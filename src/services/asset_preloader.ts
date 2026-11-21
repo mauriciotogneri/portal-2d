@@ -18,23 +18,27 @@ import type {AssetFailure, AssetKind} from '@/services/analytics'
 /** One file being downloaded. */
 interface FileDownload {
   url: string // Address of the file
+  name: string // Where the file sits in src/assets, such as images/chamber/box.webp; a build turns a small file into a data URL, whose address names nothing
   size: number | null // Size the server announced; null until it answers, or when it doesn't say
   received: number // Bytes downloaded so far
   answered: boolean // True once the server has answered or the request has failed
   finished: boolean // True once the file has downloaded or failed
 }
 
-// Every audio and image file, found at build time, so a new asset is preloaded without a list to update
-const AUDIO_URLS = Object.values(import.meta.glob<string>('@/assets/audio/**/*', {
+// Every audio and image file, with its path in the source, found at build time, so a new asset is preloaded without a list to update
+const AUDIO_FILES = Object.entries(import.meta.glob<string>('@/assets/audio/**/*', {
   eager: true,
   import: 'default',
   query: '?url',
 }))
-const IMAGE_URLS = Object.values(import.meta.glob<string>('@/assets/images/**/*', {
+const IMAGE_FILES = Object.entries(import.meta.glob<string>('@/assets/images/**/*', {
   eager: true,
   import: 'default',
   query: '?url',
 }))
+
+// Where the paths the glob finds start
+const ASSETS_FOLDER = '/src/assets/'
 
 // The font faces index.html requests from Google Fonts; keep the two in step
 const FONT_FACES = [
@@ -78,12 +82,14 @@ function downloadedShare(downloads: FileDownload[]): number {
 
 /**
  * Starts tracking a file that is about to be downloaded.
+ * @param path - The file's path in the source, as the glob found it
  * @param url - Address of the file
  * @returns The file's download, with nothing received yet
  */
-function createDownload(url: string): FileDownload {
+function createDownload(path: string, url: string): FileDownload {
   return {
     url: url,
+    name: path.startsWith(ASSETS_FOLDER) ? path.slice(ASSETS_FOLDER.length) : path,
     size: null,
     received: 0,
     answered: false,
@@ -164,15 +170,6 @@ async function preloadImage(download: FileDownload, report: () => void): Promise
 }
 
 /**
- * Names a file by the last part of its address.
- * @param url - Address of the file
- * @returns Its name, as built
- */
-function fileName(url: string): string {
-  return url.slice(url.lastIndexOf('/') + 1)
-}
-
-/**
  * Loads one font face. Never rejects: a face that fails leaves the page on the next font in its stack.
  * @param face - CSS font shorthand naming the face
  */
@@ -191,8 +188,8 @@ async function loadFont(face: string): Promise<void> {
  * @returns How many files didn't download or were refused
  */
 export async function preloadAssets(onProgress: (share: number) => void): Promise<number> {
-  const audioDownloads = AUDIO_URLS.map(createDownload)
-  const imageDownloads = IMAGE_URLS.map(createDownload)
+  const audioDownloads = AUDIO_FILES.map((file) => createDownload(...file))
+  const imageDownloads = IMAGE_FILES.map((file) => createDownload(...file))
   const downloads = [
     ...audioDownloads,
     ...imageDownloads,
@@ -219,7 +216,7 @@ export async function preloadAssets(onProgress: (share: number) => void): Promis
       return
     }
     failedUrls.add(download.url)
-    trackAssetFailed(fileName(download.url), kind, failure)
+    trackAssetFailed(download.name, kind, failure)
   }
 
   await Promise.all([

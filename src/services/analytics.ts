@@ -376,7 +376,7 @@ export function trackLoadingComplete(durationMilliseconds: number, failedFiles: 
 /**
  * A file the loading screen downloads can't be used. Only the first few per
  * visit are sent; loading_complete counts them all.
- * @param file - The file's name, as built
+ * @param file - Where the file sits in src/assets, such as images/chamber/box.webp
  * @param kind - What kind of file it is
  * @param reason - Why it can't be used
  */
