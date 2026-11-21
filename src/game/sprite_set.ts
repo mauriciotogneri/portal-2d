@@ -87,7 +87,6 @@ export const SPRITE_SHAPES = {
   receiver_dark: 'tile',
   ditch: 'strip',
   ditch_bridged: 'tile',
-  light_barrier_on: 'tile',
   light_barrier_end_on: 'tile',
   light_barrier_end_off: 'tile',
   door_closed: 'tile',

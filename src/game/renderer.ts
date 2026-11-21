@@ -9,6 +9,8 @@ import {drawExitShadow} from '@/game/exit_shadow'
 import type {FizzleParticles} from '@/game/fizzle_particles'
 import {FizzlerField} from '@/game/fizzler_field'
 import type {FizzlerFlashes} from '@/game/fizzler_flashes'
+import {LightBarrierBand} from '@/game/light_barrier_band'
+import type {LightBarrierReactions} from '@/game/light_barrier_reactions'
 import type {MissRipple} from '@/game/miss_ripple'
 import {PALETTE} from '@/game/palette'
 import {drawRayGlows, drawRays, paintRayGlows, rayRuns} from '@/game/ray_drawing'
@@ -251,16 +253,23 @@ function composeBackdrop(layer: TilePainter, floor: TilePainter, cover: TilePain
 
 /**
  * Whether anything in a state moves with time alone, so it is drawn every
- * frame while motion is allowed: a fizzler's field that is on stirs, and a
- * laser that is on or an open portal glows when its glow has a file.
+ * frame while motion is allowed: a fizzler's field that is on stirs, a
+ * light barrier's band that is on flickers, and a laser that is on or an
+ * open portal glows when its glow has a file.
  * @param state - The state drawn
- * @returns True when something stirs or glows
+ * @returns True when something stirs, flickers or glows
  */
 export function hasAmbientLife(state: RulesState): boolean {
   const chamber = state.chamber
 
   for (let i = 0; i < chamber.countOf('fizzler'); i++) {
     if (state.isBlocked('fizzler', i)) {
+      return true
+    }
+  }
+
+  for (let i = 0; i < chamber.countOf('lightBarrier'); i++) {
+    if (state.isBlocked('lightBarrier', i)) {
       return true
     }
   }
@@ -290,12 +299,12 @@ export function hasAmbientLife(state: RulesState): boolean {
  * subject's pose; the rest is drawn as the state after the step, but for the
  * blocked walls' steel still sliding apart or shut, the ditches' grates still
  * sliding in or out, the doors and the exit still sliding open or shut, the
- * fizzlers' fields and the lasers and light barriers
- * still fading out or in, drawn part way, and a portal opening drawn part way open. Last, over everything, the lasers' and portals' glows are added
+ * fizzlers' fields and the lasers still fading out or in, the light barriers' bands still unfolding or folding away, drawn part way, and a portal
+ * opening drawn part way open. Last, over everything, the lasers' and portals' glows are added
  * to what lies beneath, pulsing, an opening portal's rising with it, the open portals' particles rise, what a fizzle took breaks up and a missed
  * shot ripples where it stopped; at no time given, nothing changes over
- * time, the glows hold steady, the fizzlers' fields hold still, no particles rise and nothing breaks up,
- * flashes or ripples. While the
+ * time, the glows hold steady, the fizzlers' fields hold still, the light barriers' edges hold steady, no particles rise and nothing breaks up,
+ * flashes, reacts or ripples. While the
  * chamber is completed, the subject, on the exit or walking out past it, is
  * drawn under the open exit's shadow. With a see-through exit, the exit's
  * tile fades the canvas itself out towards the chamber's edge instead of
@@ -309,6 +318,7 @@ export class Renderer {
   private rayGlow: RayGlow | null = null // The rays' glow last painted, kept while the rays and the tile size stay the same
   private subjectLayer: SubjectLayer | null = null // The layer the subject was last drawn on while the chamber was completed, kept while the chamber and tile size stay the same
   private readonly fields = new FizzlerField() // Draws the fizzlers' fields, keeping what they are drawn from
+  private readonly bands = new LightBarrierBand() // Draws the light barriers' bands, keeping each one's place in its run
 
   /**
    * Takes over a canvas, collapsing it to 0 × 0 until setSize() is called.
@@ -495,13 +505,20 @@ export class Renderer {
    * @param shares - How far blocked the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers that are changing are drawn, or null to draw every one as the state says
    * @param opening - How far the portal opening is drawn, or null to draw both open
    * @param returns - The boxes on their way home, or null when none can be
-   * @param time - The frame's time, in milliseconds on the frame clock, or null to draw no box on its way home
+   * @param time - The frame's time, in milliseconds on the frame clock, or null to draw no box on its way home and hold the light barriers' edges steady
+   * @param reactions - Where a light barrier's band was met lately, or null when none can react
    */
-  private drawLayer(painter: TilePainter, state: RulesState, layer: DrawLayer, pose: SubjectPose, angle: number | null, shares: BlockedShares | null, opening: OpeningProgress | null, returns: BoxReturns | null, time: number | null): void {
+  private drawLayer(painter: TilePainter, state: RulesState, layer: DrawLayer, pose: SubjectPose, angle: number | null, shares: BlockedShares | null, opening: OpeningProgress | null, returns: BoxReturns | null, time: number | null, reactions: LightBarrierReactions | null): void {
     const returning: ReturningBoxes | null = ((returns !== null) && (time !== null)) ? (index) => returns.isReturningAt(state, index, time) : null
 
     painter.drawShadowsFirst(() => {
       switch (layer) {
+        // The light barriers' bands, drawn in code with the frame's time, over the layer's shadows and under their end
+        // plates, which the layer's drawing adds
+        case 'blockers':
+          this.bands.draw(painter, state, shares, time, reactions)
+          break
+
         case 'portals':
           this.drawPortal(painter, state, PortalColor.BLUE, opening)
           this.drawPortal(painter, state, PortalColor.ORANGE, opening)
@@ -539,7 +556,7 @@ export class Renderer {
     const own = this.subjectLayerOf(state.chamber)
 
     own.erase()
-    this.drawLayer(own, state, layer, pose, angle, shares, opening, null, null)
+    this.drawLayer(own, state, layer, pose, angle, shares, opening, null, null, null)
     drawExitShadow(own, state.chamber, this.seeThroughExit ? 'destination-out' : 'source-atop')
     this.painter.drawLayer(own, false)
   }
@@ -629,7 +646,7 @@ export class Renderer {
    * with the boxes falling into ditches over the ditches, the rays over the
    * buttons and switches and under the boxes, each box on its way home
    * taking shape at its start with the boxes, a portal
-   * opening part way open, and the fizzlers' fields, stirring, under their
+   * opening part way open, the light barriers' bands, flickering, under their end plates, and the fizzlers' fields, stirring, under their
    * connectors and over the subject, then the glows, the portals' particles, the pieces of what a fizzle took,
    * the pieces of the boxes flying home and a missed shot's ripple. Part way along a slide, everything but the
    * subject's pose is drawn as the state on the last tile it has reached
@@ -650,8 +667,9 @@ export class Renderer {
    * @param returns - The boxes on their way home, or null (the default) when none can be
    * @param particles - The particles rising from the portals, or null (the default) when none can
    * @param flashes - Where the subject was caught in a fizzler's field lately, flashing, or null (the default) when none can
+   * @param reactions - Where a light barrier's band was met lately, by a shot or the subject, reacting, or null (the default) when none can
    */
-  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null, flashes: FizzlerFlashes | null = null): void {
+  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null, flashes: FizzlerFlashes | null = null, reactions: LightBarrierReactions | null = null): void {
     // A canvas not yet sized for a chamber has nothing to draw
     if (this.painter.blockSize <= 0) {
       return
@@ -683,7 +701,7 @@ export class Renderer {
       if ((layer === 'subject') && state.completed) {
         this.drawLayerUnderExitShadow(shown, layer, pose, angle, shares, opening)
       } else if (!BACKDROP_LAYERS.has(layer)) {
-        this.drawLayer(this.painter, shown, layer, pose, angle, shares, opening, returns, time)
+        this.drawLayer(this.painter, shown, layer, pose, angle, shares, opening, returns, time, reactions)
       }
 
       // Down in the pit, over the grate sliding away and under everything standing on the floor

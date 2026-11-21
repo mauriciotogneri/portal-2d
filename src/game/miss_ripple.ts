@@ -1,4 +1,5 @@
 import {DELTAS, type Direction} from '@/game/direction'
+import {BAND_HALF_WIDTH} from '@/game/light_barrier_band'
 import {PALETTE} from '@/game/palette'
 import {NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import {PortalColor} from '@/game/rules/portal_color'
@@ -64,8 +65,8 @@ const WALL_INSET = 0.125
 /** How far into an element's tile: at its near edge, since a door, the exit and a fizzler fill their tile */
 const ELEMENT_INSET = 0.06
 
-/** How far into a light barrier's tile when its band runs across the shot: the band's near face, 80 px into the 256 px sprite */
-const BAND_INSET = 80 / 256
+/** How far into a light barrier's tile when its band runs across the shot: the band's near face (LightBarrierBand) */
+const BAND_INSET = 0.5 - BAND_HALF_WIDTH
 
 /** How far into the tile just outside the chamber: a little short of it, inside the doorway the shot left through */
 const OUTSIDE_INSET = -0.09

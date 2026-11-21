@@ -1,6 +1,7 @@
 import {Direction, WAY_ANGLES} from '@/game/direction'
 import {lookOf, pitTile} from '@/game/element_detail'
 import type {BlockedShares} from '@/game/element_transitions'
+import {plateShine} from '@/game/light_barrier_band'
 import {type BeamKind, type BeamOrientation, type CompiledChamber, NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import type {ElementKind} from '@/game/rules/element_registry'
 import type {RulesState} from '@/game/rules/rules_state'
@@ -11,9 +12,9 @@ import type {TilePainter} from '@/game/tile_painter'
 // How each element type is drawn by the renderer, looked up by kind: the
 // rules can't touch the canvas, so drawing stays on the browser side. Each
 // element is drawn as its sprite for its state (docs/sprites.md), switched
-// off as well as on, except an open door or exit, and a laser's or a light
-// barrier's beam that is off, which aren't drawn at all; their end plates
-// show where a beam ends, and the open
+// off as well as on, except an open door or exit, and a laser's beam that
+// is off, which aren't drawn at all; its end plates show where a beam ends,
+// and the open
 // exit's shadow is painted with the floor, or cut out of the backdrop when
 // the exit is see-through (exit_shadow). Walls, blocked
 // walls and open ditches join their neighbours, quarter by quarter (a blocked
@@ -23,11 +24,15 @@ import type {TilePainter} from '@/game/tile_painter'
 // (an arrow a link turns is drawn every frame over the backdrop, by its own
 // drawing), a blocked wall's steel
 // sliding apart into the wall beside it or shut, a ditch's grate sliding in
-// or out, a door or the exit sliding open or shut, or a laser or a light
-// barrier fading out or in, is drawn part way. A fizzler's field is drawn in
-// code, with the frame's time, by FizzlerField (fizzler_field), the renderer
-// calling it on the fields' layer; its drawing here is its connectors, at
-// both ends of each run, lit as far as the field is on. Beside them, what
+// or out, a door or the exit sliding open or shut, or a laser fading out or
+// in, is drawn part way. A fizzler's field is drawn in code, with the
+// frame's time, by FizzlerField (fizzler_field), the renderer calling it on
+// the fields' layer; its drawing here is its connectors, at both ends of
+// each run, lit as far as the field is on. A light barrier's band is drawn
+// in code the same way, by LightBarrierBand (light_barrier_band), the
+// renderer calling it on the blockers' layer just before the drawings here;
+// its drawing here is its end plates, at both ends of each run, on or off,
+// their slots lit as the band unfolds. Beside them, what
 // moves with time alone: the lasers' glow, pulsing with the portals'
 
 /**
@@ -59,7 +64,7 @@ type BeamEnd = {
  * The sprites of a type drawn as a beam.
  */
 type BeamSprites = {
-  readonly beam: SpriteName // The beam while on, drawn running left to right
+  readonly beam: SpriteName | null // The beam while on, drawn running left to right, or null for a light barrier's band, drawn in code by LightBarrierBand
   readonly endOn: SpriteName // The end plate while on, drawn at the left end of a beam running left to right
   readonly endOff: SpriteName // The same plate with its slot dark, drawn under endOn
 }
@@ -131,7 +136,7 @@ const LASER_SPRITES: BeamSprites = {
 
 /** A light barrier's sprites */
 const LIGHT_BARRIER_SPRITES: BeamSprites = {
-  beam: 'light_barrier_on',
+  beam: null,
   endOn: 'light_barrier_end_on',
   endOff: 'light_barrier_end_off',
 }
@@ -565,29 +570,33 @@ function drawDitches(painter: TilePainter, state: RulesState, shares: BlockedSha
 
 /**
  * Builds a drawing for a type drawn as a beam, a laser or a light barrier:
- * the beams of those that are on, each turned to the way it runs; one that
- * is off isn't drawn, and one fading out or in is drawn see-through.
- * Then, over every beam, the end plates at both ends of each run, on or off.
+ * the beams of those that are on, each turned to the way it runs, when the
+ * beam has a sprite (a light barrier's band is drawn in code, by
+ * LightBarrierBand); one that is off isn't drawn, and one fading out or in
+ * is drawn see-through. Then, over every beam, the end plates at both ends
+ * of each run, on or off, their slots lit as the type says for one part way.
  * @param kind - The type
  * @param sprites - Its sprites
+ * @param shineOf - How lit the end plates' slots are for a beam part way on, from how far on it is; as far as it is on by default
  * @returns The drawing
  */
-function beamDrawing(kind: BeamKind, sprites: BeamSprites): ElementDrawing {
+function beamDrawing(kind: BeamKind, sprites: BeamSprites, shineOf: (share: number) => number = (share) => share): ElementDrawing {
   return (painter, state, shares = null) => {
     const entries = state.chamber.entriesOf(kind)
+    const beam = sprites.beam
 
     entries.forEach((entry, i) => {
       const orientation = readOrientation(entry.direction)
       const share = (shares === null) ? null : shares(kind, i)
 
-      if (orientation === null) {
+      if ((orientation === null) || (beam === null)) {
         return
       }
 
       if (share !== null) {
-        painter.drawSpriteFaded(sprites.beam, entry.x, entry.y, BEAM_TURNS[orientation], share)
+        painter.drawSpriteFaded(beam, entry.x, entry.y, BEAM_TURNS[orientation], share)
       } else if (state.isBlocked(kind, i)) {
-        painter.drawSprite(sprites.beam, entry.x, entry.y, BEAM_TURNS[orientation])
+        painter.drawSprite(beam, entry.x, entry.y, BEAM_TURNS[orientation])
       }
     })
 
@@ -598,7 +607,7 @@ function beamDrawing(kind: BeamKind, sprites: BeamSprites): ElementDrawing {
       if (orientation !== null) {
         const share = (shares === null) ? null : shares(kind, i)
 
-        drawBeamEnds(painter, state.chamber, kind, sprites, entry.x, entry.y, orientation, (share !== null) ? share : (state.isBlocked(kind, i) ? 1 : 0))
+        drawBeamEnds(painter, state.chamber, kind, sprites, entry.x, entry.y, orientation, (share !== null) ? shineOf(share) : (state.isBlocked(kind, i) ? 1 : 0))
       }
     })
   }
@@ -816,7 +825,7 @@ export const ELEMENT_DRAWINGS: Readonly<Record<ElementKind, ElementDrawing>> = {
   wall: drawWalls,
   blockedWall: drawBlockedWalls,
   emitter: drawEmitters,
-  lightBarrier: beamDrawing('lightBarrier', LIGHT_BARRIER_SPRITES),
+  lightBarrier: beamDrawing('lightBarrier', LIGHT_BARRIER_SPRITES, plateShine),
   ditch: drawDitches,
   laser: beamDrawing('laser', LASER_SPRITES),
   door: slidingDrawing('door', 'door_closed'),

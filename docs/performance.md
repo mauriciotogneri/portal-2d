@@ -108,3 +108,14 @@ The fizzlers' fields (`docs/sprites.md`) are drawn in code every frame while one
 | 4 | 3 (23 × 17) | 2277 × 1683 | 1.4, 1.2, 1.1 ms | 1.2, 0.9, 1.3 ms |
 
 So the fields cost nothing this timing can tell apart from its noise. A first build drew each field tile on a scratch canvas and laid it on the chamber, so a field would fade as a whole: at 99 px that added 2.5 to 3.5 ms a frame, about 1 ms a tile, nearly all of it in handing each freshly drawn scratch canvas to the chamber's canvas, so each tile is now drawn straight onto the canvas, clipped to it, every part of a fading field faded alike. Frame intervals weren't measured, only the drawing.
+
+## Light barrier band check (2026-11-21)
+
+The light barriers' bands (`docs/sprites.md`) are drawn in code, and while one is on its edges flicker, so a chamber with a light barrier on now draws every frame, as one with a fizzler's field or a laser on already did. No chamber has a light barrier yet, so the playground (15 × 15, its three light barriers in one run, on at its start) stood in. Chrome 155 on the development machine, `npm run dev`: in the sprite gallery, which runs no frame loop, the playground's settled start drawn on one renderer at 63 and 126 px tiles (the chamber screen's size at pixel ratio 1 and 2), whole frames and the bands' drawing alone (`LightBarrierBand.draw`, ten calls a sample), at times 16.7 ms apart, timed on the main thread with `performance.now()` (0.1 ms steps). Medians of 60 samples each, three runs:
+
+| # | Canvas | Whole frame | Bands, steady | Bands, switching |
+|---|---|---|---|---|
+| 1 | 945 × 945 | 0.9, 0.7, 0.6 ms | 0.05, 0.05, 0.05 ms | 0.09, 0.08, 0.05 ms |
+| 2 | 1890 × 1890 | 0.7, 0.7, 0.7 ms | 0.06, 0.05, 0.05 ms | 0.08, 0.07, 0.07 ms |
+
+So three bands cost under 0.1 ms a frame: a steady band is drawn from two images painted once per tile size, and one switching, painted straight onto the canvas, costs a little more for the 0.3 s it lasts. The browser window was behind another during the check, which held its frame loop to a few frames a second, so frame intervals weren't measured, only the drawing.

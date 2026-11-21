@@ -1,4 +1,5 @@
 import {Direction} from '@/game/direction'
+import {BAND_HALF_WIDTH, BAND_RIM} from '@/game/light_barrier_band'
 import {PALETTE, withAlpha} from '@/game/palette'
 import {NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import type {RayLine, RayPoint, RayTrace} from '@/game/rules/rays'
@@ -44,8 +45,8 @@ const RAY_SCALE = 0.09 / (30 / 256)
 /** The least half-width a band is drawn at, in canvas pixels, so a ray still shows on the home menu's map */
 const MIN_HALF_WIDTH = 0.6
 
-/** How far short of its tile's middle a ray ends at a light barrier whose band runs across it: the band's rim, in tiles */
-const BARRIER_RIM = 50 / 256
+/** How far short of its tile's middle a ray ends at a light barrier whose band runs across it: the band's rim, in tiles (LightBarrierBand) */
+const BARRIER_RIM = BAND_HALF_WIDTH + BAND_RIM
 
 /** How strongly the rays' glow is added: held steady, where the lasers' and portals' pulse */
 const GLOW_STRENGTH = 0.8

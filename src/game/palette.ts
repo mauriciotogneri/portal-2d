@@ -5,7 +5,8 @@
  * each open portal, in its own colours, the antlines' dots, unlit
  * and lit, each with its border, an emitter's ray, from its dark rim to its
  * white-hot core, the mirror marked on a carried mirror box, the fizzlers'
- * fields, their see-through blue and their cyan light, the open exit's
+ * fields, their see-through blue and their cyan light, the light barriers'
+ * bands, their see-through teal, their rim and their light, the open exit's
  * shadow, the surface detail laid over the floor and the walls' tops,
  * its tones and its wear marks, and the element detail laid over the
  * elements' sprites, each drawn faint (how faint is the drawing's to say). Everything else is drawn from the sprites' files,
@@ -28,6 +29,11 @@ export const PALETTE = {
   fizzlerField: 'rgba(22, 85, 211, 1)', // A fizzler's field (docs/sprites.md): its see-through blue sheet, drawn half opaque, deeper than the blue portal
   fizzlerLight: 'rgba(126, 218, 255, 1)', // The field's cyan light: its wisps, its tongues of light along the connectors, its dashes' glow and its flash
   fizzlerCore: 'rgba(191, 237, 255, 1)', // The light at its palest: the wisps' brightest strands, the tongues' roots, the dashes' streaks and the flash's ring
+  lightBarrierBand: 'rgba(96, 222, 186, 1)', // A light barrier's band: the light barrier's teal meaning colour (docs/sprites.md), drawn see-through
+  lightBarrierRim: 'rgba(20, 150, 120, 1)', // The deep teal rim just outside the band, so it reads on the light floor
+  lightBarrierLight: 'rgba(186, 246, 228, 1)', // The light along the band's edges, and pooling where it leaves an end plate
+  lightBarrierEdge: 'rgba(242, 255, 251, 1)', // The band's two bright edges, the light at its brightest where it leaves an end plate, and its glow where it was met
+  lightBarrierFlare: 'rgba(255, 255, 255, 1)', // The line a band unfolds from, the fronts running out of its plates, and the flare and bar where a shot or the subject met it
   antlineOff: 'rgba(72, 176, 185, 1)', // An unlit antline's dots: muted cyan, clear of the blue portal and the light barrier's teal (docs/sprites.md)
   antlineOffBorder: 'rgba(50, 123, 130, 1)', // Their border, 30 % darker
   antlineOn: 'rgba(250, 194, 44, 1)', // A lit antline's dots: amber, yellower than the orange portal (docs/sprites.md)

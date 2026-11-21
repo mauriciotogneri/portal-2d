@@ -71,7 +71,6 @@ defineProps<ElementPictogramProps>()
     <template v-else-if="kind === 'lightBarrier'">
       <path class="pictogram-solid" d="M5 14 h5 v20 h-5 Z M38 14 h5 v20 h-5 Z" />
       <path class="pictogram-band" d="M11.5 16.5 h25 v15 h-25 Z" />
-      <path class="pictogram-hairline" d="M17.1 20 L20.5 22 L20.5 26 L17.1 28 L13.6 26 L13.6 22 Z M24 20 L27.5 22 L27.5 26 L24 28 L20.5 26 L20.5 22 Z M30.9 20 L34.4 22 L34.4 26 L30.9 28 L27.5 26 L27.5 22 Z" />
     </template>
     <template v-else-if="kind === 'emitter'">
       <path d="M20 30 V36 H6 V12 H20 V18" />
@@ -119,10 +118,6 @@ defineProps<ElementPictogramProps>()
 
 .pictogram-fine {
   stroke-width: 2;
-}
-
-.pictogram-hairline {
-  stroke-width: 1.6;
 }
 
 /* The laser's glow, dashed either side of the beam */
