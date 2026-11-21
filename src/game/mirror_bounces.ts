@@ -1,3 +1,4 @@
+import {DELTAS} from '@/game/direction'
 import {GameEvent} from '@/game/game_event'
 import {traceRays} from '@/game/rules/rays'
 import type {RulesState} from '@/game/rules/rules_state'
@@ -6,7 +7,7 @@ import {NO_BOX} from '@/game/rules/state_layout'
 /** Whether a step set a ray bouncing off a mirror box, for the mirror box's sound */
 export type MirrorBounces = {
   readonly started: boolean // Whether a ray turns, after the step, at a resting mirror box that no ray turned at, where it rested, before it
-  readonly dropped: boolean // Whether the box the step put down is one of them
+  readonly dropped: boolean // Whether the box the step put down is one of them, still where it was put down
 }
 
 /** No ray started bouncing off a mirror box */
@@ -46,7 +47,7 @@ function turningTiles(state: RulesState): Set<string> {
  * @param before - The state before the step
  * @param after - The state after the step
  * @param events - What happened in the step
- * @returns Whether any ray started bouncing off a mirror box, and whether off the one put down
+ * @returns Whether any ray started bouncing off a mirror box, and whether off the one put down, where it was put down
  */
 export function findMirrorBounces(before: RulesState, after: RulesState, events: readonly GameEvent[]): MirrorBounces {
   const chamber = after.chamber
@@ -59,6 +60,11 @@ export function findMirrorBounces(before: RulesState, after: RulesState, events:
   const turnedBefore = turningTiles(before)
   const turnedAfter = turningTiles(after)
   const putDown = events.includes(GameEvent.BOX_PUT_DOWN) ? before.carriedBox : NO_BOX
+  // A box is put down on the tile the subject faced, which interact doesn't turn; one a link or a closing door sent on
+  // home in the same step wasn't put down in the ray it turns
+  const ahead = DELTAS[before.facing]
+  const putDownX = before.subjectX + ahead.dx
+  const putDownY = before.subjectY + ahead.dy
   let started = false
   let dropped = false
 
@@ -70,7 +76,7 @@ export function findMirrorBounces(before: RulesState, after: RulesState, events:
 
     if ((after.carriedBox !== index) && turnedAfter.has(tile) && !(restedThere && turnedBefore.has(tile))) {
       started = true
-      dropped = dropped || (index === putDown)
+      dropped = dropped || ((index === putDown) && (x === putDownX) && (y === putDownY))
     }
   }
 
