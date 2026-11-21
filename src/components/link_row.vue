@@ -1,24 +1,27 @@
 <script setup lang="ts">
 /**
  * A page outside the game in the home menu: a row with its name on the left
- * and, on the right, an arrow leaving a box, since picking the row opens the
- * page in a new tab.
+ * and, on the right, an arrow leaving a box, since picking the row leaves the
+ * game: it opens the page in a new tab, or a mailto: address in the mail app.
  */
 export interface LinkRowProps {
   label: string
   url: string
+  newTab?: boolean // Whether the page opens in a new tab; false for a mailto: address, which opens the mail app
 }
 
-defineProps<LinkRowProps>()
+withDefaults(defineProps<LinkRowProps>(), {
+  newTab: true,
+})
 </script>
 
 <template>
   <a
     class="link-row menu-row"
     :href="url"
-    target="_blank"
-    rel="noopener"
-    :aria-label="`${label}, opens in a new tab`"
+    :target="newTab ? '_blank' : undefined"
+    :rel="newTab ? 'noopener' : undefined"
+    :aria-label="newTab ? `${label}, opens in a new tab` : undefined"
   >
     <span class="menu-row-label">{{ label }}</span>
     <svg

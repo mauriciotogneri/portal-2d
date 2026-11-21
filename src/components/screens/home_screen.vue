@@ -1039,24 +1039,23 @@ onBeforeUnmount(() => {
           </ul>
           <ul v-else class="home-row-list">
             <li v-for="(entry, index) in ABOUT" :key="entry.label">
-              <a
+              <LinkRow
                 v-if="entry.kind === 'mail'"
                 :id="aboutRowId(index)"
-                class="menu-row"
+                :label="entry.label"
+                :url="entry.url"
+                :new-tab="false"
                 :class="{
                   'menu-row-selected': index === highlightedAbout,
                   'menu-row-active': index === highlightedAbout && activeColumn === 'items',
                 }"
-                :href="entry.url"
                 :tabindex="index === highlightedAbout ? 0 : -1"
                 @click="trackFeedbackOpen"
                 @focus="handleItemFocus(index)"
                 @pointerdown="handleItemPointerDown(index)"
                 @pointermove="handleItemPointerMove(index, $event)"
                 @pointerleave="handleItemPointerLeave"
-              >
-                <span class="menu-row-label">{{ entry.label }}</span>
-              </a>
+              />
               <LinkRow
                 v-else-if="entry.kind === 'link'"
                 :id="aboutRowId(index)"
