@@ -133,18 +133,19 @@ The game draws from the bottom up, each later row over the earlier ones:
 | 2 | Antlines | None: dotted lines, drawn in code (see [antlines](#antlines)) |
 | 3 | Floor marks | `arrow` |
 | 4 | Structure | `wall`, `blocked_wall` for the blocked walls no link reaches, then the walls' surface detail, drawn in code, before their shadow is made |
-| 5 | Turnable arrows | `turntable`, then `turntable_arrow` over it, at the way the arrow points or part way through a turn, drawn every frame over the rows above |
-| 6 | Blockers | `blocked_wall` over the blocked walls a link reaches while blocked, `emitter_on` or `emitter_off`, `light_barrier_on`, then `light_barrier_end_*` over the bands, `ditch`, `ditch_bridged`, `laser_on`, then `laser_end_*` over the beams, `door_closed`, `exit_closed`, `receiver_dark`, then `receiver_lit` over it |
-| 7 | Fall | `box` or `box_mirror`, falling into an open ditch (see [fall](#fall)) |
-| 8 | Portals | `portal_*`, growing open just after a shot opens one (see [opening](#opening)) |
-| 9 | Fixtures | `button_*`, `switch` |
-| 10 | Rays | None: each emitter's ray, drawn in code like a laser's beam, pale gold with a dark rim, from the emitter's face to where it stops, through portals and turning on mirror boxes; over the buttons and switches, under the boxes, the subject and the fields (see [rays](#rays)) |
-| 11 | Items | `box`, `box_mirror` |
-| 12 | Subject | `subject_holding_gun`, or `subject_holding_box` while it carries a box, with a mirror box's mirror marked over the box in code (see [the subject](#the-subject)) |
-| 13 | Fields | `fizzler_on`, whole or in pieces (see [fizzle](#fizzle)), then `fizzler_end_*` over the fields |
-| 14 | Glow | `laser_glow`, the rays' glow, drawn in code, held steady at 80 % and ending where its ray ends, then `portal_*_glow` |
-| 15 | Fizzle | `portal_*`, `box`, `box_mirror`, in pieces (see [fizzle](#fizzle)) |
-| 16 | Miss | None: a missed shot's ripple, drawn in code (see [miss](#miss)) |
+| 5 | Antlines on walls | None: the antlines' dots over the tops of the plain walls they cross, drawn in code (see [antlines](#antlines)) |
+| 6 | Turnable arrows | `turntable`, then `turntable_arrow` over it, at the way the arrow points or part way through a turn, drawn every frame over the rows above |
+| 7 | Blockers | `blocked_wall` over the blocked walls a link reaches while blocked, `emitter_on` or `emitter_off`, `light_barrier_on`, then `light_barrier_end_*` over the bands, `ditch`, `ditch_bridged`, `laser_on`, then `laser_end_*` over the beams, `door_closed`, `exit_closed`, `receiver_dark`, then `receiver_lit` over it |
+| 8 | Fall | `box` or `box_mirror`, falling into an open ditch (see [fall](#fall)) |
+| 9 | Portals | `portal_*`, growing open just after a shot opens one (see [opening](#opening)) |
+| 10 | Fixtures | `button_*`, `switch` |
+| 11 | Rays | None: each emitter's ray, drawn in code like a laser's beam, pale gold with a dark rim, from the emitter's face to where it stops, through portals and turning on mirror boxes; over the buttons and switches, under the boxes, the subject and the fields (see [rays](#rays)) |
+| 12 | Items | `box`, `box_mirror` |
+| 13 | Subject | `subject_holding_gun`, or `subject_holding_box` while it carries a box, with a mirror box's mirror marked over the box in code (see [the subject](#the-subject)) |
+| 14 | Fields | `fizzler_on`, whole or in pieces (see [fizzle](#fizzle)), then `fizzler_end_*` over the fields |
+| 15 | Glow | `laser_glow`, the rays' glow, drawn in code, held steady at 80 % and ending where its ray ends, then `portal_*_glow` |
+| 16 | Fizzle | `portal_*`, `box`, `box_mirror`, in pieces (see [fizzle](#fizzle)) |
+| 17 | Miss | None: a missed shot's ripple, drawn in code (see [miss](#miss)) |
 
 ## Glow
 
@@ -170,7 +171,9 @@ When a portal shot misses, the game draws a ripple in the shot's colour where it
 
 ## Antlines
 
-An antline is a dotted line on the floor from a button, switch or receiver to one element it links, as in the original game, drawn by the game in code from no sprite along the corners the chamber file gives (see `docs/elements.md`). Its dots, 3 per tile, one on each tile's middle, so each corner gets one, are 0.15 of a tile wide, each with a border 0.025 of a tile wide (never thinner than a pixel) drawn inside its edge, in its colour 30 % darker. It runs from the middle of the button's or switch's tile, whose sprite hides its start, or of the receiver's, whose wall hides it up to the floor, to the edge of the element's tile, its last dot 1/6 of a tile before it, the same whether the element is drawn or not. It lies over the floor and under everything else, so the floor marks, the walls with their shadow and every element hide it where it runs under them, and it shows again beyond. It is cyan while unlit, and amber, lit, while the element it leads to is unblocked: a door or the exit open, a laser, a light barrier or a fizzler off, a ditch bridged, a blocked wall taking portals, an emitter on; a line to a box never lights. Unlit lines are drawn first, lit ones over them. The colour changes at once with the step, with no fade, so reduced motion changes nothing; the home menu's map and the gallery show them too.
+An antline is a dotted line on the floor from a button, switch or receiver to one element it links, as in the original game, drawn by the game in code from no sprite along the corners the chamber file gives (see `docs/elements.md`). Its dots, 3 per tile, one on each tile's middle, so each corner gets one, are 0.15 of a tile wide, each with a border 0.025 of a tile wide (never thinner than a pixel) drawn inside its edge, in its colour 30 % darker. It runs from the middle of the button's or switch's tile, whose sprite hides its start, or of the receiver's, whose wall hides it up to the floor, to the edge of the element's tile, its last dot 1/6 of a tile before it, the same whether the element is drawn or not. It lies over the floor and under everything else, so the floor marks, the walls with their shadow and every element hide it where it runs under them, and it shows again beyond, though over a plain wall dots of its own are drawn on the wall's top (below). It is cyan while unlit, and amber, lit, while the element it leads to is unblocked: a door or the exit open, a laser, a light barrier or a fizzler off, a ditch bridged, a blocked wall taking portals, an emitter on; a line to a box never lights. Unlit lines are drawn first, lit ones over them. The colour changes at once with the step, with no fade, so reduced motion changes nothing; the home menu's map and the gallery show them too.
+
+Where the line crosses a plain wall, the game draws its dots on the wall's top too, into the backdrop right after the walls and their shadow, both when the backdrop is first drawn and when an antline lighting up or going dark draws it again: on each plain wall tile along it but its first and its last (the button's, switch's or receiver's, and the element's); a blocked wall, an emitter or a receiver still hides it. Its dots there are the floor's, in size, colours and border, unlit lines first and lit ones over them, placed to keep clear of the wall's bevels. Each end of the tile along the line is bevelled when the tile beyond it is outside the chamber or isn't part of the mass of walls (walls, blocked walls, emitters and receivers), the same test the [joins](#joins) use, so it matches the bevels drawn. Where the line runs straight across the tile with walls at both ends, it takes 3 dots, as on the floor: the middle, and a third of a tile either side. Where it runs straight and either end is bevelled, it takes 2, a third and two thirds of the way across, centred on the tile and clear of the bevel, so a wall one tile thick shows 2, half a tile from the floor's dots on each side instead of a third. Where it turns on the tile, it takes the middle dot and each arm's dot a third of a tile out, but none on an arm whose end is bevelled, so a turn on a lone wall tile shows only its middle dot. The home menu's map and the gallery show these dots too.
 
 ## Rays
 

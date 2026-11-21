@@ -460,7 +460,7 @@ export function drawTurnableArrows(painter: TilePainter, state: RulesState, shar
  * @param chamber - The chamber
  * @returns The join test
  */
-function wallJoins(chamber: CompiledChamber): JoinTest {
+export function wallJoins(chamber: CompiledChamber): JoinTest {
   return (x, y) => (x >= 0) && (y >= 0) && (x < chamber.width) && (y < chamber.height) && chamber.isWall(x, y)
 }
 

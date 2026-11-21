@@ -1,4 +1,4 @@
-import {antlinesLitKey, drawAntlines} from '@/game/antline_drawing'
+import {antlinesLitKey, drawAntlines, drawWallAntlines} from '@/game/antline_drawing'
 import type {BoxFall} from '@/game/box_fall'
 import {DELTAS, Direction} from '@/game/direction'
 import {heldLook, lookOf} from '@/game/element_detail'
@@ -205,8 +205,9 @@ function drawBackdropCover(painter: TilePainter, state: RulesState): void {
  * every tile and the slide floors with the floor's surface detail and the
  * open exit's shadow, the antlines and the floor marks, then the walls,
  * painted apart with theirs and laid down over the shared drop shadow of
- * their whole mass; with a see-through exit, the whole of it faded out
- * across the exit's tile instead of the shadow.
+ * their whole mass, and the antlines again over the walls they cross; with
+ * a see-through exit, the whole of it faded out across the exit's tile
+ * instead of the shadow.
  * @param painter - Paints on the canvas, already sized for the chamber
  * @param state - The state whose antlines are drawn; the rest is the same for every state of the chamber
  * @param seeThroughExit - Whether the exit fades the backdrop out instead of darkening it (cutExitOpening); false by default
@@ -215,6 +216,7 @@ export function drawBackdrop(painter: TilePainter, state: RulesState, seeThrough
   drawFloor(painter, state, seeThroughExit)
   drawAntlines(painter, state)
   drawBackdropCover(painter, state)
+  drawWallAntlines(painter, state)
 
   if (seeThroughExit) {
     cutExitOpening(painter, state.chamber)
@@ -223,8 +225,8 @@ export function drawBackdrop(painter: TilePainter, state: RulesState, seeThrough
 
 /**
  * Draws a backdrop from its parts: the floor, a state's antlines, then the
- * cover laid over them, and with a see-through exit, the exit's fade cut
- * out of it all.
+ * cover laid over them and the antlines again over the walls they cross,
+ * and with a see-through exit, the exit's fade cut out of it all.
  * @param layer - The backdrop's layer, drawn over in full: the floor is opaque everywhere, so it covers what the exit's fade let through before
  * @param floor - The floor, the slide floors, their surface detail and, unless the exit is see-through, the open exit's shadow, from drawFloor()
  * @param cover - The floor marks and the walls over their shadow, from drawBackdropCover()
@@ -235,6 +237,7 @@ function composeBackdrop(layer: TilePainter, floor: TilePainter, cover: TilePain
   layer.drawLayer(floor, false)
   drawAntlines(layer, state)
   layer.drawLayer(cover, false)
+  drawWallAntlines(layer, state)
 
   if (seeThroughExit) {
     cutExitOpening(layer, state.chamber)
@@ -265,7 +268,7 @@ export function hasAmbientLife(state: RulesState): boolean {
 /**
  * Draws a state of the rules onto a canvas from the chamber sprites
  * (docs/sprites.md): the chamber's backdrop (floor and slide floors with the floor's surface detail and the open exit's shadow, antlines,
- * floor marks and walls with theirs), drawn once per chamber and tile size, and again when an
+ * floor marks and walls with theirs, then the antlines again over the walls they cross), drawn once per chamber and tile size, and again when an
  * antline lights up or goes dark, and copied every frame, then each
  * other draw layer back to front. The core step's layers (floor, portals,
  * subject) are drawn here; every other layer draws its element types in

@@ -93,7 +93,7 @@ Every chamber is closed in by walls (or blocked walls, emitters, receivers, door
 - A button stays pressed only while the subject or a box is on it, so a box left on it keeps a door open while the subject walks away. A receiver works the same way, held by a ray instead (see [Rays](#rays)).
 - A switch only opens. Using it again repeats that (sending a linked box back each time); it never closes anything. It can't be used while carrying a box, and a box is never put down on a switch, so none ever hides one.
 - Each element starts open or closed as the chamber sets it, before any button, switch or receiver acts on it; an emitter starts on unless the chamber says otherwise.
-- Some links are shown by a dotted line on the floor, from the button, switch or receiver to the element, as in the original game, mostly in the tutorial and early chambers. It is cyan, and turns amber while the element is open in the sense above (a line to a box never does). It runs under walls and anything else on its way, and changes nothing in play.
+- Some links are shown by a dotted line on the floor, from the button, switch or receiver to the element, as in the original game, mostly in the tutorial and early chambers. It is cyan, and turns amber while the element is open in the sense above (a line to a box never does). It is drawn over the tops of plain walls it crosses, but runs under blocked walls, emitters, receivers and anything else on its way, and changes nothing in play.
 
 ## Fizzlers in detail
 
