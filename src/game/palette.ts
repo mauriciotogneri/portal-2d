@@ -4,7 +4,8 @@
  * missed shot's ripple in each portal's colour, the particles rising from
  * each open portal, in its own colours, the antlines' dots, unlit
  * and lit, each with its border, an emitter's ray, from its dark rim to its
- * white-hot core, the mirror marked on a carried mirror box, the open exit's
+ * white-hot core, the mirror marked on a carried mirror box, the fizzlers'
+ * fields, their see-through blue and their cyan light, the open exit's
  * shadow, the surface detail laid over the floor and the walls' tops,
  * its tones and its wear marks, and the element detail laid over the
  * elements' sprites, each drawn faint (how faint is the drawing's to say). Everything else is drawn from the sprites' files,
@@ -24,6 +25,9 @@ export const PALETTE = {
   particleOrange: 'rgba(255, 160, 30, 1)', // The orange portal's particles: a shaft's sides and a spark's ring, the orange portal's rim colour
   particleOrangeShaft: 'rgba(255, 168, 48, 1)', // An orange shaft's middle, a little lighter than its sides
   particleOrangeCore: 'rgba(255, 220, 160, 1)', // An orange spark's middle: the pale orange of the portal's lit inner edge
+  fizzlerField: 'rgba(22, 85, 211, 1)', // A fizzler's field (docs/sprites.md): its see-through blue sheet, drawn half opaque, deeper than the blue portal
+  fizzlerLight: 'rgba(126, 218, 255, 1)', // The field's cyan light: its wisps, its tongues of light along the connectors, its dashes' glow and its flash
+  fizzlerCore: 'rgba(191, 237, 255, 1)', // The light at its palest: the wisps' brightest strands, the tongues' roots, the dashes' streaks and the flash's ring
   antlineOff: 'rgba(72, 176, 185, 1)', // An unlit antline's dots: muted cyan, clear of the blue portal and the light barrier's teal (docs/sprites.md)
   antlineOffBorder: 'rgba(50, 123, 130, 1)', // Their border, 30 % darker
   antlineOn: 'rgba(250, 194, 44, 1)', // A lit antline's dots: amber, yellower than the orange portal (docs/sprites.md)

@@ -4,7 +4,7 @@ import type {RulesState} from '@/game/rules/rules_state'
  * The element types drawn changing over a short time when a step switches
  * them: an arrow's chevron turns, doors and the exit slide open or shut, a
  * blocked wall's steel splits and slides into the wall beside it or back, a
- * ditch's grate slides in or out, fizzlers crumble away or form again,
+ * ditch's grate slides in or out, fizzlers' fields fade out or in,
  * lasers and light barriers fade out or in, and a receiver's eye fades as it
  * lights or goes dark.
  */
@@ -52,7 +52,7 @@ const TRANSITION_KINDS: readonly TransitionKind[] = [
   'receiver',
 ]
 
-/** How each element type changes: an arrow's chevron turns, and a blocked wall's steel, a ditch's grate, a door or the exit slides, eased like a step's glide; a field crumbles at an even pace, its pieces each in their own time; a beam, and a receiver's eye, fades at an even pace */
+/** How each element type changes: an arrow's chevron turns, and a blocked wall's steel, a ditch's grate, a door or the exit slides, eased like a step's glide; a fizzler's field, a beam, and a receiver's eye, fades at an even pace */
 const TRANSITION_STYLES: Readonly<Record<TransitionKind, TransitionStyle>> = {
   arrow: {
     milliseconds: 300,
@@ -75,7 +75,7 @@ const TRANSITION_STYLES: Readonly<Record<TransitionKind, TransitionStyle>> = {
     eased: true,
   },
   fizzler: {
-    milliseconds: 400,
+    milliseconds: 700,
     eased: false,
   },
   laser: {
@@ -107,7 +107,7 @@ function isBlockedIn(state: RulesState, kind: TransitionKind, index: number): bo
 /**
  * The arrows' chevrons turning, the blocked walls' steel sliding apart or
  * shut, the ditches' grates sliding in or out, the doors and the exit
- * sliding open or shut, the fizzlers crumbling away or forming again, the
+ * sliding open or shut, the fizzlers' fields fading out or in, the
  * lasers and light barriers fading out or in, and the receivers' eyes fading
  * as they light or go dark, over a short time after a step switched them.
  * Only an arrow or a blocked wall a link reaches is ever switched.

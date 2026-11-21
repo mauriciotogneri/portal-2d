@@ -97,7 +97,6 @@ export const SPRITE_SHAPES = {
   switch: 'tile',
   box: 'tile',
   box_mirror: 'tile',
-  fizzler_on: 'tile',
   fizzler_end_on: 'tile',
   fizzler_end_off: 'tile',
   laser_on: 'tile',

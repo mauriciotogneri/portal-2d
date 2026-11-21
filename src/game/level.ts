@@ -5,6 +5,7 @@ import type {Direction} from '@/game/direction'
 import {ElementTransitions} from '@/game/element_transitions'
 import {exitOuterSide} from '@/game/exit_shadow'
 import {FizzleParticles} from '@/game/fizzle_particles'
+import {FizzlerFlashes} from '@/game/fizzler_flashes'
 import {GameEvent} from '@/game/game_event'
 import {GameKey} from '@/game/game_key'
 import type {FrameInput} from '@/game/frame_input'
@@ -56,12 +57,12 @@ type SlideBeat = {
  * an arrow a step turns swings its chevron round, a blocked wall a step
  * switches slides its steel apart or shut, a
  * ditch a step switches slides its grate in or out, a door or the exit a step
- * opens or closes slides open or shut, a fizzler a step switches crumbles
- * away or forms, a laser or a light barrier a step switches fades out or in, a portal a shot opens grows open on its
+ * opens or closes slides open or shut, a fizzler's field a step switches
+ * fades out or in, the field the subject is caught in flashes, a laser or a light barrier a step switches fades out or in, a portal a shot opens grows open on its
  * wall, and a portal shot that misses
  * ripples where it stopped; no press waits for them nor cuts them short. While
- * anything glows, breaks up, falls, changes, opens or ripples, every frame is drawn too. Nothing is drawn over time when the player asks for reduced
- * motion: the glows hold steady. A step that slides is drawn along its path,
+ * a fizzler's field is on, or anything glows, breaks up, flashes, falls, changes, opens or ripples, every frame is drawn too. Nothing is drawn over time when the player asks for reduced
+ * motion: the glows hold steady and the fields hold still. A step that slides is drawn along its path,
  * and what happens on each tile it enters (a fizzle, a portal crossing) waits
  * until the subject gets there, its stop and settling (buttons, doors, the
  * completion) until the slide ends; the next press first plays all that is
@@ -146,6 +147,7 @@ export class Level {
   private readonly returns = new BoxReturns() // The boxes the latest steps sent home, coming apart and flying home, or gathering there, over a few frames, if any
   private readonly openings = new PortalOpenings() // The portals shots opened lately, opening over a few frames, if any
   private readonly particles = new PortalParticles() // The particles rising from the open portals, and fading where a portal closed lately
+  private readonly flashes = new FizzlerFlashes() // Where the subject was caught in a fizzler's field lately, flashing over a few frames, if anywhere
   private readonly turn = new SubjectTurn() // The subject's facing as drawn, turning over a few frames whenever it comes to face another way
   private slideBeats: SlideBeat[] = [] // What the slide being drawn still has waiting, in order; empty when none is
   private completionTime: number | null = null // When the completion is told after a step that didn't slide and walks the subject out of the chamber, once it is out of sight, in milliseconds on the frame clock; null when none waits
@@ -212,6 +214,7 @@ export class Level {
     this.returns.clear()
     this.openings.clear()
     this.particles.clear()
+    this.flashes.clear()
     this.turn.clear()
 
     this.countPortals(start.events)
@@ -352,8 +355,8 @@ export class Level {
 
   /**
    * Draws the current state, part way through the step being drawn, if any,
-   * with what moves with time alone at this time, the portals' particles, what breaks up, falls or flies home, a portal
-   * opening, a missed shot's ripple, the subject turning and the arrows, the blocked walls, the ditches, the doors,
+   * with what moves with time alone at this time, the fizzlers' fields, the portals' particles, what breaks up, flashes,
+   * falls or flies home, a portal opening, a missed shot's ripple, the subject turning and the arrows, the blocked walls, the ditches, the doors,
    * the exit, the fizzlers, the lasers and the light barriers changing included, or held still when the player asks for
    * reduced motion.
    * @param time - Now, in milliseconds on the frame clock
@@ -363,7 +366,7 @@ export class Level {
       const frameStats = this.frameStats
       const drawStart = (frameStats === null) ? 0 : performance.now()
 
-      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns, this.particles)
+      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns, this.particles, this.flashes)
       frameStats?.recordDraw(performance.now() - drawStart)
     }
   }
@@ -647,7 +650,7 @@ export class Level {
    * Shows what happened from one state to the next, all of a step or a part
    * of a slide: each arrow, blocked wall, ditch, door, exit, fizzler, laser and
    * light barrier switched starts changing, the portals a fizzle took break
-   * up, each box sent home comes apart and flies there, or falls into a
+   * up and the field the subject is caught in flashes, each box sent home comes apart and flies there, or falls into a
    * ditch and gathers there, a portal opened opens and starts giving off
    * particles, those of a portal closed or moved fade, and a refused portal
    * shot ripples, all only when motion is allowed; then the sounds play, and
@@ -671,6 +674,11 @@ export class Level {
       // A fizzler breaks up the portals it takes: both when the subject is caught in it, one facing it when it turns on
       if (Level.breaksUp(events)) {
         this.fizzle.start(before, after, events, time, joinsBreakUp)
+      }
+
+      // The field the subject is caught in flashes from its tile
+      if (events.includes(GameEvent.FIZZLED)) {
+        this.flashes.start(after, time)
       }
 
       // A box lying on a ditch that opened falls into it
@@ -773,9 +781,9 @@ export class Level {
       stateUpdated = this.update(delta, this.input, time)
     }
 
-    // So does anything that glows, gives off particles, breaks up, falls, changes, opens, ripples or turns,
+    // So does a field that is on, and anything that glows, gives off particles, breaks up, flashes, falls, changes, opens, ripples or turns,
     // paused or not, and the first frame after it stops, which draws it still
-    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.particles.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
+    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.flashes.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.particles.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
 
     if (stateUpdated || wasAnimating || ambient || this.ambientDrawn) {
       this.render(time)

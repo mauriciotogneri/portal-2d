@@ -1,34 +1,34 @@
 import {Direction, WAY_ANGLES} from '@/game/direction'
 import {lookOf, pitTile} from '@/game/element_detail'
 import type {BlockedShares} from '@/game/element_transitions'
-import {pieceNumber} from '@/game/piece_number'
 import {type BeamKind, type BeamOrientation, type CompiledChamber, NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import type {ElementKind} from '@/game/rules/element_registry'
 import type {RulesState} from '@/game/rules/rules_state'
 import {NOT_STORED} from '@/game/rules/state_layout'
 import {STRIP_TILE, type SpriteName, TILE_QUARTERS, type TileQuarter} from '@/game/sprite_set'
-import type {PiecePlacer, TilePainter} from '@/game/tile_painter'
+import type {TilePainter} from '@/game/tile_painter'
 
 // How each element type is drawn by the renderer, looked up by kind: the
 // rules can't touch the canvas, so drawing stays on the browser side. Each
 // element is drawn as its sprite for its state (docs/sprites.md), switched
-// off as well as on, except an open door or exit, a fizzler that is off, and
-// a laser's or a light barrier's beam that is off, which aren't drawn at
-// all; their end plates show where a beam ends, and a fizzler's connectors
-// where its field meets the wall, lit or not, and the open
+// off as well as on, except an open door or exit, and a laser's or a light
+// barrier's beam that is off, which aren't drawn at all; their end plates
+// show where a beam ends, and the open
 // exit's shadow is painted with the floor, or cut out of the backdrop when
 // the exit is see-through (exit_shadow). Walls, blocked
 // walls and open ditches join their neighbours, quarter by quarter (a blocked
 // wall a link reaches is drawn in the backdrop as a wall, its blocked surface
-// painted over it while it is blocked), and doors, the exit and
-// fizzlers are turned to the walls beside them; an arrow's chevron turning
+// painted over it while it is blocked), and doors and the exit are turned
+// to the walls beside them; an arrow's chevron turning
 // (an arrow a link turns is drawn every frame over the backdrop, by its own
 // drawing), a blocked wall's steel
 // sliding apart into the wall beside it or shut, a ditch's grate sliding in
-// or out, a door or the exit sliding open or shut, a fizzler crumbling away
-// or forming, or a laser or a light barrier fading out or in, is drawn part
-// way. Beside them, what moves with time alone: the lasers' glow, pulsing
-// with the portals'
+// or out, a door or the exit sliding open or shut, or a laser or a light
+// barrier fading out or in, is drawn part way. A fizzler's field is drawn in
+// code, with the frame's time, by FizzlerField (fizzler_field), the renderer
+// calling it on the fields' layer; its drawing here is its connectors, at
+// both ends of each run, lit as far as the field is on. Beside them, what
+// moves with time alone: the lasers' glow, pulsing with the portals'
 
 /**
  * Whether a box resting at its start is drawn taking shape there, on its way
@@ -109,15 +109,6 @@ const GLOW_PERIOD_MILLISECONDS = 3600
 
 /** The glows' faintest strength in a pulse, the brightest being 1 */
 const GLOW_FAINTEST = 0.6
-
-/** Pieces across a fizzler's tile as its field crumbles away or forms */
-const FIELD_PIECES_ACROSS = 7
-
-/** The latest a piece of a crumbling field starts to shrink, as a share of the whole change, so the field crumbles away bit by bit */
-const LATEST_CRUMBLE_START = 0.55
-
-/** How far a piece of a crumbling field has shrunk, as a share of its own change, when it has become a full circle: it starts square, so the whole field joins without a seam */
-const CRUMBLE_ROUNDED_BY = 0.15
 
 /** The ways a blocked wall's steel slides apart in a run of walls running left to right: its halves go left and right */
 const LEVEL_SHUTTER: readonly Direction[] = [
@@ -257,7 +248,7 @@ function drawPitTile(painter: TilePainter, chamber: CompiledChamber, joins: Join
 }
 
 /**
- * Which way a door, the exit or a fizzler is turned: its sprite is drawn
+ * Which way a door or the exit is turned: its sprite is drawn
  * with the walls on its left and right, and given a quarter turn when it
  * spans its gap from top to bottom (the rules' gapSpan()).
  * @param chamber - The chamber
@@ -267,34 +258,6 @@ function drawPitTile(painter: TilePainter, chamber: CompiledChamber, joins: Join
  */
 function gapTurn(chamber: CompiledChamber, x: number, y: number): Direction {
   return (chamber.gapSpan(x, y) === 'V') ? Direction.RIGHT : Direction.UP
-}
-
-/**
- * Places the pieces of a fizzler's field part way through crumbling away or
- * forming: each piece rounds off into a circle as it starts, then shrinks
- * away to nothing where it is, fading, in its own time, and comes back the
- * same way in reverse.
- * @param share - How much of the field is left, from 0 (gone) to 1 (whole)
- * @param seed - The fizzler's number, so its pieces keep their own times whichever way it changes
- * @returns Where each piece is drawn, or null for one gone
- */
-function crumblePlacer(share: number, seed: number): PiecePlacer {
-  return (_, __, index) => {
-    const start = LATEST_CRUMBLE_START * pieceNumber(seed, index, 0)
-    const own = Math.min(Math.max(((1 - share) - start) / (1 - start), 0), 1)
-
-    if (own >= 1) {
-      return null
-    }
-
-    return {
-      dx: 0,
-      dy: 0,
-      scale: 1 - own,
-      alpha: 1 - (own * own),
-      roundness: Math.min(own / CRUMBLE_ROUNDED_BY, 1),
-    }
-  }
 }
 
 /**
@@ -327,10 +290,10 @@ function slidingDrawing(kind: SlidingKind, closedSprite: SpriteName): ElementDra
 }
 
 /**
- * Draws the fizzlers that are on, each turned to the walls beside it; one
- * that is off isn't drawn. One crumbling away or forming is drawn part way,
- * in round pieces of its sprite. Then, over every field, the connectors at
- * both ends of each run, on or off.
+ * Draws the fizzlers' connectors at both ends of each run, on or off, lit as
+ * far as the field is on. The fields themselves, drawn in code with the
+ * frame's time, go down first on the same layer (FizzlerField), so a field
+ * never covers a connector.
  * @param painter - Paints on the canvas
  * @param state - The state drawn
  * @param shares - How far on the fizzlers that are changing are drawn, or null (the default) to draw every one as the state says
@@ -338,19 +301,6 @@ function slidingDrawing(kind: SlidingKind, closedSprite: SpriteName): ElementDra
 function drawFizzlers(painter: TilePainter, state: RulesState, shares: BlockedShares | null = null): void {
   const chamber = state.chamber
 
-  for (let i = 0; i < chamber.countOf('fizzler'); i++) {
-    const position = chamber.positionOf('fizzler', i)
-    const turn = gapTurn(chamber, position.x, position.y)
-    const share = (shares === null) ? null : shares('fizzler', i)
-
-    if (share !== null) {
-      painter.drawSpritePieces('fizzler_on', position.x + 0.5, position.y + 0.5, 1, turn, FIELD_PIECES_ACROSS, crumblePlacer(share, i))
-    } else if (state.isBlocked('fizzler', i)) {
-      painter.drawSprite('fizzler_on', position.x, position.y, turn)
-    }
-  }
-
-  // The connectors go over every field, so a neighbouring field never covers one
   for (let i = 0; i < chamber.countOf('fizzler'); i++) {
     const position = chamber.positionOf('fizzler', i)
     const share = (shares === null) ? null : shares('fizzler', i)

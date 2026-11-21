@@ -7,6 +7,8 @@ import {drawLaserGlows, drawTurnableArrows, ELEMENT_DRAWINGS, glowStrength, type
 import type {BlockedShares, ElementTransitions} from '@/game/element_transitions'
 import {drawExitShadow} from '@/game/exit_shadow'
 import type {FizzleParticles} from '@/game/fizzle_particles'
+import {FizzlerField} from '@/game/fizzler_field'
+import type {FizzlerFlashes} from '@/game/fizzler_flashes'
 import type {MissRipple} from '@/game/miss_ripple'
 import {PALETTE} from '@/game/palette'
 import {drawRayGlows, drawRays, paintRayGlows, rayRuns} from '@/game/ray_drawing'
@@ -249,13 +251,19 @@ function composeBackdrop(layer: TilePainter, floor: TilePainter, cover: TilePain
 
 /**
  * Whether anything in a state moves with time alone, so it is drawn every
- * frame while motion is allowed: a laser that is on or an open portal glows
- * when its glow has a file.
+ * frame while motion is allowed: a fizzler's field that is on stirs, and a
+ * laser that is on or an open portal glows when its glow has a file.
  * @param state - The state drawn
- * @returns True when something glows
+ * @returns True when something stirs or glows
  */
 export function hasAmbientLife(state: RulesState): boolean {
   const chamber = state.chamber
+
+  for (let i = 0; i < chamber.countOf('fizzler'); i++) {
+    if (state.isBlocked('fizzler', i)) {
+      return true
+    }
+  }
 
   if (spriteOf('laser_glow') !== null) {
     for (let i = 0; i < chamber.countOf('laser'); i++) {
@@ -282,11 +290,12 @@ export function hasAmbientLife(state: RulesState): boolean {
  * subject's pose; the rest is drawn as the state after the step, but for the
  * blocked walls' steel still sliding apart or shut, the ditches' grates still
  * sliding in or out, the doors and the exit still sliding open or shut, the
- * fizzlers still crumbling away or forming and the lasers and light barriers
+ * fizzlers' fields and the lasers and light barriers
  * still fading out or in, drawn part way, and a portal opening drawn part way open. Last, over everything, the lasers' and portals' glows are added
  * to what lies beneath, pulsing, an opening portal's rising with it, the open portals' particles rise, what a fizzle took breaks up and a missed
  * shot ripples where it stopped; at no time given, nothing changes over
- * time, the glows hold steady, no particles rise and nothing breaks up or ripples. While the
+ * time, the glows hold steady, the fizzlers' fields hold still, no particles rise and nothing breaks up,
+ * flashes or ripples. While the
  * chamber is completed, the subject, on the exit or walking out past it, is
  * drawn under the open exit's shadow. With a see-through exit, the exit's
  * tile fades the canvas itself out towards the chamber's edge instead of
@@ -299,6 +308,7 @@ export class Renderer {
   private backdrop: Backdrop | null = null // The backdrop last drawn, kept while the chamber and tile size stay the same
   private rayGlow: RayGlow | null = null // The rays' glow last painted, kept while the rays and the tile size stay the same
   private subjectLayer: SubjectLayer | null = null // The layer the subject was last drawn on while the chamber was completed, kept while the chamber and tile size stay the same
+  private readonly fields = new FizzlerField() // Draws the fizzlers' fields, keeping what they are drawn from
 
   /**
    * Takes over a canvas, collapsing it to 0 × 0 until setSize() is called.
@@ -618,8 +628,9 @@ export class Renderer {
    * turns, every layer above it,
    * with the boxes falling into ditches over the ditches, the rays over the
    * buttons and switches and under the boxes, each box on its way home
-   * taking shape at its start with the boxes, and a portal
-   * opening part way open, then the glows, the portals' particles, the pieces of what a fizzle took,
+   * taking shape at its start with the boxes, a portal
+   * opening part way open, and the fizzlers' fields, stirring, under their
+   * connectors and over the subject, then the glows, the portals' particles, the pieces of what a fizzle took,
    * the pieces of the boxes flying home and a missed shot's ripple. Part way along a slide, everything but the
    * subject's pose is drawn as the state on the last tile it has reached
    * (shownState), and the state after the step once the slide ends. The
@@ -638,8 +649,9 @@ export class Renderer {
    * @param turn - The subject's turn, followed every frame drawn with a time, or null (the default) to draw it squarely the way it faces
    * @param returns - The boxes on their way home, or null (the default) when none can be
    * @param particles - The particles rising from the portals, or null (the default) when none can
+   * @param flashes - Where the subject was caught in a fizzler's field lately, flashing, or null (the default) when none can
    */
-  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null): void {
+  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null, flashes: FizzlerFlashes | null = null): void {
     // A canvas not yet sized for a chamber has nothing to draw
     if (this.painter.blockSize <= 0) {
       return
@@ -661,6 +673,11 @@ export class Renderer {
     drawTurnableArrows(this.painter, shown, shares)
 
     for (const layer of DRAW_LAYERS) {
+      // The fizzlers' fields, drawn in code with the frame's time, under their connectors, which the layer's drawing adds
+      if (layer === 'fields') {
+        this.fields.draw(this.painter, shown, shares, time, flashes)
+      }
+
       // While the chamber is completed the subject is on the exit or walks out past it, under the exit's shadow; read from
       // the state after the step, not the state shown, so a slide onto the exit darkens as it enters the exit's tile
       if ((layer === 'subject') && state.completed) {
