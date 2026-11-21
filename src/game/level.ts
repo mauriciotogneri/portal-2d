@@ -116,6 +116,8 @@ export class Level {
     [GameEvent.LASER_SWITCHED_ON]: Sound.LASER_ON,
     [GameEvent.FIZZLER_SWITCHED_OFF]: Sound.FIZZLER_OFF,
     [GameEvent.FIZZLER_SWITCHED_ON]: Sound.FIZZLER_ON,
+    [GameEvent.EMITTER_SWITCHED_OFF]: Sound.EMITTER_OFF,
+    [GameEvent.EMITTER_SWITCHED_ON]: Sound.EMITTER_ON,
     [GameEvent.RECEIVER_LIT]: Sound.RECEIVER_ON,
     [GameEvent.RECEIVER_UNLIT]: Sound.RECEIVER_OFF,
   }

@@ -8,6 +8,8 @@ import crossUrl from '@/assets/audio/sound/cross.mp3'
 import ditchGrateUrl from '@/assets/audio/sound/ditch_grate.mp3'
 import doorCloseUrl from '@/assets/audio/sound/door_close.mp3'
 import doorOpenUrl from '@/assets/audio/sound/door_open.mp3'
+import emitterOffUrl from '@/assets/audio/sound/emitter_off.mp3'
+import emitterOnUrl from '@/assets/audio/sound/emitter_on.mp3'
 import errorUrl from '@/assets/audio/sound/error.mp3'
 import exitReachedUrl from '@/assets/audio/sound/exit_reached.mp3'
 import fizzleUrl from '@/assets/audio/sound/fizzle.mp3'
@@ -62,6 +64,8 @@ export class Sound {
   static readonly SLIDING_FLOOR = new Sound(slidingFloorUrl, 0.12) // The subject started sliding on a slide floor, once per slide
   static readonly RECEIVER_ON = new Sound(receiverOnUrl, 0.14) // A ray reached a receiver, which lit up
   static readonly RECEIVER_OFF = new Sound(receiverOffUrl, 0.54) // A receiver no ray reaches any more went dark
+  static readonly EMITTER_ON = new Sound(emitterOnUrl, 0.71) // An emitter switched on by a link
+  static readonly EMITTER_OFF = new Sound(emitterOffUrl, 0.25) // An emitter switched off by a link
   static readonly MENU_MOVE = new Sound(menuMoveUrl, 0.17) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu; played by the screens, not the game
   static readonly MENU_ACCEPT = new Sound(menuAcceptUrl, 0.15) // A menu row or dialog button pressed (Enter, Space or a click), a setting changed or a key bound; played by the screens, not the game
   static readonly START = new Sound(startUrl, 0.31) // Chamber picked on the home screen; played by the screens, not the game

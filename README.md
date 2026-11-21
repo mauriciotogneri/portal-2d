@@ -9,7 +9,6 @@
 
 ## Sounds
 
-- An emitter switching on or off
 - A ray bouncing off a mirror box
 
 ## YouTube
