@@ -2,12 +2,7 @@
 
 ## TODO
 
-- Analytics
-- Pause settions to control the volume of music and sound
 - Sync all audio volume
-- show hints for tutorial
-  - how to shot portals
-  - show a hint when standing on a button
 
 ## YouTube
 
