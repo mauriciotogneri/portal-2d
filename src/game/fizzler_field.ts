@@ -5,7 +5,7 @@ import {PALETTE, withAlpha} from '@/game/palette'
 import {pieceNumber} from '@/game/piece_number'
 import {type BeamOrientation, type CompiledChamber, NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import type {RulesState} from '@/game/rules/rules_state'
-import {type DrawingCanvas, makeCanvas} from '@/game/sprite_scaling'
+import {makeCanvas} from '@/game/sprite_scaling'
 import {smoothStep} from '@/game/surface_noise'
 import type {TilePainter} from '@/game/tile_painter'
 
@@ -27,10 +27,22 @@ type FieldImages = {
   readonly wisps: HTMLCanvasElement // The wisps: thin winding filaments, on a tile that repeats seamlessly
 }
 
-/** A scratch canvas a tile of field is drawn on, then laid on the chamber, with the wisps' patterns made for it */
-type Scratch = {
-  readonly drawing: DrawingCanvas // The canvas, a tile's size
-  readonly wisps: CanvasPattern[] // One pattern of the wisps per layer of them
+/** Each fizzler's place in its run, worked out for one chamber */
+type KeptPlaces = {
+  readonly chamber: CompiledChamber // The chamber
+  readonly places: readonly RunPlace[] // Each fizzler's place, by its number
+}
+
+/** The wisps' patterns, made for the context they are drawn on */
+type WispPatterns = {
+  readonly context: CanvasRenderingContext2D // The context they were made for
+  readonly patterns: readonly CanvasPattern[] // One per layer of wisps
+}
+
+/** A flash running in a run of fizzlers */
+type RunFlash = {
+  readonly along: number // Where along the run it spreads from: the middle of the tile the subject was caught on, in tiles from the run's first connector
+  readonly progress: number // How far through it is, from 0 to 1
 }
 
 /** How opaque the field's blue is over what lies beneath */
@@ -331,17 +343,17 @@ function runPlaces(chamber: CompiledChamber): RunPlace[] {
  * through it, light pooling along each connector in unsteady tongues, and
  * short bright dashes drifting along it. Fizzlers side by side across one
  * gap make one field. A field switching off or on fades out or in, as far
- * as its transition says; where the subject is caught in a field, a ring
- * of light spreads through it from the subject's tile. With no time given,
- * a field holds still at one moment and nothing flashes. Each tile is drawn
- * on a scratch canvas, in the field's own frame, then laid on the chamber,
- * so a field fades as a whole.
+ * as its transition says, every part of it as faint as the rest; where the
+ * subject is caught in a field, a ring of light spreads through it from the
+ * subject's tile. With no time given, a field holds still at one moment and
+ * nothing flashes. Each tile is drawn straight onto the canvas, clipped to
+ * the tile, in the field's own frame: one unit a tile, along its run from
+ * the first connector, and across it, the way through.
  */
 export class FizzlerField {
   private images: FieldImages | null = null // What the field is drawn from, made the first time a field is drawn
-  private scratch: Scratch | null = null // The scratch canvas, made again when the tiles change size
-  private places: {chamber: CompiledChamber,
-    places: RunPlace[]} | null = null // Each fizzler's place in its run, for the chamber last drawn
+  private wisps: WispPatterns | null = null // The wisps' patterns, made again for another context
+  private places: KeptPlaces | null = null // Each fizzler's place in its run, for the chamber last drawn
 
   /**
    * Draws every field that is on, or fading out or in.
@@ -354,9 +366,8 @@ export class FizzlerField {
   draw(painter: TilePainter, state: RulesState, shares: BlockedShares | null, time: number | null, flashes: FizzlerFlashes | null): void {
     const chamber = state.chamber
     const count = chamber.countOf('fizzler')
-    const tileSize = painter.blockSize
 
-    if ((count === 0) || (tileSize <= 0)) {
+    if (count === 0) {
       return
     }
 
@@ -366,7 +377,7 @@ export class FizzlerField {
 
     for (let i = 0; i < count; i++) {
       const share = (shares === null) ? null : shares('fizzler', i)
-      const strength = (share !== null) ? share : (state.isBlocked('fizzler', i) ? 1 : 0)
+      const strength = Math.min((share !== null) ? share : (state.isBlocked('fizzler', i) ? 1 : 0), 1)
       const place = places[i]
 
       if ((strength <= 0) || (place === undefined)) {
@@ -374,82 +385,45 @@ export class FizzlerField {
       }
 
       const position = chamber.positionOf('fizzler', i)
-      const scratch = this.paintTile(tileSize, place, seconds, this.flashesIn(chamber, places, place, running))
+      const runFlashes = FizzlerField.flashesIn(chamber, places, place, running)
 
-      painter.drawInFrame(position.x, position.y + 1, Direction.UP, (ctx) => {
-        ctx.globalAlpha = Math.min(strength, 1)
-        ctx.drawImage(scratch, 0, 0)
+      painter.drawInFrame(position.x, position.y + 1, Direction.UP, (ctx, tileSize) => {
+        this.drawTile(ctx, tileSize, place, seconds, runFlashes, strength)
       })
     }
   }
 
   /**
-   * Paints one tile of a field on the scratch canvas, in the field's own
-   * frame: one unit a tile, along its run from the first connector and
-   * across it, the way through.
+   * Draws one tile of a field, clipped to it, in the field's own frame.
+   * @param ctx - The canvas's context, framed on the tile's top left corner
    * @param tileSize - Side of a tile, in canvas pixels
    * @param place - The tile's place in its run
    * @param seconds - The moment drawn, in seconds
-   * @param flashes - The flashes running in its run, each where along the run it is
-   * @returns The scratch canvas, holding the tile
+   * @param flashes - The flashes running in its run
+   * @param fade - How far on the field is drawn, from 0 (gone) to 1 (on)
    */
-  private paintTile(tileSize: number, place: RunPlace, seconds: number, flashes: {along: number,
-    progress: number}[]): HTMLCanvasElement {
+  private drawTile(ctx: CanvasRenderingContext2D, tileSize: number, place: RunPlace, seconds: number, flashes: readonly RunFlash[], fade: number): void {
     const images = this.imagesOf()
-    const scratch = this.scratchOf(tileSize, images)
-    const ctx = scratch.drawing.context
-    const pixel = 1 / tileSize
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0)
-    ctx.globalAlpha = 1
-    ctx.clearRect(0, 0, tileSize, tileSize)
+    ctx.beginPath()
+    ctx.rect(0, 0, tileSize, tileSize)
+    ctx.clip()
 
     // Along the run to the right, or down the screen for a field spanning top to bottom
     if (place.span === 'H') {
-      ctx.setTransform(tileSize, 0, 0, tileSize, -place.start * tileSize, 0)
+      ctx.transform(tileSize, 0, 0, tileSize, -place.start * tileSize, 0)
     } else {
-      ctx.setTransform(0, tileSize, tileSize, 0, 0, -place.start * tileSize)
+      ctx.transform(0, tileSize, tileSize, 0, 0, -place.start * tileSize)
     }
 
+    ctx.globalAlpha = fade
     ctx.fillStyle = withAlpha(PALETTE.fizzlerField, FIELD_OPACITY)
     ctx.fillRect(place.start, 0, 1, 1)
-    FizzlerField.drawWisps(ctx, place, seconds, scratch.wisps)
-    FizzlerField.drawGlow(ctx, place)
-    FizzlerField.drawTongues(ctx, place, seconds, images.tongue)
-    FizzlerField.drawDashes(ctx, place, seconds, images.dash, pixel)
-    FizzlerField.drawFlashes(ctx, place, flashes, pixel)
-    ctx.setTransform(1, 0, 0, 1, 0, 0)
-    ctx.globalAlpha = 1
-
-    return scratch.drawing.canvas
-  }
-
-  /**
-   * The flashes running in a run: each where along the run the fizzler the
-   * subject was caught in lies.
-   * @param chamber - The chamber
-   * @param places - Each fizzler's place in its run
-   * @param place - A place in the run
-   * @param running - Every flash running
-   * @returns The run's flashes
-   */
-  private flashesIn(chamber: CompiledChamber, places: readonly RunPlace[], place: RunPlace, running: readonly RunningFlash[]): {along: number,
-    progress: number}[] {
-    const found: {along: number,
-      progress: number}[] = []
-
-    for (const flash of running) {
-      const caught = places[chamber.elementAt('fizzler', flash.x, flash.y)]
-
-      if ((caught !== undefined) && (caught.seed === place.seed) && (caught.span === place.span)) {
-        found.push({
-          along: caught.start + 0.5,
-          progress: flash.progress,
-        })
-      }
-    }
-
-    return found
+    FizzlerField.drawWisps(ctx, place, seconds, this.wispsFor(ctx, images), fade)
+    FizzlerField.drawGlow(ctx, place, fade)
+    FizzlerField.drawTongues(ctx, place, seconds, images.tongue, fade)
+    FizzlerField.drawDashes(ctx, place, seconds, images.dash, 1 / tileSize, fade)
+    FizzlerField.drawFlashes(ctx, place, flashes, 1 / tileSize, fade)
   }
 
   /**
@@ -467,24 +441,21 @@ export class FizzlerField {
   }
 
   /**
-   * The scratch canvas for a tile size, made again when the size changes,
-   * with a pattern of the wisps for each layer.
-   * @param tileSize - Side of a tile, in canvas pixels
+   * The wisps' patterns for a context, one per layer, made again for
+   * another context.
+   * @param ctx - The context drawn on
    * @param images - What the field is drawn from
-   * @returns The scratch canvas
+   * @returns The patterns
    */
-  private scratchOf(tileSize: number, images: FieldImages): Scratch {
-    if ((this.scratch === null) || (this.scratch.drawing.canvas.width !== tileSize)) {
-      const drawing = makeCanvas(tileSize, tileSize)
-      const wisps = WISP_LAYERS.map(() => drawing.context.createPattern(images.wisps, 'repeat')).filter((pattern): pattern is CanvasPattern => pattern !== null)
-
-      this.scratch = {
-        drawing: drawing,
-        wisps: wisps,
+  private wispsFor(ctx: CanvasRenderingContext2D, images: FieldImages): readonly CanvasPattern[] {
+    if ((this.wisps === null) || (this.wisps.context !== ctx)) {
+      this.wisps = {
+        context: ctx,
+        patterns: WISP_LAYERS.map(() => ctx.createPattern(images.wisps, 'repeat')).filter((pattern): pattern is CanvasPattern => pattern !== null),
       }
     }
 
-    return this.scratch
+    return this.wisps.patterns
   }
 
   /**
@@ -492,7 +463,7 @@ export class FizzlerField {
    * @param chamber - The chamber drawn
    * @returns The places, by fizzler number
    */
-  private placesOf(chamber: CompiledChamber): RunPlace[] {
+  private placesOf(chamber: CompiledChamber): readonly RunPlace[] {
     if ((this.places === null) || (this.places.chamber !== chamber)) {
       this.places = {
         chamber: chamber,
@@ -504,14 +475,41 @@ export class FizzlerField {
   }
 
   /**
+   * The flashes running in a run: each where along the run the fizzler the
+   * subject was caught in lies.
+   * @param chamber - The chamber
+   * @param places - Each fizzler's place in its run
+   * @param place - A place in the run
+   * @param running - Every flash running
+   * @returns The run's flashes
+   */
+  private static flashesIn(chamber: CompiledChamber, places: readonly RunPlace[], place: RunPlace, running: readonly RunningFlash[]): RunFlash[] {
+    const found: RunFlash[] = []
+
+    for (const flash of running) {
+      const caught = places[chamber.elementAt('fizzler', flash.x, flash.y)]
+
+      if ((caught !== undefined) && (caught.seed === place.seed) && (caught.span === place.span)) {
+        found.push({
+          along: caught.start + 0.5,
+          progress: flash.progress,
+        })
+      }
+    }
+
+    return found
+  }
+
+  /**
    * Draws the wisps over the tile: each layer's pattern, drifting along and
    * across the field and breathing.
-   * @param ctx - The scratch canvas's context, in the field's frame
+   * @param ctx - The canvas's context, in the field's frame
    * @param place - The tile's place in its run
    * @param seconds - The moment drawn, in seconds
    * @param patterns - Each layer's pattern
+   * @param fade - How far on the field is drawn, from 0 to 1
    */
-  private static drawWisps(ctx: CanvasRenderingContext2D, place: RunPlace, seconds: number, patterns: readonly CanvasPattern[]): void {
+  private static drawWisps(ctx: CanvasRenderingContext2D, place: RunPlace, seconds: number, patterns: readonly CanvasPattern[], fade: number): void {
     WISP_LAYERS.forEach((layer, k) => {
       const pattern = patterns[k]
 
@@ -524,7 +522,7 @@ export class FizzlerField {
       const across = (layer.across * seconds) + (layer.shift * 0.61)
 
       pattern.setTransform(new DOMMatrix().translateSelf(along, across).scaleSelf(layer.span / WISP_IMAGE_SIDE))
-      ctx.globalAlpha = Math.min(1, WISP_STRENGTH * layer.strength * breath)
+      ctx.globalAlpha = Math.min(1, WISP_STRENGTH * layer.strength * breath) * fade
       ctx.fillStyle = pattern
       ctx.fillRect(place.start, 0, 1, 1)
     })
@@ -533,10 +531,11 @@ export class FizzlerField {
   /**
    * Draws the steady light along each connector of the run, fading into
    * the field, on the tiles it reaches.
-   * @param ctx - The scratch canvas's context, in the field's frame
+   * @param ctx - The canvas's context, in the field's frame
    * @param place - The tile's place in its run
+   * @param fade - How far on the field is drawn, from 0 to 1
    */
-  private static drawGlow(ctx: CanvasRenderingContext2D, place: RunPlace): void {
+  private static drawGlow(ctx: CanvasRenderingContext2D, place: RunPlace, fade: number): void {
     const ends = [
       [
         0,
@@ -561,7 +560,7 @@ export class FizzlerField {
       fill.addColorStop(0, withAlpha(PALETTE.fizzlerCore, 0.95 * GLOW_STRENGTH))
       fill.addColorStop(0.3, withAlpha(PALETTE.fizzlerLight, 0.5 * GLOW_STRENGTH))
       fill.addColorStop(1, withAlpha(PALETTE.fizzlerLight, 0))
-      ctx.globalAlpha = 1
+      ctx.globalAlpha = fade
       ctx.fillStyle = fill
       ctx.fillRect(Math.min(from, to), 0, Math.abs(to - from), 1)
     }
@@ -571,12 +570,13 @@ export class FizzlerField {
    * Draws the tongues of light reaching in from each connector, each its own
    * length, growing and shrinking slowly and a little unsteady, on the tiles
    * they reach.
-   * @param ctx - The scratch canvas's context, in the field's frame
+   * @param ctx - The canvas's context, in the field's frame
    * @param place - The tile's place in its run
    * @param seconds - The moment drawn, in seconds
    * @param image - A tongue's image
+   * @param fade - How far on the field is drawn, from 0 to 1
    */
-  private static drawTongues(ctx: CanvasRenderingContext2D, place: RunPlace, seconds: number, image: HTMLCanvasElement): void {
+  private static drawTongues(ctx: CanvasRenderingContext2D, place: RunPlace, seconds: number, image: HTMLCanvasElement, fade: number): void {
     const longest = GLOW_REACH * 2.6
 
     for (const end of [
@@ -606,7 +606,7 @@ export class FizzlerField {
           ctx.scale(-1, 1)
         }
 
-        ctx.globalAlpha = Math.min(1, alpha)
+        ctx.globalAlpha = Math.min(1, alpha) * fade
         ctx.drawImage(image, 0, -width / 2, length, width)
         ctx.restore()
       }
@@ -617,13 +617,14 @@ export class FizzlerField {
    * Draws the dashes on the tile: scattered along the whole run, each
    * drifting its own way and twinkling; one drifting out at one end comes
    * back in at the other, faded out near the ends so the jump never shows.
-   * @param ctx - The scratch canvas's context, in the field's frame
+   * @param ctx - The canvas's context, in the field's frame
    * @param place - The tile's place in its run
    * @param seconds - The moment drawn, in seconds
    * @param image - A dash's image
    * @param pixel - A canvas pixel, in tiles
+   * @param fade - How far on the field is drawn, from 0 to 1
    */
-  private static drawDashes(ctx: CanvasRenderingContext2D, place: RunPlace, seconds: number, image: HTMLCanvasElement, pixel: number): void {
+  private static drawDashes(ctx: CanvasRenderingContext2D, place: RunPlace, seconds: number, image: HTMLCanvasElement, pixel: number, fade: number): void {
     const total = Math.round(DASHES_PER_TILE * place.length)
     const thickness = Math.max(pixel * 3, DASH_THICKNESS)
 
@@ -644,7 +645,7 @@ export class FizzlerField {
       const alpha = Math.min(1, (0.75 + (0.45 * numberOf(8))) * twinkle * ends)
 
       if (alpha > 0) {
-        ctx.globalAlpha = alpha
+        ctx.globalAlpha = alpha * fade
         ctx.drawImage(image, along - (length / 2), across - (thickness / 2), length, thickness)
       }
     }
@@ -654,13 +655,13 @@ export class FizzlerField {
    * Draws the flashes running in the run on the tile: the field brightens,
    * and a ring spreads from the tile the subject was caught on, at a near
    * even pace, so it stays inside a single tile for most of its life.
-   * @param ctx - The scratch canvas's context, in the field's frame
+   * @param ctx - The canvas's context, in the field's frame
    * @param place - The tile's place in its run
-   * @param flashes - The run's flashes, each where along the run it is
+   * @param flashes - The run's flashes
    * @param pixel - A canvas pixel, in tiles
+   * @param fade - How far on the field is drawn, from 0 to 1
    */
-  private static drawFlashes(ctx: CanvasRenderingContext2D, place: RunPlace, flashes: readonly {along: number,
-    progress: number}[], pixel: number): void {
+  private static drawFlashes(ctx: CanvasRenderingContext2D, place: RunPlace, flashes: readonly RunFlash[], pixel: number, fade: number): void {
     for (const flash of flashes) {
       const progress = flash.progress
 
@@ -668,18 +669,18 @@ export class FizzlerField {
         continue
       }
 
-      const fade = (1 - progress) ** FLASH_FADE_POWER
+      const strength = FLASH_STRENGTH * ((1 - progress) ** FLASH_FADE_POWER)
       const radius = 0.06 + (0.75 * (progress ** 0.8))
 
-      ctx.globalAlpha = 1
-      ctx.fillStyle = withAlpha(PALETTE.fizzlerLight, FLASH_FILL * FLASH_STRENGTH * fade)
+      ctx.globalAlpha = fade
+      ctx.fillStyle = withAlpha(PALETTE.fizzlerLight, FLASH_FILL * strength)
       ctx.fillRect(place.start, 0, 1, 1)
       ctx.beginPath()
       ctx.arc(flash.along, 0.5, radius, 0, 2 * Math.PI)
-      ctx.strokeStyle = withAlpha(PALETTE.fizzlerCore, Math.min(1, 1.1 * FLASH_STRENGTH * fade))
+      ctx.strokeStyle = withAlpha(PALETTE.fizzlerCore, Math.min(1, 1.1 * strength))
       ctx.lineWidth = Math.max(pixel * 1.2, 0.1 * (1 - progress))
       ctx.stroke()
-      ctx.strokeStyle = withAlpha(PALETTE.fizzlerLight, 0.35 * FLASH_STRENGTH * fade)
+      ctx.strokeStyle = withAlpha(PALETTE.fizzlerLight, 0.35 * strength)
       ctx.lineWidth = Math.max(pixel * 2, 0.28 * (1 - progress))
       ctx.stroke()
     }

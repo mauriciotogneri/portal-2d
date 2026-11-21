@@ -95,3 +95,16 @@ The portals' particles (`docs/sprites.md`) are drawn every frame while a portal 
 | 3 | 3 | 1.3 ms | 1.7 ms |
 
 So the particles of two portals cost about 0.2 to 0.4 ms a frame, a few per cent of a 60 Hz frame. The browser window was behind another during the check, which held its frame loop to a few frames a second, so frame intervals weren't measured, only the drawing.
+
+## Fizzler field check (2026-11-21)
+
+The fizzlers' fields (`docs/sprites.md`) are drawn in code every frame while one is on, so a chamber with a fizzler on now draws every frame, as one with a laser on already did. Chrome 155 on the development machine, `npm run dev`: in the sprite gallery, which runs no frame loop, chambers 1 (three fields) and 3 (two) at their settled start drawn on one renderer at 50 and 99 px tiles (the chamber screen's size at pixel ratio 1, near enough, and at pixel ratio 2), each frame drawn with the fields and with their drawing switched off in the page alone, at times 16.7 ms apart, timed on the main thread with `performance.now()` (0.1 ms steps). Medians of 60 frames each, three runs:
+
+| # | Chamber | Canvas | Without fields | With fields |
+|---|---|---|---|---|
+| 1 | 1 (20 × 20) | 1000 × 1000 | 1.2, 1.0, 0.9 ms | 1.1, 1.0, 0.9 ms |
+| 2 | 1 (20 × 20) | 1980 × 1980 | 1.1, 1.1, 1.5 ms | 1.3, 1.3, 1.3 ms |
+| 3 | 3 (23 × 17) | 1150 × 850 | 1.1, 0.9, 0.9 ms | 0.9, 0.9, 0.8 ms |
+| 4 | 3 (23 × 17) | 2277 × 1683 | 1.4, 1.2, 1.1 ms | 1.2, 0.9, 1.3 ms |
+
+So the fields cost nothing this timing can tell apart from its noise. A first build drew each field tile on a scratch canvas and laid it on the chamber, so a field would fade as a whole: at 99 px that added 2.5 to 3.5 ms a frame, about 1 ms a tile, nearly all of it in handing each freshly drawn scratch canvas to the chamber's canvas, so each tile is now drawn straight onto the canvas, clipped to it, every part of a fading field faded alike. Frame intervals weren't measured, only the drawing.
