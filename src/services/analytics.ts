@@ -32,7 +32,7 @@ type EventName =
 /** An event's details, by parameter name. */
 type EventParams = Record<string, string | number>
 
-/** A setting the player can switch under Settings. */
+/** A volume the player can set under Settings. */
 export type TrackedSetting = 'sound' | 'music'
 
 /** How far a run got when it ended. */
@@ -191,14 +191,16 @@ export function trackChamberComplete(chamber: ChamberEntry, attempt: number, pro
 }
 
 /**
- * The player switched a setting.
- * @param setting - Which setting
- * @param enabled - Its new value
+ * The player changed a volume, once it settled.
+ * @param setting - Which volume
+ * @param volume - Its new value, from 0 (off) to 100
  */
-export function trackSettingChange(setting: TrackedSetting, enabled: boolean): void {
+export function trackSettingChange(setting: TrackedSetting, volume: number): void {
   sendEvent('setting_change', {
     setting: setting,
-    enabled: enabled ? 'on' : 'off',
+    // Kept from the on/off switches the volumes replaced, so the history carries on
+    enabled: volume > 0 ? 'on' : 'off',
+    volume: volume,
   })
 }
 

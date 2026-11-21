@@ -37,7 +37,7 @@ import turnableArrowUrl from '@/assets/audio/sound/turnable_arrow.mp3'
  * the beginning every time it plays, cutting itself off if still playing.
  */
 export class Sound {
-  static enabled = true // When false, play() does nothing
+  static masterVolume = 1 // The player's sound effects volume, from 0 (off: play() does nothing) to 1, multiplying every effect's own volume
 
   static readonly PORTAL_BLUE = new Sound(portalBlueUrl, 0.27) // Blue portal opened
   static readonly PORTAL_ORANGE = new Sound(portalOrangeUrl, 0.24) // Orange portal opened
@@ -68,29 +68,32 @@ export class Sound {
   static readonly EMITTER_ON = new Sound(emitterOnUrl, 0.71) // An emitter switched on by a link
   static readonly EMITTER_OFF = new Sound(emitterOffUrl, 0.25) // An emitter switched off by a link
   static readonly MIRROR_BOX_RAY = new Sound(mirrorBoxRayUrl, 0.39) // A ray started bouncing off a mirror box, one put down in it included
-  static readonly MENU_MOVE = new Sound(menuMoveUrl, 0.17) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu; played by the screens, not the game
-  static readonly MENU_ACCEPT = new Sound(menuAcceptUrl, 0.15) // A menu row or dialog button pressed (Enter, Space or a click), a setting changed or a key bound; played by the screens, not the game
+  static readonly MENU_MOVE = new Sound(menuMoveUrl, 0.17) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu, or a volume stepped (Left, Right or the pointer); played by the screens, not the game
+  static readonly MENU_ACCEPT = new Sound(menuAcceptUrl, 0.15) // A menu row or dialog button pressed (Enter, Space or a click), never a volume row, or a key bound; played by the screens, not the game
   static readonly START = new Sound(startUrl, 0.31) // Chamber picked on the home screen; played by the screens, not the game
 
   private readonly audio: HTMLAudioElement // The element that plays this effect
+  private readonly volume: number // Playback volume from 0 to 1 at full master volume, set per effect so every effect sounds about equally loud, a little above the music
 
   /**
    * @param url - Address of the audio file
-   * @param volume - Playback volume from 0 to 1, set per effect so every effect sounds about equally loud, a little above the music
+   * @param volume - Playback volume from 0 to 1 at full master volume
    */
   constructor(url: string, volume: number) {
     this.audio = createAudioPlayer(url)
-    this.audio.volume = volume
+    this.volume = volume
   }
 
   /**
-   * Plays the effect from the start, unless sounds are disabled.
+   * Plays the effect from the start at its volume scaled by the master
+   * volume, unless the master volume is off.
    */
   play(): void {
-    if (!Sound.enabled) {
+    if (Sound.masterVolume === 0) {
       return
     }
 
+    this.audio.volume = this.volume * Sound.masterVolume
     this.audio.pause()
     this.audio.currentTime = 0
     this.audio.play().catch(() => {

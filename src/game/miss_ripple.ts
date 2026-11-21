@@ -62,8 +62,11 @@ const RING_FADE_POWER = 1.4
 /** How far into a wall's tile the ripple sits, as a share of a tile: where a portal's oval would open */
 const WALL_INSET = 0.125
 
-/** How far into an element's tile: at its near edge, since a door, the exit and a fizzler fill their tile */
+/** How far into a door's or the exit's tile: at its near edge, since a door and the exit fill their tile */
 const ELEMENT_INSET = 0.06
+
+/** How far into a fizzler's tile: none, on its field's edge, since the field fills the tile right to it */
+const FIZZLER_INSET = 0
 
 /** How far into a light barrier's tile when its band runs across the shot: the band's near face (LightBarrierBand) */
 const BAND_INSET = 0.5 - BAND_HALF_WIDTH
@@ -79,9 +82,10 @@ const RIPPLE_COLORS: Readonly<Record<PortalColor, string>> = {
 
 /**
  * How far into the tile where a shot stopped its ripple sits, from the
- * tile's side the shot met: on a wall where a portal would open, on an
- * element at its near edge, or on a light barrier's band, and just inside
- * the doorway when the shot left the chamber.
+ * tile's side the shot met: on a wall where a portal would open, on a door
+ * or the exit at its near edge, on a fizzler's field at its edge, or on a
+ * light barrier's band, and just inside the doorway when the shot left the
+ * chamber.
  * @param state - The state the shot was taken in
  * @param x - Column where it stopped, which can be just outside the chamber
  * @param y - Row where it stopped
@@ -100,7 +104,12 @@ function insetOf(state: RulesState, x: number, y: number, way: Direction): numbe
     return WALL_INSET
   }
 
-  // A floor tile holds one element at most, so a light barrier there is what stopped the shot
+  // A floor tile holds one element at most, so a fizzler there is what stopped the shot
+  if (chamber.elementAt('fizzler', x, y) !== NO_ELEMENT) {
+    return FIZZLER_INSET
+  }
+
+  // Likewise a light barrier
   const lightBarrier = chamber.elementAt('lightBarrier', x, y)
   const band = (lightBarrier === NO_ELEMENT) ? undefined : chamber.entriesOf('lightBarrier')[lightBarrier]?.direction
   // A band running across the shot is met on its face; one running along it, at its end on the tile's edge

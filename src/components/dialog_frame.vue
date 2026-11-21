@@ -14,11 +14,13 @@ export interface DialogFrameProps {
   title: string
   layout?: 'stack' | 'row'
   tone?: 'neutral' | 'interaction' | 'caution' | 'success'
+  wide?: boolean // Whether the panel is wider, for rows that end in a control
 }
 
 const props = withDefaults(defineProps<DialogFrameProps>(), {
   layout: 'stack',
   tone: 'neutral',
+  wide: false,
 })
 
 const titleId = useId()
@@ -111,7 +113,12 @@ onMounted(() => {
     <section
       ref="panel"
       class="dialog-panel"
-      :class="`dialog-panel-${tone}`"
+      :class="[
+        `dialog-panel-${tone}`,
+        {
+          'dialog-panel-wide': wide,
+        },
+      ]"
       role="dialog"
       aria-modal="true"
       :aria-labelledby="titleId"
@@ -157,6 +164,11 @@ onMounted(() => {
   background: var(--color-panel);
   box-shadow: 0 1.5rem 3rem rgba(var(--color-ink-rgb), 0.35);
   animation: panel-in 180ms var(--ease-out) both;
+}
+
+/* Wide enough for a volume's name beside its ramp */
+.dialog-panel-wide {
+  max-width: 30rem;
 }
 
 /* Top band carries the dialog's meaning */

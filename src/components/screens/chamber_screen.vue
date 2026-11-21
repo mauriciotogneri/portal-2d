@@ -1,14 +1,15 @@
 <script setup lang="ts">
 /**
  * Chamber screen: plays one chamber on the game canvas, with the timer and the
- * controls legend beside it and the pause, confirmation and completion dialogs
- * on top. The game objects live outside Vue's reactivity; this screen only
+ * controls legend beside it and the pause, settings, confirmation and
+ * completion dialogs on top. The game objects live outside Vue's reactivity; this screen only
  * creates, pauses, reloads and disposes them, and reads the game's clock. In
  * development it also plays the playground, which saves and sends nothing.
  */
 import {computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, useTemplateRef} from 'vue'
 import {onBeforeRouteLeave, onBeforeRouteUpdate, useRouter} from 'vue-router'
 import type {RouteLocationNormalized} from 'vue-router'
+import AudioSettingsDialog from '@/components/audio_settings_dialog.vue'
 import ChamberLegend from '@/components/chamber_legend.vue'
 import ChamberSign from '@/components/chamber_sign.vue'
 import CompletionDialog from '@/components/completion_dialog.vue'
@@ -29,7 +30,7 @@ import {bestTime, isCompleted, markChamberCompleted, recordTime, startAttempt} f
 import {playMusic} from '@/services/settings'
 
 /** Which dialog is open over the chamber. */
-type ChamberDialog = 'none' | 'pause' | 'confirm-reset' | 'confirm-exit' | 'completed'
+type ChamberDialog = 'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed'
 
 /** How a finished run went, for the completion dialog. */
 type CompletedRun = {
@@ -355,8 +356,8 @@ function handlePageHide(): void {
 }
 
 /**
- * Escape opens the pause dialog, closes it again, and steps back out of a
- * confirmation, each with a click.
+ * Escape opens the pause dialog, closes it again, and steps back out of the
+ * settings or a confirmation, each with a click.
  * @param event - Keyboard event
  */
 function handleKeydown(event: KeyboardEvent): void {
@@ -372,6 +373,7 @@ function handleKeydown(event: KeyboardEvent): void {
       resume()
       Sound.MENU_MOVE.play()
       break
+    case 'settings':
     case 'confirm-reset':
       dialog.value = 'pause'
       Sound.MENU_MOVE.play()
@@ -509,9 +511,11 @@ onBeforeUnmount(() => {
     <PauseDialog
       v-if="dialog === 'pause'"
       @continue="resume"
+      @settings="dialog = 'settings'"
       @reset="dialog = 'confirm-reset'"
       @exit="dialog = 'confirm-exit'"
     />
+    <AudioSettingsDialog v-else-if="dialog === 'settings'" @close="dialog = 'pause'" />
     <ConfirmDialog
       v-else-if="dialog === 'confirm-reset'"
       title="Restart chamber?"

@@ -6,8 +6,10 @@ import {createAudioPlayer} from '@/game/audio_sources'
  * Background music, looping quietly under the sound effects.
  */
 export class Music {
+  static masterVolume = 1 // The player's music volume, from 0 (off) to 1, multiplying every track's own volume
+
   private readonly audio: HTMLAudioElement // The element that plays the track
-  private readonly volume: number // Playback volume from 0 to 1, set per track so every track sounds equally loud
+  private readonly volume: number // Playback volume from 0 to 1 at full master volume, set per track so every track sounds equally loud
 
   /**
    * @param url - Address of the audio file
@@ -19,12 +21,13 @@ export class Music {
   }
 
   /**
-   * Starts or resumes the track on a loop at its volume.
+   * Starts or resumes the track on a loop at its volume scaled by the master
+   * volume; on a track already playing, applies a change of the master volume.
    * @returns Whether the track started; false while the browser refuses to play until the user has interacted with the page
    */
   async play(): Promise<boolean> {
     this.audio.loop = true
-    this.audio.volume = this.volume
+    this.audio.volume = this.volume * Music.masterVolume
     try {
       await this.audio.play()
       return true

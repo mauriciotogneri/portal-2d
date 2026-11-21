@@ -15,7 +15,9 @@
  * or from Controls into its layouts. Up and Down move the highlight (or scroll
  * the changelog) in the column that has the keyboard, Left, Escape and
  * Backspace step back a column, closing the section from the second. Every
- * move of the highlight clicks. Picking a layout puts it in use; picking
+ * move of the highlight clicks. Settings starts with the sound effects and
+ * music volumes, where Left and Right turn the volume down or up instead,
+ * down to Off. Picking a layout puts it in use; picking
  * Custom also opens its dialog, where each key is set. Settings ends with
  * Reset progress, which asks first in a dialog. While either dialog is open the menu ignores
  * the keyboard and Escape closes it, with a click. In development the first
@@ -24,7 +26,6 @@
  * trying every element.
  */
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useTemplateRef} from 'vue'
-import type {Ref} from 'vue'
 import {useRouter} from 'vue-router'
 import ChamberMap from '@/components/chamber_map.vue'
 import ChamberRow from '@/components/chamber_row.vue'
@@ -34,14 +35,14 @@ import CustomControlsDialog from '@/components/custom_controls_dialog.vue'
 import LayoutRow from '@/components/layout_row.vue'
 import LinkRow from '@/components/link_row.vue'
 import PortalLogo from '@/components/portal_logo.vue'
-import SettingsSwitch from '@/components/settings_switch.vue'
+import VolumeRow from '@/components/volume_row.vue'
 import {Sound} from '@/game/sound'
 import {trackChangelogOpen, trackFeedbackOpen, trackLinkOpen, trackProgressReset} from '@/services/analytics'
 import {CHAMBERS} from '@/services/chamber_catalogue'
 import {chooseControlLayout, ControlLayout, controlLayout} from '@/services/key_bindings'
 import {lastChamber, playgroundOpenedLast} from '@/services/last_chamber'
 import {bestTime, hasStartedAnyChamber, isCompleted, resetProgress} from '@/services/progress'
-import {musicEnabled, playMusic, soundEnabled} from '@/services/settings'
+import {AUDIO_VOLUMES, playMusic, setVolume, VOLUME_STEP} from '@/services/settings'
 
 /** A row listed in the first column: a section, or in development the playground, which opens none. */
 type MenuSection = 'play' | 'settings' | 'about' | 'playground'
@@ -53,12 +54,6 @@ type MenuColumn = 'sections' | 'items' | 'details'
 type SectionEntry = {
   section: MenuSection // Which section the row opens
   label: string // Name on the row
-}
-
-/** An on/off setting listed under Settings. */
-type SettingEntry = {
-  label: string // Name on the row
-  enabled: Ref<boolean> // The preference the row switches
 }
 
 /** A layout of controls listed in the Controls column. */
@@ -173,18 +168,9 @@ const ABOUT_DETAIL_END = Math.max(...ABOUT.map((entry, index) => index + (entry.
 
 const CHANGELOG_SCROLL_PIXELS = 48 // How far Up or Down scrolls the changelog
 
-const settings: SettingEntry[] = [
-  {
-    label: 'Sound effects',
-    enabled: soundEnabled,
-  },
-  {
-    label: 'Music',
-    enabled: musicEnabled,
-  },
-]
+const settings = AUDIO_VOLUMES // The volumes, first under Settings
 
-const CONTROLS_INDEX = settings.length // The Controls row comes after the switches
+const CONTROLS_INDEX = settings.length // The Controls row comes after the volumes
 const RESET_PROGRESS_INDEX = settings.length + 1 // Reset progress comes last
 
 // The rows of the Controls column
@@ -796,10 +782,10 @@ function confirmResetProgress(): void {
 /**
  * Enter opens the highlighted section from the first column (or starts the
  * tutorial from Play on a first visit). In the second
- * and third columns the focused row handles it (starting the chamber, flipping
- * the setting, asking to reset progress, stepping into About's third column or
- * opening a page); if the keyboard has left the rows, the highlighted row is
- * pressed instead.
+ * and third columns the focused row handles it (starting the chamber, asking
+ * to reset progress, stepping into About's third column or opening a page; a
+ * volume does nothing); if the keyboard has left the rows, the highlighted row
+ * is pressed instead.
  * @param event - Keyboard event
  */
 function handleEnter(event: KeyboardEvent): void {
@@ -820,6 +806,31 @@ function handleEnter(event: KeyboardEvent): void {
     event.preventDefault()
     row.click()
   }
+}
+
+/**
+ * Left or Right with a volume row highlighted while the keyboard has left the
+ * rows, as after a click on the wall (the row takes the keys itself while it
+ * has the keyboard): steps the volume, with a click when it changes, and gives
+ * the row the keyboard back, as Up and Down do.
+ * @param offset - How far to step the volume
+ * @returns Whether a volume row was highlighted, so the key was taken
+ */
+function stepHighlightedVolume(offset: number): boolean {
+  if (activeColumn.value !== 'items' || openSection.value !== 'settings') {
+    return false
+  }
+  const setting = settings[highlightedItem.value]
+  if (setting === undefined) {
+    return false
+  }
+  if (setVolume(setting.volume, setting.volume.value + offset)) {
+    void nextTick(() => {
+      Sound.MENU_MOVE.play()
+    })
+  }
+  focusRow('items', highlightedItem.value)
+  return true
 }
 
 /**
@@ -857,11 +868,15 @@ function handleKeydown(event: KeyboardEvent): void {
       break
     case 'ArrowRight':
       event.preventDefault()
-      stepIn()
+      if (!stepHighlightedVolume(VOLUME_STEP)) {
+        stepIn()
+      }
       break
     case 'ArrowLeft':
       event.preventDefault()
-      stepBack()
+      if (!stepHighlightedVolume(-VOLUME_STEP)) {
+        stepBack()
+      }
       break
     case 'Escape':
       // A held Escape that just closed a dialog must not close the section too
@@ -973,8 +988,8 @@ onBeforeUnmount(() => {
           </ol>
           <ul v-else-if="openSection === 'settings'" class="home-row-list">
             <li v-for="(setting, index) in settings" :key="setting.label">
-              <SettingsSwitch
-                v-model="setting.enabled.value"
+              <VolumeRow
+                v-model="setting.volume.value"
                 :label="setting.label"
                 :class="{
                   'menu-row-selected': index === highlightedSetting,
@@ -1181,7 +1196,7 @@ onBeforeUnmount(() => {
 }
 
 /* Three fixed tracks, so the sections stay put when the open section's items (wide enough for the
-   longest setting name beside its switch) and, widest, Play's chamber map appear beside them. The
+   longest volume's name beside its ramp) and, widest, Play's chamber map appear beside them. The
    sections' track is wide enough for the longest of them, the development-only Playground */
 .home-menu {
   --menu-row-gap: 0.25rem;

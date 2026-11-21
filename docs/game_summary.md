@@ -133,12 +133,12 @@ Every chamber is closed in by walls (or blocked walls, emitters, receivers, door
 - Ten chambers so far: the Tutorial (12 × 10 tiles), then chambers 1 (20 × 20), 2 (23 × 13) and 3 (23 × 17), chambers 4 (13 × 9) and 5 (9 × 13), which teach and test slide floors, chambers 6 (10 × 7) and 7 (10 × 9), which teach and twist turnable arrows, and chambers 8 and 9 (both 9 × 7), which teach and test rays through portals. The roadmap aims for 20.
 - The timer starts with the first press of a move, portal or interact key in a chamber and stops when the chamber is complete. The only score is the time: there are no medals or move targets.
 - Finishing a chamber shows the time and the best time (or "New best time"), with Next chamber, Play again and Back to menu (after the last chamber, only Back to menu and Play again).
-- The pause menu offers Continue, Restart chamber and Exit chamber; restarting or leaving asks for confirmation first.
+- The pause menu offers Continue, Settings (the sound effects and music volumes, as under the home screen's Settings), Restart chamber and Exit chamber; restarting or leaving asks for confirmation first.
 - Progress is kept on the device: which chambers are completed, each one's best time and how many attempts it has had.
 
 ## Screens
 
 - **Loading screen:** the first screen of every visit; it loads the sounds and images, then waits for Start.
-- **Home screen:** a menu on the wall of a test-room photo: Play (the chambers, each with its best time, a figure that turns green once completed, and a map preview of the chamber), Settings (sound effects, music, controls and reset progress; the controls are Default, the arrows with A, D, Space and Shift, or Custom keys set one by one; the mouse plays no part in the game) and About (links, the changelog and feedback).
+- **Home screen:** a menu on the wall of a test-room photo: Play (the chambers, each with its best time, a figure that turns green once completed, and a map preview of the chamber), Settings (the sound effects and music volumes, from Off to 100 in steps of 10, set with Left and Right or the pointer; controls; and reset progress; the controls are Default, the arrows with A, D, Space and Shift, or Custom keys set one by one; the mouse plays no part in the game) and About (links, the changelog and feedback).
 - **Chamber screen:** the chamber on a dark stage, lit a little behind it, with the side panel beside it.
 - Desktop only: phones and tablets get a notice instead of the game.
