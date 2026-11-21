@@ -9,19 +9,9 @@
 
 ## Sounds
 
-The game already reports these events, but they play no sound:
-
-- The subject stopping at the end of a slide
-- A receiver lighting up or going dark (the new element in your uncommitted changes)
-
-These have an animation but no event and no sound:
-
-- An emitter switching on or off, and a ray bouncing off a mirror box (new elements)
-
-These are silent in general:
-
-- Finishing a chamber (no jingle when the completion dialog opens)
-- Setting a new best time in that dialog
+- A receiver lighting up or going dark
+- An emitter switching on or off
+- A ray bouncing off a mirror box
 
 ## YouTube
 
