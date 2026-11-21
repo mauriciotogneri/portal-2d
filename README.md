@@ -9,7 +9,6 @@
 
 ## Sounds
 
-- A receiver lighting up or going dark
 - An emitter switching on or off
 - A ray bouncing off a mirror box
 

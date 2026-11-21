@@ -116,8 +116,8 @@ export class Level {
     [GameEvent.LASER_SWITCHED_ON]: Sound.LASER_ON,
     [GameEvent.FIZZLER_SWITCHED_OFF]: Sound.FIZZLER_OFF,
     [GameEvent.FIZZLER_SWITCHED_ON]: Sound.FIZZLER_ON,
-    [GameEvent.RECEIVER_LIT]: null,
-    [GameEvent.RECEIVER_UNLIT]: null,
+    [GameEvent.RECEIVER_LIT]: Sound.RECEIVER_ON,
+    [GameEvent.RECEIVER_UNLIT]: Sound.RECEIVER_OFF,
   }
 
   onCompleted: (() => void) | null = null // Called once per load when the subject reaches the exit, or, when it walks on out of the chamber, once it is out of sight

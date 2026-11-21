@@ -21,6 +21,8 @@ import menuAcceptUrl from '@/assets/audio/sound/menu_accept.mp3'
 import menuMoveUrl from '@/assets/audio/sound/menu_move.mp3'
 import portalBlueUrl from '@/assets/audio/sound/portal_blue.mp3'
 import portalOrangeUrl from '@/assets/audio/sound/portal_orange.mp3'
+import receiverOffUrl from '@/assets/audio/sound/receiver_off.mp3'
+import receiverOnUrl from '@/assets/audio/sound/receiver_on.mp3'
 import shootUrl from '@/assets/audio/sound/shoot.mp3'
 import slidingFloorUrl from '@/assets/audio/sound/sliding_floor.mp3'
 import startUrl from '@/assets/audio/sound/start.mp3'
@@ -58,6 +60,8 @@ export class Sound {
   static readonly BOX_DESTROYED = new Sound(boxDestroyedUrl, 0.43) // A box destroyed where something blocks, carried into an active fizzler, or sent back to its start by a link
   static readonly EXIT_REACHED = new Sound(exitReachedUrl, 0.34) // The subject reached the open exit
   static readonly SLIDING_FLOOR = new Sound(slidingFloorUrl, 0.12) // The subject started sliding on a slide floor, once per slide
+  static readonly RECEIVER_ON = new Sound(receiverOnUrl, 0.14) // A ray reached a receiver, which lit up
+  static readonly RECEIVER_OFF = new Sound(receiverOffUrl, 0.54) // A receiver no ray reaches any more went dark
   static readonly MENU_MOVE = new Sound(menuMoveUrl, 0.17) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu; played by the screens, not the game
   static readonly MENU_ACCEPT = new Sound(menuAcceptUrl, 0.15) // A menu row or dialog button pressed (Enter, Space or a click), a setting changed or a key bound; played by the screens, not the game
   static readonly START = new Sound(startUrl, 0.31) // Chamber picked on the home screen; played by the screens, not the game
