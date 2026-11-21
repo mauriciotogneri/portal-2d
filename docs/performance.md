@@ -115,7 +115,7 @@ The light barriers' bands (`docs/sprites.md`) are drawn in code, and while one i
 
 | # | Canvas | Whole frame | Bands, steady | Bands, switching |
 |---|---|---|---|---|
-| 1 | 945 × 945 | 0.9, 0.7, 0.6 ms | 0.05, 0.05, 0.05 ms | 0.09, 0.08, 0.05 ms |
-| 2 | 1890 × 1890 | 0.7, 0.7, 0.7 ms | 0.06, 0.05, 0.05 ms | 0.08, 0.07, 0.07 ms |
+| 1 | 945 × 945 | 0.7, 0.6, 0.5 ms | 0.03, 0.03, 0.03 ms | 0.05, 0.04, 0.04 ms |
+| 2 | 1890 × 1890 | 0.6, 0.6, 0.6 ms | 0.03, 0.04, 0.03 ms | 0.04, 0.04, 0.05 ms |
 
-So three bands cost under 0.1 ms a frame: a steady band is drawn from two images painted once per tile size, and one switching, painted straight onto the canvas, costs a little more for the 0.3 s it lasts. The browser window was behind another during the check, which held its frame loop to a few frames a second, so frame intervals weren't measured, only the drawing.
+So three bands cost under 0.1 ms a frame: a steady band is drawn from two images painted once per tile size, which match the band painted straight onto the canvas within 8 levels of 255 in any colour, and one switching, painted straight onto the canvas, costs a little more for the 0.3 s it lasts. The browser window was behind another during the check, which held its frame loop to a few frames a second, so frame intervals weren't measured, only the drawing.

@@ -108,6 +108,14 @@ const FRONT_HALF_WIDTH = 0.07
 /** How bright that front is at its brightest */
 const FRONT_STRENGTH = 0.95
 
+/** How a band fully on shows: whole, with no line */
+const STEADY_LOOK: BandLook = {
+  fade: 1,
+  front: 1,
+  open: 1,
+  line: 0,
+}
+
 /** How strong a reaction is */
 const REACTION_STRENGTH = 0.8
 
@@ -136,6 +144,11 @@ export function plateShine(share: number): number {
  * @returns How it is drawn
  */
 function switchingLook(share: number): BandLook {
+  // Fully on, it is steady, drawn from its kept images: sin(π) isn't quite 0, so its line is put out here
+  if (share >= 1) {
+    return STEADY_LOOK
+  }
+
   const line = LINE_STRENGTH * Math.sin(Math.PI * share)
 
   return {
