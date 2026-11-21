@@ -21,6 +21,7 @@ import lightBarrierOffUrl from '@/assets/audio/sound/light_barrier_off.mp3'
 import lightBarrierOnUrl from '@/assets/audio/sound/light_barrier_on.mp3'
 import menuAcceptUrl from '@/assets/audio/sound/menu_accept.mp3'
 import menuMoveUrl from '@/assets/audio/sound/menu_move.mp3'
+import mirrorBoxRayUrl from '@/assets/audio/sound/mirror_box_ray.mp3'
 import portalBlueUrl from '@/assets/audio/sound/portal_blue.mp3'
 import portalOrangeUrl from '@/assets/audio/sound/portal_orange.mp3'
 import receiverOffUrl from '@/assets/audio/sound/receiver_off.mp3'
@@ -66,6 +67,7 @@ export class Sound {
   static readonly RECEIVER_OFF = new Sound(receiverOffUrl, 0.54) // A receiver no ray reaches any more went dark
   static readonly EMITTER_ON = new Sound(emitterOnUrl, 0.71) // An emitter switched on by a link
   static readonly EMITTER_OFF = new Sound(emitterOffUrl, 0.25) // An emitter switched off by a link
+  static readonly MIRROR_BOX_RAY = new Sound(mirrorBoxRayUrl, 0.39) // A ray started bouncing off a mirror box, one put down in it included
   static readonly MENU_MOVE = new Sound(menuMoveUrl, 0.17) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu; played by the screens, not the game
   static readonly MENU_ACCEPT = new Sound(menuAcceptUrl, 0.15) // A menu row or dialog button pressed (Enter, Space or a click), a setting changed or a key bound; played by the screens, not the game
   static readonly START = new Sound(startUrl, 0.31) // Chamber picked on the home screen; played by the screens, not the game

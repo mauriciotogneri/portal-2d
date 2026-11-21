@@ -11,6 +11,7 @@ import type {FrameInput} from '@/game/frame_input'
 import type {FrameStats} from '@/game/frame_stats'
 import {Input} from '@/game/input'
 import type {KeyBindings} from '@/game/key_bindings'
+import {findMirrorBounces, type MirrorBounces, NO_MIRROR_BOUNCES} from '@/game/mirror_bounces'
 import {MissRipple} from '@/game/miss_ripple'
 import {PortalOpenings} from '@/game/portal_openings'
 import {sendsBoxesHome} from '@/game/returned_boxes'
@@ -38,6 +39,7 @@ type SlideBeat = {
   readonly after: RulesState // The state drawn from then on
   readonly events: readonly GameEvent[] // What happened, in order
   readonly joinsBreakUp: boolean // Whether what it breaks up joins what an earlier beat of the same slide broke up, rather than replacing it
+  readonly bounces: MirrorBounces // Whether a ray started bouncing off a mirror box, judged over the whole slide, so only the beat of its stop and settling has one
 }
 
 /**
@@ -384,15 +386,26 @@ export class Level {
    * Plays the sound of each thing that happened, in order. A portal shot
    * that misses plays the shot sound instead of the error sound; any other
    * refusal plays the error sound. A portal a fizzler closes by turning on
-   * plays none.
+   * plays none. A ray starting to bounce off a mirror box plays the mirror
+   * box's sound last, once however many it bounces off, and a mirror box put
+   * down in a ray plays it instead of the put-down sound.
    * @param events - What happened
    * @param shot - Whether a portal shot made it happen
+   * @param bounces - Whether it set a ray bouncing off a mirror box
    */
-  private playSounds(events: readonly GameEvent[], shot = false): void {
+  private playSounds(events: readonly GameEvent[], shot = false, bounces = NO_MIRROR_BOUNCES): void {
     for (const event of events) {
+      if (bounces.dropped && (event === GameEvent.BOX_PUT_DOWN)) {
+        continue
+      }
+
       const sound = (shot && (event === GameEvent.REFUSED)) ? Sound.SHOOT : Level.SOUNDS[event]
 
       sound?.play()
+    }
+
+    if (bounces.started) {
+      Sound.MIRROR_BOX_RAY.play()
     }
   }
 
@@ -507,6 +520,7 @@ export class Level {
     const shot = ((action === Action.BLUE) || (action === Action.ORANGE)) && !state.isCarrying
     const drawn = (next !== state) && !this.reducedMotion.matches
     const walkOut = drawn ? Level.walkOutWay(result) : null
+    const bounces = findMirrorBounces(state, next, result.events)
 
     this.logStep(action, next)
 
@@ -523,9 +537,9 @@ export class Level {
     }
 
     if (drawn && (result.path.length > 0)) {
-      this.queueSlideBeats(state, result)
+      this.queueSlideBeats(state, result, bounces)
     } else {
-      this.playStep(state, next, result.events, shot ? action : null, time, false, walkOut === null)
+      this.playStep(state, next, result.events, shot ? action : null, time, false, walkOut === null, bounces)
 
       if (walkOut !== null) {
         this.completionTime = this.animation.endTime ?? time
@@ -565,8 +579,9 @@ export class Level {
    * the exit, rather than once it has walked out of sight.
    * @param state - The state before the step
    * @param result - What the rules' step gave for it, a slide
+   * @param bounces - Whether it set a ray bouncing off a mirror box, heard as it stops
    */
-  private queueSlideBeats(state: RulesState, result: StepResult): void {
+  private queueSlideBeats(state: RulesState, result: StepResult, bounces: MirrorBounces): void {
     const path = result.path
     let before = state
     let legEvents = 0
@@ -582,6 +597,7 @@ export class Level {
         after: leg.state,
         events: leg.events,
         joinsBreakUp: brokeUp,
+        bounces: NO_MIRROR_BOUNCES,
       })
       before = leg.state
       legEvents += leg.events.length
@@ -607,6 +623,7 @@ export class Level {
       after: result.state,
       events: settled.filter((event) => event !== GameEvent.EXIT_REACHED),
       joinsBreakUp: brokeUp,
+      bounces: bounces,
     })
   }
 
@@ -619,7 +636,7 @@ export class Level {
   private playSlideBeats(time: number, all = false): void {
     for (let beat = this.slideBeats.at(0); (beat !== undefined) && (all || (beat.time <= time)); beat = this.slideBeats.at(0)) {
       this.slideBeats.shift()
-      this.playStep(beat.before, beat.after, beat.events, null, Math.min(beat.time, time), beat.joinsBreakUp)
+      this.playStep(beat.before, beat.after, beat.events, null, Math.min(beat.time, time), beat.joinsBreakUp, true, beat.bounces)
     }
   }
 
@@ -639,8 +656,9 @@ export class Level {
    * @param time - When it happened, in milliseconds on the frame clock
    * @param joinsBreakUp - Whether what it breaks up joins what an earlier part of the same step broke up, rather than replacing it
    * @param tellsCompletion - Whether the completion is told now, rather than left waiting until a walk-out ends
+   * @param bounces - Whether it set a ray bouncing off a mirror box
    */
-  private playStep(before: RulesState, after: RulesState, events: readonly GameEvent[], shot: PortalColor | null, time: number, joinsBreakUp = false, tellsCompletion = true): void {
+  private playStep(before: RulesState, after: RulesState, events: readonly GameEvent[], shot: PortalColor | null, time: number, joinsBreakUp = false, tellsCompletion = true, bounces = NO_MIRROR_BOUNCES): void {
     if (!this.reducedMotion.matches) {
       if (after !== before) {
         this.changes.start(before, after, time)
@@ -675,7 +693,7 @@ export class Level {
       }
     }
 
-    this.playSounds(events, shot !== null)
+    this.playSounds(events, shot !== null, bounces)
 
     if (after.completed && tellsCompletion) {
       this.onCompleted?.()
