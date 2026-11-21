@@ -1,6 +1,7 @@
-import {Direction} from '@/game/direction'
+import {DELTAS, Direction} from '@/game/direction'
 import type {BlockedShares} from '@/game/element_transitions'
 import type {FizzlerFlashes, RunningFlash} from '@/game/fizzler_flashes'
+import {type FizzlerSplashes, type RunningSplash, SPLASH_MILLISECONDS} from '@/game/fizzler_splashes'
 import {PALETTE, withAlpha} from '@/game/palette'
 import {pieceNumber} from '@/game/piece_number'
 import {type BeamOrientation, type CompiledChamber, NO_ELEMENT} from '@/game/rules/compiled_chamber'
@@ -42,6 +43,13 @@ type WispPatterns = {
 /** A flash running in a run of fizzlers */
 type RunFlash = {
   readonly along: number // Where along the run it spreads from: the middle of the tile the subject was caught on, in tiles from the run's first connector
+  readonly progress: number // How far through it is, from 0 to 1
+}
+
+/** A splash running in a run of fizzlers */
+type RunSplash = {
+  readonly along: number // Where along the run the shot met the field, in tiles from the run's first connector: the middle of the fizzler's tile, or its end for a shot along the run
+  readonly face: number // Where across the field: 0 or 1, the edge of the face the shot met, or 0.5, the middle, for a shot along the run
   readonly progress: number // How far through it is, from 0 to 1
 }
 
@@ -118,6 +126,24 @@ const FLASH_FILL = 0.4
 
 /** How fast a flash fades: above 1, quickly at first */
 const FLASH_FADE_POWER = 1.6
+
+/** How strongly the field splashes where a portal shot met it */
+const SPLASH_STRENGTH = 1
+
+/** How far a splash's ring spreads into the field, in tiles */
+const SPLASH_REACH = 0.8
+
+/** How brightly the field lights up round the point a shot met, as a share of the splash's strength */
+const SPLASH_FILL = 0.7
+
+/** How fast a splash fades: above 1, quickly at first */
+const SPLASH_FADE_POWER = 1.6
+
+/** How long the white spot where a shot met the field lasts, fading, in milliseconds */
+const SPLASH_SPOT_MILLISECONDS = 120
+
+/** The white spot's radius, in tiles */
+const SPLASH_SPOT_RADIUS = 0.3
 
 /** What each of the run's things is numbered by, added to its seed */
 const SALTS = {
@@ -345,8 +371,10 @@ function runPlaces(chamber: CompiledChamber): RunPlace[] {
  * gap make one field. A field switching off or on fades out or in, as far
  * as its transition says, every part of it as faint as the rest; where the
  * subject is caught in a field, a ring of light spreads through it from the
- * subject's tile. With no time given, a field holds still at one moment and
- * nothing flashes. Each tile is drawn straight onto the canvas, clipped to
+ * subject's tile; where a portal shot met a field, it splashes: it lights up
+ * round the point met on its face, a white spot flashes there, and a ring of
+ * light spreads from it. With no time given, a field holds still at one
+ * moment and nothing flashes or splashes. Each tile is drawn straight onto the canvas, clipped to
  * the tile, in the field's own frame: one unit a tile, along its run from
  * the first connector, and across it, the way through.
  */
@@ -362,8 +390,9 @@ export class FizzlerField {
    * @param shares - How far on the fizzlers that are changing are drawn, or null to draw every one as the state says
    * @param time - The frame's time, in milliseconds on the frame clock, or null to hold every field still
    * @param flashes - Where the subject was caught in a field lately, or null when none can flash
+   * @param splashes - Where a portal shot met a field lately, or null (the default) when none can splash
    */
-  draw(painter: TilePainter, state: RulesState, shares: BlockedShares | null, time: number | null, flashes: FizzlerFlashes | null): void {
+  draw(painter: TilePainter, state: RulesState, shares: BlockedShares | null, time: number | null, flashes: FizzlerFlashes | null, splashes: FizzlerSplashes | null = null): void {
     const chamber = state.chamber
     const count = chamber.countOf('fizzler')
 
@@ -374,6 +403,7 @@ export class FizzlerField {
     const places = this.placesOf(chamber)
     const seconds = (time === null) ? STILL_SECONDS : time / 1000
     const running = ((time === null) || (flashes === null)) ? [] : flashes.runningAt(time)
+    const splashing = ((time === null) || (splashes === null)) ? [] : splashes.runningAt(time)
 
     for (let i = 0; i < count; i++) {
       const share = (shares === null) ? null : shares('fizzler', i)
@@ -386,9 +416,10 @@ export class FizzlerField {
 
       const position = chamber.positionOf('fizzler', i)
       const runFlashes = FizzlerField.flashesIn(chamber, places, place, running)
+      const runSplashes = FizzlerField.splashesIn(chamber, places, place, splashing)
 
       painter.drawInFrame(position.x, position.y + 1, Direction.UP, (ctx, tileSize) => {
-        this.drawTile(ctx, tileSize, place, seconds, runFlashes, strength)
+        this.drawTile(ctx, tileSize, place, seconds, runFlashes, runSplashes, strength)
       })
     }
   }
@@ -400,9 +431,10 @@ export class FizzlerField {
    * @param place - The tile's place in its run
    * @param seconds - The moment drawn, in seconds
    * @param flashes - The flashes running in its run
+   * @param splashes - The splashes running in its run
    * @param fade - How far on the field is drawn, from 0 (gone) to 1 (on)
    */
-  private drawTile(ctx: CanvasRenderingContext2D, tileSize: number, place: RunPlace, seconds: number, flashes: readonly RunFlash[], fade: number): void {
+  private drawTile(ctx: CanvasRenderingContext2D, tileSize: number, place: RunPlace, seconds: number, flashes: readonly RunFlash[], splashes: readonly RunSplash[], fade: number): void {
     const images = this.imagesOf()
 
     ctx.beginPath()
@@ -424,6 +456,7 @@ export class FizzlerField {
     FizzlerField.drawTongues(ctx, place, seconds, images.tongue, fade)
     FizzlerField.drawDashes(ctx, place, seconds, images.dash, 1 / tileSize, fade)
     FizzlerField.drawFlashes(ctx, place, flashes, 1 / tileSize, fade)
+    FizzlerField.drawSplashes(ctx, splashes, 1 / tileSize, fade)
   }
 
   /**
@@ -493,6 +526,41 @@ export class FizzlerField {
         found.push({
           along: caught.start + 0.5,
           progress: flash.progress,
+        })
+      }
+    }
+
+    return found
+  }
+
+  /**
+   * The splashes running in a run: each where along the run the fizzler the
+   * shot met lies, and on which face, the side the shot came from.
+   * @param chamber - The chamber
+   * @param places - Each fizzler's place in its run
+   * @param place - A place in the run
+   * @param running - Every splash running
+   * @returns The run's splashes
+   */
+  private static splashesIn(chamber: CompiledChamber, places: readonly RunPlace[], place: RunPlace, running: readonly RunningSplash[]): RunSplash[] {
+    const found: RunSplash[] = []
+
+    for (const splash of running) {
+      const met = places[chamber.elementAt('fizzler', splash.x, splash.y)]
+
+      if ((met !== undefined) && (met.seed === place.seed) && (met.span === place.span)) {
+        const delta = DELTAS[splash.way]
+        // The shot's way across the field's frame, which runs down the screen for a field spanning left to right and to
+        // the right for one spanning top to bottom: moving that way it meets the face at 0, moving back the face at 1
+        const across = (place.span === 'H') ? -delta.dy : delta.dx
+        // And along the run, to the right or down the screen, for a shot along it from the open floor at a run's end,
+        // which meets the end of the tile it reached, where the miss ripple sits
+        const along = (place.span === 'H') ? delta.dx : -delta.dy
+
+        found.push({
+          along: (across !== 0) ? met.start + 0.5 : met.start + ((along > 0) ? 0 : 1),
+          face: (across > 0) ? 0 : (across < 0) ? 1 : 0.5,
+          progress: splash.progress,
         })
       }
     }
@@ -684,5 +752,63 @@ export class FizzlerField {
       ctx.lineWidth = Math.max(pixel * 2, 0.28 * (1 - progress))
       ctx.stroke()
     }
+  }
+
+  /**
+   * Draws the splashes running in the run on the tile: the field lights up
+   * round the point the shot met on its face, a white spot flashes there
+   * for a moment, and a ring of light spreads from it into the field, all
+   * fading, quickly at first.
+   * @param ctx - The canvas's context, in the field's frame
+   * @param splashes - The run's splashes
+   * @param pixel - A canvas pixel, in tiles
+   * @param fade - How far on the field is drawn, from 0 to 1
+   */
+  private static drawSplashes(ctx: CanvasRenderingContext2D, splashes: readonly RunSplash[], pixel: number, fade: number): void {
+    for (const splash of splashes) {
+      const progress = splash.progress
+
+      if ((progress < 0) || (progress >= 1)) {
+        continue
+      }
+
+      const strength = SPLASH_STRENGTH * ((1 - progress) ** SPLASH_FADE_POWER)
+      const spot = Math.max(1 - ((progress * SPLASH_MILLISECONDS) / SPLASH_SPOT_MILLISECONDS), 0)
+      const radius = 0.05 + (SPLASH_REACH * (progress ** 0.8))
+
+      ctx.globalAlpha = fade
+      FizzlerField.drawSoftSpot(ctx, splash.along, splash.face, 0.25 + (SPLASH_REACH * 0.9), PALETTE.fizzlerLight, SPLASH_FILL * strength)
+      FizzlerField.drawSoftSpot(ctx, splash.along, splash.face, SPLASH_SPOT_RADIUS, PALETTE.fizzlerSplashSpot, 0.9 * SPLASH_STRENGTH * spot)
+      ctx.beginPath()
+      ctx.arc(splash.along, splash.face, radius, 0, 2 * Math.PI)
+      ctx.strokeStyle = withAlpha(PALETTE.fizzlerLight, 0.45 * strength)
+      ctx.lineWidth = Math.max(pixel * 2, 0.3 * (1 - progress))
+      ctx.stroke()
+      ctx.strokeStyle = withAlpha(PALETTE.fizzlerSplashRing, Math.min(1.2 * strength, 1))
+      ctx.lineWidth = Math.max(pixel * 1.5, 0.11 * (1 - progress))
+      ctx.stroke()
+    }
+  }
+
+  /**
+   * Draws a soft round spot of light, a colour fading out from its middle.
+   * @param ctx - The canvas's context, in the field's frame
+   * @param along - Its middle, along the run, in tiles
+   * @param across - Its middle, across the field, in tiles
+   * @param radius - How far it reaches, in tiles
+   * @param colour - Its colour
+   * @param alpha - How opaque it is at its middle, from 0 to 1
+   */
+  private static drawSoftSpot(ctx: CanvasRenderingContext2D, along: number, across: number, radius: number, colour: string, alpha: number): void {
+    if (alpha <= 0) {
+      return
+    }
+
+    const fill = ctx.createRadialGradient(along, across, 0, along, across, radius)
+
+    fill.addColorStop(0, withAlpha(colour, alpha))
+    fill.addColorStop(1, withAlpha(colour, 0))
+    ctx.fillStyle = fill
+    ctx.fillRect(along - radius, across - radius, radius * 2, radius * 2)
   }
 }

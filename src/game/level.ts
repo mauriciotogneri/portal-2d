@@ -6,6 +6,7 @@ import {ElementTransitions} from '@/game/element_transitions'
 import {exitOuterSide} from '@/game/exit_shadow'
 import {FizzleParticles} from '@/game/fizzle_particles'
 import {FizzlerFlashes} from '@/game/fizzler_flashes'
+import {FizzlerSplashes} from '@/game/fizzler_splashes'
 import {GameEvent} from '@/game/game_event'
 import {GameKey} from '@/game/game_key'
 import type {FrameInput} from '@/game/frame_input'
@@ -62,9 +63,9 @@ type SlideBeat = {
  * fades out or in, the field the subject is caught in flashes, a laser a step switches fades out or in, a light barrier's band a step
  * switches unfolds or folds away, a portal a shot opens grows open on its
  * wall, and a portal shot that misses
- * ripples where it stopped, and a light barrier's band that stopped it, or that the subject walked into, reacts; no press waits for them
- * nor cuts them short. While
- * a fizzler's field or a light barrier is on, or anything glows, breaks up, flashes, falls, changes, opens, ripples or reacts, every frame is
+ * ripples where it stopped, a fizzler's field that stopped it splashes, and a light barrier's band that stopped it, or that the subject
+ * walked into, reacts; no press waits for them nor cuts them short. While
+ * a fizzler's field or a light barrier is on, or anything glows, breaks up, flashes, splashes, falls, changes, opens, ripples or reacts, every frame is
  * drawn too. Nothing is drawn over time when the player asks for reduced
  * motion: the glows hold steady, the fields hold still and the bands' edges hold steady. A step that slides is drawn along its path,
  * and what happens on each tile it enters (a fizzle, a portal crossing) waits
@@ -152,6 +153,7 @@ export class Level {
   private readonly openings = new PortalOpenings() // The portals shots opened lately, opening over a few frames, if any
   private readonly particles = new PortalParticles() // The particles rising from the open portals, and fading where a portal closed lately
   private readonly flashes = new FizzlerFlashes() // Where the subject was caught in a fizzler's field lately, flashing over a few frames, if anywhere
+  private readonly splashes = new FizzlerSplashes() // Where a portal shot met a fizzler's field lately, splashing over a few frames, if anywhere
   private readonly reactions = new LightBarrierReactions() // Where a shot or the subject met a light barrier's band lately, reacting over a few frames, if anywhere
   private readonly turn = new SubjectTurn() // The subject's facing as drawn, turning over a few frames whenever it comes to face another way
   private slideBeats: SlideBeat[] = [] // What the slide being drawn still has waiting, in order; empty when none is
@@ -220,6 +222,7 @@ export class Level {
     this.openings.clear()
     this.particles.clear()
     this.flashes.clear()
+    this.splashes.clear()
     this.reactions.clear()
     this.turn.clear()
 
@@ -362,7 +365,7 @@ export class Level {
   /**
    * Draws the current state, part way through the step being drawn, if any,
    * with what moves with time alone at this time, the fizzlers' fields, the light barriers' bands, the portals' particles, what breaks up,
-   * flashes, reacts, falls or flies home, a portal opening, a missed shot's ripple, the subject turning and the arrows, the blocked walls, the ditches, the doors,
+   * flashes, splashes, reacts, falls or flies home, a portal opening, a missed shot's ripple, the subject turning and the arrows, the blocked walls, the ditches, the doors,
    * the exit, the fizzlers, the lasers and the light barriers changing included, or held still when the player asks for
    * reduced motion.
    * @param time - Now, in milliseconds on the frame clock
@@ -372,7 +375,7 @@ export class Level {
       const frameStats = this.frameStats
       const drawStart = (frameStats === null) ? 0 : performance.now()
 
-      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns, this.particles, this.flashes, this.reactions)
+      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns, this.particles, this.flashes, this.reactions, this.splashes)
       frameStats?.recordDraw(performance.now() - drawStart)
     }
   }
@@ -667,7 +670,7 @@ export class Level {
    * up and the field the subject is caught in flashes, each box sent home comes apart and flies there, or falls into a
    * ditch and gathers there, a portal opened opens and starts giving off
    * particles, those of a portal closed or moved fade, and a refused portal
-   * shot ripples, and a light barrier's band that stopped it reacts, all only when motion is allowed; then the sounds play, and
+   * shot ripples, and a fizzler's field or a light barrier's band that stopped it splashes or reacts, all only when motion is allowed; then the sounds play, and
    * the completion is told when the chamber is completed, unless it waits
    * for a walk-out.
    * @param before - The state before
@@ -716,9 +719,11 @@ export class Level {
       // A portal opened, moved or closed: the particles of the one that was there fade, and the new one's start rising
       this.particles.start(before, after, time)
 
-      // Only a shot's refusal ripples: a refused crossing or interact shows nothing; and a light barrier that stopped it reacts
+      // Only a shot's refusal ripples: a refused crossing or interact shows nothing; and a fizzler's field that stopped it
+      // splashes, a light barrier that stopped it reacts
       if ((shot !== null) && events.includes(GameEvent.REFUSED)) {
         this.ripple.start(after, shot, time)
+        this.splashes.startShot(after, time)
         this.reactions.startShot(after, time)
       }
     }
@@ -796,9 +801,9 @@ export class Level {
       stateUpdated = this.update(delta, this.input, time)
     }
 
-    // So does a field or a band that is on, and anything that glows, gives off particles, breaks up, flashes, reacts, falls, changes, opens,
-    // ripples or turns, paused or not, and the first frame after it stops, which draws it still
-    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.flashes.isRunningAt(time) || this.reactions.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.particles.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
+    // So does a field or a band that is on, and anything that glows, gives off particles, breaks up, flashes, splashes, reacts, falls, changes,
+    // opens, ripples or turns, paused or not, and the first frame after it stops, which draws it still
+    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.flashes.isRunningAt(time) || this.splashes.isRunningAt(time) || this.reactions.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.particles.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
 
     if (stateUpdated || wasAnimating || ambient || this.ambientDrawn) {
       this.render(time)

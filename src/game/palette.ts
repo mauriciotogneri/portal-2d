@@ -5,7 +5,8 @@
  * each open portal, in its own colours, the antlines' dots, unlit
  * and lit, each with its border, an emitter's ray, from its dark rim to its
  * white-hot core, the mirror marked on a carried mirror box, the fizzlers'
- * fields, their see-through blue and their cyan light, the light barriers'
+ * fields, their see-through blue, their cyan light and the splash where a
+ * portal shot meets one, the light barriers'
  * bands, their see-through teal, their rim and their light, the open exit's
  * shadow, the surface detail laid over the floor and the walls' tops,
  * its tones and its wear marks, and the element detail laid over the
@@ -27,8 +28,10 @@ export const PALETTE = {
   particleOrangeShaft: 'rgba(255, 168, 48, 1)', // An orange shaft's middle, a little lighter than its sides
   particleOrangeCore: 'rgba(255, 220, 160, 1)', // An orange spark's middle: the pale orange of the portal's lit inner edge
   fizzlerField: 'rgba(22, 85, 211, 1)', // A fizzler's field (docs/sprites.md): its see-through blue sheet, drawn half opaque, deeper than the blue portal
-  fizzlerLight: 'rgba(126, 218, 255, 1)', // The field's cyan light: its wisps, its tongues of light along the connectors, its dashes' glow and its flash
+  fizzlerLight: 'rgba(126, 218, 255, 1)', // The field's cyan light: its wisps, its tongues of light along the connectors, its dashes' glow, its flash and a shot's splash's glow
   fizzlerCore: 'rgba(191, 237, 255, 1)', // The light at its palest: the wisps' brightest strands, the tongues' roots, the dashes' streaks and the flash's ring
+  fizzlerSplashRing: 'rgba(223, 246, 255, 1)', // The ring spreading where a portal shot met the field: its palest light, halfway to white
+  fizzlerSplashSpot: 'rgba(255, 255, 255, 1)', // The spot flashing white where the shot met it
   lightBarrierBand: 'rgba(96, 222, 186, 1)', // A light barrier's band: the light barrier's teal meaning colour (docs/sprites.md), drawn see-through
   lightBarrierRim: 'rgba(20, 150, 120, 1)', // The deep teal rim just outside the band, so it reads on the light floor
   lightBarrierLight: 'rgba(186, 246, 228, 1)', // The light along the band's edges, and pooling where it leaves an end plate

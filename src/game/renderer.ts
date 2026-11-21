@@ -9,6 +9,7 @@ import {drawExitShadow} from '@/game/exit_shadow'
 import type {FizzleParticles} from '@/game/fizzle_particles'
 import {FizzlerField} from '@/game/fizzler_field'
 import type {FizzlerFlashes} from '@/game/fizzler_flashes'
+import type {FizzlerSplashes} from '@/game/fizzler_splashes'
 import {LightBarrierBand} from '@/game/light_barrier_band'
 import type {LightBarrierReactions} from '@/game/light_barrier_reactions'
 import type {MissRipple} from '@/game/miss_ripple'
@@ -304,7 +305,7 @@ export function hasAmbientLife(state: RulesState): boolean {
  * to what lies beneath, pulsing, an opening portal's rising with it, the open portals' particles rise, what a fizzle took breaks up and a missed
  * shot ripples where it stopped; at no time given, nothing changes over
  * time, the glows hold steady, the fizzlers' fields hold still, the light barriers' edges hold steady, no particles rise and nothing breaks up,
- * flashes, reacts or ripples. While the
+ * flashes, splashes, reacts or ripples. While the
  * chamber is completed, the subject, on the exit or walking out past it, is
  * drawn under the open exit's shadow. With a see-through exit, the exit's
  * tile fades the canvas itself out towards the chamber's edge instead of
@@ -646,8 +647,8 @@ export class Renderer {
    * with the boxes falling into ditches over the ditches, the rays over the
    * buttons and switches and under the boxes, each box on its way home
    * taking shape at its start with the boxes, a portal
-   * opening part way open, the light barriers' bands, flickering, under their end plates, and the fizzlers' fields, stirring, under their
-   * connectors and over the subject, then the glows, the portals' particles, the pieces of what a fizzle took,
+   * opening part way open, the light barriers' bands, flickering, under their end plates, and the fizzlers' fields, stirring, flashing
+   * and splashing, under their connectors and over the subject, then the glows, the portals' particles, the pieces of what a fizzle took,
    * the pieces of the boxes flying home and a missed shot's ripple. Part way along a slide, everything but the
    * subject's pose is drawn as the state on the last tile it has reached
    * (shownState), and the state after the step once the slide ends. The
@@ -668,8 +669,9 @@ export class Renderer {
    * @param particles - The particles rising from the portals, or null (the default) when none can
    * @param flashes - Where the subject was caught in a fizzler's field lately, flashing, or null (the default) when none can
    * @param reactions - Where a light barrier's band was met lately, by a shot or the subject, reacting, or null (the default) when none can
+   * @param splashes - Where a portal shot met a fizzler's field lately, splashing, or null (the default) when none can
    */
-  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null, flashes: FizzlerFlashes | null = null, reactions: LightBarrierReactions | null = null): void {
+  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null, flashes: FizzlerFlashes | null = null, reactions: LightBarrierReactions | null = null, splashes: FizzlerSplashes | null = null): void {
     // A canvas not yet sized for a chamber has nothing to draw
     if (this.painter.blockSize <= 0) {
       return
@@ -693,7 +695,7 @@ export class Renderer {
     for (const layer of DRAW_LAYERS) {
       // The fizzlers' fields, drawn in code with the frame's time, under their connectors, which the layer's drawing adds
       if (layer === 'fields') {
-        this.fields.draw(this.painter, shown, shares, time, flashes)
+        this.fields.draw(this.painter, shown, shares, time, flashes, splashes)
       }
 
       // While the chamber is completed the subject is on the exit or walks out past it, under the exit's shadow; read from
