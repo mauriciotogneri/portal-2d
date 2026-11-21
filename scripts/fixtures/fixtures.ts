@@ -47,6 +47,7 @@ import rayReceiversDoors from '@scripts/fixtures/ray_receivers_doors.json'
 import rayRelay from '@scripts/fixtures/ray_relay.json'
 import raySlide from '@scripts/fixtures/ray_slide.json'
 import rayStoppers from '@scripts/fixtures/ray_stoppers.json'
+import raySwitch from '@scripts/fixtures/ray_switch.json'
 import rayTwoEmitters from '@scripts/fixtures/ray_two_emitters.json'
 import shotEdges from '@scripts/fixtures/shot_edges.json'
 import shotStoppers from '@scripts/fixtures/shot_stoppers.json'
@@ -1572,6 +1573,21 @@ export const FIXTURES: readonly Fixture[] = [
     },
   },
   {
+    name: 'switch_switches_emitter_on',
+    behaviour: 'Using a switch switches on the emitter it links, which starts off, and its ray passes over another switch to light a receiver that opens a door.',
+    chamber: raySwitch,
+    actions: [
+      'left',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: 'bc3c5b58',
+    },
+  },
+  {
     name: 'receivers_hold_each_others_doors',
     behaviour: 'Two rays, each through the door the other\'s receiver opens: a button opening the first door lights the first receiver, which opens the second door, which lights the second receiver, and settling ends with both lit.',
     chamber: rayReceiversDoors,
@@ -1611,6 +1627,23 @@ export const FIXTURES: readonly Fixture[] = [
       moves: 2,
       portals: 0,
       finalHash: 'df21f199',
+    },
+  },
+  {
+    name: 'receiver_and_switch_latest_wins',
+    behaviour: 'A receiver and a switch link one door: stepping onto the switch in the ray darkens the receiver, which closes the door, and using the switch opens it again, the latest change, though the receiver stays dark.',
+    chamber: raySwitch,
+    actions: [
+      'left',
+      'interact',
+      'up',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 2,
+      portals: 0,
+      finalHash: '43c8abc6',
     },
   },
   {

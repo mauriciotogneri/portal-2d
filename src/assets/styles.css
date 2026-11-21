@@ -262,7 +262,7 @@ a {
   border-color: var(--color-ink);
 }
 
-/* Sign button: condensed capitals in a heavy frame */
+/* Sign button: sign capitals in a heavy frame */
 .button-sign {
   min-height: 3.25rem;
   padding: 0 1.5rem;

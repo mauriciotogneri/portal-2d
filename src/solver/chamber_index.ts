@@ -10,14 +10,14 @@ export const NO_NUMBER = -1
  * row order, and every side of a wall that can take portals (a wall, or a
  * blocked wall a link reaches or that starts unblocked) facing such a tile,
  * where a portal can open, but for a side facing a door or the exit, or
- * behind a laser's or a light barrier's end plate. A state key stores these
- * numbers instead of columns and rows, so its fields are only as wide as the
- * chamber needs.
+ * behind a laser's or a light barrier's end plate or a fizzler's connector.
+ * A state key stores these numbers instead of columns and rows, so its
+ * fields are only as wide as the chamber needs.
  */
 export class ChamberIndex {
   readonly chamber: CompiledChamber // The chamber numbered
   readonly tileCount: number // Tiles that aren't wall
-  readonly sideCount: number // Sides of walls that can take portals, facing a tile that isn't wall, a door or the exit, and not behind an end plate
+  readonly sideCount: number // Sides of walls that can take portals, facing a tile that isn't wall, a door or the exit, and not behind an end plate or a connector
   private readonly tileNumbers: Int32Array // Each cell's tile number, or NO_NUMBER on a wall
   private readonly tileCells: Int32Array // Each tile's cell
   private readonly sideNumbers: Int32Array // Each cell's side numbers, four per cell in DIRECTIONS order, or NO_NUMBER

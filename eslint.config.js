@@ -144,7 +144,7 @@ export default withVueTs(
         },
       ],
 
-      // Pairs with verbatimModuleSyntax in tsconfig.app.json
+      // Pairs with verbatimModuleSyntax, which tsconfig.app.json takes from @vue/tsconfig
       '@typescript-eslint/consistent-type-imports': 'error',
 
       // Disable formatting-only Vue rules
@@ -225,6 +225,9 @@ export default withVueTs(
             '@/game/wear_marks',
             '@/game/element_parts',
             '@/game/element_detail',
+            '@/game/antline_drawing',
+            '@/game/chamber_preview',
+            '@/game/frame_stats',
           ],
           patterns: [
             '@/chambers/*',
@@ -294,6 +297,9 @@ export default withVueTs(
             '@/game/wear_marks',
             '@/game/element_parts',
             '@/game/element_detail',
+            '@/game/antline_drawing',
+            '@/game/chamber_preview',
+            '@/game/frame_stats',
           ],
           patterns: [
             '@/chambers/*',

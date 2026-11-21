@@ -39,7 +39,7 @@ export const BOX_DESTROYING_KINDS = [
  * goes back to its start tile, reporting boxDestroyed. Run by the core step
  * in every pass, after the buttons, since boxes move and so have no pass
  * hook. A box at its start stays: the layout checks keep starts on plain
- * floor or a button, and a fixture chamber read without them may start one
+ * floor, slide floor or a button, and a fixture chamber read without them may start one
  * on a blocked element. So each box is destroyed at most once in a step. A
  * carried box is left to the fizzler rule.
  * @param draft - The step's state

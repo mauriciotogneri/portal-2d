@@ -19,75 +19,20 @@
 | 2 | `01_engine_v2.md` (file removed) | Done | Sounds out of the rules, engine runnable without a browser, replays on today's engine, recorded solutions and a local replay check, input rewrite (remappable keys), v2 rules and chamber format, the three inherited bugs fixed, v2 checked against the old rules, old engine deleted |
 | 3 | `02_solver.md` (file removed; see `docs/solver.md`) | Stopped | Solver prototype on the current chambers (go/no-go: no-go on 2026-11-08, decision 10); the rest was dropped: solvability and par in the local checks, shortcut finder, dead-end warning, hints, generated chambers |
 | 4 | `03_look_and_sound.md` (file removed) | Done | Visual rework, one tutorial chamber (chamber 0) |
-| 5 | `04a_mechanics.md` (file removed, decision 17) | Done | Lasers through portals, slide floors and rotating arrows, each with a teach and a proof chamber |
+| 5 | `04a_mechanics.md` (file removed, decision 17) | Done | Slide floors, turnable arrows and rays (emitters, receivers and mirror boxes, the "live lasers" of decisions 14 to 16), each with a teach and a proof chamber |
 | 6 | `04b_campaign.md` | Draft | The campaign completed at 20 chambers, a menu and catalogue that scale, chamber numbering and links |
 | 7 | `05_creator_platform.md` | Draft | Editor, sharing in the link, share only what you solved |
+| 8 | `future.md` | — | Not a stage: ideas for mechanics beyond the plan, and how a mechanic was built (kept from stage 04a) |
+
 ## The idea
 
-The moonshot isn't "more chambers". It is turning the rules into a pure function — *current state + one keypress → next state* — with the frame loop only animating and drawing. Once that exists, five things become possible: a solver that understands every chamber, replays, an editor, a daily puzzle, and leaderboards that can be verified by re-running a replay. Almost everything in stages 02–05 hangs off stage 01.
+The moonshot isn't "more chambers". It is turning the rules into a pure function — *current state + one keypress → next state* — with the frame loop only animating and drawing. Once that exists, five things become possible: a solver that understands every chamber, replays, an editor, a daily puzzle, and leaderboards that can be verified by re-running a replay. (Replays exist since stage 01 and the editor is planned in stage 05; the solver stopped at its prototype (decision 10); leaderboards went with ranked runs and Stage B (decisions 13 and 14), and no stage plans a daily puzzle.) Almost everything in stages 02–05 hangs off stage 01.
 
 Two existing facts make this realistic: the rules never read the frame time, and `src/game/` is already walled off from Vue (enforced by lint).
 
-## Where it starts (checked against the code on 2026-11-06)
+## Where it started
 
-These replace the rougher claims in the original roadmap. Re-check them when revisiting a stage; the code may have moved.
-
-**Size and shape**
-
-- Three chambers (`src/chambers/chamber_1..3.json`): 20×20, 23×13 and 23×17. Every one has 2 boxes. The engine has no size limit and no edge check; the walls in the data keep the subject inside.
-- `src/game/` is about 2,850 lines. Nothing animates or stays in flight: a portal shot is traced in a single loop, doors flip a flag, nobody falls or dies.
-
-**Time and frames**
-
-- The rules ignore frame time (`State.update` takes it as `_`), but some effects land **one frame after the key**:
-  - Buttons are checked before the carried box catches up, so walking off a button (or through a portal) carrying a box releases it a frame later, with its effects: doors close, blocked walls block again and remove portals, fizzlers turn on.
-  - Every frame without a key steps the subject onto its own tile again, so a fizzler that turns on under the subject fires on a later frame.
-  - The exit check runs first in the frame, so the win is reported a frame after arriving.
-- So today's rules as a step function are: *apply the key, then run empty frames until the state stops changing*. Compare the state itself; the frame's "changed" result misses a fizzler firing this way.
-
-**Boundaries**
-
-- Nothing in `src/game/` imports Vue, components, services or chambers (`eslint.config.js`).
-- But the rules play sounds directly (`state.ts`, `button.ts`, `door.ts`, `exit.ts`, `switch.ts`), and `sound.ts` creates its players when the module loads, so the engine cannot load under Node or in a Web Worker without stubbing audio.
-
-**Elements and format**
-
-- Each element type is written out in 5–6 places: its own class file, `chamber_data.ts`, `chamber.ts` (fields, setup, the linkable list, lookups), `state.ts` (walking checks and shot checks are separate lists), `renderer.ts`, and `docs/elements.md`.
-- The chamber JSON has `size`, 10 required lists (walls, barriers, ditches, boxes, buttons, arrows, fizzlers, doors, switches, lasers; barriers then, blocked walls now), and a single subject and exit. The format accepts walls as single tiles or inclusive rectangles; today's chambers list them tile by tile (110–138 each). Elements carry an `id` used to link buttons and switches to what they open — not the catalogue's permanent chamber id.
-- Switchable blocked walls (barriers on wall tiles then; 8 in chamber 2, 1 in chamber 3). One takes portals only while it is unblocked, and blocking it again removes the portal: a switchable portal surface that already exists.
-- Links: a button opens its links when pressed and closes them when released, even ones that started open; a switch only ever opens. Linking a box sends it back to its start (chamber 1 has a switch linked to a box).
-- Only the subject teleports; a carried box follows at the end of the frame. A laser is a single on/off tile that blocks walking only while on (its H/V setting only changes the drawing). Shots pass through lasers, ditches and boxes and never go through portals. Boxes block neither the subject nor shots, can stack on one tile, and can't be dropped on a switch.
-- Arrows are fixed: they can't be linked, you can only enter one moving in its direction, and while on one every other arrow key and Ctrl are ignored.
-- Portals land on any wall tile, on the side facing the shooter. Active fizzlers, barriers (blocked walls and light barriers now), doors and a closed exit stop shots. A wall holding a portal refuses shots on that side and both neighbouring sides. Each chamber has about 170–225 wall sides facing an open tile.
-
-**State**
-
-- What changes during play: subject x, y, facing and carried box; each portal's tile and facing; each box's x, y; each button's pressed flag; the open/closed flag of every linked blocked wall, ditch, door, fizzler, laser and the exit; an "inside a fizzler" flag; the won flag and the portal counter. The clock and step count live in `level.ts`.
-- Switches hold no state. The open/closed flags depend on history (switches only ever open; buttons act once on press and once on release), so they can't be derived from positions.
-- The rules change objects in place, elements hold references to the chamber, and every lookup scans a whole list.
-
-**Input and drawing**
-
-- Input reads the outdated `KeyboardEvent.keyCode`. Pressed keys collect in a set emptied every frame; per frame only one arrow counts (Up, then Down, Left, Right) and one portal key (A beats D), and an arrow plus a shot always runs move-then-shoot. Ctrl is read as held.
-- The game canvas is sized in CSS pixels and ignores `devicePixelRatio`, so it is blurry on high-DPI screens. The home menu's chamber map already handles it (`chamber_map.vue`).
-- `chamber_preview.ts` draws a fresh start state with the game's renderer; the renderer can draw any state.
-
-**Inherited bugs** (kept by the frozen-rules rule until stage 01)
-
-1. Coming out of a portal sets the position directly and skips the ditch, laser, door, closed-exit and arrow checks. Buttons and the exit still react (they are judged by position every frame); a fizzler fires one frame late.
-2. Landing on a closed exit through a portal completes the chamber (the exit check never asks whether it is open).
-3. Releasing a button linked to a box throws and stops the frame loop. No current chamber does this.
-4. The "inside a fizzler" flag clears only on a tile with no fizzler at all, even a switched-off one.
-
-**Services and hosting**
-
-- Progress is stored by chamber **position**: `portal-2d.completed-chambers` (array of numbers) and `portal-2d.best-times` (number → hundredths). The `/chamber/:number` route is by position too, and each catalogue entry's `number` is typed by hand, separate from the list order.
-- Analytics events carry `chamber_id` and `chamber_number`. Gaps: closing the tab records no quit; no attempt counter; no first-completion or new-best flag (the progress service already knows when a time is a new best); Reset sends `chamber_restart` but no new `chamber_start`; no run id (GA4 adds session ids, but linking a start to its end likely needs the BigQuery export — unverified).
-- No tests, no CI. `npm run check` runs `lint:fix` then `build`; `npm run deploy` builds and runs `firebase deploy --only hosting`.
-- Hosting rewrites every path to `/index.html`. Routes: `/`, `/chamber/<digits>`, and a catch-all that redirects home. The no-cache headers cover `/`, `/index.html`, `/settings` (stale: no such route; removed 2026-11-06) and `/chamber/**`; any new route must be added there.
-- Chambers are static imports listed by hand in `chamber_catalogue.ts`, all in the main bundle (about 204 KB today; each chamber adds about 0.6–0.8 KB gzipped). The Play menu draws every chamber as a fixed-height row and cannot scroll.
-- The full `firebase` package is installed but only `firebase/app` and `firebase/analytics` are used; the config holds only `apiKey`, `projectId` and `appId`, and the Firebase app is created only inside analytics startup in production builds.
-- The name "Portal" belongs to Valve.
+The code as found on 2026-11-06, before stage 00 (three chambers, the old engine with its inherited bugs, no checks), was written up here as each stage's starting point. Stages 00 to 04a have since replaced nearly all of it, so it was removed on 2026-11-21; it is in git history. Each stage is re-read against the code as it is when it is revisited.
 
 ## Decisions made
 
@@ -106,7 +51,7 @@ These replace the rougher claims in the original roadmap. Re-check them when rev
 | 11 | 2026-11-08 | Stages 03 and 04 swap. Identity, look and sound come first (now stage 03, `03_identity_look_sound.md`) and add only a tutorial chamber, numbered 0 (chamber numbers count from 0), so chambers 1–3 keep their numbers and links. Mechanics and the rest of the campaign follow (now stage 04, `04_mechanics_campaign.md`), with the catalogue, menu and links that scale, difficulty from data and medals. The campaign has 20 chambers in total (0–19), with no wings. All seven mechanics stay in the plan; how they fit is settled when stage 04 is revisited. Stage 04 later dropped conveyors (its decision 15), then echo, timed buttons and push blocks (its decision 16), leaving three. In decisions 1–10, "stage 03" means the mechanics stage and "stage 04" the campaign, identity, look and sound stage |
 | 12 | 2026-11-08 | A private fan game: played only by the author and a few friends, never published on Steam or any other platform. It stays "Portal 2D" with Valve's name, logo and assets (open decision 5 settled), so stage 03 drops all identity work and becomes "Look and sound" (`03_look_and_sound.md`). Stage 03 also drops the colour-blind palettes, portal shapes and relaxed mode, the camera (every chamber fits the screen) and preview deploys; the renderer stays on the 2D canvas unless stage 03's profiling shows it can't hold 60 fps (open decision 4 settled). Stages 04 and 05 were updated to match |
 | 13 | 2026-11-09 | The author is the only player during development; a few friends will play later (decision 12). No compatibility work, ever: saves and settings may be reset by updates, with no migrations, and links and the chamber and replay formats may break. Done in the code the same day: chamber format 1 support removed (the upgrader and its example), the progress migration from version 1 and the guard against overwriting a newer save removed, and the format, ruleset and chamber-id fields dropped from recorded solutions. Analytics was removed and restored the same day, so it stays as it was (Firebase events and the attempts counter). Kept: permanent chamber ids (they name the chamber files, key stored progress and are analytics' `chamber_id`), the recorded solutions and their checks, and the chamber hash. For the plan: links may follow position with no redirects (open decision 6 settled), no retired-id list, no data migrations. Difficulty from player data and the histogram stay dropped, since a few friends are far below any useful sample (stage 04 had set about 50 players), so the chamber order comes from playtests, with the friends' analytics informing them. Stage 05's Stage B (accounts, community) is removed, since a few friends are no audience (open decisions 7 and 8 settled). Stages 03–05 were updated to match, and stages 04 and 05 now also apply decision 10 in full |
-| 14 | 2026-11-15 | Stage 04 settles its open decisions (its decisions 16–18): the campaign's new mechanics are slide floors, rotating arrows and live lasers; echo, timed buttons and push blocks are dropped, and so are medals, so the time stays the only score (open decisions 1 and 3 settled) |
+| 14 | 2026-11-15 | Stage 04 settles its open decisions (its decisions 16–18): the campaign's new mechanics are slide floors, rotating arrows and live lasers (built as slide floors, turnable arrows, and emitters with their rays, receivers and mirror boxes); echo, timed buttons and push blocks are dropped, and so are medals, so the time stays the only score (open decisions 1 and 3 settled) |
 | 15 | 2026-11-16 | Stage 04 splits in two. 04a (`04a_mechanics.md`) builds slide floors, rotating arrows and live lasers, each with its rules, fixtures, docs and a teach and a proof chamber that prove it in play. 04b (`04b_campaign.md`) builds the rest of the 16 new chambers and their order, and the catalogue, links and Play menu that scale to 20. Stage 04's decisions 1–19 stay in 04a with their numbers, and 04b cites them as "04a decision N". 04b's parts that need no new mechanic (lab chambers, chambers for the existing elements, catalogue, links, menu) may start before 04a is done. Earlier decisions here that name stage 04 mean both halves |
 | 16 | 2026-11-20 | Stage 04a is done: slide floors, turnable arrows and live lasers each shipped with their rules, fixtures, docs and a teach and a proof chamber (chambers 4 to 9). Its file is kept, unlike the files of the stages done before it, because 04b cites its decisions by number |
 | 17 | 2026-11-20 | `04a_mechanics.md` is removed after all, as the files of the stages done before it were. What later stages still need moved out first: the decisions 04b cites, into 04b's "Decisions made" with their 04a numbers; a summary of chambers 4–9, into 04b; the editor's needs, into stage 05; stage 03's profiling numbers, into `docs/performance.md`; that settling's end is argued, not proven, into `docs/elements.md`; and the way a mechanic was built, step by step, into `future.md`. The rest (each mechanic's spec, plan and the code as found, and what each decision was chosen over) is in `docs/` as built, or in git history |
@@ -167,7 +112,7 @@ Every stage file follows this layout:
 ```markdown
 # Stage NN — Title
 
-Status: Draft | Ready | In progress | Done
+Status: Draft | Ready | In progress | Done | Stopped
 Last revised: YYYY-MM-DD
 
 ## Goal

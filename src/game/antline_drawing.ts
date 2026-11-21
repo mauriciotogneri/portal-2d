@@ -62,8 +62,8 @@ const HIDING_WALL_KINDS: readonly PlacedKind[] = [
 /**
  * Whether an antline is lit: while the element it leads to is unblocked (a
  * door or the exit open, a laser, a light barrier or a fizzler off, a ditch
- * bridged, a blocked wall taking portals, an emitter on). A box has no
- * blocked flag, so a line to it is never lit.
+ * bridged, a blocked wall taking portals, an emitter on, an arrow turned). A
+ * box has no blocked flag, so a line to it is never lit.
  * @param state - The state drawn
  * @param antline - The antline
  * @returns True when it is lit

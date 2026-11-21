@@ -213,6 +213,7 @@ The script proves the route plays. To make it the chamber's recorded solution, p
 - Walking into anything it can't enter only turns the subject that way.
 - It can't enter an open ditch, a laser or light barrier that is on, a closed door or exit, a tile where a box rests, or an arrow from any way but the arrow's own. Fizzlers, buttons, switches and rays never stop it.
 - On an arrow, the subject can move only the arrow's way; the other three keys do nothing.
+- A linked arrow (one with an id and a turned way) points its turned way, a quarter turn from its own, while its link unblocks it: for good once a switch is used, while a button is held or a receiver lit. Turning, it turns a subject standing on it to face its new way, which is then the only way off.
 - A move counts when the subject ends on another tile (a crossing counts as one, a slide as one); turning and shooting cost no move.
 
 **Shots and portals.**
@@ -269,8 +270,8 @@ Note any element without an id that starts unblocked (the list's "always" lines)
 
 Group the floor tiles into regions the subject can walk between with the scenery as it is. Mark each edge between regions:
 
-- **Conditional:** a linked door, ditch, laser or light barrier, open only while its link is held. Note what holds it.
-- **One way:** an arrow, which lets the subject in its way only and never back. Several arrows in a row make a one-way corridor.
+- **Conditional:** a linked door, ditch, laser or light barrier, open only while its link is held, or a linked arrow, turned only while its link is held. Note what holds it.
+- **One way:** an arrow, which lets the subject in its way only and never back. Several arrows in a row make a one-way corridor. A linked arrow's way, and so the edge, turns with its link.
 - **A fizzler that is on:** walkable both ways, but crossing it closes both portals and destroys a carried box. Treat it as a reset of everything the subject carries.
 - **Slide floor:** an edge from each tile and way to wherever the slide stops, which may be far away or through a portal.
 
@@ -294,7 +295,7 @@ Look hardest at the long sightlines that end in a blocked wall, at the chamber's
 A cut is a boundary between two parts of the chamber that something can't cross. The most useful:
 
 - **An always-on fizzler as the only walking link, with no sightline across.** No portal survives the walk through it and no carried box crosses it, so nothing but the subject ever moves from one side to the other. Each box is bound to its side, and portals have to be set up afresh on each side.
-- **A one-way arrow.** The subject can go through and never come back the same way, so the region behind it must have another way out, or be visited last.
+- **A one-way arrow.** The subject can go through and never come back the same way, so the region behind it must have another way out, or be visited last. A linked arrow is a cut only while its link stays as it is: turning it changes which sides lead on and off it, and turns the subject standing on it.
 - **A conditional edge with no other way across.** Whatever holds it is required, so it becomes a goal of its own (step 5).
 
 Cuts settle most of the big questions before any route is written: which box can serve which button, which regions are visited in which order, which portal must be kept.
@@ -342,7 +343,7 @@ Paste the phases into the route check with a checkpoint after each crossing and 
 
 **Fetching a box back.** A box left on a button to open a way across can be recovered from the far side by a hop back next to it. A sightline through the box's own tile works, since shots pass boxes.
 
-**Getting out of a dead end.** Before walking into a region with no way out but the way in, make sure a portal that will still be open points somewhere useful. From inside, shoot the other colour onto a wall there and walk into it. A portal survives walking and every element but a fizzler.
+**Getting out of a dead end.** Before walking into a region with no way out but the way in, make sure a portal that will still be open points somewhere useful. From inside, shoot the other colour onto a wall there and walk into it. A portal survives walking and every element but a fizzler and a linked blocked wall becoming blocked under it.
 
 **The long shot.** A row or a column that runs the length of the chamber, past lasers, ditches and arrows, can end a long walk in one hop. Look for one whenever the route walks back the way it came.
 
@@ -365,7 +366,7 @@ When every crossing is ruled out with a reason, the argument holds for every ord
 ## Pitfalls
 
 1. **The map is upside down.** y grows upwards: the map prints the highest row first, and "up" is towards it.
-2. **A field left out is blocked.** A door, laser, fizzler or exit without `blocked` starts closed or on, and an emitter starts on.
+2. **A field left out is blocked.** A door, laser, light barrier, fizzler or exit without `blocked` starts closed or on, a ditch open and a blocked wall refusing portals, and an emitter starts on.
 3. **Lasers don't stop shots; light barriers and fizzlers do while on.** A pocket sealed by lasers is reachable by portal; one sealed by light barriers may not be.
 4. **Faces that refuse a portal.** Check the end plate or a fizzler's connector, the door or exit beside the wall, the neighbouring face of a wall already holding a portal, and blocked walls: four misses that look like hits on the map.
 5. **A box blocks a crossing onto its tile.** A box left on a button can make a portal face looking onto that button unusable.

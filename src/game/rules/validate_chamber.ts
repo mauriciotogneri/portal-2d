@@ -320,11 +320,11 @@ class ChamberValidator {
       }
 
       if ((boxes.length > 0) && startsBadly) {
-        this.problems.push(chamberError(boxes[0]?.field ?? '', tile, 'a box can only start on plain floor or a button'))
+        this.problems.push(chamberError(boxes[0]?.field ?? '', tile, 'a box can only start on plain floor, slide floor or a button'))
       }
 
       if ((subject !== undefined) && startsBadly) {
-        this.problems.push(chamberError(subject.field, tile, 'the subject can only start on plain floor or a button'))
+        this.problems.push(chamberError(subject.field, tile, 'the subject can only start on plain floor, slide floor or a button'))
       }
 
       if ((subject !== undefined) && (boxes.length > 0)) {

@@ -18,11 +18,11 @@ import {loadSprites} from '@/game/sprite_sources'
 // frame interval (between animation frames, which shows whether the browser
 // keeps up) on the page and in the console
 
-/** Width the chamber screen's stage leaves the chamber in a 1920 × 1080 window, in page pixels */
-const STAGE_WIDTH = 1486
+/** Width the chamber screen's stage leaves the chamber in a 1920 × 1080 window, in page pixels: the window less the 23rem rail and the stage's 2rem padding each side */
+const STAGE_WIDTH = 1488
 
-/** Height the chamber screen's stage leaves the chamber in a 1920 × 1080 window, in page pixels */
-const STAGE_HEIGHT = 1014
+/** Height the chamber screen's stage leaves the chamber in a 1920 × 1080 window, in page pixels: the window less the stage's 2rem padding each side */
+const STAGE_HEIGHT = 1016
 
 /** The pixel ratios measured, in order */
 const PIXEL_RATIOS: readonly number[] = [

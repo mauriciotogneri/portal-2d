@@ -502,7 +502,8 @@ export function stopsShot(draft: StateReader, x: number, y: number): boolean {
 /**
  * Whether a side of a wall takes portals now: a wall's always, a blocked
  * wall's only while it isn't blocked, but never a side facing a door or the
- * exit, or behind a laser's or a light barrier's end plate.
+ * exit, or behind a laser's or a light barrier's end plate or a fizzler's
+ * connector.
  * @param draft - The step's state
  * @param x - Column of the wall
  * @param y - Row of the wall

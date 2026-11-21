@@ -212,7 +212,7 @@ function formatSignNumber(chamberNumber: number | null): string {
   background: var(--color-ink);
 }
 
-/* The elements, in rows of seven, with room in the second for the kinds still to come */
+/* The elements, in rows of seven */
 .sign-elements {
   display: grid;
   grid-template-columns: repeat(7, 1fr);

@@ -24,8 +24,6 @@ export const VOLUME_MAX = 100 // Full volume: as loud as the game played before 
 
 const SOUND_VOLUME_STORAGE_KEY = 'portal-2d.sound-volume'
 const MUSIC_VOLUME_STORAGE_KEY = 'portal-2d.music-volume'
-const SOUND_SWITCH_STORAGE_KEY = 'portal-2d.sound-enabled' // The on/off switch the sound effects volume replaced
-const MUSIC_SWITCH_STORAGE_KEY = 'portal-2d.music-enabled' // The on/off switch the music volume replaced
 const LEGEND_STORAGE_KEY = 'portal-2d.legend-open'
 
 const VOLUME_SETTLE_TIME = 1000 // Milliseconds a volume must stay put before analytics hears of it, so a run of steps counts once
@@ -73,18 +71,15 @@ function isVolume(volume: number): boolean {
 }
 
 /**
- * Reads a stored volume. Missing or unreadable values count as full volume,
- * unless none is stored yet and the player had switched the sound off with
- * the on/off switch the volume replaced, which counts as off.
+ * Reads a stored volume. Missing or unreadable values count as full volume.
  * @param key - localStorage key of the volume
- * @param switchKey - localStorage key of the retired on/off switch
  * @returns The stored volume
  */
-function readVolume(key: string, switchKey: string): number {
+function readVolume(key: string): number {
   try {
     const stored = localStorage.getItem(key)
     if (stored === null) {
-      return readPreference(switchKey) ? VOLUME_MAX : 0
+      return VOLUME_MAX
     }
     const volume = /^\d+$/.test(stored) ? Number(stored) : Number.NaN
     return isVolume(volume) ? volume : VOLUME_MAX
@@ -134,8 +129,8 @@ function stopRetryingMusic(): void {
   window.removeEventListener('pointerdown', applyMusic)
 }
 
-export const soundVolume = ref(readVolume(SOUND_VOLUME_STORAGE_KEY, SOUND_SWITCH_STORAGE_KEY)) // The sound effects volume, from 0 (off) to VOLUME_MAX
-export const musicVolume = ref(readVolume(MUSIC_VOLUME_STORAGE_KEY, MUSIC_SWITCH_STORAGE_KEY)) // The music volume, from 0 (off) to VOLUME_MAX
+export const soundVolume = ref(readVolume(SOUND_VOLUME_STORAGE_KEY)) // The sound effects volume, from 0 (off) to VOLUME_MAX
+export const musicVolume = ref(readVolume(MUSIC_VOLUME_STORAGE_KEY)) // The music volume, from 0 (off) to VOLUME_MAX
 
 /**
  * The volumes in the order the menus list them, under Settings and in the
