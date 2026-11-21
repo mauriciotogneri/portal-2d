@@ -13,6 +13,13 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+for tool in ffmpeg ffprobe mp3gain; do
+  if ! command -v "$tool" > /dev/null; then
+    echo "Needs $tool: sudo apt install ffmpeg mp3gain" >&2
+    exit 1
+  fi
+done
+
 # Loudness every file is evened to, in LUFS: the loudest no effect has to be pushed past its peak to reach
 TARGET=-24
 
@@ -59,7 +66,8 @@ unmeasured_files=0
 for file in src/assets/audio/music/*.mp3 src/assets/audio/sound/*.mp3; do
   name=${file#src/assets/audio/}
   adjustment=${ADJUSTMENTS[$name]:-0}
-  read -r loudness peak < <(measure "$file")
+  # A file ffmpeg can't read prints nothing, so it reaches the check below instead of stopping the run
+  read -r loudness peak < <(measure "$file") || true
   if awk -v loudness="$loudness" -v unmeasured="$UNMEASURED" 'BEGIN { exit !(loudness == "" || loudness <= unmeasured) }'; then
     printf '%-26s could not be measured, left as it is\n' "$name"
     unmeasured_files=$((unmeasured_files + 1))
