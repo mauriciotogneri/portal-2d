@@ -1,8 +1,9 @@
 import {antlinesLitKey, drawAntlines, drawWallAntlines} from '@/game/antline_drawing'
 import type {BoxFall} from '@/game/box_fall'
+import type {BoxReturns} from '@/game/box_returns'
 import {DELTAS, Direction} from '@/game/direction'
 import {heldLook, lookOf} from '@/game/element_detail'
-import {drawLaserGlows, drawTurnableArrows, ELEMENT_DRAWINGS, glowStrength} from '@/game/element_drawings'
+import {drawLaserGlows, drawTurnableArrows, ELEMENT_DRAWINGS, glowStrength, type ReturningBoxes} from '@/game/element_drawings'
 import type {BlockedShares, ElementTransitions} from '@/game/element_transitions'
 import {drawExitShadow} from '@/game/exit_shadow'
 import type {FizzleParticles} from '@/game/fizzle_particles'
@@ -131,11 +132,12 @@ const BACKDROP_LAYERS: ReadonlySet<DrawLayer> = new Set<DrawLayer>([
  * @param state - The state drawn
  * @param layer - The layer
  * @param shares - How far blocked the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers that are changing are drawn, or null (the default) to draw every one as the state says
+ * @param returning - Which boxes resting at their start are on their way home, left out, or null (the default) when none is
  */
-function drawElementsOn(painter: TilePainter, state: RulesState, layer: DrawLayer, shares: BlockedShares | null = null): void {
+function drawElementsOn(painter: TilePainter, state: RulesState, layer: DrawLayer, shares: BlockedShares | null = null, returning: ReturningBoxes | null = null): void {
   for (const definition of ELEMENT_REGISTRY) {
     if (definition.layer === layer) {
-      ELEMENT_DRAWINGS[definition.kind](painter, state, shares)
+      ELEMENT_DRAWINGS[definition.kind](painter, state, shares, returning)
     }
   }
 }
@@ -470,8 +472,10 @@ export class Renderer {
 
   /**
    * Draws one layer above the backdrop: the core step's own, or every
-   * element type on it, in registry order. The shadows of the raised things
-   * on it go down before any of them, so touching ones don't shade each other.
+   * element type on it, in registry order, and on the boxes' layer each box
+   * on its way home taking shape at its start. The shadows of the raised
+   * things on it go down before any of them, so touching ones don't shade
+   * each other.
    * @param painter - Paints on the canvas, or on a layer of its own
    * @param state - The state drawn
    * @param layer - The layer
@@ -479,8 +483,12 @@ export class Renderer {
    * @param angle - How far the subject is turned part way through a turn, from SubjectTurn, or null to turn it squarely the way its pose faces
    * @param shares - How far blocked the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers that are changing are drawn, or null to draw every one as the state says
    * @param opening - How far the portal opening is drawn, or null to draw both open
+   * @param returns - The boxes on their way home, or null when none can be
+   * @param time - The frame's time, in milliseconds on the frame clock, or null to draw no box on its way home
    */
-  private drawLayer(painter: TilePainter, state: RulesState, layer: DrawLayer, pose: SubjectPose, angle: number | null, shares: BlockedShares | null, opening: OpeningProgress | null): void {
+  private drawLayer(painter: TilePainter, state: RulesState, layer: DrawLayer, pose: SubjectPose, angle: number | null, shares: BlockedShares | null, opening: OpeningProgress | null, returns: BoxReturns | null, time: number | null): void {
+    const returning: ReturningBoxes | null = ((returns !== null) && (time !== null)) ? (index) => returns.isReturningAt(state, index, time) : null
+
     painter.drawShadowsFirst(() => {
       switch (layer) {
         case 'portals':
@@ -493,7 +501,12 @@ export class Renderer {
           break
       }
 
-      drawElementsOn(painter, state, layer, shares)
+      drawElementsOn(painter, state, layer, shares, returning)
+
+      // Its shadow forming as its pieces land, or its pieces gathering for one that fell
+      if ((layer === 'items') && (returns !== null) && (time !== null)) {
+        returns.drawLanding(painter, state, time)
+      }
     })
   }
 
@@ -515,7 +528,7 @@ export class Renderer {
     const own = this.subjectLayerOf(state.chamber)
 
     own.erase()
-    this.drawLayer(own, state, layer, pose, angle, shares, opening)
+    this.drawLayer(own, state, layer, pose, angle, shares, opening, null, null)
     drawExitShadow(own, state.chamber, this.seeThroughExit ? 'destination-out' : 'source-atop')
     this.painter.drawLayer(own, false)
   }
@@ -603,9 +616,10 @@ export class Renderer {
    * Draws a whole frame, back to front: the backdrop, the arrows a link
    * turns, every layer above it,
    * with the boxes falling into ditches over the ditches, the rays over the
-   * buttons and switches and under the boxes, and a portal
-   * opening part way open, then the glows, the pieces of what a fizzle took
-   * and a missed shot's ripple. Part way along a slide, everything but the
+   * buttons and switches and under the boxes, each box on its way home
+   * taking shape at its start with the boxes, and a portal
+   * opening part way open, then the glows, the pieces of what a fizzle took,
+   * the pieces of the boxes flying home and a missed shot's ripple. Part way along a slide, everything but the
    * subject's pose is drawn as the state on the last tile it has reached
    * (shownState), and the state after the step once the slide ends. The
    * subject is drawn part way through its turn while it turns, and, while
@@ -621,8 +635,9 @@ export class Renderer {
    * @param fall - The boxes falling into ditches, or null (the default) when none can
    * @param openings - The portals opening, or null (the default) when none can
    * @param turn - The subject's turn, followed every frame drawn with a time, or null (the default) to draw it squarely the way it faces
+   * @param returns - The boxes on their way home, or null (the default) when none can be
    */
-  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null): void {
+  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null): void {
     // A canvas not yet sized for a chamber has nothing to draw
     if (this.painter.blockSize <= 0) {
       return
@@ -649,7 +664,7 @@ export class Renderer {
       if ((layer === 'subject') && state.completed) {
         this.drawLayerUnderExitShadow(shown, layer, pose, angle, shares, opening)
       } else if (!BACKDROP_LAYERS.has(layer)) {
-        this.drawLayer(this.painter, shown, layer, pose, angle, shares, opening)
+        this.drawLayer(this.painter, shown, layer, pose, angle, shares, opening, returns, time)
       }
 
       // Down in the pit, over the grate sliding away and under everything standing on the floor
@@ -667,6 +682,10 @@ export class Renderer {
 
     if ((time !== null) && (fizzle !== null)) {
       fizzle.draw(this.painter, time)
+    }
+
+    if ((time !== null) && (returns !== null)) {
+      returns.drawFlights(this.painter, shown, time)
     }
 
     if ((time !== null) && (ripple !== null)) {

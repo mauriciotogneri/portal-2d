@@ -345,6 +345,38 @@ export class TilePainter {
   }
 
   /**
+   * Draws only a raised sprite's shadow over a tile, see-through: something
+   * taking shape there, its shadow forming before it is whole. Nothing is
+   * drawn while only sprites are painted, nor for a sprite that casts no
+   * shadow.
+   * @param name - The sprite
+   * @param x - Column
+   * @param y - Row
+   * @param way - The way it is turned to face, from facing up as drawn
+   * @param opacity - How opaque the shadow is drawn, from 0 (not at all) to 1 (as drawSprite() draws it)
+   */
+  drawSpriteShadow(name: SpriteName, x: number, y: number, way: Direction, opacity: number): void {
+    if ((this.pass === 'sprites') || (opacity <= 0) || !RAISED_SPRITES.has(name)) {
+      return
+    }
+
+    const shadow = scaledShadow(name, this.tileSize)
+
+    if (shadow === null) {
+      return
+    }
+
+    this.context.save()
+
+    try {
+      this.context.globalAlpha = Math.min(opacity, 1)
+      this.drawTurned(shadow, Math.round(x * this.tileSize), Math.round(this.tileTop(y)), this.tileSize, way)
+    } finally {
+      this.context.restore()
+    }
+  }
+
+  /**
    * Draws a sprite over a tile, with its overhang around it, see-through:
    * something fading in or out. A raised one's shadow fades with it.
    * @param name - The sprite

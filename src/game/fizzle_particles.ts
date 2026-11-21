@@ -1,13 +1,9 @@
-import {findDestroyedBoxes} from '@/game/destroyed_boxes'
 import {DELTAS, type Direction} from '@/game/direction'
-import {boxSprite} from '@/game/element_drawings'
-import {type ElementLook, lookOf} from '@/game/element_detail'
 import {GameEvent} from '@/game/game_event'
 import {pieceNumber} from '@/game/piece_number'
-import {CARRIED_BOX_AHEAD, CARRIED_BOX_SIZE, PORTAL_SPRITES} from '@/game/renderer'
+import {PORTAL_SPRITES} from '@/game/renderer'
 import {PORTAL_COLORS} from '@/game/rules/portal_color'
 import type {RulesState} from '@/game/rules/rules_state'
-import {NO_BOX} from '@/game/rules/state_layout'
 import type {SpriteName} from '@/game/sprite_set'
 import type {PiecePlacement, TilePainter} from '@/game/tile_painter'
 
@@ -20,7 +16,6 @@ type Burst = {
   readonly y: number // Row of its middle, in tiles
   readonly size: number // Its side, as a share of a tile
   readonly way: Direction // The way it was turned to face
-  readonly look: ElementLook | null // A box's look of its own (element_detail), so its pieces show it, or null for the sprite as it is
   readonly seed: number // Sets its pieces' paths apart from another burst's
   readonly startTime: number // When it started breaking up, in milliseconds on the frame clock
 }
@@ -86,28 +81,27 @@ function placePiece(burst: Burst, progress: number, offsetX: number, offsetY: nu
 
 /**
  * What the latest fizzle took, drawn breaking up over a short time: each
- * portal it closed and a box it destroyed, and each box a door, a laser, a
- * light barrier or a fizzler destroyed by closing or switching on where it
- * lay, come apart in pieces of their own sprites, which round off into dots as they drift a short way out, shrink
- * and fade. Purely visual: the rules have already settled the step, and
- * nothing waits for the pieces.
+ * portal it closed, and each portal a fizzler closed by switching on, come
+ * apart in pieces of their own sprites, which round off into dots as they
+ * drift a short way out, shrink and fade. A box a fizzle or anything else
+ * destroys comes apart and flies home instead (BoxReturns). Purely visual:
+ * the rules have already settled the step, and nothing waits for the
+ * pieces.
  */
 export class FizzleParticles {
   private bursts: readonly Burst[] = [] // What is breaking up, empty when nothing is
   private burstCount = 0 // Bursts started so far, which seeds each new one
 
   /**
-   * Starts breaking up what a step's fizzlers took. When the subject was
-   * caught in a field (fizzled): each portal open before it and closed after
-   * it, where it was, and a box carried before it and gone after it, unless
-   * it was put down, where it was carried at the step's end. Otherwise only each portal a fizzler
-   * closed by switching on: one closed in the step whose wall side faced a
-   * fizzler that is on after it, so a portal a blocked wall closed in the
-   * same step still just vanishes. And each box destroyed where it lay or
-   * was put down (boxDestroyed), but one that fell into a ditch. Replaces
-   * anything still breaking up, unless the step took nothing, or it is a
-   * later part of a step whose earlier part broke something up (a slide's
-   * stop after a fizzler it passed), which it joins.
+   * Starts breaking up the portals a step's fizzlers took. When the subject
+   * was caught in a field (fizzled): each portal open before it and closed
+   * after it, where it was. Otherwise only each portal a fizzler closed by
+   * switching on: one closed in the step whose wall side faced a fizzler
+   * that is on after it, so a portal a blocked wall closed in the same step
+   * still just vanishes. Replaces anything still breaking up, unless the
+   * step took nothing, or it is a later part of a step whose earlier part
+   * broke something up (a slide's stop after a fizzler it passed), which it
+   * joins.
    * @param before - The state before the step, or before this part of it
    * @param after - The state after the step, or after this part of it
    * @param events - What happened in the step, or in this part of it
@@ -135,40 +129,6 @@ export class FizzleParticles {
           y: before.portalY(color) + 0.5,
           size: 1,
           way: side,
-          look: null,
-          seed: this.burstCount++,
-          startTime: time,
-        })
-      }
-    }
-
-    // A box put down in the step was let go before the field could take it,
-    // even when a button it landed on switched the field on under the subject
-    if (subjectFizzled && (before.carriedBox !== NO_BOX) && (after.carriedBox === NO_BOX) && (!events.includes(GameEvent.BOX_PUT_DOWN))) {
-      const ahead = DELTAS[after.facing]
-      const sprite = boxSprite(after.chamber, before.carriedBox, after.facing)
-
-      bursts.push({
-        sprite: sprite.name,
-        x: after.subjectX + 0.5 + (ahead.dx * CARRIED_BOX_AHEAD),
-        y: after.subjectY + 0.5 + (ahead.dy * CARRIED_BOX_AHEAD),
-        size: CARRIED_BOX_SIZE,
-        way: sprite.way,
-        look: lookOf(after.chamber, 'box', before.carriedBox),
-        seed: this.burstCount++,
-        startTime: time,
-      })
-    }
-
-    for (const box of findDestroyedBoxes(before, after, events)) {
-      if (!box.fell) {
-        bursts.push({
-          sprite: box.sprite,
-          x: box.x,
-          y: box.y,
-          size: box.size,
-          way: box.way,
-          look: lookOf(after.chamber, 'box', box.index),
           seed: this.burstCount++,
           startTime: time,
         })
@@ -217,7 +177,7 @@ export class FizzleParticles {
         continue
       }
 
-      painter.drawSpritePieces(burst.sprite, burst.x, burst.y, burst.size, burst.way, PIECES_ACROSS, (offsetX, offsetY, index) => placePiece(burst, progress, offsetX, offsetY, index), burst.look)
+      painter.drawSpritePieces(burst.sprite, burst.x, burst.y, burst.size, burst.way, PIECES_ACROSS, (offsetX, offsetY, index) => placePiece(burst, progress, offsetX, offsetY, index))
     }
   }
 }

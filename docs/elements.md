@@ -140,7 +140,7 @@ A box picked up while the subject stands in a fizzler that is on, from the tile 
 
 ### The fizzler rule
 
-If the subject stands in a fizzler that is on, both portals close and a carried box is destroyed (a slide also runs this rule on each tile it passes, see [a slide](#a-slide)): it goes back to its start tile (see [one box per tile](#one-box-per-tile)) and is no longer carried. `fizzled` is reported at most once per step, and only if the subject wasn't standing in a fizzler that was on when the step began: it walked or crossed into the field, or the field turned on under it. Nothing remembers having been inside a field.
+If the subject stands in a fizzler that is on, both portals close and a carried box is destroyed (a slide also runs this rule on each tile it passes, see [a slide](#a-slide)): it goes back to its start tile (see [one box per tile](#one-box-per-tile)) and is no longer carried, `carriedBoxDestroyed`. `fizzled` is reported at most once per step, and only if the subject wasn't standing in a fizzler that was on when the step began: it walked or crossed into the field, or the field turned on under it. Nothing remembers having been inside a field.
 
 ### A box where something blocks
 
@@ -192,11 +192,11 @@ A button, switch or receiver names its links by element id. Only blocked walls (
 | 5 | Exit | Opened: `exitOpened` | Closed: `exitClosed` |
 | 6 | Fizzler | Off: `fizzlerSwitchedOff` | On: `fizzlerSwitchedOn` (see [the fizzler rule](#the-fizzler-rule)), and a portal on a wall side facing it closes: `portalFizzled` |
 | 7 | Laser | Off: `laserSwitchedOff` | On: `laserSwitchedOn` |
-| 8 | Box | Back to its start tile (see [one box per tile](#one-box-per-tile)), unless it is carried | Nothing; the validator warns about a box linked to a button or a receiver |
+| 8 | Box | Back to its start tile (see [one box per tile](#one-box-per-tile)), unless it is carried: `boxSentBack`, when it was away from there | Nothing; the validator warns about a box linked to a button or a receiver |
 | 9 | Arrow | Points its turned way: `arrowTurned`; a subject on it turns with it | Points its own way: `arrowTurned`; a subject on it turns with it |
 | 10 | Emitter | On: its ray leaves its firing face (see [rays](#rays)) | Off: it sends no ray |
 
-A door or the exit reports its event only when it actually opens or closes, an arrow `arrowTurned` only when it actually turns, a blocked wall `blockedWallSwitched` and a ditch `ditchSwitched` only when it actually switches, a light barrier `lightBarrierSwitchedOff` or `lightBarrierSwitchedOn`, a laser `laserSwitchedOff` or `laserSwitchedOn` and a fizzler `fizzlerSwitchedOff` or `fizzlerSwitchedOn` only when it actually switches off or on, and a fizzler reports `portalFizzled` only when it closes a portal; the others are silent.
+A door or the exit reports its event only when it actually opens or closes, an arrow `arrowTurned` only when it actually turns, a blocked wall `blockedWallSwitched` and a ditch `ditchSwitched` only when it actually switches, a light barrier `lightBarrierSwitchedOff` or `lightBarrierSwitchedOn`, a laser `laserSwitchedOff` or `laserSwitchedOn` and a fizzler `fizzlerSwitchedOff` or `fizzlerSwitchedOn` only when it actually switches off or on, a fizzler reports `portalFizzled` only when it closes a portal, and a box `boxSentBack` only when it was away from its start; the others are silent.
 
 An arrow turning under the subject turns the subject with it, to face the arrow's new way, so on an arrow the subject always faces the way it points, and its shots fly that way; a carried box stays carried. It can then leave only that way. An arrow turns only as links act: as a button goes down or comes up, or a receiver lights or goes dark, while the step settles (a chamber's start included), or on a switch's use. A slide judges no button or receiver until it ends, so no arrow turns mid-slide, but a slide's end can turn one, under the subject too.
 
@@ -204,7 +204,7 @@ A blocked wall is a wall in every state: it stops walking and shots, and joins t
 
 ### The exit
 
-A step that ends with the subject on the exit completes the chamber. The subject can only get there while the exit is open, since walking and crossing a portal both refuse a closed exit, so the chamber is completed even when the same step closes the exit under it.
+A step that ends with the subject on the exit completes the chamber, `exitReached`. The subject can only get there while the exit is open, since walking and crossing a portal both refuse a closed exit, so the chamber is completed even when the same step closes the exit under it.
 
 ### Something blocking under the subject
 

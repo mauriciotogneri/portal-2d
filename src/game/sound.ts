@@ -1,5 +1,6 @@
 import blockedWallUrl from '@/assets/audio/sound/blocked_wall.mp3'
 import boxUrl from '@/assets/audio/sound/box.mp3'
+import boxDestroyedUrl from '@/assets/audio/sound/box_destroyed.mp3'
 import {createAudioPlayer} from '@/game/audio_sources'
 import buttonOffUrl from '@/assets/audio/sound/button_off.mp3'
 import buttonOnUrl from '@/assets/audio/sound/button_on.mp3'
@@ -8,6 +9,7 @@ import ditchGrateUrl from '@/assets/audio/sound/ditch_grate.mp3'
 import doorCloseUrl from '@/assets/audio/sound/door_close.mp3'
 import doorOpenUrl from '@/assets/audio/sound/door_open.mp3'
 import errorUrl from '@/assets/audio/sound/error.mp3'
+import exitReachedUrl from '@/assets/audio/sound/exit_reached.mp3'
 import fizzleUrl from '@/assets/audio/sound/fizzle.mp3'
 import fizzlerOffUrl from '@/assets/audio/sound/fizzler_off.mp3'
 import fizzlerOnUrl from '@/assets/audio/sound/fizzler_on.mp3'
@@ -20,6 +22,7 @@ import menuMoveUrl from '@/assets/audio/sound/menu_move.mp3'
 import portalBlueUrl from '@/assets/audio/sound/portal_blue.mp3'
 import portalOrangeUrl from '@/assets/audio/sound/portal_orange.mp3'
 import shootUrl from '@/assets/audio/sound/shoot.mp3'
+import slidingFloorUrl from '@/assets/audio/sound/sliding_floor.mp3'
 import startUrl from '@/assets/audio/sound/start.mp3'
 import switchUrl from '@/assets/audio/sound/switch.mp3'
 import turnableArrowUrl from '@/assets/audio/sound/turnable_arrow.mp3'
@@ -52,6 +55,9 @@ export class Sound {
   static readonly LASER_ON = new Sound(laserOnUrl, 0.37) // A laser switched on by a link
   static readonly FIZZLER_OFF = new Sound(fizzlerOffUrl, 0.63) // A fizzler switched off by a link
   static readonly FIZZLER_ON = new Sound(fizzlerOnUrl, 0.12) // A fizzler switched on by a link
+  static readonly BOX_DESTROYED = new Sound(boxDestroyedUrl, 0.43) // A box destroyed where something blocks, carried into an active fizzler, or sent back to its start by a link
+  static readonly EXIT_REACHED = new Sound(exitReachedUrl, 0.34) // The subject reached the open exit
+  static readonly SLIDING_FLOOR = new Sound(slidingFloorUrl, 0.12) // The subject started sliding on a slide floor, once per slide
   static readonly MENU_MOVE = new Sound(menuMoveUrl, 0.17) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu; played by the screens, not the game
   static readonly MENU_ACCEPT = new Sound(menuAcceptUrl, 0.15) // A menu row or dialog button pressed (Enter, Space or a click), a setting changed or a key bound; played by the screens, not the game
   static readonly START = new Sound(startUrl, 0.31) // Chamber picked on the home screen; played by the screens, not the game

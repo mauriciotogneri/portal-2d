@@ -836,6 +836,7 @@ function settle(draft: StateDraft): void {
     if (draft.changes === changes) {
       if (draft.chamber.elementAt('exit', draft.subjectX, draft.subjectY) !== NO_ELEMENT) {
         draft.complete()
+        draft.emit(GameEvent.EXIT_REACHED)
       }
 
       return

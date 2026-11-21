@@ -36,10 +36,10 @@ function turnFizzlerOn(draft: StateDraft, index: number): void {
 
 /**
  * The fizzler rule, in every pass while the subject stands in the field:
- * if it is on, both portals close and a carried box is destroyed. Reports
- * fizzled at most once per step, and only when the subject wasn't standing
- * in a field that was on when the step began, so nothing remembers having
- * been inside one.
+ * if it is on, both portals close and a carried box is destroyed, reporting
+ * carriedBoxDestroyed. Reports fizzled at most once per step, and only when
+ * the subject wasn't standing in a field that was on when the step began,
+ * so nothing remembers having been inside one.
  * @param draft - The step's state
  * @param index - The fizzler's index in the chamber's fizzler list
  */
@@ -49,7 +49,11 @@ function applyFizzlerRule(draft: StateDraft, index: number): void {
   }
 
   draft.closePortals()
-  draft.destroyCarriedBox()
+
+  if (draft.isCarrying) {
+    draft.destroyCarriedBox()
+    draft.emit(GameEvent.CARRIED_BOX_DESTROYED)
+  }
 
   const before = draft.before
   const startedInField = (before !== null) && before.isBlockedAt('fizzler', before.subjectX, before.subjectY)
@@ -78,6 +82,7 @@ export const FIZZLER_ELEMENT = defineElement<BlockableData>()({
   events: [
     GameEvent.FIZZLED,
     GameEvent.PORTAL_FIZZLED,
+    GameEvent.CARRIED_BOX_DESTROYED,
     GameEvent.FIZZLER_SWITCHED_OFF,
     GameEvent.FIZZLER_SWITCHED_ON,
   ],

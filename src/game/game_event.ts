@@ -9,6 +9,8 @@ export type GameEvent =
   | 'boxPickedUp'
   | 'boxPutDown'
   | 'boxDestroyed'
+  | 'carriedBoxDestroyed'
+  | 'boxSentBack'
   | 'fizzled'
   | 'portalFizzled'
   | 'crossed'
@@ -19,6 +21,7 @@ export type GameEvent =
   | 'buttonPressed'
   | 'buttonReleased'
   | 'switchUsed'
+  | 'exitReached'
   | 'slideStarted'
   | 'slideStopped'
   | 'arrowTurned'
@@ -43,6 +46,8 @@ export const GameEvent = {
   BOX_PICKED_UP: 'boxPickedUp', // The subject picked up a box
   BOX_PUT_DOWN: 'boxPutDown', // The subject put down the box it carried
   BOX_DESTROYED: 'boxDestroyed', // A box lying where a door closed, a ditch opened, or a laser, a light barrier or a fizzler switched on went back to its start
+  CARRIED_BOX_DESTROYED: 'carriedBoxDestroyed', // A box the subject carried into an active fizzler went back to its start
+  BOX_SENT_BACK: 'boxSentBack', // A link sent a box lying away from its start back there
   FIZZLED: 'fizzled', // The subject entered an active fizzler, closing both portals
   PORTAL_FIZZLED: 'portalFizzled', // A fizzler turning on closed a portal on a wall side facing it
   CROSSED: 'crossed', // The subject came out of a portal
@@ -53,6 +58,7 @@ export const GameEvent = {
   BUTTON_PRESSED: 'buttonPressed', // A button went down
   BUTTON_RELEASED: 'buttonReleased', // A button came up
   SWITCH_USED: 'switchUsed', // The subject used a switch
+  EXIT_REACHED: 'exitReached', // The subject reached the open exit, completing the chamber
   SLIDE_STARTED: 'slideStarted', // The subject, having entered a slide floor, slid on from it
   SLIDE_STOPPED: 'slideStopped', // A slide that started ended
   ARROW_TURNED: 'arrowTurned', // An arrow turned, by a link, to its turned way or back

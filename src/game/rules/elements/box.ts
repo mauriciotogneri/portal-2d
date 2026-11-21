@@ -5,13 +5,23 @@ import type {StateDraft} from '@/game/rules/state_draft'
 
 /**
  * Sends a box back to its start tile, when a link unblocks it, unless the
- * subject carries it. Blocking it does nothing.
+ * subject carries it, reporting it only if the box was away from there.
+ * Blocking it does nothing.
  * @param draft - The step's state
  * @param index - The box's index in the chamber's box list
  */
 function sendBoxBack(draft: StateDraft, index: number): void {
-  if (draft.carriedBox !== index) {
-    draft.sendBoxToStart(index)
+  if (draft.carriedBox === index) {
+    return
+  }
+
+  const x = draft.boxX(index)
+  const y = draft.boxY(index)
+
+  draft.sendBoxToStart(index)
+
+  if ((draft.boxX(index) !== x) || (draft.boxY(index) !== y)) {
+    draft.emit(GameEvent.BOX_SENT_BACK)
   }
 }
 
@@ -70,6 +80,7 @@ export const BOX_ELEMENT = defineElement<BoxData>()({
     GameEvent.BOX_PICKED_UP,
     GameEvent.BOX_PUT_DOWN,
     GameEvent.BOX_DESTROYED,
+    GameEvent.BOX_SENT_BACK,
   ],
   hooks: {
     linkUnblocked: sendBoxBack,

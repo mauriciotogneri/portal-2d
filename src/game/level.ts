@@ -1,4 +1,5 @@
 import {BoxFall} from '@/game/box_fall'
+import {BoxReturns} from '@/game/box_returns'
 import type {ChamberData} from '@/game/chamber_data'
 import type {Direction} from '@/game/direction'
 import {ElementTransitions} from '@/game/element_transitions'
@@ -12,6 +13,7 @@ import {Input} from '@/game/input'
 import type {KeyBindings} from '@/game/key_bindings'
 import {MissRipple} from '@/game/miss_ripple'
 import {PortalOpenings} from '@/game/portal_openings'
+import {sendsBoxesHome} from '@/game/returned_boxes'
 import {getChamberHash, type ReplayData} from '@/game/replay_data'
 import {hasAmbientLife, Renderer} from '@/game/renderer'
 import {Action, actionOfPress} from '@/game/rules/action'
@@ -88,7 +90,9 @@ export class Level {
     [GameEvent.REFUSED]: Sound.ERROR,
     [GameEvent.BOX_PICKED_UP]: Sound.BOX,
     [GameEvent.BOX_PUT_DOWN]: Sound.BOX,
-    [GameEvent.BOX_DESTROYED]: null,
+    [GameEvent.BOX_DESTROYED]: Sound.BOX_DESTROYED,
+    [GameEvent.CARRIED_BOX_DESTROYED]: Sound.BOX_DESTROYED,
+    [GameEvent.BOX_SENT_BACK]: Sound.BOX_DESTROYED,
     [GameEvent.FIZZLED]: Sound.FIZZLE,
     [GameEvent.PORTAL_FIZZLED]: null,
     [GameEvent.CROSSED]: Sound.CROSS,
@@ -99,7 +103,8 @@ export class Level {
     [GameEvent.BUTTON_PRESSED]: Sound.BUTTON_ON,
     [GameEvent.BUTTON_RELEASED]: Sound.BUTTON_OFF,
     [GameEvent.SWITCH_USED]: Sound.SWITCH,
-    [GameEvent.SLIDE_STARTED]: null,
+    [GameEvent.EXIT_REACHED]: Sound.EXIT_REACHED,
+    [GameEvent.SLIDE_STARTED]: Sound.SLIDING_FLOOR,
     [GameEvent.SLIDE_STOPPED]: null,
     [GameEvent.ARROW_TURNED]: Sound.TURNABLE_ARROW,
     [GameEvent.BLOCKED_WALL_SWITCHED]: Sound.BLOCKED_WALL,
@@ -132,6 +137,7 @@ export class Level {
   private readonly changes = new ElementTransitions() // The arrows, the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers changing over a few frames after a step switched them, if any
   private readonly ripple = new MissRipple() // Where the latest missed portal shot stopped, rippling over a few frames, if anywhere
   private readonly fall = new BoxFall() // The boxes the latest step dropped into ditches, falling over a few frames, if any
+  private readonly returns = new BoxReturns() // The boxes the latest steps sent home, coming apart and flying home, or gathering there, over a few frames, if any
   private readonly openings = new PortalOpenings() // The portals shots opened lately, opening over a few frames, if any
   private readonly turn = new SubjectTurn() // The subject's facing as drawn, turning over a few frames whenever it comes to face another way
   private slideBeats: SlideBeat[] = [] // What the slide being drawn still has waiting, in order; empty when none is
@@ -196,6 +202,7 @@ export class Level {
     this.changes.clear()
     this.ripple.clear()
     this.fall.clear()
+    this.returns.clear()
     this.openings.clear()
     this.turn.clear()
 
@@ -337,7 +344,7 @@ export class Level {
 
   /**
    * Draws the current state, part way through the step being drawn, if any,
-   * with what moves with time alone at this time, what breaks up or falls, a portal
+   * with what moves with time alone at this time, what breaks up, falls or flies home, a portal
    * opening, a missed shot's ripple, the subject turning and the arrows, the blocked walls, the ditches, the doors,
    * the exit, the fizzlers, the lasers and the light barriers changing included, or held still when the player asks for
    * reduced motion.
@@ -348,7 +355,7 @@ export class Level {
       const frameStats = this.frameStats
       const drawStart = (frameStats === null) ? 0 : performance.now()
 
-      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn)
+      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns)
       frameStats?.recordDraw(performance.now() - drawStart)
     }
   }
@@ -387,13 +394,13 @@ export class Level {
   }
 
   /**
-   * Whether what happened can break something up: a fizzle, a portal a
-   * fizzler closed by switching on, or a box destroyed.
+   * Whether what happened can break a portal up: a fizzle, or a portal a
+   * fizzler closed by switching on.
    * @param events - What happened
    * @returns True when it can
    */
   private static breaksUp(events: readonly GameEvent[]): boolean {
-    return events.includes(GameEvent.FIZZLED) || events.includes(GameEvent.PORTAL_FIZZLED) || events.includes(GameEvent.BOX_DESTROYED)
+    return events.includes(GameEvent.FIZZLED) || events.includes(GameEvent.PORTAL_FIZZLED)
   }
 
   /**
@@ -478,7 +485,7 @@ export class Level {
    * Takes a step of the rules: records it in the log,
    * counts the move and the portals opened, starts drawing the step when it changed the state, with
    * each arrow, blocked wall, ditch, door, exit, fizzler, laser and light barrier it switched changing, what it took
-   * breaking up when it fizzled, each box it destroyed breaking up or falling, a portal it opened opening, and a ripple
+   * breaking up when it fizzled, each box it sent home flying there or falling, a portal it opened opening, and a ripple
    * where a portal shot it refused stopped, and plays the sounds of what happened, a missed portal shot's own.
    * A step that slid and is drawn over time leaves all but the log and the
    * counts waiting until the subject gets to each tile, and the end of the
@@ -601,8 +608,9 @@ export class Level {
   /**
    * Shows what happened from one state to the next, all of a step or a part
    * of a slide: each arrow, blocked wall, ditch, door, exit, fizzler, laser and
-   * light barrier switched starts changing, what a fizzle took breaks up, each box
-   * destroyed breaks up or falls, a portal opened opens and a refused portal
+   * light barrier switched starts changing, the portals a fizzle took break
+   * up, each box sent home comes apart and flies there, or falls into a
+   * ditch and gathers there, a portal opened opens and a refused portal
    * shot ripples, all only when motion is allowed; then the sounds play, and
    * the completion is told when the chamber is completed, unless it waits
    * for a walk-out.
@@ -620,14 +628,19 @@ export class Level {
         this.changes.start(before, after, time)
       }
 
-      // A fizzler breaks up what it takes: both portals and a carried box when the subject is caught in it, a portal facing it when it turns on; and a box lying where something closes or switches on breaks up too
+      // A fizzler breaks up the portals it takes: both when the subject is caught in it, one facing it when it turns on
       if (Level.breaksUp(events)) {
         this.fizzle.start(before, after, events, time, joinsBreakUp)
       }
 
-      // Unless it lay on a ditch that opened, into which it falls
+      // A box lying on a ditch that opened falls into it
       if (events.includes(GameEvent.BOX_DESTROYED)) {
         this.fall.start(before, after, events, time)
+      }
+
+      // Each box sent home comes apart where it was and flies there, or, one that fell, gathers there
+      if (sendsBoxesHome(events)) {
+        this.returns.start(before, after, events, time)
       }
 
       // A portal a shot opened grows open on its wall
@@ -716,7 +729,7 @@ export class Level {
 
     // So does anything that glows, breaks up, falls, changes, opens, ripples or turns,
     // paused or not, and the first frame after it stops, which draws it still
-    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.fall.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
+    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
 
     if (stateUpdated || wasAnimating || ambient || this.ambientDrawn) {
       this.render(time)

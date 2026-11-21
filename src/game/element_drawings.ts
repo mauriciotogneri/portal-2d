@@ -31,12 +31,18 @@ import type {PiecePlacer, TilePainter} from '@/game/tile_painter'
 // with the portals'
 
 /**
+ * Whether a box resting at its start is drawn taking shape there, on its way
+ * home (BoxReturns), rather than resting.
+ */
+export type ReturningBoxes = (index: number) => boolean
+
+/**
  * Draws every element of one type in a state, with the blocked walls, the
  * ditches, the doors, the exit, the fizzlers, the lasers and the light
  * barriers that are changing drawn part way, or every one as the state says
- * when no shares are given.
+ * when no shares are given, and the boxes on their way home left out.
  */
-export type ElementDrawing = (painter: TilePainter, state: RulesState, shares?: BlockedShares | null) => void
+export type ElementDrawing = (painter: TilePainter, state: RulesState, shares?: BlockedShares | null, returning?: ReturningBoxes | null) => void
 
 /**
  * One end of a beam, or of a fizzler's field, running a way: where the tile
@@ -786,13 +792,16 @@ export function boxSprite(chamber: CompiledChamber, index: number, held: Directi
 
 /**
  * Draws the boxes that lie in the chamber, on a button as on the floor, a
- * mirror box with its mirror. A carried box is drawn with the subject.
+ * mirror box with its mirror. A carried box is drawn with the subject, and
+ * a box on its way home by its return (BoxReturns).
  * @param painter - Paints on the canvas
  * @param state - The state drawn
+ * @param _ - Unused: boxes don't change part way
+ * @param returning - Which boxes resting at their start are on their way home, or null (the default) when none is
  */
-function drawBoxes(painter: TilePainter, state: RulesState): void {
+function drawBoxes(painter: TilePainter, state: RulesState, _: BlockedShares | null = null, returning: ReturningBoxes | null = null): void {
   for (let i = 0; i < state.chamber.stateLayout.boxCount; i++) {
-    if (i === state.carriedBox) {
+    if ((i === state.carriedBox) || (returning?.(i) === true)) {
       continue
     }
 
