@@ -14,4 +14,6 @@
 
 ----
 
-there is a bridge over a drich that is a sliding floor. the player needs to stop in the middle but the sliding door doesnot allow it. the only way is to enable a light barrier that stops the player mid way through the sliding floor
+Ideas:
+- there is a bridge over a drich that is a sliding floor. the player needs to stop in the middle but the sliding door doesnot allow it. the only way is to enable a light barrier that stops the player mid way through the sliding floor
+- align doors and they all have to open in order to shoot a portal through all of them. there a box missing so you have to stand on one of the buttons in order to get all the doors open at the same time
