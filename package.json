@@ -21,6 +21,7 @@
     "solve": "tsx --tsconfig tsconfig.scripts.json scripts/solve.ts",
     "solver:check": "tsx --tsconfig tsconfig.scripts.json scripts/check_solver.ts",
     "state-set:bench": "tsx --tsconfig tsconfig.scripts.json scripts/bench_state_set.ts",
+    "audio:normalize": "bash scripts/normalize_audio.sh",
     "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {

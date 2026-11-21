@@ -37,63 +37,61 @@ import turnableArrowUrl from '@/assets/audio/sound/turnable_arrow.mp3'
  * the beginning every time it plays, cutting itself off if still playing.
  */
 export class Sound {
-  static masterVolume = 1 // The player's sound effects volume, from 0 (off: play() does nothing) to 1, multiplying every effect's own volume
+  static masterVolume = 1 // The player's sound effects volume, from 0 (off: play() does nothing) to 1, multiplying the effects' volume
+  private static readonly VOLUME = 0.5 // Playback volume of every effect at full master volume: their files are evened to one loudness (scripts/normalize_audio.sh), and this puts them 10 dB above the music
 
-  static readonly PORTAL_BLUE = new Sound(portalBlueUrl, 0.27) // Blue portal opened
-  static readonly PORTAL_ORANGE = new Sound(portalOrangeUrl, 0.24) // Orange portal opened
-  static readonly SHOOT = new Sound(shootUrl, 0.25) // Portal shot missed: nothing there takes a portal
-  static readonly BUTTON_ON = new Sound(buttonOnUrl, 0.27) // Button pressed down
-  static readonly BUTTON_OFF = new Sound(buttonOffUrl, 0.56) // Button released
-  static readonly BOX = new Sound(boxUrl, 0.05) // Box picked up or put down
-  static readonly FIZZLE = new Sound(fizzleUrl, 0.27) // Subject entered an active fizzler
-  static readonly CROSS = new Sound(crossUrl, 0.35) // Subject went through a portal
-  static readonly DOOR_OPEN = new Sound(doorOpenUrl, 0.15) // Door or exit opened
-  static readonly DOOR_CLOSE = new Sound(doorCloseUrl, 0.15) // Door or exit closed
-  static readonly ERROR = new Sound(errorUrl, 0.13) // Action refused
-  static readonly SWITCH = new Sound(switchUrl, 0.72) // Switch used
-  static readonly TURNABLE_ARROW = new Sound(turnableArrowUrl, 0.28) // A turnable arrow turned, by a link, to its turned way or back
-  static readonly BLOCKED_WALL = new Sound(blockedWallUrl, 0.18) // A blocked wall switched, by a link, to take portals or to refuse them
-  static readonly DITCH_GRATE = new Sound(ditchGrateUrl, 0.12) // A ditch's grate slid in or out, a link bridging or opening it
-  static readonly LIGHT_BARRIER_OFF = new Sound(lightBarrierOffUrl, 0.33) // A light barrier switched off by a link
-  static readonly LIGHT_BARRIER_ON = new Sound(lightBarrierOnUrl, 0.15) // A light barrier switched on by a link
-  static readonly LASER_OFF = new Sound(laserOffUrl, 0.33) // A laser switched off by a link
-  static readonly LASER_ON = new Sound(laserOnUrl, 0.37) // A laser switched on by a link
-  static readonly FIZZLER_OFF = new Sound(fizzlerOffUrl, 0.63) // A fizzler switched off by a link
-  static readonly FIZZLER_ON = new Sound(fizzlerOnUrl, 0.12) // A fizzler switched on by a link
-  static readonly BOX_DESTROYED = new Sound(boxDestroyedUrl, 0.43) // A box destroyed where something blocks, carried into an active fizzler, or sent back to its start by a link
-  static readonly EXIT_REACHED = new Sound(exitReachedUrl, 0.34) // The subject reached the open exit
-  static readonly SLIDING_FLOOR = new Sound(slidingFloorUrl, 0.12) // The subject started sliding on a slide floor, once per slide
-  static readonly RECEIVER_ON = new Sound(receiverOnUrl, 0.14) // A ray reached a receiver, which lit up
-  static readonly RECEIVER_OFF = new Sound(receiverOffUrl, 0.54) // A receiver no ray reaches any more went dark
-  static readonly EMITTER_ON = new Sound(emitterOnUrl, 0.71) // An emitter switched on by a link
-  static readonly EMITTER_OFF = new Sound(emitterOffUrl, 0.25) // An emitter switched off by a link
-  static readonly MIRROR_BOX_RAY = new Sound(mirrorBoxRayUrl, 0.39) // A ray started bouncing off a mirror box, one put down in it included
-  static readonly MENU_MOVE = new Sound(menuMoveUrl, 0.17) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu, or a volume stepped (Left, Right or the pointer); played by the screens, not the game
-  static readonly MENU_ACCEPT = new Sound(menuAcceptUrl, 0.15) // A menu row or dialog button pressed (Enter, Space or a click), never a volume row, or a key bound; played by the screens, not the game
-  static readonly START = new Sound(startUrl, 0.31) // Chamber picked on the home screen; played by the screens, not the game
+  static readonly PORTAL_BLUE = new Sound(portalBlueUrl) // Blue portal opened
+  static readonly PORTAL_ORANGE = new Sound(portalOrangeUrl) // Orange portal opened
+  static readonly SHOOT = new Sound(shootUrl) // Portal shot missed: nothing there takes a portal
+  static readonly BUTTON_ON = new Sound(buttonOnUrl) // Button pressed down
+  static readonly BUTTON_OFF = new Sound(buttonOffUrl) // Button released
+  static readonly BOX = new Sound(boxUrl) // Box picked up or put down
+  static readonly FIZZLE = new Sound(fizzleUrl) // Subject entered an active fizzler
+  static readonly CROSS = new Sound(crossUrl) // Subject went through a portal
+  static readonly DOOR_OPEN = new Sound(doorOpenUrl) // Door or exit opened
+  static readonly DOOR_CLOSE = new Sound(doorCloseUrl) // Door or exit closed
+  static readonly ERROR = new Sound(errorUrl) // Action refused
+  static readonly SWITCH = new Sound(switchUrl) // Switch used
+  static readonly TURNABLE_ARROW = new Sound(turnableArrowUrl) // A turnable arrow turned, by a link, to its turned way or back
+  static readonly BLOCKED_WALL = new Sound(blockedWallUrl) // A blocked wall switched, by a link, to take portals or to refuse them
+  static readonly DITCH_GRATE = new Sound(ditchGrateUrl) // A ditch's grate slid in or out, a link bridging or opening it
+  static readonly LIGHT_BARRIER_OFF = new Sound(lightBarrierOffUrl) // A light barrier switched off by a link
+  static readonly LIGHT_BARRIER_ON = new Sound(lightBarrierOnUrl) // A light barrier switched on by a link
+  static readonly LASER_OFF = new Sound(laserOffUrl) // A laser switched off by a link
+  static readonly LASER_ON = new Sound(laserOnUrl) // A laser switched on by a link
+  static readonly FIZZLER_OFF = new Sound(fizzlerOffUrl) // A fizzler switched off by a link
+  static readonly FIZZLER_ON = new Sound(fizzlerOnUrl) // A fizzler switched on by a link
+  static readonly BOX_DESTROYED = new Sound(boxDestroyedUrl) // A box destroyed where something blocks, carried into an active fizzler, or sent back to its start by a link
+  static readonly EXIT_REACHED = new Sound(exitReachedUrl) // The subject reached the open exit
+  static readonly SLIDING_FLOOR = new Sound(slidingFloorUrl) // The subject started sliding on a slide floor, once per slide
+  static readonly RECEIVER_ON = new Sound(receiverOnUrl) // A ray reached a receiver, which lit up
+  static readonly RECEIVER_OFF = new Sound(receiverOffUrl) // A receiver no ray reaches any more went dark
+  static readonly EMITTER_ON = new Sound(emitterOnUrl) // An emitter switched on by a link
+  static readonly EMITTER_OFF = new Sound(emitterOffUrl) // An emitter switched off by a link
+  static readonly MIRROR_BOX_RAY = new Sound(mirrorBoxRayUrl) // A ray started bouncing off a mirror box, one put down in it included
+  static readonly MENU_MOVE = new Sound(menuMoveUrl) // A menu's or dialog's highlight moved (arrow keys, Tab or the pointer), a menu stepped into or back out of with the arrow keys, or Escape or Backspace stepped back, closed a dialog or opened or closed the pause menu, or a volume stepped (Left, Right or the pointer); played by the screens, not the game
+  static readonly MENU_ACCEPT = new Sound(menuAcceptUrl) // A menu row or dialog button pressed (Enter, Space or a click), never a volume row, or a key bound; played by the screens, not the game
+  static readonly START = new Sound(startUrl) // Chamber picked on the home screen; played by the screens, not the game
 
   private readonly audio: HTMLAudioElement // The element that plays this effect
-  private readonly volume: number // Playback volume from 0 to 1 at full master volume, set per effect so every effect sounds about equally loud, a little above the music
 
   /**
    * @param url - Address of the audio file
-   * @param volume - Playback volume from 0 to 1 at full master volume
    */
-  constructor(url: string, volume: number) {
+  constructor(url: string) {
     this.audio = createAudioPlayer(url)
-    this.volume = volume
   }
 
   /**
-   * Plays the effect from the start at its volume scaled by the master
-   * volume, unless the master volume is off.
+   * Plays the effect from the start at the effects' volume scaled by the
+   * master volume, unless the master volume is off.
    */
   play(): void {
     if (Sound.masterVolume === 0) {
       return
     }
 
-    this.audio.volume = this.volume * Sound.masterVolume
+    this.audio.volume = Sound.VOLUME * Sound.masterVolume
     this.audio.pause()
     this.audio.currentTime = 0
     this.audio.play().catch(() => {
