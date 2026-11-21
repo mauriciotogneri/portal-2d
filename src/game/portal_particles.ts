@@ -335,7 +335,7 @@ export class PortalParticles {
    * @returns True while there is something to draw
    */
   isRunningAt(time: number): boolean {
-    this.closed = this.closed.filter((source) => time - source.closeTime < CLOSING_FADE_MILLISECONDS)
+    this.forgetFaded(time)
 
     return (this.closed.length > 0) || PORTAL_COLORS.some((color) => this.sources[color] !== null)
   }
@@ -350,10 +350,11 @@ export class PortalParticles {
    * @param time - The frame's time, in milliseconds on the frame clock
    */
   draw(painter: TilePainter, state: RulesState, time: number): void {
+    // Trimmed here too, since the level stops asking whether anything runs once something else, such as a glow, needs the frame
+    this.forgetFaded(time)
+
     for (const source of this.closed) {
-      if (time - source.closeTime < CLOSING_FADE_MILLISECONDS) {
-        this.drawSource(painter, source, time)
-      }
+      this.drawSource(painter, source, time)
     }
 
     for (const color of PORTAL_COLORS) {
@@ -370,6 +371,14 @@ export class PortalParticles {
         this.drawSource(painter, shown, time)
       }
     }
+  }
+
+  /**
+   * Forgets the portals that closed or moved whose particles have all faded.
+   * @param time - The frame's time, in milliseconds on the frame clock
+   */
+  private forgetFaded(time: number): void {
+    this.closed = this.closed.filter((source) => time - source.closeTime < CLOSING_FADE_MILLISECONDS)
   }
 
   /**
