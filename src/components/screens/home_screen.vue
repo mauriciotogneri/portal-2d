@@ -10,7 +10,8 @@
  * list. The third column follows the highlight there: Play shows the
  * chamber's map, About shows a list of pages or the changelog, and Settings'
  * Controls row the layouts of controls, Default and Custom, level with it,
- * the one in use lit.
+ * the one in use lit. About's Valve's Portal and Feedback rows show nothing
+ * there: picking one opens its page in a new tab, or the mail app.
  * Right, Enter or a click steps from an About row into its pages or changelog,
  * or from Controls into its layouts. Up and Down move the highlight (or scroll
  * the changelog) in the column that has the keyboard, Left, Escape and
@@ -80,6 +81,11 @@ type AboutEntry =
     links: LinkEntry[] // The pages, in the order listed
   }
   | {
+    kind: 'link' // Opens one page in a new tab, straight from the row
+    label: string
+    url: string // Address the row opens
+  }
+  | {
     kind: 'mail' // Opens the player's mail app
     label: string
     url: string // The mailto: address
@@ -143,18 +149,9 @@ const ABOUT: AboutEntry[] = [
     label: 'Changelog',
   },
   {
-    kind: 'links',
-    label: 'Original game',
-    links: [
-      {
-        label: 'Portal',
-        url: 'https://store.steampowered.com/app/400/Portal/',
-      },
-      {
-        label: 'Portal 2',
-        url: 'https://store.steampowered.com/app/620/Portal_2/',
-      },
-    ],
+    kind: 'link',
+    label: 'Valve\'s Portal',
+    url: 'https://store.steampowered.com/developer/valve/list/9/',
   },
   {
     kind: 'mail',
@@ -503,7 +500,7 @@ function closeSection(): void {
 /**
  * Steps from the highlighted About row into its pages or changelog in the
  * third column, or from Controls into its layouts, with a click. Does nothing
- * anywhere else, or for Feedback, which has nothing there.
+ * anywhere else, or for Valve's Portal and Feedback, which have nothing there.
  * @param click - The click to play: the move sound for Right, the accept sound for Enter, Space or a click
  */
 function openDetail(click: Sound): void {
@@ -1060,6 +1057,22 @@ onBeforeUnmount(() => {
               >
                 <span class="menu-row-label">{{ entry.label }}</span>
               </a>
+              <LinkRow
+                v-else-if="entry.kind === 'link'"
+                :id="aboutRowId(index)"
+                :label="entry.label"
+                :url="entry.url"
+                :class="{
+                  'menu-row-selected': index === highlightedAbout,
+                  'menu-row-active': index === highlightedAbout && activeColumn === 'items',
+                }"
+                :tabindex="index === highlightedAbout ? 0 : -1"
+                @click="trackLinkOpen(entry.label, entry.url)"
+                @focus="handleItemFocus(index)"
+                @pointerdown="handleItemPointerDown(index)"
+                @pointermove="handleItemPointerMove(index, $event)"
+                @pointerleave="handleItemPointerLeave"
+              />
               <button
                 v-else
                 :id="aboutRowId(index)"
@@ -1092,7 +1105,7 @@ onBeforeUnmount(() => {
         <!-- About's third column follows the highlighted row, starting level with it, and is
              drawn anew for each row so it slides out again -->
         <div
-          v-else-if="openSection === 'about' && highlightedAboutEntry !== undefined && highlightedAboutEntry.kind !== 'mail'"
+          v-else-if="openSection === 'about' && (highlightedAboutEntry?.kind === 'links' || highlightedAboutEntry?.kind === 'changelog')"
           :id="detailColumnId"
           ref="detailColumn"
           :key="`about-${highlightedAbout}`"
