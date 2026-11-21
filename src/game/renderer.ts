@@ -14,6 +14,7 @@ import type {CompiledChamber, Mirror} from '@/game/rules/compiled_chamber'
 import {DRAW_LAYERS, type DrawLayer} from '@/game/rules/draw_layer'
 import {ELEMENT_REGISTRY} from '@/game/rules/element_registry'
 import {drawPortalOpening, openingGlowShare, type PortalOpenings} from '@/game/portal_openings'
+import type {PortalParticles} from '@/game/portal_particles'
 import {PORTAL_COLORS, PortalColor} from '@/game/rules/portal_color'
 import {traceRays} from '@/game/rules/rays'
 import type {RulesState} from '@/game/rules/rules_state'
@@ -283,9 +284,9 @@ export function hasAmbientLife(state: RulesState): boolean {
  * sliding in or out, the doors and the exit still sliding open or shut, the
  * fizzlers still crumbling away or forming and the lasers and light barriers
  * still fading out or in, drawn part way, and a portal opening drawn part way open. Last, over everything, the lasers' and portals' glows are added
- * to what lies beneath, pulsing, an opening portal's rising with it, what a fizzle took breaks up and a missed
+ * to what lies beneath, pulsing, an opening portal's rising with it, the open portals' particles rise, what a fizzle took breaks up and a missed
  * shot ripples where it stopped; at no time given, nothing changes over
- * time, the glows hold steady and nothing breaks up or ripples. While the
+ * time, the glows hold steady, no particles rise and nothing breaks up or ripples. While the
  * chamber is completed, the subject, on the exit or walking out past it, is
  * drawn under the open exit's shadow. With a see-through exit, the exit's
  * tile fades the canvas itself out towards the chamber's edge instead of
@@ -618,7 +619,7 @@ export class Renderer {
    * with the boxes falling into ditches over the ditches, the rays over the
    * buttons and switches and under the boxes, each box on its way home
    * taking shape at its start with the boxes, and a portal
-   * opening part way open, then the glows, the pieces of what a fizzle took,
+   * opening part way open, then the glows, the portals' particles, the pieces of what a fizzle took,
    * the pieces of the boxes flying home and a missed shot's ripple. Part way along a slide, everything but the
    * subject's pose is drawn as the state on the last tile it has reached
    * (shownState), and the state after the step once the slide ends. The
@@ -636,8 +637,9 @@ export class Renderer {
    * @param openings - The portals opening, or null (the default) when none can
    * @param turn - The subject's turn, followed every frame drawn with a time, or null (the default) to draw it squarely the way it faces
    * @param returns - The boxes on their way home, or null (the default) when none can be
+   * @param particles - The particles rising from the portals, or null (the default) when none can
    */
-  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null): void {
+  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null): void {
     // A canvas not yet sized for a chamber has nothing to draw
     if (this.painter.blockSize <= 0) {
       return
@@ -679,6 +681,11 @@ export class Renderer {
     }
 
     this.drawGlows(shown, glowStrength(time), shares, opening, runs)
+
+    // Over the glows, so they don't wash out, and under a fizzle's pieces
+    if ((time !== null) && (particles !== null)) {
+      particles.draw(this.painter, shown, time)
+    }
 
     if ((time !== null) && (fizzle !== null)) {
       fizzle.draw(this.painter, time)

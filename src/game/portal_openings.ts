@@ -25,7 +25,7 @@ const FADED_IN_BY = 0.2
 const OVERSHOOT = 1.70158
 
 /** How far inside its wall tile the portal's oval has its middle, from the side it opens on, in tiles (art/sprites/portal_blue.svg: 23.5 px of the 256 px tile) */
-const OVAL_INSET = 23.5 / 256
+export const OVAL_INSET = 23.5 / 256
 
 /** The event each portal's opening reports */
 const OPENED_EVENTS: Readonly<Record<PortalColor, GameEvent>> = {

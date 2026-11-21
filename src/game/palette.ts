@@ -1,7 +1,8 @@
 /**
  * Every colour the game draws on its canvas by code, named by what it
  * colours: the background behind the floor, the shared drop shadow, a
- * missed shot's ripple in each portal's colour, the antlines' dots, unlit
+ * missed shot's ripple in each portal's colour, the particles rising from
+ * each open portal, in its own colours, the antlines' dots, unlit
  * and lit, each with its border, an emitter's ray, from its dark rim to its
  * white-hot core, the mirror marked on a carried mirror box, the open exit's
  * shadow, the surface detail laid over the floor and the walls' tops,
@@ -17,6 +18,12 @@ export const PALETTE = {
   shadow: 'rgba(0, 0, 0, 0.5)', // The shared drop shadow under what stands raised, at its darkest
   missBlue: 'rgba(40, 140, 220, 1)', // A missed blue shot's ripple: the blue portal's meaning colour (docs/sprites.md); mirrored by --color-blue
   missOrange: 'rgba(255, 160, 30, 1)', // A missed orange shot's ripple: the orange portal's meaning colour (docs/sprites.md); mirrored by --color-orange
+  particleBlue: 'rgba(40, 140, 220, 1)', // The blue portal's particles (docs/sprites.md): a shaft's sides and a spark's ring, the blue portal's rim colour
+  particleBlueShaft: 'rgba(58, 151, 225, 1)', // A blue shaft's middle, a little lighter than its sides
+  particleBlueCore: 'rgba(170, 220, 255, 1)', // A blue spark's middle: the pale blue of the portal's lit inner edge
+  particleOrange: 'rgba(255, 160, 30, 1)', // The orange portal's particles: a shaft's sides and a spark's ring, the orange portal's rim colour
+  particleOrangeShaft: 'rgba(255, 168, 48, 1)', // An orange shaft's middle, a little lighter than its sides
+  particleOrangeCore: 'rgba(255, 220, 160, 1)', // An orange spark's middle: the pale orange of the portal's lit inner edge
   antlineOff: 'rgba(72, 176, 185, 1)', // An unlit antline's dots: muted cyan, clear of the blue portal and the light barrier's teal (docs/sprites.md)
   antlineOffBorder: 'rgba(50, 123, 130, 1)', // Their border, 30 % darker
   antlineOn: 'rgba(250, 194, 44, 1)', // A lit antline's dots: amber, yellower than the orange portal (docs/sprites.md)

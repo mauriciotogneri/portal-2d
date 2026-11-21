@@ -83,3 +83,15 @@ The element detail (`docs/sprites.md`) is drawn per instance from images made on
 | 4 | Tutorial (12 × 10) | 56 px | 19.5 / 9.3 ms | 6.6 / 6.2 ms | 0.1 / 0.1 ms | 59.4 / 86.2 ms | 6.0 / 6.6 ms |
 
 Once a size's images are made, the detail costs nothing measurable, per frame or on a chamber's first frame. Making them is what it adds, once per tile size in a visit: for chamber 3, its 67 sprite images took 11 to 18 ms and its 39 pit tiles 4 to 11 ms, the larger figures the first time, which also paints the chamber's pit shade (kept, 24 chambers at once, as the soft layers are) and runs the code for the first time. The first-frame and first-map columns are noisy (single runs, the first in the page among them: only noise explains chamber 3 and the tutorial reading lower with the detail on), so take about 15 to 35 ms once per chamber and tile size as the figure, mostly on the home menu's map, whose sizes differ from the chamber screen's. Drawing the map again costs about 3 ms more, the looks being worked out again for each new drawing (each draws a chamber compiled afresh). Working out every look of chamber 3 takes about 1.5 ms. A first try, with the detail on and a chamber being played in the same page, which draws every frame, read the first frames about 10 ms slower than this check did.
+
+## Portal particles check (2026-11-21)
+
+The portals' particles (`docs/sprites.md`) are drawn every frame while a portal is open, when the level already draws every frame for the glows, so they add only their own drawing. Chrome 155 on the development machine, `npm run dev`: in the sprite gallery, which runs no frame loop, chamber 3 after 54 actions of its recorded solution (both portals open) drawn on one renderer at 99 px tiles, a 2277 × 1683 canvas, the size the chamber screen gives it at pixel ratio 2 (as in the depth and ambient life check), each frame drawn with and without the particles at times 16.7 ms apart, timed on the main thread with `performance.now()` (0.1 ms steps). Medians of 60 frames each:
+
+| # | Run | Without particles | With particles |
+|---|---|---|---|
+| 1 | 1 | 0.8 ms | 1.0 ms |
+| 2 | 2 | 0.9 ms | 1.1 ms |
+| 3 | 3 | 1.3 ms | 1.7 ms |
+
+So the particles of two portals cost about 0.2 to 0.4 ms a frame, a few per cent of a 60 Hz frame. The browser window was behind another during the check, which held its frame loop to a few frames a second, so frame intervals weren't measured, only the drawing.

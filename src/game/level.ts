@@ -14,6 +14,7 @@ import type {KeyBindings} from '@/game/key_bindings'
 import {findMirrorBounces, type MirrorBounces, NO_MIRROR_BOUNCES} from '@/game/mirror_bounces'
 import {MissRipple} from '@/game/miss_ripple'
 import {PortalOpenings} from '@/game/portal_openings'
+import {PortalParticles} from '@/game/portal_particles'
 import {sendsBoxesHome} from '@/game/returned_boxes'
 import {getChamberHash, type ReplayData} from '@/game/replay_data'
 import {hasAmbientLife, Renderer} from '@/game/renderer'
@@ -144,6 +145,7 @@ export class Level {
   private readonly fall = new BoxFall() // The boxes the latest step dropped into ditches, falling over a few frames, if any
   private readonly returns = new BoxReturns() // The boxes the latest steps sent home, coming apart and flying home, or gathering there, over a few frames, if any
   private readonly openings = new PortalOpenings() // The portals shots opened lately, opening over a few frames, if any
+  private readonly particles = new PortalParticles() // The particles rising from the open portals, and fading where a portal closed lately
   private readonly turn = new SubjectTurn() // The subject's facing as drawn, turning over a few frames whenever it comes to face another way
   private slideBeats: SlideBeat[] = [] // What the slide being drawn still has waiting, in order; empty when none is
   private completionTime: number | null = null // When the completion is told after a step that didn't slide and walks the subject out of the chamber, once it is out of sight, in milliseconds on the frame clock; null when none waits
@@ -209,6 +211,7 @@ export class Level {
     this.fall.clear()
     this.returns.clear()
     this.openings.clear()
+    this.particles.clear()
     this.turn.clear()
 
     this.countPortals(start.events)
@@ -349,7 +352,7 @@ export class Level {
 
   /**
    * Draws the current state, part way through the step being drawn, if any,
-   * with what moves with time alone at this time, what breaks up, falls or flies home, a portal
+   * with what moves with time alone at this time, the portals' particles, what breaks up, falls or flies home, a portal
    * opening, a missed shot's ripple, the subject turning and the arrows, the blocked walls, the ditches, the doors,
    * the exit, the fizzlers, the lasers and the light barriers changing included, or held still when the player asks for
    * reduced motion.
@@ -360,7 +363,7 @@ export class Level {
       const frameStats = this.frameStats
       const drawStart = (frameStats === null) ? 0 : performance.now()
 
-      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns)
+      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns, this.particles)
       frameStats?.recordDraw(performance.now() - drawStart)
     }
   }
@@ -645,7 +648,8 @@ export class Level {
    * of a slide: each arrow, blocked wall, ditch, door, exit, fizzler, laser and
    * light barrier switched starts changing, the portals a fizzle took break
    * up, each box sent home comes apart and flies there, or falls into a
-   * ditch and gathers there, a portal opened opens and a refused portal
+   * ditch and gathers there, a portal opened opens and starts giving off
+   * particles, those of a portal closed or moved fade, and a refused portal
    * shot ripples, all only when motion is allowed; then the sounds play, and
    * the completion is told when the chamber is completed, unless it waits
    * for a walk-out.
@@ -686,6 +690,9 @@ export class Level {
       if (events.includes(GameEvent.BLUE_PORTAL_OPENED) || events.includes(GameEvent.ORANGE_PORTAL_OPENED)) {
         this.openings.start(after, events, time)
       }
+
+      // A portal opened, moved or closed: the particles of the one that was there fade, and the new one's start rising
+      this.particles.start(before, after, time)
 
       // Only a shot's refusal ripples: a refused crossing or interact shows nothing
       if ((shot !== null) && events.includes(GameEvent.REFUSED)) {
@@ -766,9 +773,9 @@ export class Level {
       stateUpdated = this.update(delta, this.input, time)
     }
 
-    // So does anything that glows, breaks up, falls, changes, opens, ripples or turns,
+    // So does anything that glows, gives off particles, breaks up, falls, changes, opens, ripples or turns,
     // paused or not, and the first frame after it stops, which draws it still
-    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
+    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.particles.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
 
     if (stateUpdated || wasAnimating || ambient || this.ambientDrawn) {
       this.render(time)

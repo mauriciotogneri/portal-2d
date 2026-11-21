@@ -28,8 +28,8 @@ The game draws the chamber and the home menu's map from these files. A sprite wh
 
 | # | Colour | RGB | Used for |
 |---|--------|-----|----------|
-| 1 | Blue | 40, 140, 220 | The blue portal, and a missed blue shot's ripple, drawn by the game in code (see [miss](#miss)) |
-| 2 | Orange | 255, 160, 30 | The orange portal, and a missed orange shot's ripple |
+| 1 | Blue | 40, 140, 220 | The blue portal, and, drawn by the game in code, its particles and a missed blue shot's ripple (see [particles](#particles) and [miss](#miss)) |
+| 2 | Orange | 255, 160, 30 | The orange portal, its particles and a missed orange shot's ripple |
 | 3 | Red | 220, 60, 50 | The floor button (caution) |
 | 4 | Green | 40, 200, 130 | A completed chamber's test-subject figure in the home menu; the subject's own sprites are painted in their own colours (see [the subject](#the-subject)) |
 | 5 | Crimson | 235, 30, 55 | Lasers, and the lit slot of their end plates |
@@ -144,19 +144,31 @@ The game draws from the bottom up, each later row over the earlier ones:
 | 13 | Subject | `subject_holding_gun`, or `subject_holding_box` while it carries a box, with a mirror box's mirror marked over the box in code (see [the subject](#the-subject)) |
 | 14 | Fields | `fizzler_on`, whole or in pieces (see [fizzle](#fizzle)), then `fizzler_end_*` over the fields |
 | 15 | Glow | `laser_glow`, the rays' glow, drawn in code, held steady at 80 % and ending where its ray ends, then `portal_*_glow` |
-| 16 | Fizzle | `portal_*`, in pieces (see [fizzle](#fizzle)) |
-| 17 | Fly home | `box`, `box_mirror`, in pieces flying home (see [fly home](#fly-home)) |
-| 18 | Miss | None: a missed shot's ripple, drawn in code (see [miss](#miss)) |
+| 16 | Particles | None: each open portal's shafts of light and sparks, drawn in code and painted over (see [particles](#particles)) |
+| 17 | Fizzle | `portal_*`, in pieces (see [fizzle](#fizzle)) |
+| 18 | Fly home | `box`, `box_mirror`, in pieces flying home (see [fly home](#fly-home)) |
+| 19 | Miss | None: a missed shot's ripple, drawn in code (see [miss](#miss)) |
 
 ## Glow
 
-The three glow sprites are drawn over everything but a fizzle's pieces, a box's pieces flying home and a missed shot's ripple, and added to the colours beneath, so they brighten and never darken. Their strength pulses slowly, all together, between 60 % and full. Draw only the light, at full strength: colour fading to transparent, with no beam or portal in it. A missing glow file just means no glow. With reduced motion, and in the home menu's map and the gallery, the glow holds steady at 80 %.
+The three glow sprites are drawn over everything but the portals' particles, a fizzle's pieces, a box's pieces flying home and a missed shot's ripple, and added to the colours beneath, so they brighten and never darken. Their strength pulses slowly, all together, between 60 % and full. Draw only the light, at full strength: colour fading to transparent, with no beam or portal in it. A missing glow file just means no glow. With reduced motion, and in the home menu's map and the gallery, the glow holds steady at 80 %.
 
 The rays' glow, drawn in code from no sprite (see [rays](#rays)), is added with the glow sprites, after the lasers' and before the portals', but always held steady at 80 %, so a lit ray never needs a frame of its own. It is painted on a layer of its own, where each spot keeps its brightest, so a ray's corners and two rays crossing aren't lit twice, and kept until the rays run elsewhere or the tile size changes.
 
 ## Opening
 
-When a shot opens a portal, the game grows it open on its wall from its own sprite, so there is nothing extra to draw: it grows from the middle of its oval, past its size to about 110 %, and settles back, in about 0.2 s, fading in over the first 40 ms, while its glow rises with it. The game takes the oval's middle as 23.5 px of the 256 px tile in from the tile's top edge, as drawn (`src/game/portal_openings.ts`), so move it there too if the oval moves. The portal it replaces, if any, still vanishes at once; one that moves or closes while it opens is drawn as it is, and one that breaks up while it opens breaks up whole (see [fizzle](#fizzle)). With reduced motion, and in the home menu's map and the gallery, a portal appears at once.
+When a shot opens a portal, the game grows it open on its wall from its own sprite, so there is nothing extra to draw: it grows from the middle of its oval, past its size to about 110 %, and settles back, in about 0.2 s, fading in over the first 40 ms, while its glow rises with it. The game takes the oval's middle as 23.5 px of the 256 px tile in from the tile's top edge, as drawn (`src/game/portal_openings.ts`), and the particles take the oval as 97.25 by 19.75 px about it (`src/game/portal_particles.ts`), so change them there too if the oval moves or changes size. The portal it replaces, if any, still vanishes at once; one that moves or closes while it opens is drawn as it is, and one that breaks up while it opens breaks up whole (see [fizzle](#fizzle)). With reduced motion, and in the home menu's map and the gallery, a portal appears at once.
+
+## Particles
+
+Each open portal gives off particles, drawn by the game in code from no sprite (`src/game/portal_particles.ts`), in its own colours from the palette: soft shafts of light standing on the oval and rising into the room, and small sparks climbing them. They are painted over what lies beneath rather than added like the glows, since added light washes out to white on the pale floor, right after the glows and under a fizzle's pieces. The look, and every number below, was chosen on a mixer page that draws the real chambers with the game's renderer (https://claude.ai/artifact/NheohqT6ZoLXPRXy8SC1Gc, option C, Updraft).
+
+- **Shafts:** about 6 at once on each portal, each lasting 0.48 to 0.78 s and fading in and out (the sine of how far through it is, to the power 1.5), at 0.8 of the particles' strength at most. Each is 0.15 to 0.35 of a tile wide and reaches 0.28 to 0.5 of a tile into the room, growing from 85 % of its length to all of it, and stands anywhere along the middle 78 % of the oval, its foot a little below the oval's middle. Across, it is a bell of light, its middle a little lighter than its sides; up, it is brightest just above its foot and thins out towards its top.
+- **Sparks:** 20 a second on each portal, 0.009 to 0.0165 of a tile in radius, a pale middle (the lit inner edge's colour) in a ring of the portal's colour. Each leaves the middle 80 % of the oval and climbs 0.18 to 0.5 of a tile in 1 to 1.6 s, slowing a little, fading in quickly and out over the second half of its climb, and twinkles 2.5 to 4.5 times a second between full strength and a tenth of it. At the chamber screen's tile sizes on a screen of pixel ratio 1 they are only 1 to 2 px across, so they show mostly on denser screens.
+- **Strength:** 0.65 at most, painted over.
+- **Opening and closing:** a portal that just opened comes up to full strength over 0.3 s; when it closes, moves or breaks up, its particles still in the air fade out where they are in 0.2 s. A portal found already open, such as one opened while motion was reduced, gives off particles at full strength at once.
+
+Each particle's place is worked out every frame from when it was born and numbers of its own, so nothing is kept per particle and the same moment always looks the same. The level already draws every frame while a portal glows, so the particles add only their own drawing (`docs/performance.md`). With reduced motion, and in the home menu's map and the gallery, no particles rise.
 
 ## Fizzle
 
