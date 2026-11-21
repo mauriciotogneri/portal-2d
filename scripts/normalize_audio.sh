@@ -63,7 +63,7 @@ measure() {
 }
 
 unmeasured_files=0
-for file in src/assets/audio/music/*.mp3 src/assets/audio/sound/*.mp3; do
+for file in src/assets/audio/music/*.mp3 src/assets/audio/music/streamed/*.mp3 src/assets/audio/sound/*.mp3; do
   name=${file#src/assets/audio/}
   adjustment=${ADJUSTMENTS[$name]:-0}
   # A file ffmpeg can't read prints nothing, so it reaches the check below instead of stopping the run

@@ -4,18 +4,20 @@ import {fileURLToPath} from 'node:url'
 import {allowedSizes, isSpriteName, overhangFor, SPRITE_EXTENSIONS, SPRITE_SHAPES, type SpriteName} from '@/game/sprite_set'
 
 // Checks that every file under src/assets is used, since the loading screen
-// downloads every audio and image file there (src/services/asset_preloader.ts)
-// whether the game uses it or not. Every file must be imported, or named in a
-// CSS url(), by production source: the .ts, .vue and .css files under src/
+// downloads every audio and image file there
+// (src/services/asset_preloader.ts) whether the game uses it or not, but the
+// chamber playlist's streamed tracks (src/assets/audio/music/streamed/),
+// which every deploy still uploads. Every file must be imported, or named in
+// a CSS url(), by production source: the .ts, .vue and .css files under src/
 // but src/dev/ (development pages, never built), and index.html. The chamber
-// sprites (src/assets/images/chamber/) are found by a folder glob and matched
-// by name (src/game/sprite_sources.ts), so no source names them: instead each
-// entry there must be a file named like a sprite, with an extension a
-// sprite's file may have, every sprite must have exactly one file, and its
-// size, read from the file's header, must be one its shape allows, since the
-// game draws nothing for a sprite without a usable file. Prints one line per
-// problem file, or one line when there is none, and exits non-zero on any
-// problem.
+// sprites (src/assets/images/chamber/) are found by a folder glob and
+// matched by name (src/game/sprite_sources.ts), so no source names them:
+// instead each entry there must be a file named like a sprite, with an
+// extension a sprite's file may have, every sprite must have exactly one
+// file, and its size, read from the file's header, must be one its shape
+// allows, since the game draws nothing for a sprite without a usable file.
+// Prints one line per problem file, or one line when there is none, and
+// exits non-zero on any problem.
 //
 // References are found in the text rather than by parsing each language:
 // each source's comments are stripped by a small scanner that steps over
@@ -80,6 +82,9 @@ const ASSETS_DIRECTORY = join(SOURCE_DIRECTORY, 'assets')
 
 /** Where the chamber sprites are, matched by name rather than referenced */
 const SPRITES_DIRECTORY = join(ASSETS_DIRECTORY, 'images', 'chamber')
+
+/** Where the chamber playlist's streamed tracks are, which the loading screen leaves to download as they come up */
+const STREAMED_DIRECTORY = join(ASSETS_DIRECTORY, 'audio', 'music', 'streamed')
 
 /** The bytes a PNG file starts with */
 const PNG_SIGNATURE = Buffer.from([
@@ -492,7 +497,9 @@ function checkAssets(problems: Problem[]): CheckTotals {
     } else {
       problems.push({
         path: path,
-        reason: 'no production source imports it or names it in a CSS url(), yet the loading screen downloads it',
+        reason: isInside(path, STREAMED_DIRECTORY)
+          ? 'no production source imports it or names it in a CSS url(), yet every deploy uploads it'
+          : 'no production source imports it or names it in a CSS url(), yet the loading screen downloads it',
       })
     }
   }

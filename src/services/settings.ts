@@ -1,11 +1,14 @@
 /**
  * Sound effects and music volumes, kept in localStorage and applied to the
- * game audio, and whether the chamber screen's controls legend is open, kept
- * the same way.
+ * game audio, the background music each screen plays, with the chamber
+ * playlist's place kept the same way, and whether the chamber screen's controls
+ * legend is open, kept the same way too.
  */
 import {ref, watch} from 'vue'
 import type {Ref} from 'vue'
-import {gameMusic, menuMusic, Music} from '@/game/music'
+import {menuMusic, Music} from '@/game/music'
+import {gameMusic} from '@/game/music_playlist'
+import type {MusicPlaylist} from '@/game/music_playlist'
 import {Sound} from '@/game/sound'
 import {trackSettingChange} from '@/services/analytics'
 import type {TrackedSetting} from '@/services/analytics'
@@ -24,16 +27,18 @@ export const VOLUME_MAX = 100 // Full volume: as loud as the game played before 
 
 const SOUND_VOLUME_STORAGE_KEY = 'portal-2d.sound-volume'
 const MUSIC_VOLUME_STORAGE_KEY = 'portal-2d.music-volume'
+const MUSIC_TRACK_STORAGE_KEY = 'portal-2d.music-track'
 const LEGEND_STORAGE_KEY = 'portal-2d.legend-open'
 
 const VOLUME_SETTLE_TIME = 1000 // Milliseconds a volume must stay put before analytics hears of it, so a run of steps counts once
 
-const MUSIC_TRACKS: Record<MusicTrack, Music> = {
+const MUSIC_TRACKS: Record<MusicTrack, Music | MusicPlaylist> = {
   menu: menuMusic,
   game: gameMusic,
 }
 
 let currentTrack: MusicTrack | null = null // Track of the open screen; none until a screen opens
+let chamberMusicStarted = false // Whether a chamber has started its music this visit, so the next one moves the playlist on
 
 /**
  * Reads an on/off preference. Missing or unreadable values count as on.
@@ -102,6 +107,34 @@ function writeVolume(key: string, volume: number): void {
 }
 
 /**
+ * Reads the position in the chamber playlist's list of the last track it
+ * moved to. Missing or unreadable values, and a position past the end of the
+ * list, count as none, so the list starts from its top.
+ * @returns The stored position, or -1 for none
+ */
+function readMusicTrack(): number {
+  try {
+    const stored = localStorage.getItem(MUSIC_TRACK_STORAGE_KEY)
+    const track = stored !== null && /^\d+$/.test(stored) ? Number(stored) : Number.NaN
+    return track < gameMusic.trackCount ? track : -1
+  } catch (_error) {
+    return -1
+  }
+}
+
+/**
+ * Persists the position in the chamber playlist's list of the last track it moved to.
+ * @param track - The position
+ */
+function writeMusicTrack(track: number): void {
+  try {
+    localStorage.setItem(MUSIC_TRACK_STORAGE_KEY, String(track))
+  } catch (_error) {
+    // Storage blocked: the next visit starts the list from its top
+  }
+}
+
+/**
  * Plays the open screen's track if the music volume is above 0, and pauses
  * every other track. Safe to call repeatedly; playing music that is already
  * playing only applies the music volume.
@@ -165,6 +198,10 @@ export function setVolume(volume: Ref<number>, next: number): boolean {
 Sound.masterVolume = soundVolume.value / VOLUME_MAX
 Music.masterVolume = musicVolume.value / VOLUME_MAX
 
+// Each visit carries on the chamber playlist's list from where the last one left it
+gameMusic.lastTrack = readMusicTrack()
+gameMusic.onTrackChosen = writeMusicTrack
+
 // The last volume analytics heard of, or the one the visit started with, and the wait for a new one to settle
 const reportedVolumes: Record<TrackedSetting, number> = {
   sound: soundVolume.value,
@@ -211,20 +248,32 @@ watch(legendOpen, (open) => {
 })
 
 /**
- * Switches the background music to a screen's track, which loops while the
- * screen is open and, unless told to start over, resumes where it left off when
- * the screen opens again. Browsers block audio until the page gets a key press
- * or click, so on a fresh visit every key press and click retries the track
- * until it starts; some keys, such as Escape, don't count as interacting with the page.
+ * Switches the background music to a screen's track, which plays while the
+ * screen is open and resumes where it left off when the screen opens again.
+ * Browsers block audio until the page gets a key press or click, so on a fresh
+ * visit every key press and click retries the track until it starts; some
+ * keys, such as Escape, don't count as interacting with the page.
  * @param track - The track the opening screen plays
- * @param fromStart - True to play the track from its beginning instead of where it left off
  */
-export function playMusic(track: MusicTrack, fromStart = false): void {
+export function playMusic(track: MusicTrack): void {
   currentTrack = track
-  if (fromStart) {
-    MUSIC_TRACKS[track].rewind()
-  }
   applyMusic()
   window.addEventListener('keydown', applyMusic)
   window.addEventListener('pointerdown', applyMusic)
+}
+
+/**
+ * Plays the chamber music for a chamber opened or played again: the
+ * playlist's opener from its beginning for the visit's first chamber, and the
+ * next track in its list for every later one, unless the music is off, which
+ * leaves the playlist where it is.
+ */
+export function startChamberMusic(): void {
+  if (!chamberMusicStarted) {
+    gameMusic.startOpener()
+    chamberMusicStarted = true
+  } else if (musicVolume.value > 0) {
+    gameMusic.moveOn()
+  }
+  playMusic('game')
 }

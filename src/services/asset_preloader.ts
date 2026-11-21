@@ -1,5 +1,6 @@
 /**
- * Downloads every audio and image file in src/assets before the first screen opens.
+ * Downloads every audio and image file in src/assets before the first screen
+ * opens, but the chamber playlist's streamed tracks (src/assets/audio/music/streamed/).
  * Each audio file is handed to the game's players as a copy in memory: their own
  * requests ask the host for a different encoding, so they would miss the browser
  * cache and download the file again. Images are drawn from CSS, which reads the
@@ -25,8 +26,12 @@ interface FileDownload {
   finished: boolean // True once the file has downloaded or failed
 }
 
-// Every audio and image file, with its path in the source, found at build time, so a new asset is preloaded without a list to update
-const AUDIO_FILES = Object.entries(import.meta.glob<string>('@/assets/audio/**/*', {
+// Every audio and image file, with its path in the source, found at build time, so a new asset is preloaded without a list to update;
+// but the chamber playlist's tracks after its first (src/game/music_playlist.ts), far too large to download before Start, which each download as the one before them plays
+const AUDIO_FILES = Object.entries(import.meta.glob<string>([
+  '@/assets/audio/**/*',
+  '!@/assets/audio/music/streamed/**',
+], {
   eager: true,
   import: 'default',
   query: '?url',

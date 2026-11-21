@@ -27,7 +27,7 @@ import {keyBindings} from '@/services/key_bindings'
 import {formatTime} from '@/services/format_time'
 import {rememberChamber, rememberPlayground} from '@/services/last_chamber'
 import {bestTime, isCompleted, markChamberCompleted, recordTime, startAttempt} from '@/services/progress'
-import {playMusic} from '@/services/settings'
+import {startChamberMusic} from '@/services/settings'
 
 /** Which dialog is open over the chamber. */
 type ChamberDialog = 'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed'
@@ -212,13 +212,12 @@ function beginAttempt(): void {
 }
 
 /**
- * Rebuilds the chamber from its starting layout, starts the music over and resumes play.
+ * Rebuilds the chamber from its starting layout and resumes play, leaving the music playing.
  */
 function restartChamber(): void {
   if (level !== null && layout.value !== undefined) {
     level.load(layout.value)
   }
-  playMusic('game', true)
   resume()
 }
 
@@ -235,11 +234,12 @@ function confirmReset(): void {
 }
 
 /**
- * Starts a new run of the chamber just completed.
+ * Starts a new run of the chamber just completed, to the next track of the music.
  */
 function playAgain(): void {
   beginAttempt()
   restartChamber()
+  startChamberMusic()
   if (chamber.value !== undefined) {
     trackChamberStart(chamber.value, attempt)
   }
@@ -457,8 +457,8 @@ onMounted(() => {
 
   window.addEventListener('keydown', handleKeydown)
   window.addEventListener('pagehide', handlePageHide)
-  // Every chamber starts its music from the beginning
-  playMusic('game', true)
+  // Every chamber opened moves the music on to its next track
+  startChamberMusic()
 })
 
 onBeforeUnmount(() => {
