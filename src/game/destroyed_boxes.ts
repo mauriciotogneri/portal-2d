@@ -1,8 +1,7 @@
 import type {PositionData} from '@/game/chamber_data'
-import {DELTAS, Direction} from '@/game/direction'
+import {DELTAS, type Direction} from '@/game/direction'
 import {boxSprite} from '@/game/element_drawings'
 import {GameEvent} from '@/game/game_event'
-import {CARRIED_BOX_AHEAD, CARRIED_BOX_SIZE} from '@/game/renderer'
 import {NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import {BOX_DESTROYING_KINDS} from '@/game/rules/elements/box'
 import type {RulesState} from '@/game/rules/rules_state'
@@ -27,8 +26,9 @@ export type DestroyedBox = {
  * The boxes a step destroyed because an element was blocked where they lay
  * (boxDestroyed): each box that went back to its start from a tile holding
  * a door, a ditch, a laser, a light barrier or a fizzler, where it lay or
- * was put down. A box carried into a fizzler that is on is the fizzler
- * rule's, not one of these. One on a ditch falls in only while the ditch
+ * was put down in the step, on the tile the subject faced as the step
+ * began. A box carried into a fizzler that is on is the fizzler rule's, not
+ * one of these. One on a ditch falls in only while the ditch
  * is still open after the step: sent back to a button that bridges it
  * again, it flies home, as the grate slides back over the pit. A box a
  * switch sends back from such a tile in the same step as another is
@@ -47,27 +47,27 @@ export function findDestroyedBoxes(before: RulesState, after: RulesState, events
   const destroyed: DestroyedBox[] = []
 
   chamber.boxStarts.forEach((start, index) => {
-    // A carried box lies on the subject's tile
-    const x = before.boxX(index)
-    const y = before.boxY(index)
+    // A carried box can only lie anywhere by being put down, on the tile the subject faced, which interact doesn't
+    // turn; one still carried, or carried into a fizzler that is on, is no box destroyed where it lay
     const carried = before.carriedBox === index
+    const putDown = carried && events.includes(GameEvent.BOX_PUT_DOWN)
+    const ahead = DELTAS[before.facing]
+    const x = putDown ? before.subjectX + ahead.dx : before.boxX(index)
+    const y = putDown ? before.subjectY + ahead.dy : before.boxY(index)
     const sentBack = (after.carriedBox !== index) && (after.boxX(index) === start.x) && (after.boxY(index) === start.y) && ((x !== start.x) || (y !== start.y))
-    const putDownInPlace = (after.subjectX === x) && (after.subjectY === y)
     const kind = BOX_DESTROYING_KINDS.find((candidate) => chamber.elementAt(candidate, x, y) !== NO_ELEMENT)
 
-    if ((!sentBack) || (kind === undefined) || (carried && ((!putDownInPlace) || (kind === 'fizzler')))) {
+    if ((carried && !putDown) || (!sentBack) || (kind === undefined)) {
       return
     }
 
-    const facing = carried ? after.facing : Direction.UP
-    const ahead = carried ? CARRIED_BOX_AHEAD : 0
-    const sprite = boxSprite(chamber, index, facing)
+    const sprite = boxSprite(chamber, index)
 
     destroyed.push({
       index: index,
-      x: x + 0.5 + (DELTAS[facing].dx * ahead),
-      y: y + 0.5 + (DELTAS[facing].dy * ahead),
-      size: carried ? CARRIED_BOX_SIZE : 1,
+      x: x + 0.5,
+      y: y + 0.5,
+      size: 1,
       sprite: sprite.name,
       way: sprite.way,
       tile: {

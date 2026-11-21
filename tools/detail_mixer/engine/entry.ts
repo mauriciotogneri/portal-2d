@@ -51,12 +51,14 @@ import {NOT_STORED} from '@/game/rules/state_layout'
 import {startChamber, step} from '@/game/rules/step'
 import {loadSprites} from '@/game/sprite_sources'
 import {BoxFall} from '@/game/box_fall'
+import {BoxReturns} from '@/game/box_returns'
 import {ElementTransitions} from '@/game/element_transitions'
 import {exitOuterSide} from '@/game/exit_shadow'
 import {FizzleParticles} from '@/game/fizzle_particles'
 import {GameEvent} from '@/game/game_event'
 import {MissRipple} from '@/game/miss_ripple'
 import {PortalOpenings} from '@/game/portal_openings'
+import {sendsBoxesHome} from '@/game/returned_boxes'
 import type {PortalColor} from '@/game/rules/portal_color'
 import {legReach, StepAnimation} from '@/game/step_animation'
 import {SubjectTurn} from '@/game/subject_turn'
@@ -373,10 +375,11 @@ type PlayOptions = {
 class Effects {
   readonly renderer: Renderer // Draws the chamber
   readonly animation = new StepAnimation() // The step being drawn
-  readonly fizzle = new FizzleParticles() // What a fizzle or a destroyed box broke up
+  readonly fizzle = new FizzleParticles() // The portals a fizzle broke up
   readonly changes = new ElementTransitions() // Elements switching
   readonly ripple = new MissRipple() // A missed shot
   readonly fall = new BoxFall() // Boxes falling into pits
+  readonly returns = new BoxReturns() // Boxes sent home, flying there, or gathering there after a fall
   readonly openings = new PortalOpenings() // Portals opening
   readonly turn = new SubjectTurn() // The subject turning
 
@@ -391,12 +394,18 @@ class Effects {
       this.changes.start(before, after, time)
     }
 
-    if (events.includes(GameEvent.FIZZLED) || events.includes(GameEvent.PORTAL_FIZZLED) || events.includes(GameEvent.BOX_DESTROYED)) {
+    if (events.includes(GameEvent.FIZZLED) || events.includes(GameEvent.PORTAL_FIZZLED)) {
       this.fizzle.start(before, after, events, time, joining)
     }
 
     if (events.includes(GameEvent.BOX_DESTROYED)) {
       this.fall.start(before, after, events, time)
+    }
+
+    this.returns.forgetMoved(after)
+
+    if (sendsBoxesHome(events)) {
+      this.returns.start(before, after, events, time)
     }
 
     if (events.includes(GameEvent.BLUE_PORTAL_OPENED) || events.includes(GameEvent.ORANGE_PORTAL_OPENED)) {
@@ -486,7 +495,7 @@ export function play(targets: PlayTarget[], index: number, tileSize: number, opt
       mixer.__mixer = {surfaceDetail: options.surfaceDetail !== false, hooks: target.hooksAt(stepNumber)}
 
       try {
-        set.renderer.render(state, set.animation.transitionAt(time), time, set.fizzle, set.changes, set.ripple, set.fall, set.openings, set.turn)
+        set.renderer.render(state, set.animation.transitionAt(time), time, set.fizzle, set.changes, set.ripple, set.fall, set.openings, set.turn, set.returns)
       } finally {
         mixer.__mixer = undefined
       }
