@@ -143,7 +143,7 @@ export const musicVolume = ref(readVolume(MUSIC_VOLUME_STORAGE_KEY, MUSIC_SWITCH
  */
 export const AUDIO_VOLUMES: VolumeSetting[] = [
   {
-    label: 'Sound effects',
+    label: 'Sound',
     volume: soundVolume,
   },
   {
