@@ -78,7 +78,7 @@ The existing elements need chambers too (portal basics, boxes and buttons, doors
 | 4 | Live lasers | About 4 | Chambers 8 (teach) and 9 (test), stage 04a's cold playtest of 2026-11-20: liked, no confusion reported |
 | 5 | Total | 16 (20 with chambers 0–3) | |
 
-**Chambers built by stage 04a** (each mechanic's first two, from layouts the author approved; what designing them taught became guidelines 25 and 27–29 in `docs/level_design.md`):
+**Chambers built by stage 04a** (each mechanic's first two, from layouts the author approved; what designing them taught became guidelines 26 and 28–30 in `docs/level_design.md`):
 
 | # | Chamber | Mechanic, part | What it asks | Best routes (moves, portals) |
 |---|---|---|---|---|
