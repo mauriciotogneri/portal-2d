@@ -1,4 +1,4 @@
-import gameMusicUrl from '@/assets/audio/music/game.mp3'
+import gameMusicUrl from '@/assets/audio/music/Portal 2 OST Volume 1 - Science is Fun.mp3'
 import menuMusicUrl from '@/assets/audio/music/menu.mp3'
 import {createAudioPlayer} from '@/game/audio_sources'
 
