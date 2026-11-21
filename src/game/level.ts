@@ -46,9 +46,10 @@ type SlideBeat = {
  * rules' step, plays a sound for each thing that happened and redraws when
  * the state changed. A step that changes the state is then drawn over a few
  * frames, redrawn every frame until it ends, paused or not; the next press
- * ends it at once. When a step fizzles, what it took breaks up over a few
- * frames, and so does a box a door, a laser, a light barrier or a fizzler
- * destroys where it lies, while one on a ditch that opens falls out of sight;
+ * ends it at once. When a step fizzles, the portals it took break up over a
+ * few frames; a box a step sends back to its start, destroyed or sent home by
+ * a link, comes apart where it was and flies there, while one on a ditch
+ * that opens falls out of sight and gathers at its start;
  * an arrow a step turns swings its chevron round, a blocked wall a step
  * switches slides its steel apart or shut, a
  * ditch a step switches slides its grate in or out, a door or the exit a step
@@ -557,7 +558,9 @@ export class Level {
    * Leaves what a slide being drawn did waiting: what happened on each tile
    * it entered until the subject is half way into that tile, or through the
    * portal onto it, and its stop and settling until the slide ends, or, when
-   * it walks the subject out of the chamber, until it is out of sight.
+   * it walks the subject out of the chamber, until it is out of sight. Only
+   * reaching the exit is heard with the last tile, as the subject gets onto
+   * the exit, rather than once it has walked out of sight.
    * @param state - The state before the step
    * @param result - What the rules' step gave for it, a slide
    */
@@ -583,11 +586,24 @@ export class Level {
       brokeUp = brokeUp || Level.breaksUp(leg.events)
     }
 
+    const settled = result.events.slice(legEvents)
+    const lastLeg = this.slideBeats.at(-1)
+
+    if ((lastLeg !== undefined) && (path.length > 0) && settled.includes(GameEvent.EXIT_REACHED)) {
+      this.slideBeats[this.slideBeats.length - 1] = {
+        ...lastLeg,
+        events: [
+          ...lastLeg.events,
+          GameEvent.EXIT_REACHED,
+        ],
+      }
+    }
+
     this.slideBeats.push({
       time: this.animation.endTime ?? this.frameTime,
       before: before,
       after: result.state,
-      events: result.events.slice(legEvents),
+      events: settled.filter((event) => event !== GameEvent.EXIT_REACHED),
       joinsBreakUp: brokeUp,
     })
   }
@@ -638,7 +654,10 @@ export class Level {
         this.fall.start(before, after, events, time)
       }
 
-      // Each box sent home comes apart where it was and flies there, or, one that fell, gathers there
+      // Each box sent home comes apart where it was and flies there, or, one that fell, gathers there; one picked up
+      // again is done with going home
+      this.returns.forgetMoved(after)
+
       if (sendsBoxesHome(events)) {
         this.returns.start(before, after, events, time)
       }

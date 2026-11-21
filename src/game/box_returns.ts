@@ -254,6 +254,18 @@ export class BoxReturns {
   }
 
   /**
+   * Forgets the return of each box no longer resting at its start after a
+   * step, picked up again, so it isn't drawn coming home again should it be
+   * put back there before its return would have ended.
+   * @param state - The state after the step, or after this part of it
+   */
+  forgetMoved(state: RulesState): void {
+    if (this.returns.some((box) => !restsAtStart(state, box))) {
+      this.returns = this.returns.filter((box) => restsAtStart(state, box))
+    }
+  }
+
+  /**
    * Ends every return at once, so nothing of it is drawn again.
    */
   clear(): void {

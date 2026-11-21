@@ -30,7 +30,7 @@ export type DestroyedBox = {
  * was put down. A box carried into a fizzler that is on is the fizzler
  * rule's, not one of these. One on a ditch falls in only while the ditch
  * is still open after the step: sent back to a button that bridges it
- * again, it breaks up, as the grate slides back over the pit. A box a
+ * again, it flies home, as the grate slides back over the pit. A box a
  * switch sends back from such a tile in the same step as another is
  * destroyed would be counted too, a case too rare to tell apart.
  * @param before - The state before the step

@@ -46,8 +46,10 @@ export function sendsBoxesHome(events: readonly GameEvent[]): boolean {
  * ditch; the box carried into an active fizzler, from the subject's hands;
  * and each other box that went from elsewhere to its start, which only a
  * link sending it back can do, or another box sent home onto its tile,
- * which sends it on to its own. A box resting at its start that was carried
- * before the step was put down there, not sent home.
+ * which sends it on to its own. A box carried before the step and put down
+ * on its own start wasn't sent home; one put down elsewhere and sent on
+ * home in the same step goes from the tile it was put down on, the one the
+ * subject faced as the step began.
  * @param before - The state before the step, or before this part of it
  * @param after - The state after the step, or after this part of it
  * @param events - What happened in the step, or in this part of it
@@ -96,15 +98,20 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
         fromWay: boxSprite(chamber, index, after.facing).way,
       })
     } else {
-      const wasAway = (before.boxX(index) !== start.x) || (before.boxY(index) !== start.y)
       const isHome = (after.carriedBox !== index) && (after.boxX(index) === start.x) && (after.boxY(index) === start.y)
+      // A carried box lies on the subject's tile, and is put down on the tile it faces
+      const ahead = DELTAS[before.facing]
+      const putDown = (index === carried) && events.includes(GameEvent.BOX_PUT_DOWN)
+      const fromX = putDown ? before.subjectX + ahead.dx : before.boxX(index)
+      const fromY = putDown ? before.subjectY + ahead.dy : before.boxY(index)
+      const wasAway = (fromX !== start.x) || (fromY !== start.y)
 
-      if (wasAway && isHome && (index !== carried)) {
+      if (isHome && wasAway && ((index !== carried) || putDown)) {
         returned.push({
           ...box,
           fell: false,
-          fromX: before.boxX(index) + 0.5,
-          fromY: before.boxY(index) + 0.5,
+          fromX: fromX + 0.5,
+          fromY: fromY + 0.5,
           fromSize: 1,
           fromWay: resting.way,
         })
