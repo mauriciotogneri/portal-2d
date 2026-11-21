@@ -80,6 +80,7 @@ let readoutFrameId: number | null = null // The pending animation frame request 
 let shownTime = '' // The text now in the timer, so the element is only written when it changes
 let attempt = 0 // The current run's attempt number at this chamber, counted on this device across visits
 let abandonReported = false // Whether the page going away has already been reported for this attempt
+let pauses = 0 // Times the pause menu was opened during this attempt, for analytics
 
 /**
  * Measures the space the chamber may fill inside the stage.
@@ -172,6 +173,7 @@ function setPaused(paused: boolean): void {
 function openPause(): void {
   setPaused(true)
   dialog.value = 'pause'
+  pauses += 1
   Sound.MENU_MOVE.play()
 }
 
@@ -185,23 +187,28 @@ function resume(): void {
 
 /**
  * Reads how far the current run has got, for analytics.
- * @returns The run's time and moves so far
+ * @returns The run's time, moves, portals, pauses and frame rate so far
  */
 function runProgress(): RunProgress {
   return {
     hundredths: level?.elapsedHundredths ?? 0,
     moves: level?.moves ?? 0,
+    portals: level?.portalsPlaced ?? 0,
+    pauses: pauses,
+    framesPerSecond: level?.framesPerSecond ?? null,
   }
 }
 
 /**
- * Counts a new attempt at the chamber, which the page going away may report once.
+ * Counts a new attempt at the chamber, which the page going away may report
+ * once, with no pauses yet.
  */
 function beginAttempt(): void {
   if (chamber.value !== undefined) {
     attempt = startAttempt(chamber.value)
   }
   abandonReported = false
+  pauses = 0
 }
 
 /**
@@ -295,7 +302,7 @@ function handleCompleted(): void {
     markChamberCompleted(chamber.value)
     newBest = recordTime(chamber.value, time)
     chamberBest = bestTime(chamber.value) ?? time
-    trackChamberComplete(chamber.value, attempt, runProgress(), level?.portalsPlaced ?? 0, firstCompletion, newBest)
+    trackChamberComplete(chamber.value, attempt, runProgress(), firstCompletion, newBest)
   }
   completedRun.value = {
     time: time,

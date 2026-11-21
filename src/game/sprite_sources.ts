@@ -127,13 +127,14 @@ const refusals = new Map<SpriteName, string>() // Why each sprite whose file was
  * be decoded or has the wrong size leaves its sprites undrawn.
  * @param url - Address of the file, as found at build time
  * @param file - The downloaded file
+ * @returns False when the file was refused for a sprite it serves, else true
  */
-export async function useSpriteFile(url: string, file: Blob): Promise<void> {
+export async function useSpriteFile(url: string, file: Blob): Promise<boolean> {
   const names = namesByUrl.get(url) ?? []
 
   // The preloader lists an address once per file, so an address several sprites share arrives more than once
   if (names.every((name) => decodedSprites.has(name))) {
-    return
+    return true
   }
 
   let image: ImageBitmap
@@ -145,16 +146,18 @@ export async function useSpriteFile(url: string, file: Blob): Promise<void> {
       refuse(name, 'it can\'t be decoded')
     }
 
-    return
+    return false
   }
 
   let used = false
+  let refused = false
 
   for (const name of names) {
     const overhang = overhangFor(name, image.width, image.height)
 
     if (overhang === null) {
       refuse(name, `it is ${image.width} × ${image.height} px; it must be ${allowedSizes(name)}`)
+      refused = true
     } else if (!decodedSprites.has(name)) {
       // Checked again after decoding: the same address may have been decoded meanwhile
       decodedSprites.set(name, {
@@ -168,6 +171,8 @@ export async function useSpriteFile(url: string, file: Blob): Promise<void> {
   if (!used) {
     image.close()
   }
+
+  return !refused
 }
 
 /**

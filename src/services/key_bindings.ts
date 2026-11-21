@@ -7,6 +7,7 @@
 import {computed, shallowRef} from 'vue'
 import {GameKey} from '@/game/game_key'
 import {ARROW_KEY_BINDINGS, type BoundKey, isBindableKey, type KeyBindings} from '@/game/key_bindings'
+import {trackControlsChange} from '@/services/analytics'
 
 /** A set of controls the player can pick: Arrow keys is the one shown as Default. */
 export type ControlLayout = 'arrow-keys' | 'custom'
@@ -176,7 +177,8 @@ export const keyBindings = computed(() => bindingsOf(controls.value))
 
 /**
  * Puts a layout in use. The first time Custom is picked, its keys start as
- * those of the layout in use.
+ * those of the layout in use. Analytics hears of it only when the layout in
+ * use changes.
  * @param layout - The layout
  */
 export function chooseControlLayout(layout: ControlLayout): void {
@@ -187,6 +189,9 @@ export function chooseControlLayout(layout: ControlLayout): void {
   }
   controls.value = updated
   saveControls(updated)
+  if (layout !== current.layout) {
+    trackControlsChange(layout)
+  }
 }
 
 /**

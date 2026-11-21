@@ -93,6 +93,9 @@ export class Level {
   /** Fewest tiles the chamber is sized for each way, so a small chamber's tiles are no larger than a chamber this size would get */
   private static readonly MINIMUM_TILES = 16
 
+  /** A longer gap between frames (a hidden tab, the computer asleep) is left out of the frame rate, in milliseconds */
+  private static readonly FRAME_RATE_GAP_LIMIT = 1000
+
   /** The sound each event of the rules plays, or null for one shown but not heard */
   private static readonly SOUNDS: Readonly<Record<GameEvent, Sound | null>> = {
     [GameEvent.BLUE_PORTAL_OPENED]: Sound.PORTAL_BLUE,
@@ -143,6 +146,8 @@ export class Level {
   private elapsedSeconds = 0 // Play time since the clock started; only grows while unpaused
   private stepCount = 0 // Steps that put the subject on another tile since the last load
   private portalCount = 0 // Portals opened on a wall since the last load, misses not counted
+  private rateFrames = 0 // Frames since the last load that came within the gap limit of the frame before them
+  private rateMilliseconds = 0 // The gaps before those frames, added up
   private readonly renderer: Renderer // Draws the state
   private readonly animation = new StepAnimation() // The step being drawn over a few frames, if any
   private readonly fizzle = new FizzleParticles() // What the latest fizzle took, breaking up over a few frames, if anything
@@ -210,6 +215,8 @@ export class Level {
     this.elapsedSeconds = 0
     this.stepCount = 0
     this.portalCount = 0
+    this.rateFrames = 0
+    this.rateMilliseconds = 0
     this.animation.finish()
     // What a slide of the run being dropped still had waiting goes with it, its completion included, and so does a walk-out's
     this.slideBeats = []
@@ -293,6 +300,16 @@ export class Level {
    */
   get portalsPlaced(): number {
     return this.portalCount
+  }
+
+  /**
+   * How often the frame loop has run since the last load, in frames per
+   * second, paused or not, leaving out gaps of over a second between frames
+   * (a hidden tab, the computer asleep); null until a frame has followed
+   * another within that time.
+   */
+  get framesPerSecond(): number | null {
+    return (this.rateFrames === 0) ? null : this.rateFrames * 1000 / this.rateMilliseconds
   }
 
   /**
@@ -780,6 +797,14 @@ export class Level {
    * @param time - The frame's time, in milliseconds on the frame clock (the page's, as `performance.now()` reads it)
    */
   private readonly onFrame = (time: number): void => {
+    // The first frame has none before it: the frame time is still 0
+    const frameGap = time - this.frameTime
+
+    if (this.frameTime > 0 && frameGap > 0 && frameGap <= Level.FRAME_RATE_GAP_LIMIT) {
+      this.rateFrames += 1
+      this.rateMilliseconds += frameGap
+    }
+
     this.frameTime = time
     this.frameStats?.recordFrame(time)
 

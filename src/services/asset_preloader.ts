@@ -8,10 +8,12 @@
  * files cached for a year (firebase.json), so later visits read them from disk.
  * A file that fails is skipped and loads on demand later, as it would without
  * the preload; a chamber sprite that fails isn't drawn for the rest of the
- * visit.
+ * visit. Each file that fails is reported to analytics.
  */
 import {useAudioFile} from '@/game/audio_sources'
 import {useSpriteFile} from '@/game/sprite_sources'
+import {trackAssetFailed} from '@/services/analytics'
+import type {AssetFailure, AssetKind} from '@/services/analytics'
 
 /** One file being downloaded. */
 interface FileDownload {
@@ -134,12 +136,15 @@ async function downloadFile(download: FileDownload, report: () => void): Promise
  * A file that fails leaves its players to fetch it when they first play.
  * @param download - The file to download, updated as it arrives
  * @param report - Called whenever the download moves forward
+ * @returns Why the file can't be used, or null when it can
  */
-async function preloadAudio(download: FileDownload, report: () => void): Promise<void> {
+async function preloadAudio(download: FileDownload, report: () => void): Promise<AssetFailure | null> {
   const file = await downloadFile(download, report)
-  if (file !== null) {
-    useAudioFile(download.url, URL.createObjectURL(file))
+  if (file === null) {
+    return 'download'
   }
+  useAudioFile(download.url, URL.createObjectURL(file))
+  return null
 }
 
 /**
@@ -148,12 +153,23 @@ async function preloadAudio(download: FileDownload, report: () => void): Promise
  * drawn.
  * @param download - The file to download, updated as it arrives
  * @param report - Called whenever the download moves forward
+ * @returns Why the file can't be used, or null when it can
  */
-async function preloadImage(download: FileDownload, report: () => void): Promise<void> {
+async function preloadImage(download: FileDownload, report: () => void): Promise<AssetFailure | null> {
   const file = await downloadFile(download, report)
-  if (file !== null) {
-    await useSpriteFile(download.url, file)
+  if (file === null) {
+    return 'download'
   }
+  return (await useSpriteFile(download.url, file)) ? null : 'refused'
+}
+
+/**
+ * Names a file by the last part of its address.
+ * @param url - Address of the file
+ * @returns Its name, as built
+ */
+function fileName(url: string): string {
+  return url.slice(url.lastIndexOf('/') + 1)
 }
 
 /**
@@ -170,10 +186,11 @@ async function loadFont(face: string): Promise<void> {
 
 /**
  * Downloads every asset and loads the fonts. Resolves once each one has loaded
- * or failed; never rejects.
+ * or failed; never rejects. Reports each file that fails, once.
  * @param onProgress - Called with the share of the assets downloaded so far, from 0 to 1
+ * @returns How many files didn't download or were refused
  */
-export async function preloadAssets(onProgress: (share: number) => void): Promise<void> {
+export async function preloadAssets(onProgress: (share: number) => void): Promise<number> {
   const audioDownloads = AUDIO_URLS.map(createDownload)
   const imageDownloads = IMAGE_URLS.map(createDownload)
   const downloads = [
@@ -188,9 +205,32 @@ export async function preloadAssets(onProgress: (share: number) => void): Promis
     onProgress(downloadedShare(downloads))
   }
 
+  // By address: byte-identical files share one, which is listed once per file
+  const failedUrls = new Set<string>()
+
+  /**
+   * Reports a file that can't be used, the first time its address fails.
+   * @param download - The file
+   * @param kind - What kind of file it is
+   * @param failure - Why it can't be used, or null when it can
+   */
+  const noteFailure = (download: FileDownload, kind: AssetKind, failure: AssetFailure | null): void => {
+    if (failure === null || failedUrls.has(download.url)) {
+      return
+    }
+    failedUrls.add(download.url)
+    trackAssetFailed(fileName(download.url), kind, failure)
+  }
+
   await Promise.all([
-    ...audioDownloads.map((download) => preloadAudio(download, report)),
-    ...imageDownloads.map((download) => preloadImage(download, report)),
+    ...audioDownloads.map(async (download) => {
+      noteFailure(download, 'audio', await preloadAudio(download, report))
+    }),
+    ...imageDownloads.map(async (download) => {
+      noteFailure(download, 'image', await preloadImage(download, report))
+    }),
     ...FONT_FACES.map((face) => loadFont(face)),
   ])
+
+  return failedUrls.size
 }

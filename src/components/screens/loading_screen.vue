@@ -7,6 +7,7 @@
 import {nextTick, onMounted, ref, useTemplateRef} from 'vue'
 import PortalLogo from '@/components/portal_logo.vue'
 import {Sound} from '@/game/sound'
+import {trackLoadingComplete} from '@/services/analytics'
 import {preloadAssets} from '@/services/asset_preloader'
 
 const emit = defineEmits<{
@@ -60,13 +61,15 @@ function waitMinimumLoadingTime(): Promise<void> {
  */
 async function preload(): Promise<void> {
   loadingStartedAt = performance.now()
-  await Promise.all([
+  const [failedFiles] = await Promise.all([
     preloadAssets((share) => {
       downloadedShare = share
       showProgress()
     }),
     waitMinimumLoadingTime(),
   ])
+  // The page's clock starts as the page starts loading, so this is the whole wait for Start
+  trackLoadingComplete(performance.now(), failedFiles)
   progress.value = 1
   loaded.value = true
   await nextTick()

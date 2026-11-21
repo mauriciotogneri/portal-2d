@@ -2,7 +2,13 @@
 /**
  * Replaces the whole app on touch-first devices, which have no keyboard to play with.
  */
+import {onMounted} from 'vue'
 import PortalLogo from '@/components/portal_logo.vue'
+import {trackDesktopOnlyShown} from '@/services/analytics'
+
+onMounted(() => {
+  trackDesktopOnlyShown()
+})
 </script>
 
 <template>
