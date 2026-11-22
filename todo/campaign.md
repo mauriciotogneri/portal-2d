@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 2, the outline (`docs/campaign.md`) drafted, waiting for the author's approval
+Status: In progress. Now: phase 3, run 1, not started (on hold until the author says to start)
 Last revised: 2026-11-22
 
 ## Goal
@@ -54,8 +54,8 @@ And the assumptions that follow from them:
 
 ### Phase 2 — Outline
 
-- [ ] **2.1 Write the outline.** `docs/campaign.md`: the campaign's conventions, every run in order with its new elements, what it teaches and a guess at its size, and run 1 detailed chamber by chamber. Drafted 2026-11-22; waiting for the author's approval of the order of the runs and of run 1.
-- [ ] **2.2 Sketch run 1's combine chamber** in the idea pool, before its teach chambers (guideline 51). Drafted 2026-11-22.
+- [x] **2.1 Write the outline.** `docs/campaign.md`: the campaign's conventions, every run in order with its new elements, what it teaches and a guess at its size, and run 1 detailed chamber by chamber. Approved by the author 2026-11-22.
+- [x] **2.2 Sketch run 1's combine chamber** in the idea pool, before its teach chambers (guideline 51).
 
 ### Phase 3 — Run 1: first steps (the tutorial)
 
