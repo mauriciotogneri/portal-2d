@@ -4,7 +4,7 @@ Portal 2D — a desktop-only, keyboard-driven puzzle game: the player crosses gr
 
 `todo/` holds the author's roadmap: an overview (`README.md`) and one file per stage (`04b_campaign.md` and `05_creator_platform.md`; stages 00, 01, 03 and 04a are done, stage 02 stopped after its prototype, and their files are removed; what stage 02 learned is in `docs/solver.md`; the 04a decisions 04b cites are copied into it), and `future.md`, ideas for mechanics beyond the plan and how a mechanic was built. They are not planned work; do not build any of it unless asked, and only tick a stage's checkboxes for steps you were asked to do and finished.
 
-`level_design_research.md` (in the root) is outside research on puzzle level design: advice by topic, from the makers of similar games and generic writing, with each point marked against `docs/level_design.md`, a pattern catalog mapped to this game's elements, and chamber ideas. Read it when designing chambers; it is reference, not rules or planned work.
+`level_design_research.md` (in the root) is outside research on puzzle level design: tips by topic for designing this game's chambers, drawn from the makers of similar games and generic writing, those `docs/level_design.md` lacks listed as candidate guidelines, a pattern catalog mapped to this game's elements, and chamber ideas. Read it when designing chambers; it is reference, not rules or planned work.
 
 ## Layout
 
