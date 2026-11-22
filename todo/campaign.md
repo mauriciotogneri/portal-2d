@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 3, run 1, not started (on hold until the author says to start)
+Status: In progress. Now: phase 3, step 3.1: Chamber 1.1 drafted, waiting for the author's cold play
 Last revised: 2026-11-22
 
 ## Goal
@@ -59,15 +59,16 @@ And the assumptions that follow from them:
 
 ### Phase 3 — Run 1: first steps (the tutorial)
 
-- [ ] **3.1 Chamber 1.1** (teach: portals).
+Cut from five chambers to four on 2026-11-22, with the author: walls alone can't make a portal crossing necessary, so 1.1 already crosses a ditch, and the ditch's own teach chamber was dropped (`docs/campaign.md`, run 1).
+
+- [ ] **3.1 Chamber 1.1** (teach: portals, over a ditch). Drafted as id 2, first in the play order; waiting for the author's cold play.
 - [ ] **3.2 Chamber 1.2** (test: portals).
-- [ ] **3.3 Chamber 1.3** (teach: ditch).
-- [ ] **3.4 Chamber 1.4** (teach: button and door).
-- [ ] **3.5 Chamber 1.5** (combine).
-- [ ] **3.6 Retire today's tutorial.** Once the new first chamber is approved, move today's Chamber 1 to the playground and update `AGENTS.md`, `docs/game_summary.md` and `docs/hints.md`, which describe it. Make the home menu's first-visit Play start the first chamber in the play order: today it starts permanent id 1 (`src/components/screens/home_screen.vue`), so with the new chambers listed it opens the old tutorial, and once that leaves the list it just opens the chamber list. Check it with empty progress.
-- [ ] **3.7 Friends play run 1 cold.** Note what confused them in each chamber's notes.
-- [ ] **3.8 Revise the handbook** with what run 1 taught (decision 10).
-- [ ] **3.9 Detail run 2** in the outline, its combine chamber sketched first.
+- [ ] **3.3 Chamber 1.3** (teach: button and door).
+- [ ] **3.4 Chamber 1.4** (combine).
+- [ ] **3.5 Retire today's tutorial.** Once the new first chamber is approved, move today's tutorial (id 1, now Chamber 2) to the playground and update `AGENTS.md`, `docs/game_summary.md` and `docs/hints.md`, which describe it. Make the home menu's first-visit Play start the first chamber in the play order: today it starts permanent id 1 (`src/components/screens/home_screen.vue`), so with the new chambers listed it opens the old tutorial, and once that leaves the list it just opens the chamber list. Check it with empty progress.
+- [ ] **3.6 Friends play run 1 cold.** Note what confused them in each chamber's notes.
+- [ ] **3.7 Revise the handbook** with what run 1 taught (decision 10).
+- [ ] **3.8 Detail run 2** in the outline, its combine chamber sketched first.
 
 ### Later runs
 

@@ -24,7 +24,7 @@ What every chamber keeps, so the player can trust it (the campaign intro of `doc
 
 | #   | Run                                      | New elements and rules                                                                 | Size (guess) | Status         |
 | --- | ---------------------------------------- | -------------------------------------------------------------------------------------- | ------------ | -------------- |
-| 1   | First steps (the tutorial)               | Portals, walls and steel, the exit, the ditch, the box, the button, the door, antlines | 5            | Detailed below |
+| 1   | First steps (the tutorial)               | Portals, walls and steel, the exit, the ditch, the box, the button, the door, antlines | 4            | Detailed below |
 | 2   | Portals in depth                         | None                                                                                   | 5–7          | Outline        |
 | 3   | Boxes and buttons                        | Turning in place; doors several buttons link                                           | 4–6          | Outline        |
 | 4   | Switches                                 | The switch                                                                             | 3–4          | Outline        |
@@ -89,12 +89,11 @@ Nothing new: chambers that make the campaign's elements act on each other, endin
 
 ## Run 1 in detail
 
-The tutorial run: today's tutorial split into small chambers, about one new thing each, with fixed arrows and blocked walls that open left for their own runs (7 and 5). Every chamber works on its layout alone (guideline 31); the hint column names the element a hint would explain if hints are built.
+The tutorial run: today's tutorial split into small chambers, about one new thing each, with fixed arrows and blocked walls that open left for their own runs (7 and 5). Every chamber works on its layout alone (guideline 31); the hint column names the element a hint would explain if hints are built. Walls alone can't make a portal crossing necessary, since a shot flies only over floor the subject could walk too (guideline 74), so chamber 1 already crosses a ditch, and the ditch's own teach chamber was cut (2026-11-22).
 
-| #   | Part    | Elements                            | The player already knows                | Should teach                                                                                                                                    | Hint (if built) |
-| --- | ------- | ----------------------------------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| 1   | Teach   | Walls, steel, the exit              | The move keys, from the controls legend | Shooting a portal of each colour onto a plain wall, and crossing from one to the other; steel takes none                                        | Steel           |
-| 2   | Test    | Walls, steel, the exit              | Chamber 1                               | A shot flies straight along the row or column the subject faces, so where it stands decides which wall it hits; either portal can be the way in | —               |
-| 3   | Teach   | A ditch                             | Chambers 1 and 2                        | A ditch stops the subject but not a shot                                                                                                        | Ditch           |
-| 4   | Teach   | A box, a button, a door, an antline | Chamber 1                               | A button opens the door its antline leads to while something stands on it; a box carried there holds it for the subject                         | Button          |
-| 5   | Combine | A box, a button, a door, a ditch    | Chambers 1 to 4                         | Carrying a box through portals; the portal keys don't shoot while a box is carried                                                              | —               |
+| #   | Part    | Elements                            | The player already knows                | Should teach                                                                                                                                       | Hint (if built) |
+| --- | ------- | ----------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| 1   | Teach   | Walls, steel, a ditch, the exit     | The move keys, from the controls legend | Shooting a portal of each colour onto a plain wall, and crossing from one to the other; a ditch stops the subject but not a shot; steel takes none | Steel, ditch    |
+| 2   | Test    | Walls, steel, a ditch, the exit     | Chamber 1                               | A shot flies straight along the row or column the subject faces, so where it stands decides which wall it hits; either portal can be the way in    | —               |
+| 3   | Teach   | A box, a button, a door, an antline | Chamber 1                               | A button opens the door its antline leads to while something stands on it; a box carried there holds it for the subject                            | Button          |
+| 4   | Combine | A box, a button, a door, a ditch    | Chambers 1 to 3                         | Carrying a box through portals; the portal keys don't shoot while a box is carried                                                                 | —               |

@@ -188,7 +188,7 @@ const LAYOUTS: LayoutEntry[] = [
 
 const CUSTOM_LAYOUT_INDEX = LAYOUTS.findIndex((entry) => entry.layout === ControlLayout.CUSTOM) // The Custom row, which the keyboard goes back to when its dialog closes
 
-const TUTORIAL_ID = 1 // The tutorial's permanent chamber id (Chamber 1), which Play opens straight away until any chamber has been opened
+const TUTORIAL_ID = 1 // The tutorial's permanent chamber id, which Play opens straight away until any chamber has been opened
 
 const router = useRouter()
 const menuId = useId()
