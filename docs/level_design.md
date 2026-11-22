@@ -115,7 +115,7 @@ Arrows are the exception: an arrow a link turns may turn under the subject. The 
 
 ## Size
 
-36. Every chamber must fit the screen whole, since there is no camera: the whole chamber is always on screen, scaled to fit and centred, with no scrolling, so its tiles shrink as it grows, to about 40 px for chamber 1 (20 × 20) on a 1080p screen. Keep a chamber no larger than its puzzle needs, so its elements stay easy to read. Tiles stop growing below 16 tiles either way: a smaller chamber gets the tiles a 16 × 16 one would, with more room around it.
+36. Every chamber must fit the screen whole, since there is no camera: the whole chamber is always on screen, scaled to fit and centred, with no scrolling, so its tiles shrink as it grows, to about 40 px for Playground 2 (20 × 20, chamber 1 until it left the campaign) on a 1080p screen. Keep a chamber no larger than its puzzle needs, so its elements stay easy to read. Tiles stop growing below 16 tiles either way: a smaller chamber gets the tiles a 16 × 16 one would, with more room around it.
 
 ## Checking a chamber
 
@@ -126,10 +126,10 @@ Arrows are the exception: an arrow a link turns may turn under the subject. The 
 ## The campaign
 
 40. Bring in each mechanic, and each existing element the campaign teaches, through a run of chambers in four parts, in this order:
-    - *Teach*: the mechanic alone, with no way to fail at understanding it, since using it is the only way forward. Chamber 4's first step slides the subject across a slide room.
-    - *Test*: the mechanic alone, but the player must use it on purpose. Chamber 9 needs a ray aimed where chamber 8's answer doesn't send it.
-    - *Twist*: an unexpected consequence of the rules, such as a fizzler on a slide's way closing the portals mid-slide, or a door that shuts as the subject steps into the ray holding it open. In chamber 7, stepping off a button onto the arrow it turns lets the arrow turn back under the subject.
+    - *Teach*: the mechanic alone, with no way to fail at understanding it, since using it is the only way forward. The first step of chamber 4 (now Playground 5) slides the subject across a slide room.
+    - *Test*: the mechanic alone, but the player must use it on purpose. Chamber 9 (now Playground 10) needs a ray aimed where the answer of chamber 8 (now Playground 9) doesn't send it.
+    - *Twist*: an unexpected consequence of the rules, such as a fizzler on a slide's way closing the portals mid-slide, or a door that shuts as the subject steps into the ray holding it open. In chamber 7 (now Playground 8), stepping off a button onto the arrow it turns lets the arrow turn back under the subject.
     - *Combine*: the mechanic with earlier ones.
 41. A full run is 10–12 chambers: 1–2 teach, about 3 test, about 3 twist and 3–4 combine. A short run of about 4 has room for about one of each, and a combine chamber can serve two mechanics at once.
-42. A test chamber can reuse its teach chamber's room with one change that breaks the teach chamber's answer: chamber 9 is chamber 8's room with the receiver moved to the bottom wall, so the ray must come down from a portal on the ceiling, where chamber 8's answer runs it into the right wall. It can also ask for the teach chamber's move again with a catch: chamber 5 asks for chamber 4's move twice, the second lane entered only by sliding back into the portal just come out of, so the other portal is the one to move.
+42. A test chamber can reuse its teach chamber's room with one change that breaks the teach chamber's answer: chamber 9 is chamber 8's room with the receiver moved to the bottom wall, so the ray must come down from a portal on the ceiling, where chamber 8's answer runs it into the right wall. It can also ask for the teach chamber's move again with a catch: chamber 5 (now Playground 6) asks for chamber 4's move twice, the second lane entered only by sliding back into the portal just come out of, so the other portal is the one to move.
 43. No chamber comes before the chambers that teach what it needs, and the tutorial stays first. Set the order by playtests (guideline 39); analytics can inform it, but a few players are too few to rank chambers by difficulty. A chamber's number and link follow its place in the list, while its completions and best times follow its permanent id, so a reorder renumbers chambers without losing progress: say what moved in the changelog.

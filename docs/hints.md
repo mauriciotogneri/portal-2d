@@ -47,7 +47,7 @@ With `prefers-reduced-motion` the game should show and remove it at once, like e
 
 ### Screen sizes
 
-The chamber screen sizes tiles from the stage, so the lit tile is as large as the chamber's tiles. On Chamber 1 (20 × 20 tiles):
+The chamber screen sizes tiles from the stage, so the lit tile is as large as the chamber's tiles. On Playground 2 (20 × 20 tiles; chamber 1 until it left the campaign), where the page was made:
 
 | # | Window | Tile | Lit area with brackets |
 |---|--------|------|------------------------|
@@ -91,11 +91,11 @@ None of these was decided. Each needs an answer before building.
 | # | Question | What is known |
 |---|----------|---------------|
 | 1 | When does a hint appear? | The page set it off when the subject came into the fizzler's part of the chamber (out of the portal, four tiles from the field). Other choices: when the chamber opens, when the subject first comes within some tiles of the element, or the first time the element would matter (before the step that would fizzle). The game reads one press per frame and never moves on its own, so a hint can be set off between two steps |
-| 2 | Which hints, in which chambers? | Only the fizzler was mocked. Elements first appear in the tutorial (chamber 0: walls, blocked walls, ditches, boxes, buttons, doors, arrows and the exit), chamber 1 (fizzlers, switches and lasers), chamber 4 (slide floors), chamber 6 (turnable arrows) and chamber 8 (emitters and receivers); chambers 2, 3, 5, 7 and 9 bring none, and no chamber yet holds a light barrier or a mirror box |
+| 2 | Which hints, in which chambers? | Only the fizzler was mocked. The campaign holds only Chamber 1, the tutorial, so far, where walls, blocked walls, ditches, boxes, buttons, doors, arrows and the exit first appear; no campaign chamber yet holds any other element (the chambers that brought fizzlers, switches, lasers, slide floors, turnable arrows, emitters and receivers left the campaign and are now playground chambers) |
 | 3 | Shown once, or every time? | Once per player (stored), once per visit, or on every attempt. If stored: under a `portal-2d.` key, wrapped in `try`/`catch`, and cleared by Reset progress or not |
 | 4 | After Restart chamber? | Whether the hint shows again after a restart or Play again |
 | 5 | Can the player read a hint again? | For example from the pause menu or the rail; nothing decided |
-| 6 | Where does the card go when the left has no room? | The page always put it to the left (Chamber 1's fizzler is near the right edge). A rule is needed: the side with the most room on the stage, the card whole on the stage, never over the lit tile, the leader straight |
+| 6 | Where does the card go when the left has no room? | The page always put it to the left (Playground 2's fizzler is near the right edge). A rule is needed: the side with the most room on the stage, the card whole on the stage, never over the lit tile, the leader straight |
 | 7 | Which keys close it? | Enter on the page. Space too? A held key (a move key bound to Enter or Space) must not close it as it appears, as `dialog_frame.vue` already ignores a repeating Enter or Space. A click? |
 | 8 | Escape and pause | What Escape does while a hint shows: close it, or open the pause menu over it |
 | 9 | Several elements at once | One hint at a time, in what order, and whether the spotlight can light several tiles (a run of fizzlers or lasers spans several) |
@@ -126,7 +126,7 @@ https://claude.ai/artifact/C5MwvnphSuw5qpWG9ZBttP, private to its owner, titled 
 | 1 | 1 | Round 1: seven hint styles | A to G, the large view with a picker and a side-by-side compare, all seven in step, a notes table |
 | 2 | 2 | Round 2: spotlight on one tile | B2 large (at the chosen window size), then B2 at 1920 × 1080, 1440 × 900 and 1280 × 720 in step; round 1 kept below, collapsed, drawn only while open |
 
-**The scene.** Chamber 1 (permanent id 1, the second in the list) from its recorded solution (`src/chambers/chamber_1.solution.json`), steps 96 to 116: the blue portal on the wall at (12, 7) facing right, the orange one at (15, 7), then moved to (14, 12) facing down (step 99); at step 101 the subject walks into the blue portal and comes out at (14, 11); steps 102 to 105 walk right to (18, 11); step 106 walks up into the fizzler at (18, 12), which no link reaches (always on): `fizzled`, both portals close. Each step shows for 0.42 s at 1×, and the loop is 11.5 s: the hint at 2.25 s (step 101), Enter at 7.0 s, the game going on at 7.6 s, the fizzle at 9.55 s. The page sets the clock on the sign to 01:12.40 at step 96 (not a measured time).
+**The scene.** Playground 2 (then chamber 1, permanent id 1, the second in the list) from its recorded solution of the time (`src/chambers/chamber_1.solution.json` then, since deleted, which git history keeps, so an engine built today draws only its start), steps 96 to 116: the blue portal on the wall at (12, 7) facing right, the orange one at (15, 7), then moved to (14, 12) facing down (step 99); at step 101 the subject walks into the blue portal and comes out at (14, 11); steps 102 to 105 walk right to (18, 11); step 106 walks up into the fizzler at (18, 12), which no link reaches (always on): `fizzled`, both portals close. Each step shows for 0.42 s at 1×, and the loop is 11.5 s: the hint at 2.25 s (step 101), Enter at 7.0 s, the game going on at 7.6 s, the fizzle at 9.55 s. The page sets the clock on the sign to 01:12.40 at step 96 (not a measured time).
 
 **Its controls.** Play and pause, a scrubber with the moments marked, speed (0.25×, 0.5×, 1×), screen (1920 × 1080, 1440 × 900, 1280 × 720), text (short, long), large view (fit, actual size), and a lamp beside each screen showing the key being pressed.
 

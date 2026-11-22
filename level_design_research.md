@@ -64,7 +64,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 | Game | Maker, year | Overlap with Portal 2D | Best design source |
 |---|---|---|---|
-| The Witness | Thekla, 2016 | Grid sequences taught without words; power cables (≈ antlines) | Blow and ten Bosch, IndieCade 2011; noclip documentary |
 | Chip's Challenge 1 and 2, and its level packs | Chuck Sommerville, 1989/2015 | Ice (≈ slide floors), force floors (≈ arrows, loosely), toggle walls, blocks and buttons, water (≈ ditches), teleports | Sommerville interviews; J.B. Lewis's essays; the Bit Busters wiki |
 | Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
 | Sokoban and Microban | Hiroyuki Imabayashi, 1981; David W. Skinner, 2000 | Boxes on buttons | Imabayashi interview; Sokoban difficulty research |
@@ -84,28 +83,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### The Witness (Thekla, 2016) and Jonathan Blow's method
-
-**What it is.** A first-person island of 650+ line-drawing panels on grids, eleven regions each exploring one rule family, taught only by the panels. Power cables show what powers what (≈ antlines). Its 3D environmental puzzles don't carry over; its sequencing and Blow's principles do.
-
-**How the puzzles were made.**
-- *Discover rules by asking low-level questions.* Panels use grooves because input devices vary; the line ends in a notch so you can't slip past; it may not cross itself because "you can't tell how many times I've circled that block". That last answer means every line splits the grid in two, and the partition rule followed: "it came just by asking these low-level questions; it didn't come from a top-down imposition" ([Blow and ten Bosch, IndieCade 2011](https://www.youtube.com/watch?v=OGSeLSmOALU)).
-- *Virtues.* "Aim toward the richest space … explore it completely … trace a strong boundary … present [results] cleanly … with the lightest contrivance". Completeness means a matrix: a property such as "immune to rewind" has to be asked of every kind of thing in the world. Then surprise edits it: "take out all the things that are not surprising, except possibly for things that you need to tutorialize" (IndieCade 2011).
-- *Truth, not hardness.* "You don't make good puzzles by trying to make things that are hard"; "look for what's true about the situation". An aha that doesn't let the player glimpse something true "is going to feel false and empty" (IndieCade 2011).
-- *Clutter.* In Braid, levels got better "the more of that stuff that I eliminated". The Witness had buttons and levers "until I decided that was stupid. Because the players are looking for buttons and levers everywhere"; rooms stayed bare and only panels act ([noclip documentary](https://www.youtube.com/watch?v=YdSdvIRkkDY)).
-- *A sequence is a conversation.* The first partition run: a tiny panel ("only four solutions to this and two are right", so brute force is fine); the same stones with the exit moved, so winding the old way walls off the exit; two groups plus an empty square; the empty square moved, so the winding must reverse ("do you remember that? It was three puzzles ago"); then a stumper where both windings fail until you see the empty square mustn't be cut through: "you have to break your perception of that pattern" (IndieCade 2011).
-- *Show both ends.* Right after the easy intro comes a puzzle "so hard that you actually just can't do it … we're obviously not asking you to do it", then simpler puzzles carrying the information: "it's okay if you can't do something" (noclip).
-- *Difficulty is "a statistical thing".* "Different people find different things hard … I couldn't really rank the puzzles on a difficulty scale" (noclip).
-- *Don't cut everything some find hard.* "If you design such that you kill anything that a percentage of people find hard … you end up getting this nucleus in the middle" (noclip). Croteam cut a cluster that split testers half and half; Blow keeps what a quarter of players hate. "When I playtest a game, I am almost never seeking feedback; it's more like executing a reality check" ([NYU Game Center](https://gamecenter.nyu.edu/?p=9486)).
-- *Overproduce.* For his newer grid game, Order of the Sinking Star, Blow says the shipped puzzles are "probably less than half of what we designed and tried out" ([stream clip](https://www.youtube.com/watch?v=Ku64fkXIKzk)).
-- *Attention by subtraction.* "We don't have to shine spotlights on things, because they don't stand out unless we mean for them to stand out"; cool props were vetoed because "people are going to walk up to it" ([Game Developer 2014](https://gamedeveloper.com/design/-i-the-witness-i-modeling-epiphany); noclip).
-
-**Borrow for Portal 2D.**
-- *Same chamber, one thing moved.* Two chambers with the same walls; in the second, move the receiver to where the old route crosses the ray, or the exit behind the box's drop tile, so the first answer fails at exactly the step that shows the hidden rule.
-- *A run of four that breaks its own pattern* (rays): one mirror box turns the ray onto a receiver; then the corner tile is a button; then two receivers; then a chamber that looks like the third but needs the portal pair instead of the mirror box, because the box is needed on a button out of line.
-- *Completeness grid for each new element.* For rays: one row per element, asking what a ray does there, what happens when the subject cuts it there, and what happens when the element switches under a ray. Each surprising cell is a candidate chamber.
-- *One kind of interactive thing.* Anything that looks like it could be an element should be one.
 
 ### Chip's Challenge (Chuck Sommerville, 1989), Chip's Challenge 2 (2015) and their level-pack community
 
