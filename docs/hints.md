@@ -2,7 +2,7 @@
 
 Short notes shown during the first chambers, so a new player understands what an element does: for example, that walking into a fizzler that is on closes both portals and destroys a box the subject carries. Nothing of this is built yet. This file records the design chosen on 2026-11-21, how it was chosen, what is still open, and what was learned about the code on the way, so the work can start from here.
 
-These are tutorial hints. They are not the solver's hints (a nudge, a highlight, the next move, on a key of their own) that roadmap decision 10 dropped with the solver (`docs/solver.md`, `todo/README.md`).
+These are tutorial hints. They are not the solver's hints (a nudge, a highlight, the next move, on a key of their own) that were dropped with the solver (`docs/solver.md`).
 
 ## The decision
 

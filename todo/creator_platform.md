@@ -5,11 +5,11 @@ Last revised: 2026-11-20
 
 ## Goal
 
-The author can build chambers in an in-browser editor, prove each one solvable by solving it, and share it in a link, with no backend: the whole chamber (and the author's solution) lives in the link, so it works on today's static Firebase Hosting site. A solved chamber can also be exported as a chamber file and its recorded solution, for the campaign. Whether sharing by link is worth building is open decision 1 (recommended: yes, to send chambers to friends). The old Stage B (accounts and a community on Firebase) was removed, since a few friends are no audience (README decision 13).
+The author can build chambers in an in-browser editor, prove each one solvable by solving it, and share it in a link, with no backend: the whole chamber (and the author's solution) lives in the link, so it works on today's static Firebase Hosting site. A solved chamber can also be exported as a chamber file and its recorded solution, for the campaign. Whether sharing by link is worth building is open decision 1 (recommended: yes, to send chambers to friends). The old Stage B (accounts and a community on Firebase) was removed, since a few friends are no audience.
 
 ## Open decisions
 
-1. **Is sharing by link worth building?** (Added 2026-11-09, replacing "When does Stage B start?", which README decision 13 settled: never.) Links would go to a few friends (README decision 12), not a public audience.
+1. **Is sharing by link worth building?** (Added 2026-11-09, replacing "When does Stage B start?", which was settled: never.) Links would go to a few friends, not a public audience.
    - *Editor only:* the editor exports a solved chamber's JSON and its recorded solution for the campaign (A4.1, A4.2). Phases A1 and A2 and steps A4.3 and A4.4 are skipped, apart from A1.3's grid cap and A1.4's checks, which the editor needs anyway. Cost: no way to send friends a chamber outside a release.
    - *Editor plus link sharing:* everything below. Cost: the link format, its decoder, size caps, a shared-chamber screen and local records for shared chambers.
    - **Recommendation: editor plus link sharing**, so the author can send chambers to friends; still decided at this stage's revisit.
@@ -55,9 +55,9 @@ The author can build chambers in an in-browser editor, prove each one solvable b
 ### Phase A4 — Share only what you solved
 
 - [ ] **A4.1 Sharing needs a fresh solve.** Share and Export are enabled only when the last completed test-play's content hash equals the current draft's. Verify: any edit after solving disables both until solved again.
-- [ ] **A4.2 Export for the campaign.** Save a solved draft as a format 2 chamber file and its test-play as its recorded solution, named by the next unused permanent id, ready for `src/chambers/` and the catalogue (the "Chambers" rule in `AGENTS.md`). This replaces the solver report planned here, which README decision 10 dropped. Verify: an exported chamber, added to the campaign, passes `npm run verify`.
+- [ ] **A4.2 Export for the campaign.** Save a solved draft as a format 2 chamber file and its test-play as its recorded solution, named by the next unused permanent id, ready for `src/chambers/` and the catalogue (the "Chambers" rule in `AGENTS.md`). This replaces the solver report planned here, dropped when the solver stopped at its prototype. Verify: an exported chamber, added to the campaign, passes `npm run verify`.
 - [ ] **A4.3 Build and copy the link.** Encode the draft, the author's replay, the name and the author; copy with `navigator.clipboard.writeText`, falling back to a selected text field. Verify: the link opens in another browser profile, shows the verified badge and plays the same way.
-- [ ] **A4.4 Links from another version.** The link carries its format version, raised by any format or rules change that would break old links. A link in a version this game doesn't read shows "made with a different version" (A2.2) instead of failing oddly. There is no upgrade chain: old links may stop opening (README decision 13). Verify: a fixture link with another version number shows the message.
+- [ ] **A4.4 Links from another version.** The link carries its format version, raised by any format or rules change that would break old links. A link in a version this game doesn't read shows "made with a different version" (A2.2) instead of failing oddly. There is no upgrade chain: old links may stop opening. Verify: a fixture link with another version number shows the message.
 
 ### Phase A5 — Docs and release
 
@@ -84,14 +84,14 @@ The author can build chambers in an in-browser editor, prove each one solvable b
 
 ## Go/no-go points
 
-Revised 2026-11-09: the Stage B gate and the moderation, cost and verifier cost points went with Stage B (README decision 13), and the stage 02 no-go point is settled (README decision 10: no par or shortcuts).
+Revised 2026-11-09: the Stage B gate and the moderation, cost and verifier cost points went with Stage B, and the stage 02 no-go point is settled (no par or shortcuts).
 
 - **Link length:** if typical links exceed the 2,000-character budget even with the binary encoding, drop the replay from the link (open decision 2), or accept long links and note that some chat apps cut them.
 
 ## Risks
 
-- **IP exposure:** a shared link opens the game, with Valve's name and logo (README decision 12), for whoever receives it, and friends may forward links. Send them only to friends, and keep the game a private fan game.
-- **Format and rules drift:** a link a friend received before a format or rules change may stop opening after it. Accepted (README decision 13): the link carries its format version and shows "made with a different version" (A4.4).
+- **IP exposure:** a shared link opens the game, with Valve's name and logo, for whoever receives it, and friends may forward links. Send them only to friends, and keep the game a private fan game.
+- **Format and rules drift:** a link a friend received before a format or rules change may stop opening after it. Accepted: the link carries its format version and shows "made with a different version" (A4.4).
 - **Untrusted data:** a link is input from outside the game: one damaged in a chat app, or edited by hand, could hold a giant or malformed chamber that freezes the tab. Size caps before decoding and the chamber loader's checks (A1.3, A1.4).
 
 ## Notes for later stages
