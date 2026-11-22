@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: draft, waiting for the author's cold play (2026-11-22). File: `src/chambers/chamber_2.json`, second in the play order; permanent id 2. No recorded solution yet, so `npm run replay:check` and `npm run solver:check` fail on it until the author's run is recorded.
+Status: kept by the author on 2026-11-22, their cold run its recorded solution. File: `src/chambers/chamber_2.json`, second in the play order; permanent id 2.
 
 ## Entry
 
@@ -113,3 +113,6 @@ None is a dead end: there is no box, link, arrow or anything one-way, and from t
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-22 | Right, up to the start room's top row, blue across onto (6, 2), down, orange onto the floor at (2, 0), through it into the middle room; left to its left column, blue up onto (4, 6), which took the middle room's portal away (wrong try 4), orange onto (6, 2) again, through it, then to the exit (9 moves, 4 portals). No shot missed, so neither near miss fired: the second chamber in a row where the author never shot steel. They walked into orange both times and never into blue, so the half "either portal can be the way in" went unused, as the independent check foresaw. Recorded as `chamber_2.solution.json`; kept |
+
+Lesson (guideline 107): a lesson a chamber only offers goes unlearned when the other way costs a single extra shot, which is guideline 27's point (force the opposite of a likely wrong belief). Since run 1 can't force "either portal can be the way in", run 2, which tests portals in depth, should force it: a crossing where the only way in is the colour not used so far.
