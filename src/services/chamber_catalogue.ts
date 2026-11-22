@@ -3,6 +3,7 @@
  * too (scripts/chamber_files.ts), so it uses nothing of Vite's, such as import.meta.env.
  */
 import chamberOneData from '@/chambers/chamber_1.json'
+import chamberTwoData from '@/chambers/chamber_2.json'
 import type {ChamberData} from '@/game/chamber_data'
 
 /** Which list a chamber is in: the campaign, under Play, or in development the playground chambers. */
@@ -27,6 +28,10 @@ const CHAMBER_LISTINGS: ChamberListing[] = [
   {
     id: 1,
     data: chamberOneData,
+  },
+  {
+    id: 2,
+    data: chamberTwoData,
   },
 ]
 

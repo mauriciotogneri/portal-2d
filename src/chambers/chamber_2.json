@@ -1,0 +1,93 @@
+{
+    "version": 2,
+    "size": {
+        "width": 7,
+        "height": 7
+    },
+    "subject": {
+        "x": 1,
+        "y": 1,
+        "direction": "RIGHT"
+    },
+    "exit": {
+        "x": 6,
+        "y": 5,
+        "blocked": false
+    },
+    "walls": [
+        {
+            "xFrom": 1,
+            "xTo": 2,
+            "yFrom": 0,
+            "yTo": 0
+        },
+        {
+            "x": 6,
+            "y": 2
+        },
+        {
+            "x": 4,
+            "y": 6
+        }
+    ],
+    "blockedWalls": [
+        {
+            "xFrom": 0,
+            "xTo": 0,
+            "yFrom": 0,
+            "yTo": 6
+        },
+        {
+            "xFrom": 3,
+            "xTo": 6,
+            "yFrom": 0,
+            "yTo": 0
+        },
+        {
+            "xFrom": 1,
+            "xTo": 3,
+            "yFrom": 6,
+            "yTo": 6
+        },
+        {
+            "xFrom": 5,
+            "xTo": 6,
+            "yFrom": 6,
+            "yTo": 6
+        },
+        {
+            "x": 6,
+            "y": 1
+        },
+        {
+            "xFrom": 6,
+            "xTo": 6,
+            "yFrom": 3,
+            "yTo": 4
+        },
+        {
+            "xFrom": 1,
+            "xTo": 3,
+            "yFrom": 3,
+            "yTo": 5
+        }
+    ],
+    "ditches": [
+        {
+            "x": 3,
+            "y": 1
+        },
+        {
+            "x": 3,
+            "y": 2
+        },
+        {
+            "x": 4,
+            "y": 3
+        },
+        {
+            "x": 5,
+            "y": 3
+        }
+    ]
+}
