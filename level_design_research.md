@@ -64,7 +64,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 | Game | Maker, year | Overlap with Portal 2D | Best design source |
 |---|---|---|---|
-| Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
 | Sokoban and Microban | Hiroyuki Imabayashi, 1981; David W. Skinner, 2000 | Boxes on buttons | Imabayashi interview; Sokoban difficulty research |
 | Stephen's Sausage Roll | Stephen Lavelle, 2016 | New consequences of old elements (the twist chamber) | Draknek & Friends podcast; GMTK |
 | Sokobond, A Good Snowman Is Hard to Build, Cosmic Express, A Monster's Expedition | Alan Hazelden and collaborators, 2013–2020 | Grid, turn-based, small rooms | Hazelden's talks and interviews |
@@ -82,17 +81,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### Adventures of Lolo / Eggerland (HAL Laboratory, 1985–2000)
-
-Single-screen 11×11 rooms, always fully visible, where "the most difficult thing about Lolo is figuring out the exact order that you should be doing things in" ([Retro XP](https://retroxp.beehiiv.com/p/retro-spotlight-adventures-of-lolo)). No designer interview exists; this rests on analysts and walkthroughs. Its overlaps: pushable framers (≈ boxes), Medusa statues whose gaze runs along their lines and is stopped by a block (≈ a ray cut by a box, with the stakes inverted: in Lolo you block a line to cross it, in Portal 2D you keep a ray clear to keep a receiver lit), trees that block walking but not the gaze against boulders that block both (≈ lasers and ditches against light barriers and closed doors), one-way arrows that don't stop shots, and an arrow power that flips one arrow (≈ a turnable arrow).
-
-- *One element per opening room.* Eggerland Mystery's first rounds each add one monster; its Medusa room offers exactly the framers needed, one per gaze line ([StrategyWiki](https://strategywiki.org/wiki/Eggerland_Mystery/Rounds_1-10)).
-- *Curated for a new audience.* The US Lolo is a compilation of the easier, more straightforward rooms of its Japanese predecessors ([Hardcore Gaming 101](https://hardcoregaming101.net/eggerland/eggerland2.htm)).
-- *Where it was unfair.* Eggerland 2's solutions were "nigh-impossible to figure out without a FAQ", needing requirements that "normally don't apply to the rest of the game"; a hidden respawn rule was "essential to solving some of the more difficult puzzles, which can be confusing". A later version animated the water currents because that "eliminates the need to figure this out by trial-and-error" ([Hardcore Gaming 101](https://hardcoregaming101.net/eggerland/eggerland.htm)). A reviewer's verdict on the rest: "It's never unfair: it just requires that you understand how the rules of its world work" (Retro XP).
-- *HAL's later principle* (BoxBoy's director, who places it in Lolo's lineage): each world starts with a simple stage teaching a method, then a variation, then a combination; the stage that drew the most player questions required a technique never asked for before ([Kotaku](https://kotaku.com/the-guy-behind-one-of-the-year-s-best-3ds-games-1702235041)).
-
-**Borrow.** *Prepare, then trigger*: Lolo's sleeping monsters wake on the last heart, so the room is solved by arranging framers before taking it. In Portal 2D: a final switch whose links open the exit and send the boxes home, so every button they held comes up and its door closes or its laser comes back on; the player must have placed portals so the route still works once the boxes are gone. The antlines show the trap in advance, which keeps it fair.
 
 ### The push-block family: Sokoban, Stephen's Sausage Roll, the Draknek games, Snakebird, Patrick's Parabox
 

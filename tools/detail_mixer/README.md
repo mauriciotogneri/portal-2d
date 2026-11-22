@@ -126,7 +126,7 @@ With the Claude in Chrome extension connected:
 
 - Start the game with `npm run dev -- --port 5199 --strictPort` in the background. Stop it with `pkill -f "[v]ite --port 5199"` (the brackets keep `pkill` from matching itself) and close the tab when done.
 - After **every** page load and before pressing Start, mute the tab: `const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { this.muted = true; return play.call(this) }`.
-- Every visit opens on a loading screen; press its Start button. **Use `/playground`**, which keeps no progress, or `/src/dev/sprite_gallery.html`, which needs no Start at all and runs no frame loop, so it is the place to time. Opening `/chamber/N` adds an attempt to the saved progress; the home menu can be browsed with the arrow keys alone (Enter on Play starts the tutorial until a chamber has been opened).
+- Every visit opens on a loading screen; press its Start button. **Use `/playground/1`** (or any playground chamber), which keeps no progress, or `/src/dev/sprite_gallery.html`, which needs no Start at all and runs no frame loop, so it is the place to time. Opening `/chamber/N` adds an attempt to the saved progress; the home menu can be browsed with the arrow keys alone (Enter on Play starts Chamber 1, the tutorial, until a chamber has been opened).
 - Screenshots come back scaled (a 1920 px window as a 1559 px frame, as JPEG). For a 1:1 look use the `zoom` action on a region; the chamber's canvas sits where `document.querySelector('canvas').getBoundingClientRect()` says.
 - **Drive the game's own modules from the page.** In `npm run dev` every source file is a module the page can import, sharing the app's loaded sprites:
 
