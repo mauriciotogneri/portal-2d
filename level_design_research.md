@@ -10,7 +10,6 @@ Every claim links its source. Sources are primary where possible (developer comm
 - [Part 3 — What the advice says, topic by topic](#part-3--what-the-advice-says-topic-by-topic)
 - [Part 4 — Pattern catalog, mapped to Portal 2D](#part-4--pattern-catalog-mapped-to-portal-2d)
 - [Part 5 — Chamber ideas, by element and part](#part-5--chamber-ideas-by-element-and-part)
-- [How this was gathered, and its limits](#how-this-was-gathered-and-its-limits)
 
 ## The short version
 
@@ -446,22 +445,3 @@ What already exists, so the ideas avoid repeating it: chambers 4 and 5 teach and
 
 30. **Filters** (combine, late). One chamber where the subject, the box, a shot and the ray each reach a different region: an open ditch passes rays and shots but not the subject; a fizzler passes the subject but not the box or a shot; a light barrier passes nothing. The puzzle is ferrying each across its own barrier. *From:* Talos 2's driller and exclusion field. *Check:* guideline 22 (if slides are involved), guideline 30, and the solver's refusal of chambers with receivers.
 31. **The capstone** (finale). Portal's TC18 introduces nothing and combines nearly everything; Valve's finale was "about the easiest puzzle in Portal". Without time pressure, Portal 2D's last chamber needs synthesis and spectacle: several elements working at once, a visible chain of doors with lit antlines, and a catch no harder than the run before it.
-
-## How this was gathered, and its limits
-
-- **Method.** Nine research passes ran in parallel, one per family of games and two on generic writing, each reading developer commentary, talks (from YouTube captions: about 70 videos), postmortems, interviews, papers and forum threads, and writing notes with a link per claim. The passes listed about 420 source entries (some appear in more than one pass) and opened about 350. The notes were then condensed into this document, which links its claims inline.
-- **Spot check.** Sixteen key quotes were re-read at their source: fourteen exact, one a close paraphrase (now tightened), and one wrong label (Game Informer names only "checklisting"; its second kind of training has no name), now fixed. The developer commentary transcript doesn't number Portal's chambers; the numbers follow the Portal Wiki's grouping.
-- **Second pass.** Later in November 2026 each of twelve key sources (Brown's GMTK video, Valve's commentaries, Traynor, Brett Taylor, Blow and ten Bosch, Grant, Ladavac, Jarušek and Pelánek, J.B. Lewis, Foster, the Portal team's Thinking With Portals and Ambinder's slides) was re-read in full by its own pass (Grant's talk turned out to have a third part, now used), checked against this document, and its new points merged. It corrected:
-  - a misattributed anecdote (Foster's cube, 3.8) and two credits (Blow's few-steps rule is ten Bosch's; the box-lines count is Joshua Taylor and Ian Parberry, not Brett Taylor);
-  - what each Sokoban metric measures, and "near-identical" levels that are only very similar;
-  - which Ambinder slide says what about think-aloud and Q&A, and that Grant files distractors apart from misleading red herrings;
-  - several near-quotes, now exact.
-  
-  The live Combine OverWiki was down, so the commentary was read from Wayback copies of October 2026. The IndieCade captions don't name speakers; Blow's and ten Bosch's parts are told apart from context ("my game" for Miegakure or for Braid and The Witness). The Talos postmortem's captions couldn't be fetched (YouTube rate limits), so the claims credited to it (about 20 raters, the two-jammers story, the retextured door, the hint system) rest on the first pass alone; written interviews with Croteam were used for the points added from them.
-- **Gaps.**
-  - Some talks couldn't be transcribed (YouTube rate limits): the GDC 2012 Portal 2 talk, the Hitman GO postmortem, Jolie Menzel's GDC 2016 puzzle workshop, Traynor's Wookash podcast. Written reports of them were used instead.
-  - Blocked pages: Ido Tal's Portal: The Flash Version retrospective (search snippets only), the Valve Developer Community wiki (archived copies used), Rock Paper Shotgun.
-  - No designer interview exists for Eggerland/Lolo, none was found for Snakebird's level design, and nothing on Pokémon's ice puzzles.
-  - Writing on top-down portal games is thin.
-  - One research pass ran out of web searches near its end, so symmetry and composition in puzzle layouts, and learned helplessness, are barely covered; the second pass found two passing remarks on symmetry (Foster, Taylor; 3.8).
-- **What isn't checked.** The chamber ideas in Part 5 are prose sketches: none was built, solved or tested. Several outside findings come from 3D or real-time games and are translated here; the translations are this document's reading of `docs/elements.md`.
