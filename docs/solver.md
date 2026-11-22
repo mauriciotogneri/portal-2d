@@ -1,16 +1,16 @@
 # Solver
 
-A program that searches the states a chamber can reach, to prove it can be finished and to find its par (the fewest moves, the fewest portals). It was built as stage 02's prototype, which stopped on 2026-11-08: it is too slow on the current chambers for what was planned on top of it (see [Why it stopped](#why-it-stopped)). The code stays, runs under Node by hand, and its check runs in `npm run verify`, so it keeps working as the rules change. This file is what the stage learned, and what a revisit would start from.
+A program that searches the states a chamber can reach, to prove it can be finished and to find its par (the fewest moves, the fewest portals). It was built as stage 02's prototype, which stopped on 2026-11-08: it is too slow on the large chambers (chambers 1 to 3 then, now Playground 2 to 4, outside the campaign) for what was planned on top of it (see [Why it stopped](#why-it-stopped)). The code stays, runs under Node by hand, and its check runs in `npm run verify`, so it keeps working as the rules change. This file is what the stage learned, and what a revisit would start from.
 
 ## Running it
 
 | # | Command | What it does |
 |---|---------|--------------|
-| 1 | `npm run solve [chamber files]` | Prints each chamber's size (tiles, portal wall sides, flags, boxes, buttons, the state's values, a rough upper bound on its states, its key's width); every chamber in `src/chambers/` when no file is given. `--baseline` adds the baseline search for both pars, `--solvable` the macro search for any route, `--par` the macro search for both pars; each prints its result, states, effort, time and route, a macro search also its peak memory, and a macro route is replayed through the rules; on a chamber with a receiver, each macro search prints that it refused and why. `--max-states=` (default 1,000,000) caps each search, and `--max-seconds=` (default 300) each macro search |
+| 1 | `npm run solve [chamber files]` | Prints each chamber's size (tiles, portal wall sides, flags, boxes, buttons, the state's values, a rough upper bound on its states, its key's width); every chamber in `src/chambers/` (the campaign's) when no file is given, so a playground chamber only when its file is named. `--baseline` adds the baseline search for both pars, `--solvable` the macro search for any route, `--par` the macro search for both pars; each prints its result, states, effort, time and route, a macro search also its peak memory, and a macro route is replayed through the rules; on a chamber with a receiver, each macro search prints that it refused and why. `--max-states=` (default 1,000,000) caps each search, and `--max-seconds=` (default 300) each macro search |
 | 2 | `npm run solver:check` | Part of `npm run verify`: everything under [How it's checked](#how-its-checked), in about 6 seconds |
 | 3 | `npm run state-set:bench` | By hand: 10 million keys in and out of the state set, with the time and memory |
 
-The real chambers need `--max-states=40000000` to search for 5 minutes without running out of room.
+The large chambers (Playground 2 to 4) need `--max-states=40000000` to search for 5 minutes without running out of room.
 
 ## How it works
 
@@ -19,7 +19,7 @@ The ground rule: every rule effect comes from the rules' own `step` (`src/game/r
 The pieces, in `src/solver/`:
 
 - **Chamber index** (`chamber_index.ts`): numbers every tile that isn't wall, and every wall side a portal can ever open on: a wall's, or a blocked wall's that a link reaches or that starts unblocked, but never one facing a door or the exit, or behind a laser's or a light barrier's end plate or a fizzler's connector, nor any face of an emitter or a receiver.
-- **State key** (`state_key_codec.ts`): a settled state packed into 64 bits from those numbers: the subject's tile and facing, the carried box, each portal (closed or a wall side), each box's tile (a mirror box's too, its mirror fixed by the chamber), one bit per blocked flag (one per element a button's, switch's or receiver's link reaches, a turnable arrow or an emitter among them). It leaves out what settling decides: each button's pressed flag, each receiver's lit flag (worked out on unpacking by tracing the rays, which don't depend on it), the carried box's tile (the subject's) and the completion (the subject on the exit). Rays are never stored, so they add nothing. Chambers 1 to 3 need 49–53 bits.
+- **State key** (`state_key_codec.ts`): a settled state packed into 64 bits from those numbers: the subject's tile and facing, the carried box, each portal (closed or a wall side), each box's tile (a mirror box's too, its mirror fixed by the chamber), one bit per blocked flag (one per element a button's, switch's or receiver's link reaches, a turnable arrow or an emitter among them). It leaves out what settling decides: each button's pressed flag, each receiver's lit flag (worked out on unpacking by tracing the rays, which don't depend on it), the carried box's tile (the subject's) and the completion (the subject on the exit). Rays are never stored, so they add nothing. Playground 2 to 4 need 49–53 bits.
 - **State set** (`state_set.ts`): keys in typed arrays of a capacity fixed up front, numbered in the order added, each with the entry it was reached from, so a route can be rebuilt. 10 million keys go in in 1.7 s and are found in 2.1 s, in 188 MiB.
 - **Cost queue** (`cost_heap.ts`): a binary heap that gives back the cheapest queued state first, for the baseline search and the macro search's cheapest-first modes.
 - **Baseline search** (`baseline_search.ts`): every action from every state, cheapest first (Dijkstra). Exact and slow (about 35,000 states a second on a real chamber); it is the reference the macro search is checked against on the tiny chambers.
@@ -40,7 +40,7 @@ The shortcuts the macro search takes:
 
 `npm run solver:check` (`scripts/check_solver.ts`):
 
-- Every state along each chamber's recorded solution and 100,000 seeded random steps packs into the key and unpacks unchanged; a chamber too large for the key is refused.
+- Every state along each chamber's recorded solution (only the campaign's chambers have one: today Chamber 1's) and 100,000 seeded random steps packs into the key and unpacks unchanged; a chamber too large for the key is refused.
 - From every state along the recorded solutions and every state the baseline search finds on the tiny chambers: every walk, turn and shared shot gives the state the rules' step gives, with the ways and canonical facings for the state's blocked flags; every skipped no-op move changes nothing but the facing, and every interact skipped, each way the subject may face, changes nothing but the facing or gives the state an interact taken there gives; and a tile a walk reaches is in the start's region exactly when a walk from it gets back. The limited box drops aren't checked this way, since the drops they leave out do change the state. On a chamber with a receiver, which the macro search refuses, only the key round trip above runs: the walk, shot, skip and region checks are skipped, and the chamber's line says why.
 - On every tiny chamber, the baseline and macro searches find both hand-counted pars, the macro search also finds a route for any route, and every route replays to the counts found.
 
@@ -50,22 +50,22 @@ The tiny chambers are in `scripts/solver_fixtures/` (`solver_fixtures.ts` lists 
 
 All in Node 24 on the author's machine (8 cores), one search at a time unless said otherwise.
 
-Size of the problem, as the chambers are now (`npm run solve`, 2026-11-21). The upper bound is tiles × 4 facings × (wall sides + 1)² for the portals × (tiles + 1)^boxes for the boxes × 2^flags:
+Size of the problem, as the chambers were on 2026-11-21 (`npm run solve`), when chambers 1 to 9 were still in the campaign, with the name each has now. The upper bound is tiles × 4 facings × (wall sides + 1)² for the portals × (tiles + 1)^boxes for the boxes × 2^flags:
 
 | # | Chamber | Size | Tiles | Portal wall sides | Flags | Boxes | Buttons | Upper bound | Key bits |
 |---|---------|------|-------|-------------------|-------|-------|---------|-------------|----------|
-| 1 | 0 (tutorial) | 12×10 | 61 | 58 | 2 | 1 | 2 | ~10^8.3 | 29 |
-| 2 | 1 | 20×20 | 252 | 187 | 6 | 2 | 5 | ~10^14.2 | 50 |
-| 3 | 2 | 23×13 | 185 | 161 | 9 | 2 | 2 | ~10^14.5 | 53 |
-| 4 | 3 | 23×17 | 241 | 165 | 5 | 2 | 4 | ~10^13.7 | 49 |
-| 5 | 4 | 13×9 | 65 | 61 | 0 | 0 | 0 | ~10^6.0 | 21 |
-| 6 | 5 | 9×13 | 40 | 36 | 0 | 0 | 0 | ~10^5.3 | 20 |
-| 7 | 6 | 10×7 | 27 | 28 | 1 | 0 | 0 | ~10^5.3 | 18 |
-| 8 | 7 | 10×9 | 36 | 44 | 2 | 1 | 2 | ~10^7.6 | 29 |
-| 9 | 8 (a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
-| 10 | 9 (a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
+| 1 | 0, the tutorial (now Chamber 1) | 12×10 | 61 | 58 | 2 | 1 | 2 | ~10^8.3 | 29 |
+| 2 | 1 (now Playground 2) | 20×20 | 252 | 187 | 6 | 2 | 5 | ~10^14.2 | 50 |
+| 3 | 2 (now Playground 3) | 23×13 | 185 | 161 | 9 | 2 | 2 | ~10^14.5 | 53 |
+| 4 | 3 (now Playground 4) | 23×17 | 241 | 165 | 5 | 2 | 4 | ~10^13.7 | 49 |
+| 5 | 4 (now Playground 5) | 13×9 | 65 | 61 | 0 | 0 | 0 | ~10^6.0 | 21 |
+| 6 | 5 (now Playground 6) | 9×13 | 40 | 36 | 0 | 0 | 0 | ~10^5.3 | 20 |
+| 7 | 6 (now Playground 7) | 10×7 | 27 | 28 | 1 | 0 | 0 | ~10^5.3 | 18 |
+| 8 | 7 (now Playground 8) | 10×9 | 36 | 44 | 2 | 1 | 2 | ~10^7.6 | 29 |
+| 9 | 8 (now Playground 9; a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
+| 10 | 9 (now Playground 10; a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
 
-The searches below ran on 2026-11-08 and are a record, not today's figures. The chambers' barriers have since become blocked walls; their floor tiles then still counted as tiles (262, 189 and 268, with a key of 52–53 bits), but nothing could stand on them, so that only renumbered the states. The rules have changed too (shooting takes free hands, and a tile holds one box, both 2026-11-15; the walls beside a door or the exit, and those behind a laser's or a light barrier's end plate, take no portal, which also left fewer wall sides to number, and a fizzler switching on closes a portal facing it, both 2026-11-16; the walls behind a fizzler's connector take no portal either, 2026-11-21, which left chamber 1 four fewer wall sides and chamber 3 two), which changes the states a chamber can reach.
+The searches below ran on 2026-11-08 and are a record, not today's figures; chamber N there is now Playground N + 1, and the recorded solutions they mention were deleted when those chambers left the campaign (git history keeps them). The chambers' barriers have since become blocked walls; their floor tiles then still counted as tiles (262, 189 and 268, with a key of 52–53 bits), but nothing could stand on them, so that only renumbered the states. The rules have changed too (shooting takes free hands, and a tile holds one box, both 2026-11-15; the walls beside a door or the exit, and those behind a laser's or a light barrier's end plate, take no portal, which also left fewer wall sides to number, and a fizzler switching on closes a portal facing it, both 2026-11-16; the walls behind a fizzler's connector take no portal either, 2026-11-21, which left chamber 1 four fewer wall sides and chamber 3 two), which changes the states a chamber can reach.
 
 States expanded in 5 minutes as the shortcuts were added (the par searches don't use regions or limited drops):
 
@@ -113,7 +113,7 @@ The prototype had to pass these before anything was built on it:
 | 3 | Browser worker: the next move to the next milestone, from a mid-game state | ≤ 1 s for 95% of states, ≤ 256 MB | No live next-move hints, no dead-end warning |
 | 4 | Node: any route on a 12×12 chamber with one box | ≤ 2 s | No generated chambers |
 
-Test 1 failed: chamber 3 took 110 s, and chambers 1 and 2 hadn't finished after 10 minutes, past 6 million states each, so passing would take well over 10× more speed. Test 2 failed with it (no par search finished in 5 minutes). Tests 3 and 4 weren't run. What was dropped (roadmap decision 10): the solvability and par checks, par in the chamber files, the shortcut report, hints and the dead-end warning, solver difficulty metrics (difficulty was to come from measured clear rates instead, until roadmap decision 13 dropped difficulty from player data: the chamber order comes from playtests) and generated chambers.
+Test 1 failed: chamber 3 (now Playground 4) took 110 s, and chambers 1 and 2 (now Playground 2 and Playground 3) hadn't finished after 10 minutes, past 6 million states each, so passing would take well over 10× more speed. Test 2 failed with it (no par search finished in 5 minutes). Tests 3 and 4 weren't run. What was dropped (roadmap decision 10): the solvability and par checks, par in the chamber files, the shortcut report, hints and the dead-end warning, solver difficulty metrics (difficulty was to come from measured clear rates instead, until roadmap decision 13 dropped difficulty from player data: the chamber order comes from playtests) and generated chambers.
 
 ## If it's revisited
 

@@ -2,14 +2,14 @@
 
 How to solve a chamber by reasoning rather than by search, and how to prove the solution right by playing it through the rules. It is for the chambers the solver can't help with:
 
-- **Too large to finish.** The solver gives up on chambers 1 and 2, and finds only a long route for chamber 3 (`docs/solver.md`).
+- **Too large to finish.** The solver gives up on Playground 2 and Playground 3 (chambers 1 and 2 until they left the campaign), and finds only a long route for Playground 4 (chamber 3 then; `docs/solver.md`).
 - **A receiver.** The solver's fast search refuses any chamber with one, since the subject cuts a ray by walking into it.
 - **Proving a new chamber solvable** before its solution is recorded.
 - **Arguing that something can't be done.** For example, that no route skips an element, or that a shortcut doesn't exist (`docs/level_design.md`, guideline 38).
 
 The approach: treat the chamber as a set of regions joined by walking, by portal shots and by boxes, work back from the exit to what each step needs, write the route forward, then play it through the game's own rules with a short script. A route that plays to completion is a proof that the chamber is solvable, since the script runs the same `step` the game runs.
 
-Chamber 1 was solved this way on 2026-11-20, with no search: 169 actions, 100 moves and 29 portals (its recorded solution takes 260 actions, 167 moves and 34 portals). The [worked example](#worked-example-chamber-1) at the end walks through it.
+Playground 2 was solved this way on 2026-11-20, as chamber 1, with no search: 169 actions, 100 moves and 29 portals (its recorded solution then took 260 actions, 167 moves and 34 portals; it was deleted when the chamber left the campaign, and git history keeps it). The [worked example](#worked-example-playground-2) at the end walks through it.
 
 To check a chamber for shortcuts, solve it before reading its recorded solution. A route found on its own is what shows a way the design didn't intend; compare the two afterwards.
 
@@ -25,7 +25,7 @@ Both scripts are throwaways: keep them outside the repository.
 
 ### Chamber map
 
-Save as `chamber_map.py` and run `python3 chamber_map.py src/chambers/chamber_N.json`. It needs nothing but Python 3.
+Save as `chamber_map.py` and run `python3 chamber_map.py src/chambers/chamber_N.json` (or a playground chamber's file, `src/dev/playground/playground_N.json`). It needs nothing but Python 3.
 
 ```python
 import json
@@ -144,7 +144,7 @@ Save as `route_check.ts`, change the chamber import and the route, and run `npx 
 // printing each step, and stops at the first refusal or wrong checkpoint.
 // A token like 3,11 is a checkpoint: where the subject must stand after the
 // action before it.
-import chamberData from '@/chambers/chamber_1.json'
+import chamberData from '@/dev/playground/playground_2.json'
 import {parseReplayAction} from '@/game/replay_data'
 import type {Action} from '@/game/rules/action'
 import {CompiledChamber} from '@/game/rules/compiled_chamber'
@@ -275,7 +275,7 @@ Group the floor tiles into regions the subject can walk between with the scenery
 - **A fizzler that is on:** walkable both ways, but crossing it closes both portals and destroys a carried box. Treat it as a reset of everything the subject carries.
 - **Slide floor:** an edge from each tile and way to wherever the slide stops, which may be far away or through a portal.
 
-Name each region in plain words (the start room, the door pocket) and keep a list: its tiles, what is in it (boxes, buttons, switches), and its edges. A small pocket sealed off by lasers, as in chamber 1's top half, is a region of its own: lasers stop walking but not shots.
+Name each region in plain words (the start room, the door pocket) and keep a list: its tiles, what is in it (boxes, buttons, switches), and its edges. A small pocket sealed off by lasers, as in Playground 2's top half, is a region of its own: lasers stop walking but not shots.
 
 ### 3. Map the sightlines
 
@@ -376,9 +376,9 @@ When every crossing is ruled out with a reason, the argument holds for every ord
 9. **One-way arrows decide the order.** Visit the far side of a one-way edge only once there is another way back, or nothing left behind it.
 10. **The portal just come out of is the one to keep.** Shoot the other colour next.
 
-## Worked example: chamber 1
+## Worked example: Playground 2
 
-Chamber 1 (20 × 20) as it stood on 2026-11-20. The solver gave up on it after 10 minutes, past 6 million states (`docs/solver.md`).
+Playground 2 (20 × 20), then chamber 1, as it stood on 2026-11-20. The solver gave up on it after 10 minutes, past 6 million states (`docs/solver.md`).
 
 ```
     0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
@@ -493,6 +493,6 @@ turnDown blue down down 5,16 blue left 13,16 down down turnRight blue turnLeft o
 orange turnLeft blue down 1,11 turnDown orange left 1,1 right right down 3,0
 ```
 
-The route check ends with `completed: true, actions: 169, moves: 100, portals: 29`. A change to chamber 1 or to the rules can break it; run the check again before relying on it.
+The route check ends with `completed: true, actions: 169, moves: 100, portals: 29`. A change to Playground 2 or to the rules can break it; run the check again before relying on it.
 
 Every moving part took part but one: both boxes, all five buttons, the exit switch, both linked fizzlers, the linked ditch, the door and laser (4,18). Box A's switch (11,8) was never needed. It is the undo for a box A left somewhere useless.

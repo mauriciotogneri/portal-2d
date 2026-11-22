@@ -64,7 +64,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 | Game | Maker, year | Overlap with Portal 2D | Best design source |
 |---|---|---|---|
-| Chip's Challenge 1 and 2, and its level packs | Chuck Sommerville, 1989/2015 | Ice (≈ slide floors), force floors (≈ arrows, loosely), toggle walls, blocks and buttons, water (≈ ditches), teleports | Sommerville interviews; J.B. Lewis's essays; the Bit Busters wiki |
 | Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
 | Sokoban and Microban | Hiroyuki Imabayashi, 1981; David W. Skinner, 2000 | Boxes on buttons | Imabayashi interview; Sokoban difficulty research |
 | Stephen's Sausage Roll | Stephen Lavelle, 2016 | New consequences of old elements (the twist chamber) | Draknek & Friends podcast; GMTK |
@@ -83,36 +82,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### Chip's Challenge (Chuck Sommerville, 1989), Chip's Challenge 2 (2015) and their level-pack community
-
-**What it is.** A top-down tile game on 32×32 grids seen through a 9×9 window, in real time with monsters and a clock. Mechanically it is the closest grid game: ice (≈ slide floors, though its ice corners turn slides and pushed blocks slide too), force floors (they push; Portal 2D's arrows only restrict), toggle walls and buttons (≈ doors and links), blocks pushed onto buttons and into water to make a permanent bridge (≈ boxes, buttons, ditches), and teleports (≈ portals, loosely). Its community has produced five voted level packs (CCLP1–5) and the most explicit writing on what makes a fair grid level. Community jargon: a **bust** is an unintended solution, a **cook** a softlock.
-
-**How the levels were made.**
-- *Editorial control.* Sommerville designed about a third of CC1, a puzzle designer friend a third, and programmers from other Lynx titles the rest; "I was given the editorial control of which levels went into the game, and in what order". His idea generators: "think of ways to use an element in a manner that you have never seen it used before", and model a real process. Testers proved every level solvable and rated fun and difficulty, which set the order. He warned against levels "designed to be tedious, doing the same thing over and over again", preferring "lots of trade off decisions" ([Midnight Synergy, 2006](https://midnightsynergy.com/newsletter/issue004/page4.htm)).
-- *Write the goals first.* J.B. Lewis (CCLP1's coordinator and the community's most-cited essayist) tells how a level planned as #39 grew mechanism by mechanism into #133; his fix: "Come up with a list of goals for your level… and check what you're doing with those original goals as you design" ([The Simple Things](https://forum.bitbusters.club/thread-91.html)).
-- *One hard axis per level.* "What CC1 accomplished quite brilliantly was limiting its difficulty to one component… and dialing down other components": a long level keeps each part self-contained and forgiving; a level with one brutal puzzle "typically goes no further" ([In Defense of Consistency](https://forum.bitbusters.club/thread-81.html)). His four frustration amplifiers: convoluted logic, needless red herrings (worst late in a long level), excessive length, and unforgiving linearity where several options are shown but only one order works. One is fine; two or more make a level "relentlessly difficult" ([In Defense of Difficult Levels](https://forum.bitbusters.club/thread-83.html)).
-- *Designer disconnect.* The designer sees the whole map and knows the answer; "Everything feels so obvious to us because we're the ones in charge". Designers also "felt obligated to fill up the entire map" (In Defense of Consistency).
-- *Busts.* "Minor" busts skip one part, "major" ones change the objective ([wiki: Busted level](https://wiki.bitbusters.club/Bust)). The shapes that map onto Portal 2D:
-  - An ice strip around the outside that bypasses a whole section, the biggest time-saving bust in any CC set.
-  - A one-way tile next to a sliding tile.
-  - Spare blocks or leftover items that make a section unnecessary.
-  - The exit reachable by teleport.
-  - A block carried through a teleport that ends the hazard guarding the exit.
-  - A wrong link.
-  - Rule differences between versions.
-  
-  One bust was found 34 years after release, mostly by optimisers chasing faster routes. In Portal 2D, the solver's fewest moves and fewest portals play that optimiser role.
-- *Teaching.* CC1 front-loads eight lessons, each a small set of tiles with a one-line hint, then level 9 combines all eight, a jump first-time players found big; CC2 spreads its lessons out (levels 1, 9, 19, 29, 50, 60, 71). CCLP1 cut thieves from a lesson "to create a more steady difficulty curve", and moved a fake wall out of a no-return section because it felt "a touch unfair for a beginner player" ([wiki: Present Company](https://wiki.bitbusters.club/Present_Company), [Facades](https://wiki.bitbusters.club/Facades)). The tiny level *Tiny* teaches by an instant failure: the tempting move cooks the level at once, "but due to the small size this is an 'ohhhhh, so that's what I do' moment" ([CCLP1 Retrospective](https://forum.bitbusters.club/thread-63.html)).
-- *The rule of 90/10.* In a good obscure puzzle, "the resources given to Chip will hint as to the solution", and the first steps hint at the rest ([wiki: CCLP2](https://wiki.bitbusters.club/CCLP2)). *Pier Seven* gives exactly seven blocks and one place where seven bridge the sea.
-- *Don't be clever at the player's expense.* "If you think your red herring, guesswork challenge at the end, or making-the-player-realize-that-he-or-she-had-been-doing-everything-incorrectly-for-20-minutes moment is going to make someone go, 'Oh, that was just brilliant!', chances are that it probably will frustrate more people instead" (The Simple Things). Make the objective obvious, not the solution.
-- *Hidden state was CC's main source of guesswork*: blue walls you can tell apart only by bumping them, ice mazes where you can't see a fall coming. Portal 2D shows every element's state, so it avoids this by construction.
-- *Restart without undo.* Sommerville later called CC1 "pretty brutal", since one mistake 20 minutes in meant starting over, and made his later game's levels shorter ([Pocket Gamer, 2011](https://www.pocketgamer.com/chucks-challenge/interview-nifflers-chuck-sommerville-talks-about-how-chucks-challenge-on-iphone)). Lewis: full view plus undo lets a designer make far harder puzzles; CC "has no such mechanics" (In Defense of Difficult Levels). Portal 2D has the full view but not the undo.
-- *Pack pipelines* ([wiki: CCLP3](https://wiki.bitbusters.club/CCLP3), [CCLP5](https://wiki.bitbusters.club/CCLP5)): dedicated playtesters, "fixing periods" for busts before voting, mandatory solution files, fun and difficulty voted separately with difficulty setting the order, easy levels "perfectly placed between the harder ones". "When evaluating easy levels, don't look for the interesting - look for the uninteresting" ([In Defense of Easy Levels](https://forum.bitbusters.club/thread-89.html)).
-
-**Patterns that translate** (more in Part 4): a nine-square lattice of stopping points joined by ice lanes (*I Slide*); an ice field whose only landing points are the goals (*Ice Cube*); a block lodged on ice as a stopper; teleport "switch stations" where you change lines (*Blink*); ferrying objects across a network of islands (*Oversea Delivery*); exactly enough resources and one right place (*Pier Seven*); one key that must be used last (*Teleblock*); plug a teleport's exit so a slide stops elsewhere (*Partial Post*); show the goal blocked to state the concept at once (*The Sound of Silence*).
-
-**Doesn't carry over.** Monsters and clone machines, time limits, random force floors ("levels that rely on random elements" are CC1's "least popular of all"), boosting and override timing, fake, invisible and hidden walls, one-use tiles, and the 9×9 window's thrill of discovery: in Portal 2D discovery has to come from understanding, not uncovering.
 
 ### Adventures of Lolo / Eggerland (HAL Laboratory, 1985–2000)
 

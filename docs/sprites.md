@@ -24,7 +24,7 @@ Add `-alpha off` to the second command for the sprites that fill their tiles: th
 
 ## Size
 
-- **Tile:** 256 × 256 px. The game shrinks each sprite once to the tile size on screen: about 40 px for chamber 1 on a 1080p screen, about 125 px for the tutorial on a high-DPI 1920 × 1080 screen (a chamber under 16 tiles either way gets the tiles a 16 × 16 one would), and smaller still in the home menu's map.
+- **Tile:** 256 × 256 px. The game shrinks each sprite once to the tile size on screen: about 40 px for Playground 2 (20 × 20, chamber 1 until it left the campaign) on a 1080p screen, about 125 px for Chamber 1, the tutorial, on a high-DPI 1920 × 1080 screen (a chamber under 16 tiles either way gets the tiles a 16 × 16 one would), and smaller still in the home menu's map.
 - **Overhang:** a sprite that spills past its tile (a glow, a portal reaching into the room) is 384 × 384 px: its tile is the centred 256 px square, with 64 px of margin on every side. Any sprite but a strip may overhang; the game tells by the file's size.
 - **Strips:** `wall`, `blocked_wall` and `ditch` are 1280 × 256 px, five tiles side by side (see [joins](#joins)).
 - **Any other size** is refused, and the sprite isn't drawn.
@@ -327,6 +327,6 @@ Drop the file into the folder, and `npm run dev` picks it up. The sprite gallery
 - each sprite as the game has it, at full size on a checkerboard, with its size and whether its file is in use, missing, not downloaded or refused (and why); one without a usable file shows as an empty frame, since the game draws nothing for it;
 - a small chamber with every element and an antline, drawn by the game with everything on and with everything off (the antline unlit, then lit; the turnable arrow pointing its own way, then turned; the emitter on, its ray turned by a mirror box onto the receiver, lit, then the emitter off and the receiver dark), the subject carrying a box and both portals open;
 - every way walls and open ditches meet;
-- each chamber at its start.
+- each chamber at its start, Chamber 1 then Playground 1 to 10.
 
-The small chamber and the walls and ditches come at the smallest tile the home menu's map draws, then at 40, 100 and 230 px, and each chamber at 40 px, each canvas pixel on one screen pixel.
+The small chamber and the walls and ditches come at the smallest tile the home menu's map draws (a playground chamber's map included), then at 40, 100 and 230 px, and each chamber at 40 px, each canvas pixel on one screen pixel.
