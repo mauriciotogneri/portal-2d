@@ -957,7 +957,12 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="home-screen room">
-    <div class="home-inner room-inner">
+    <div
+      class="home-inner room-inner"
+      :class="{
+        'home-inner-fixed': chamberListOpen,
+      }"
+    >
       <h1 class="room-title">
         <PortalLogo size="medium" />
       </h1>
@@ -1262,13 +1267,18 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* The logo clear of the menu below it, and exactly the window's height, so the menu below takes
-   what the logo leaves and a chamber list can scroll within it; a window too short for the menu
-   scrolls the room instead */
+/* The logo clear of the menu below it, and at least the window's height; content taller than the
+   window grows it, so the room scrolls with its foot's padding still below */
 .home-inner {
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  min-height: 100%;
+}
+
+/* While a chamber list is open, exactly the window's height, so the menu takes what the logo leaves
+   and the list scrolls within it; a window too short for its three rows scrolls the room instead */
+.home-inner-fixed {
   height: 100%;
 }
 

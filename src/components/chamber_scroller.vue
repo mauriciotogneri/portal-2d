@@ -8,8 +8,9 @@
  * while the list has the keyboard and hidden when the list fits; the
  * browser's own scrollbar is hidden. The rows come from the slot. Reveal
  * keeps one more row in view beyond a row, gliding there unless motion is
- * reduced; a wheel turn stops the glide. Nothing else scrolls it but the
- * wheel, a trackpad and the browser's own focus.
+ * reduced, and scrolls the page to the list when the window is too short to
+ * show it whole; a wheel turn stops the glide. Nothing else scrolls it but
+ * the wheel, a trackpad and the browser's own focus.
  */
 import {onBeforeUnmount, onMounted, ref, useTemplateRef} from 'vue'
 
@@ -23,6 +24,7 @@ const FADE_ROWS = 0.5 // How far the rows fade out at an edge with more beyond i
 const KEPT_ROWS = 1 // How many more rows reveal keeps in view beyond the row it shows
 const GLIDE_MS = 160 // How long reveal's glide takes
 
+const scroller = useTemplateRef<HTMLElement>('scroller')
 const viewport = useTemplateRef<HTMLElement>('viewport')
 const thumb = useTemplateRef<HTMLElement>('thumb')
 const overflowing = ref(false) // Whether the rows run past the list's height, which shows the rule
@@ -122,7 +124,9 @@ function scrollListTo(target: number, glide: boolean): void {
 /**
  * Scrolls the list just enough to show a row with one more row beyond it on
  * the side it is nearest leaving by, or as far as the list goes. Leaves the
- * list where it is (or where its glide ends) when that already shows.
+ * list where it is (or where its glide ends) when that already shows. In a
+ * window too short for the list's three rows, where the page scrolls, it
+ * also scrolls the page at once to show the list, whose own scroll it leaves alone.
  * @param index - The row's index in the list
  * @param glide - True to glide there, unless motion is reduced; false to jump
  */
@@ -145,6 +149,11 @@ function reveal(index: number, glide: boolean): void {
   target = Math.min(Math.max(target, 0), box.scrollHeight - box.clientHeight)
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   scrollListTo(target, glide && !reducedMotion)
+  // The row is focused without scrolling, so the page would otherwise never come to it
+  scroller.value?.scrollIntoView({
+    block: 'nearest',
+    inline: 'nearest',
+  })
 }
 
 defineExpose({
@@ -171,7 +180,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="chamber-scroller">
+  <div ref="scroller" class="chamber-scroller">
     <div
       ref="viewport"
       class="chamber-scroller-viewport"
