@@ -1,7 +1,7 @@
 # Stage 04b — Campaign
 
 Status: Draft
-Last revised: 2026-11-20
+Last revised: 2026-11-22
 
 ## Goal
 
@@ -29,7 +29,7 @@ Stages 00, 01 and 03 are done, and stage 02 stopped after its prototype (README 
 
 - The tutorial first in the list (permanent id 0), as chamber 0 (stage 03 settled that numbers count from 0). Links still follow position.
 - Kept from stage 03's notes when its file was removed (2026-11-14):
-  - Every chamber must fit the screen whole, since there is no camera: this stage's chambers stay within that, as does stage 05's grid cap.
+  - Every chamber must fit the screen whole (`docs/level_design.md`, guideline 36): this stage's chambers stay within that, as does stage 05's grid cap.
   - The home menu's map doesn't redraw when only the pixel ratio changes (a window dragged to a denser screen without changing size), unlike the chamber screen.
 
 **From stage 04a (mechanics)**
@@ -58,13 +58,7 @@ Stage 04a later named an emitter's light a ray, keeping "beam" for a laser's or 
 
 ### Campaign plan
 
-**Teach → test → twist → combine.** Each mechanic, and each existing element the campaign teaches, gets a run of chambers:
-- *Teach*: the mechanic alone, with no way to fail at understanding it.
-- *Test*: the mechanic alone, but you must use it on purpose.
-- *Twist*: an unexpected consequence of the rules (a fizzler mid-slide, a door that shuts as you step into its beam).
-- *Combine*: with earlier mechanics.
-
-A full run was planned at 10–12 chambers per mechanic (1–2 teach, about 3 test, about 3 twist, 3–4 combine). With 16 new chambers for the whole campaign (04a decision 10), that no longer fits, so the campaign takes three mechanics at about 4 chambers each (04a decision 16). Stage 04a builds the first two of each mechanic's run, a teach and a proof chamber. A combine chamber can serve two mechanics at once.
+Each mechanic, and each existing element the campaign teaches, gets a run of chambers: teach, test, twist and combine (`docs/level_design.md`, guidelines 40–42). With 16 new chambers for the whole campaign (04a decision 10), a full run doesn't fit, so the campaign takes three mechanics at about 4 chambers each (04a decision 16). Stage 04a builds the first two of each mechanic's run, a teach and a proof chamber.
 
 The existing elements need chambers too (portal basics, boxes and buttons, doors and switches, blocked walls, light barriers and ditches, fizzlers, arrows, laser fields); the tutorial (chamber 0) and today's three chambers already cover some of them. Switchable blocked walls (switchable portal surfaces, already used in chambers 2 and 3) deserve a teach chamber of their own.
 
@@ -123,8 +117,8 @@ Neither laser chamber uses the mirror box; this stage's combine chamber is the f
 
 ### Phase 3 — Campaign content
 
-- [ ] **Chamber plan.** List the 16 new chambers in this file, in play order together with chambers 0–3, each with its mechanic or element and its part (teach, test, twist or combine), following the campaign plan table and 04a decision 16. Starting order: the existing elements first, then the new mechanics in the order built. Later reorders follow playtests, with the friends' analytics informing them: a chamber never moves before the chambers that teach what it needs, the tutorial stays first, and each reorder goes in the changelog. Verify: every mechanic stage 04a shipped has chambers or a recorded reason it doesn't, and the total is 20.
-- [ ] **Authoring workflow before the editor.** Until stage 05's editor exists: hand-write chamber v2 JSON; a development-only route (behind `import.meta.env.DEV`, never in production builds) that loads a chamber file from disk and reloads on save, extending this stage's lab route (Phase 0, if built by then) rather than adding a second one; record the solution by playing it with 01's recorder; tick a per-chamber checklist (solution recorded, one playtest by someone else). Verify: one chamber goes through the whole workflow; a production build has no development route.
+- [ ] **Chamber plan.** List the 16 new chambers in this file, in play order together with chambers 0–3, each with its mechanic or element and its part (teach, test, twist or combine), following the campaign plan table and 04a decision 16. Starting order: the existing elements first, then the new mechanics in the order built. Later reorders follow playtests, with the friends' analytics informing them, and the ordering guideline (`docs/level_design.md`, guideline 43). Verify: every mechanic stage 04a shipped has chambers or a recorded reason it doesn't, and the total is 20.
+- [ ] **Authoring workflow before the editor.** Until stage 05's editor exists: hand-write chamber v2 JSON; a development-only route (behind `import.meta.env.DEV`, never in production builds) that loads a chamber file from disk and reloads on save, extending this stage's lab route (Phase 0, if built by then) rather than adding a second one; record the solution by playing it with 01's recorder; tick a per-chamber checklist (`docs/level_design.md`, guidelines 37 and 39). Verify: one chamber goes through the whole workflow; a production build has no development route.
 - [ ] **Place chambers 0–3 in the campaign.** The tutorial and today's three chambers keep permanent ids 0 and 1–3 wherever the plan puts them; their links follow their new places. Verify: their completions and best times survive.
 - [ ] **Author release 1** (about four new chambers; each release ships with a changelog entry in `src/services/changelog.ts`). Verify: `npm run verify` and the catalogue check pass; playtested.
 - [ ] **Author release 2.** Same checks.

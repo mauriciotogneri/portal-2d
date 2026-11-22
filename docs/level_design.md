@@ -1,6 +1,6 @@
 # Level Design
 
-Guidelines for designing a chamber (`src/chambers/`), beyond what the chamber check rejects (`docs/elements.md`, "What the validator rejects"): first the states a chamber should never let the player reach, then the guidelines that keep the player out of them. The rules allow all of these states, and nothing checks these guidelines: they keep the player out of states that look broken, keep each chamber fair, and keep it checkable. Break one only on purpose.
+Guidelines for designing a chamber (`src/chambers/`), beyond what the chamber check rejects (`docs/elements.md`, "What the validator rejects"): first the states a chamber should never let the player reach, then the guidelines that keep the player out of them, and last how chambers follow each other in the campaign. The rules allow all of these states, and nothing checks these guidelines: they keep the player out of states that look broken, keep each chamber fair, and keep it checkable. Break one only on purpose.
 
 ## States to avoid
 
@@ -39,7 +39,7 @@ Only Restart chamber gets the player out (guideline 15).
 ### The puzzle is bypassed
 
 - **A box delivered by its start tile:** a box sent back lands on its start tile wherever that is, so a start beyond a barrier delivers it past the barrier, and a start on a button presses the button from anywhere (guideline 6).
-- **A portal route the design didn't intend:** shots fly over lasers, ditches, boxes and arrows, so a portal can skip a laser, a ditch or a one-way passage (guidelines 14 and 37).
+- **A portal route the design didn't intend:** shots fly over lasers, ditches, boxes and arrows, so a portal can skip a laser, a ditch or a one-way passage (guidelines 14 and 38).
 - **A pass through a blocked element:** a closed door, an open ditch, or a laser or a light barrier that is on, switched under the subject, lets it walk out the far side without holding the button (guidelines 1, 2 and 23).
 
 The rules already keep out the rest, so a design never needs to guard against them: the subject coming out of a portal onto a tile it couldn't walk onto, into a doorway or onto the exit; a box lying in a closed door, over an open ditch, or in a laser, a light barrier or a fizzler that is on; a box on the exit or a switch, two boxes on one tile, or the subject on a box, but for a box sent back to its start under it; a carried box inside a fizzler that is on; and the subject leaving the chamber. A layout that starts in a broken state is rejected by the chamber check.
@@ -113,7 +113,23 @@ Arrows are the exception: an arrow a link turns may turn under the subject. The 
 
 35. The exit stands in the chamber's outer wall, away from its corners (the chamber check rejects it anywhere else), and the subject walks out through it, on past the chamber's edge, only when it steps onto it heading out of the chamber. Give it a straight way in from the tile inside it, and don't put a door in the outer wall beside it: stepping sideways from that doorway onto the exit, the subject just stops there.
 
+## Size
+
+36. Every chamber must fit the screen whole, since there is no camera: the whole chamber is always on screen, scaled to fit and centred, with no scrolling, so its tiles shrink as it grows, to about 40 px for chamber 1 (20 × 20) on a 1080p screen. Keep a chamber no larger than its puzzle needs, so its elements stay easy to read. Tiles stop growing below 16 tiles either way: a smaller chamber gets the tiles a 16 × 16 one would, with more room around it.
+
 ## Checking a chamber
 
-36. Record its solution by playing it through (Download solution in the completion dialog, in `npm run dev`), and record it again after any change to the chamber but its antlines.
-37. Run `npm run chamber:check` and `npm run replay:check`. `npm run solve -- --par src/chambers/chamber_N.json --max-states=40000000` finds the fewest moves and the fewest portals, which shows any shortcut the design didn't intend. To check that no route skips an element, solve a copy of the chamber with the links to it removed, using `--solvable`: it should come back unsolvable. The macro search behind `--par` and `--solvable` refuses a chamber with a receiver, since the subject cuts rays by walking: there, look for shortcuts with `--baseline` where it finishes, and by hand where it doesn't. A chamber the solver can't finish, or refuses, is solved and checked by hand as `docs/solving_by_hand.md` describes.
+37. Record its solution by playing it through (Download solution in the completion dialog, in `npm run dev`), and record it again after any change to the chamber but its antlines.
+38. Run `npm run chamber:check` and `npm run replay:check`. `npm run solve -- --par src/chambers/chamber_N.json --max-states=40000000` finds the fewest moves and the fewest portals, which shows any shortcut the design didn't intend. To check that no route skips an element, solve a copy of the chamber with the links to it removed, using `--solvable`: it should come back unsolvable. The macro search behind `--par` and `--solvable` refuses a chamber with a receiver, since the subject cuts rays by walking: there, look for shortcuts with `--baseline` where it finishes, and by hand where it doesn't. A chamber the solver can't finish, or refuses, is solved and checked by hand as `docs/solving_by_hand.md` describes.
+39. Have someone who hasn't seen the chamber play it cold, and note where they got confused and what helped them, a teach chamber above all (guideline 40): its designer knows the answer, so only a fresh player shows whether the chamber teaches what it means to.
+
+## The campaign
+
+40. Bring in each mechanic, and each existing element the campaign teaches, through a run of chambers in four parts, in this order:
+    - *Teach*: the mechanic alone, with no way to fail at understanding it, since using it is the only way forward. Chamber 4's first step slides the subject across a slide room.
+    - *Test*: the mechanic alone, but the player must use it on purpose. Chamber 9 needs a ray aimed where chamber 8's answer doesn't send it.
+    - *Twist*: an unexpected consequence of the rules, such as a fizzler on a slide's way closing the portals mid-slide, or a door that shuts as the subject steps into the ray holding it open. In chamber 7, stepping off a button onto the arrow it turns lets the arrow turn back under the subject.
+    - *Combine*: the mechanic with earlier ones.
+41. A full run is 10–12 chambers: 1–2 teach, about 3 test, about 3 twist and 3–4 combine. A short run of about 4 has room for about one of each, and a combine chamber can serve two mechanics at once.
+42. A test chamber can reuse its teach chamber's room with one change that breaks the teach chamber's answer: chamber 9 is chamber 8's room with the receiver moved to the bottom wall, so the ray must come down from a portal on the ceiling, where chamber 8's answer runs it into the right wall. It can also ask for the teach chamber's move again with a catch: chamber 5 asks for chamber 4's move twice, the second lane entered only by sliding back into the portal just come out of, so the other portal is the one to move.
+43. No chamber comes before the chambers that teach what it needs, and the tutorial stays first. Set the order by playtests (guideline 39); analytics can inform it, but a few players are too few to rank chambers by difficulty. A chamber's number and link follow its place in the list, while its completions and best times follow its permanent id, so a reorder renumbers chambers without losing progress: say what moved in the changelog.
