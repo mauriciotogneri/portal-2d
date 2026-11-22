@@ -57,6 +57,16 @@ The tiny chambers are in `scripts/solver_fixtures/` (`solver_fixtures.ts` lists 
 
 All in Node 24 on the author's machine (8 cores), one search at a time unless said otherwise.
 
+Chamber 1, the tutorial, under the rules as they stood on 2026-11-22 (`npm run solve -- --solvable --par src/chambers/chamber_1.json`, at the default caps of 1,000,000 states and 300 s a search), the only chamber searched since the prototype stopped:
+
+| # | Search | Result | States kept | Expanded | Time | Peak memory |
+|---|--------|--------|-------------|----------|------|-------------|
+| 1 | any route | solved: 57 moves, 4 portals | 187,740 | 176,382 | 27.6 s | 154 MiB |
+| 2 | fewest moves | solved: 19 moves, 8 portals | 717,831 | 639,125 | 230.9 s | 257 MiB |
+| 3 | fewest portals | gave up (time) | 762,120 | 701,376 | 300 s | 265 MiB |
+
+Its recorded solution takes 33 moves and 6 portals, so the fewest-moves route is 14 moves shorter, and the any-route search found one with 2 fewer portals. Neither route has been looked at for a shortcut the design didn't intend.
+
 Size of the problem, as the chambers were on 2026-11-21 (`npm run solve`), when chambers 1 to 9 were still in the campaign. The upper bound is tiles × 4 facings × (wall sides + 1)² for the portals × (tiles + 1)^boxes for the boxes × 2^flags (since switches stay used, `npm run solve` also multiplies it by 2^switches and adds a bit per switch to the key, so a chamber with a switch now shows a higher bound and a wider key than here):
 
 | # | Chamber | Size | Tiles | Portal wall sides | Flags | Boxes | Buttons | Upper bound | Key bits |

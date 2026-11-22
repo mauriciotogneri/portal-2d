@@ -120,7 +120,7 @@ The rules play no sounds: they report what happens as events, and after each ste
 - The settings set the music's master volume from the player's music volume, as for the sound effects, 0 playing nothing, and switch between two players:
   - **The menu music,** played on the home screen and resumed where it left off.
   - **The chamber playlist** (`src/game/music_playlist.ts`), played in a chamber. The visit's first chamber opened starts its opener, Science is Fun, from its beginning, and every chamber opened after it (Next chamber or from the home menu) and Play again move it on to the next track in its list, carrying on the list from where the last visit left it ([saved data](#saved-data)). Restart chamber leaves it playing, and with the music Off nothing moves it. A track that ends moves it on too, and no chamber track loops.
-- The playlist's tracks are streamed (`src/assets/audio/music/streamed/`, about 150 MB): each is downloaded while the track before it plays, never by the loading screen.
+- The loading screen downloads the menu music and the playlist's opener; the playlist's other tracks are streamed (`src/assets/audio/music/streamed/`, about 150 MB): each is downloaded while the track before it plays.
 - Nothing plays before Start: pressing it lets the music play.
 
 ## Saved data
