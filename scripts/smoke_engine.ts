@@ -56,7 +56,7 @@ function runAll(): boolean {
     const data = CHAMBER_FILES[file]
 
     if (data === undefined) {
-      console.error(`${file} FAILED: not listed in scripts/chamber_files.ts`)
+      console.error(`${file} FAILED: not in the play order (src/services/chamber_catalogue.ts)`)
       passed = false
       continue
     }

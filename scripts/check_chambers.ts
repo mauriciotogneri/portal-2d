@@ -1,3 +1,5 @@
+import {existsSync, readFileSync} from 'node:fs'
+import {isDeepStrictEqual} from 'node:util'
 import {GameEvent} from '@/game/game_event'
 import {CHAMBER_FIELDS} from '@/game/rules/chamber_parser'
 import {formatChamberProblem} from '@/game/rules/chamber_problem'
@@ -5,13 +7,17 @@ import {CompiledChamber, type LinkTarget, NO_ELEMENT, type PlacedKind} from '@/g
 import type {ElementDefinition} from '@/game/rules/element_definition'
 import {CORE_STEP_EVENTS, ELEMENT_REGISTRY} from '@/game/rules/element_registry'
 import {loadChamber, readChamber} from '@/game/rules/load_chamber'
-import {CHAMBER_FILES, listChamberFiles, PLAYGROUND_DATA, PLAYGROUND_FILE} from '@scripts/chamber_files'
+import {CHAMBERS} from '@/services/chamber_catalogue'
+import {CHAMBER_FILES, CHAMBERS_DIRECTORY, chamberFileName, listChamberFiles, PLAYGROUND_DATA, PLAYGROUND_FILE} from '@scripts/chamber_files'
 import {listFixtureChambers} from '@scripts/fixtures/fixtures'
 import {CHAMBER_CASES, type ChamberCase, FORMAT_V2_EXAMPLE} from '@scripts/fixtures/format_examples'
 
 // Loads every chamber file the way the game does (every field read, the
 // layout checked). Every chamber in src/chambers and the playground must load
-// without an error, and each case in scripts/fixtures/format_examples.ts must report exactly
+// without an error. The play order (src/services/chamber_catalogue.ts) must give
+// every chamber an id that is a whole number of 0 or more, used once, whose
+// file, chamber_<id>.json, holds exactly the layout the game loads for it.
+// Each case in scripts/fixtures/format_examples.ts must report exactly
 // the problems pinned for it. The format 2 example, compiled, must reach
 // exactly the pinned links (its link group expanded) and refuse portals for
 // good on exactly the pinned walls. Every chamber file, the playground, every fixture
@@ -93,12 +99,76 @@ function checkChamberFile(file: string): boolean {
   const data = CHAMBER_FILES[file]
 
   if (data === undefined) {
-    console.error(`${file} FAILED: not listed in scripts/chamber_files.ts`)
+    console.error(`${file} FAILED: not in the play order (src/services/chamber_catalogue.ts)`)
 
     return false
   }
 
   return checkChamberData(file, data)
+}
+
+/**
+ * Reads a chamber file as raw JSON, as it is on disk.
+ * @param file - Its file name in src/chambers
+ * @returns Its contents, or undefined when there is no such file
+ */
+function readChamberFile(file: string): unknown {
+  const location = new URL(file, CHAMBERS_DIRECTORY)
+
+  if (!existsSync(location)) {
+    return undefined
+  }
+
+  return JSON.parse(readFileSync(location, 'utf8')) as unknown
+}
+
+/**
+ * Checks the play order against the chamber files: every chamber's id a
+ * whole number of 0 or more, used by no earlier chamber, and its file,
+ * chamber_<id>.json, holding exactly the layout the game loads for it, since
+ * the id names its files and keys its progress, analytics and recorded
+ * solution. A chamber file missing from the play order has already failed
+ * on its own line.
+ * @returns Whether the play order passed
+ */
+function checkCatalogue(): boolean {
+  const problems: string[] = []
+  const seenIds = new Set<number>()
+
+  for (const chamber of CHAMBERS) {
+    const label = `chamber ${chamber.number} (id ${chamber.id})`
+
+    if (!Number.isInteger(chamber.id) || chamber.id < 0) {
+      problems.push(`${label}: its id is not a whole number of 0 or more`)
+    } else if (seenIds.has(chamber.id)) {
+      problems.push(`${label}: its id is already used by an earlier chamber`)
+    } else {
+      const file = chamberFileName(chamber.id)
+      const contents = readChamberFile(file)
+
+      if (contents === undefined) {
+        problems.push(`${label}: src/chambers/${file} doesn't exist`)
+      } else if (!isDeepStrictEqual(contents, chamber.data)) {
+        problems.push(`${label}: its layout isn't the one in src/chambers/${file}`)
+      }
+    }
+
+    seenIds.add(chamber.id)
+  }
+
+  if (problems.length === 0) {
+    console.log(`play order OK: ${CHAMBERS.length} chambers, each id used once and naming the file that holds its layout`)
+
+    return true
+  }
+
+  console.error(`play order FAILED: ${countProblems(problems.length)}`)
+
+  for (const problem of problems) {
+    console.error(`  ${problem}`)
+  }
+
+  return false
 }
 
 /**
@@ -380,7 +450,7 @@ function checkRegistryFlags(): boolean {
 }
 
 /**
- * Checks every chamber file in src/chambers, the playground, every case, the
+ * Checks every chamber file in src/chambers, the play order, the playground, every case, the
  * compiled format 2 example, the ring outside every chamber's edge and the
  * element registry.
  * @returns Whether all of them passed
@@ -392,6 +462,7 @@ function runAll(): boolean {
     passed = checkChamberFile(file) && passed
   }
 
+  passed = checkCatalogue() && passed
   passed = checkChamberData(PLAYGROUND_FILE, PLAYGROUND_DATA) && passed
 
   for (const chamberCase of CHAMBER_CASES) {
@@ -400,7 +471,7 @@ function runAll(): boolean {
 
   passed = checkCompiledExample() && passed
 
-  // A chamber file missing from the shared list has already failed above
+  // A chamber file missing from the play order has already failed above
   for (const file of listChamberFiles()) {
     const data = CHAMBER_FILES[file]
 

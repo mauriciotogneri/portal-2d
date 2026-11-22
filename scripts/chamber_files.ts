@@ -1,34 +1,28 @@
 import {readdirSync} from 'node:fs'
-import chamber0 from '@/chambers/chamber_0.json'
-import chamber1 from '@/chambers/chamber_1.json'
-import chamber2 from '@/chambers/chamber_2.json'
-import chamber3 from '@/chambers/chamber_3.json'
-import chamber4 from '@/chambers/chamber_4.json'
-import chamber5 from '@/chambers/chamber_5.json'
-import chamber6 from '@/chambers/chamber_6.json'
-import chamber7 from '@/chambers/chamber_7.json'
-import chamber8 from '@/chambers/chamber_8.json'
-import chamber9 from '@/chambers/chamber_9.json'
 import playground from '@/dev/playground.json'
 import type {ChamberData} from '@/game/chamber_data'
+import {CHAMBERS} from '@/services/chamber_catalogue'
 
 // The chamber files the engine scripts run, shared so that every script
-// checks the same chambers. The scripts can't load the catalogue, which reads
-// Vite's development flag, so the chambers are listed here as well
+// checks the same chambers: the game's own play order
+// (src/services/chamber_catalogue.ts), each chamber's file named by its
+// permanent id. The chamber check fails on a chamber whose file doesn't hold
+// its layout, and on an id that isn't a whole number of 0 or more or is used twice
 
-/** Every chamber file, by file name; the engine scripts fail on a chamber file missing here */
-export const CHAMBER_FILES: Readonly<Record<string, ChamberData>> = {
-  'chamber_0.json': chamber0,
-  'chamber_1.json': chamber1,
-  'chamber_2.json': chamber2,
-  'chamber_3.json': chamber3,
-  'chamber_4.json': chamber4,
-  'chamber_5.json': chamber5,
-  'chamber_6.json': chamber6,
-  'chamber_7.json': chamber7,
-  'chamber_8.json': chamber8,
-  'chamber_9.json': chamber9,
+/**
+ * Names a chamber's file, after its permanent id.
+ * @param id - The chamber's permanent id
+ * @returns Its file name in src/chambers
+ */
+export function chamberFileName(id: number): string {
+  return `chamber_${id}.json`
 }
+
+/** Every chamber in the play order, by its file name; the engine scripts fail on a chamber file missing here */
+export const CHAMBER_FILES: Readonly<Record<string, ChamberData>> = Object.fromEntries(CHAMBERS.map((chamber) => [
+  chamberFileName(chamber.id),
+  chamber.data,
+]))
 
 /** The playground (src/dev/playground.json), the development-only chamber for trying every element: checked, settled and walked like a chamber file, but it has no recorded solution and the solver leaves it out */
 export const PLAYGROUND_FILE = 'playground.json'

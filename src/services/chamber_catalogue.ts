@@ -1,5 +1,6 @@
 /**
- * The chambers bundled with the game, in play order.
+ * The chambers bundled with the game, in play order. The engine scripts read it under Node
+ * too (scripts/chamber_files.ts), so it uses nothing of Vite's, such as import.meta.env.
  */
 import chamberZeroData from '@/chambers/chamber_0.json'
 import chamberOneData from '@/chambers/chamber_1.json'
@@ -11,7 +12,6 @@ import chamberSixData from '@/chambers/chamber_6.json'
 import chamberSevenData from '@/chambers/chamber_7.json'
 import chamberEightData from '@/chambers/chamber_8.json'
 import chamberNineData from '@/chambers/chamber_9.json'
-import playgroundData from '@/dev/playground.json'
 import type {ChamberData} from '@/game/chamber_data'
 
 export type ChamberEntry = {
@@ -79,34 +79,6 @@ export const CHAMBERS: ChamberEntry[] = CHAMBER_LISTINGS.map((listing, index) =>
   name: listing.name ?? `Chamber ${index}`,
   data: listing.data,
 }))
-
-// Development only: the playground, a chamber outside the list for trying every element, each
-// direction from the start switched by its own button, a turnable arrow turned by its own
-// button in the middle room, a slide room off the left arm, and a ray room off the middle
-// room's top right, where a button switches an emitter on and its ray, turned by a mirror box
-// or routed through portals, lights a receiver that opens a door.
-// Production builds have none, and the comparison lets them leave the file out
-export const PLAYGROUND: ChamberData | undefined = import.meta.env.DEV === true ? playgroundData : undefined
-
-/**
- * Logs an error for every chamber whose id is not a whole number of 0 or
- * more, or is already taken by an earlier chamber. Run in development only.
- */
-function reportInvalidIds(): void {
-  const seenIds = new Set<number>()
-  for (const chamber of CHAMBERS) {
-    if (!Number.isInteger(chamber.id) || chamber.id < 0) {
-      console.error(`Chamber ${chamber.number} has id ${chamber.id}, which is not a whole number of 0 or more`)
-    } else if (seenIds.has(chamber.id)) {
-      console.error(`Chamber ${chamber.number} has id ${chamber.id}, already used by an earlier chamber`)
-    }
-    seenIds.add(chamber.id)
-  }
-}
-
-if (import.meta.env.DEV) {
-  reportInvalidIds()
-}
 
 /**
  * Looks up a chamber by its number.
