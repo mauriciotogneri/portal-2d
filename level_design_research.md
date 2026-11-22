@@ -1,14 +1,12 @@
 # Level Design Research
 
-Outside research for designing Portal 2D's campaign chambers, gathered in November 2026: how the makers of similar games designed their levels, what generic puzzle-design writing says, a catalog of patterns translated into Portal 2D's elements, and chamber ideas. It is reference material, not rules: the rules are `docs/elements.md`, and the project's own guidelines are `docs/level_design.md`. Where a finding matches or adds to one of those guidelines, it says so (guideline N).
+Outside research for designing Portal 2D's campaign chambers, gathered in November 2026: advice by topic from the makers of similar games and from generic puzzle-design writing, a catalog of patterns translated into Portal 2D's elements, and chamber ideas. It is reference material, not rules: the rules are `docs/elements.md`, and the project's own guidelines are `docs/level_design.md`. Where a finding matches or adds to one of those guidelines, it says so (guideline N).
 
 Every claim links its source. Sources are primary where possible (developer commentary, talks, postmortems, designer interviews), then analysts (Game Maker's Toolkit, Game Developer, Electron Dance), then community (forums, wikis). Quotes from videos come from YouTube's automatic captions, so small words may differ. Mappings to Portal 2D are this document's own reading of `docs/elements.md`, not claims by the sources.
 
 **Contents**
 - [The short version](#the-short-version)
 - [Candidate additions to the guide](#candidate-additions-to-the-guide)
-- [Part 1 — The games](#part-1--the-games)
-- [Part 2 — How each game's levels were designed](#part-2--how-each-games-levels-were-designed)
 - [Part 3 — What the advice says, topic by topic](#part-3--what-the-advice-says-topic-by-topic)
 - [Part 4 — Pattern catalog, mapped to Portal 2D](#part-4--pattern-catalog-mapped-to-portal-2d)
 - [Part 5 — Chamber ideas, by element and part](#part-5--chamber-ideas-by-element-and-part)
@@ -57,56 +55,7 @@ Points marked **[new]** in Part 3 that are concrete enough to become guidelines 
 | 16 | Give a run's teach and test chambers one route; let its twist and combine chambers allow several | Portal TC04, translated; tension with Teikari (3.3) |
 | 17 | Where a chamber shows something the player must notice, make the route stop in front of it, not run past it | Portal TC02, translated (3.3) |
 | 18 | Once part of a chamber is solved, make it plain which of its elements still matter, and keep the chamber compact | Portal 2 commentary, translated (3.8) |
-
-## Part 1 — The games
-
-Chosen because they share a Portal 2D mechanic or are known for their puzzle design writing. "Overlap" names the Portal 2D elements each one's ideas map onto.
-
-| Game | Maker, year | Overlap with Portal 2D | Best design source |
-|---|---|---|---|
-| Lara Croft GO, Hitman GO | Square Enix Montréal, 2014–2015 | Levers (≈ switches), plates, pillars (≈ boxes), line-of-sight "eyes" (≈ rays) | Antoine Routon's GDC 2016 postmortem |
-| Q.U.B.E. and Q.U.B.E. 2 | Toxic Games, 2011/2018 | Surfaces that respond or don't (≈ walls that take portals or don't), light-beam rooms | Game Developer; 80.lv |
-| Quantum Conundrum | Airtight Games (Kim Swift), 2012 | Per-room limits on the strongest tool | Kim Swift interviews |
-| Antichamber | Alexander Bruce, 2013 | Beams cut by blocks; ordering by introductoriness | Bruce, GDC 2014 |
-| Mechanic sources: Ricochet Robots, Pokémon and Zelda ice puzzles, Zelda dungeons, Laser Maze, Khet, Puzzledorf | Various | Slide stoppers, one-way structure, beam routing, switch logic | Kluiver's ice-block thesis; Mark Brown's Boss Keys; ThinkFun rules; Stuart Burfield's posts |
-
-## Part 2 — How each game's levels were designed
-
-Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
-
-
-### Lara Croft GO (2015) and Hitman GO (2014) (Square Enix Montréal)
-
-**What they are.** Turn-based puzzles on a board of nodes and lines, the whole puzzle on screen, no text tutorial. Levers (≈ switches), pressure plates (≈ buttons), pushable pillars that fill gaps, block boulders and kill enemies (≈ a box that touches many systems), trapdoor pairs (≈ portals), and KO_OP's "eyes" in its expansion that fire when something passes in front and are blocked by pillars (≈ emitter, ray and receiver, cut by a box).
-
-**How the levels were made.**
-- *Bare first.* "We created all the nodes and the lines first, and only later did we dress them up" ([Game Developer 2014](https://www.gamedeveloper.com/design/for-square-enix-designing-i-hitman-i-as-a-board-game-just-made-sense)). Tooling in-engine, one right-click per block: "if tools are super easy to use then the designers are just going to be excited to use them" ([BIG Festival 2016](https://www.youtube.com/watch?v=e94xwaizTS8)). They made "way, way, way more levels" than shipped.
-- *Cut the universal verb.* Hitman GO dropped a "wait" action because "it basically allowed you to kill anyone on the board" (Game Developer 2014).
-- *Unwritten rules.* When a plate pushing a spider onto a boulder raised "what happens?", they decided "to just design our puzzle so this never happens", building up "all these unwritten rules about how to create levels". No solver, "designers and QA"; in the expansion "someone found a way to break the puzzle" ([GDC 2016 postmortem](https://www.youtube.com/watch?v=r3A-DY9iDnU)).
-- *Tedium.* Maze-like exploration levels were cut: "too much swiping required with too little decisions to make" ([MCV](https://mcvuk.com/?p=65919)).
-- *No words.* "A game with no words, no tutorial, so we just have people try"; if a tester stumbled, back to the drawing board (BIG 2016). The lever-door countdown went through about 100 visual treatments: teaching is partly a presentation problem.
-- *Difficulty.* The level designers' first puzzles were "insanely hard", and were cut; the post-launch chapter raised difficulty sharply but came after the story, reusing the levels too hard to ship (GDC 2016). Hitman GO's optional goals (briefcase, no kills, move limits) earn stars.
-- *Visible progress.* A hub door with three locks, each key fetched from a maze, so players always see progress towards a goal.
-
-**Borrow.** Keep a written list of states chambers must never reach (Portal 2D has "States to avoid", plus a solver Lara GO lacked). Compare the solver's fewest moves with the number of "walk then act" steps in the route: a high ratio flags walking chores. Let the exit and a chain of doors with lit antlines show progress.
-
-### Q.U.B.E. (2011) and Q.U.B.E. 2 (2018) (Toxic Games)
-
-First-person rooms where the player's gloves work only on coloured blocks, white surfaces staying inert: the same contract as Portal 2D's walls that take portals and walls that don't. Q.U.B.E. 2's designer built each puzzle in an empty square room before the art team dressed it: "The prettiest room in the world would just frustrate player if they couldn't find the exit" ([80.lv](https://80.lv/articles/the-production-of-q-u-b-e-2)). The first game used most mechanics once and felt unfocused, so the sequel limited cube types; each mechanic is shown working in a fixed position before the player can place it, and story stays out of puzzle rooms because "people can't focus on two things at once". Testers weren't screened for puzzle experience, so the game was made easier and fans called it too easy: "The important thing is you need to get the right players" ([Game Developer 2018](https://www.gamedeveloper.com/design/how-the-i-qube-2-i-devs-built-a-better-massive-3d-puzzle-labyrinth)). Readability: "The player should be able to easily identify every puzzle element in the room."
-
-**Borrow.** Show it in place before handing it over: a first ray chamber can start with a mirror box already resting in the ray, turning it into a wall, one tile from where it would aim at the receiver. Count each element's uses across the campaign; a mechanic used once is cost without payoff.
-
-### Quantum Conundrum (Airtight Games, Kim Swift, 2012)
-
-Single rooms in a mansion; the player switches the whole room between dimensions using batteries placed per room. Mechanics were chosen for "the most permutations of use" ([Game Developer 2011](https://www.gamedeveloper.com/design/kim-swift-on-creating-i-quantum-conundrum-i-)) and settled at four "without overwhelming our players". Reverse gravity threatened to break the climbing puzzles, so rooms withhold it by withholding the battery: "being able to pace out the dimensions in each puzzle was a big help" ([CES interview](https://www.youtube.com/watch?v=iQOIYQJUA2o)). Players who saw an object they couldn't reach would "thrash on it for a really long time", so such bits were removed. A room should be read fast: "within 30 seconds to a minute, know what they have to do"; watch for "accidentally giving negative reinforcement for the right thing to do"; "leading the player without making them feel like they're led" ([Game Developer 2012](https://www.gamedeveloper.com/design/the-inclusive-design-of-kim-swift)).
-
-**Borrow.** Portals are Portal 2D's overpowered tool: decide per chamber which wall sides may take them and remove the rest. No unreachable bait: a box, button or switch visible in a sealed area reads as a target. The one-minute test: can a first-time player say *what* they must achieve within a minute? The chamber sign's pictograms and the antlines help.
-
-### Antichamber (Alexander Bruce, 2013)
-
-A first-person game of impossible spaces with no death and a map to jump back anywhere. In 2009 "I basically had the whole game built but it was totally not understandable"; he then picked the most introductory puzzle for each concept and put it first ([design3 interview](https://www.youtube.com/watch?v=WpNd6OqA4Hg)). Testers said "I'm always lost. There's too many dead ends"; lessons taught in one area were needed in another, so he connected spaces so each lesson sat next to its use. At E3 people played five minutes and left; after fixes the problems showed up "20 minutes through rather than 5 minutes through": how far players get before stalling is his measure ([GDC 2014](https://www.youtube.com/watch?v=wOlcB-JxkFw)).
-
-**Borrow.** Put the lesson next to its use: the chamber after a teach chamber should use its lesson at once. Design wrong moves to reveal information rather than trap.
+| 19 | Steer with the layout, not with text: the first thing to use in view of the start, sightlines and antlines pointing at the next step; in the cold playtest, check that testers describe the answer as something they worked out, not something they were shown | Kim Swift, translated (3.3) |
 
 ## Part 3 — What the advice says, topic by topic
 
@@ -119,7 +68,7 @@ Each topic gives the points the sources agree on, each sourced, then what it mea
 | # | Workflow | What it means | Who | Verdict |
 |---|---|---|---|---|
 | 1 | Exploratory forwards | Play with the rules until something surprising turns up; package it as a puzzle. You don't know the answer when you start | Blow and ten Bosch ([IndieCade 2011](https://www.youtube.com/watch?v=OGSeLSmOALU)), VanDevander ([talk](https://www.youtube.com/watch?v=0zVjdEhHmGo)), Brett Taylor ("the mechanics came up with the levels", [GDC 2019](https://www.youtube.com/watch?v=B36_OL1ZXVM)) | Recommended for *finding* ideas |
-| 2 | Backwards from the trick | Pick the one interaction the solution must contain, build the smallest room where it is the only way, then add one restriction per shortcut | Hazelden, Martin, Traynor, Teikari, Brown, Croteam (see Part 2) | Recommended for *building* a chamber; the most common method among the designers researched |
+| 2 | Backwards from the trick | Pick the one interaction the solution must contain, build the smallest room where it is the only way, then add one restriction per shortcut | Hazelden, Martin, Traynor, Teikari, Brown, Croteam | Recommended for *building* a chamber; the most common method among the designers researched |
 | 3 | Backwards from the goal | Start at the exit and ask what each step needs, as a dependency chart; aim for a diamond shape (one solve opens two or three, which reconverge) | Ron Gilbert ([dependency charts](https://grumpygamer.com/puzzle_dependency_charts)), Noah Falstein ([report](https://www.gamedeveloper.com/design/the-technique-lucasarts-used-to-design-its-classic-adventure-games)), Demon Arisen (central concept as the final move) | Recommended for multi-step chambers |
 | 4 | Backwards as obfuscation | Take a solved state and shuffle it until it's hard | VanDevander names it to warn against it: difficulty becomes arbitrary | Avoid |
 
@@ -137,7 +86,7 @@ Each topic gives the points the sources agree on, each sourced, then what it mea
 - *Traynor's list of 29 strategies* ([cwpat.me](https://cwpat.me/misc/puzzle-level-idea-strategies/)), the most useful for a small grid: enumerate action sequences (shoot then carry, carry–put down–shoot–pick up); extreme geometry (every wall takes portals, or one does); "possible, then impossible, then undo the last change" to find the tightest version; gadgets (arrows as one-way valves, a switch as a latch); translate puzzles from other games (Portal is his own example).
 - *Sit on it.* Lavelle carried some level ideas for months before a level turned up for them ([podcast](https://www.youtube.com/watch?v=4P2iC7YQu1k)); Blow found The Witness's rules only after coming back months later "with an open mind" ([Truth in Game Design](https://www.youtube.com/watch?v=C5FUtrmO7gI)).
 
-**Expect waste.** Parabox shipped 364 of about 960 drafts; Sokobond cut about half; Talos 2 made "the double number of puzzles"; Blow kept "less than half"; A Monster's Expedition kept one or two of a dozen versions (sources in Part 2). For the 10 chambers still to make, budget about 20–30 drafts. **[new]**
+**Expect waste.** Parabox shipped 364 of about 960 drafts ([GDC 2024](https://www.youtube.com/watch?v=HAvS-RwkjdA)); Talos 2 made "the double number of puzzles" ([Thinky Games](https://www.youtube.com/watch?v=KbMIp3q2Tc0)); Blow kept "less than half" ([stream clip](https://www.youtube.com/watch?v=Ku64fkXIKzk)). For the 10 chambers still to make, budget about 20–30 drafts. **[new]**
 
 **Keep a card per chamber**: its sentence, the elements it uses, its role (teach, test, twist, combine) and what it needs the player to know already. Brown's "puzzle bible" made gaps visible ("level 4 suddenly adds four new elements") and turned each gap into a brief ([Developing 9](https://www.youtube.com/watch?v=akeVPZLZejY)); Hazelden tags every level by mechanic and "intro" so a pool of drafts can be searched later ([ThinkyCon 2024](https://www.youtube.com/watch?v=98tmqN0bUGc)). Your 04b chamber plan table is most of this already. **[new]**
 
@@ -182,6 +131,7 @@ Each topic gives the points the sources agree on, each sourced, then what it mea
 - **Take the training wheels off at the end of a run.** Portal's last fling room removes the cue: "players must realize that they can double fling almost anywhere" (commentary, TC15). **[new]**
 - **Re-teach after a big new mechanic.** Testers forgot flinging after the full gun arrived, so TC12 brings it back (commentary, TC12); Hazelden refreshes an old trick just before it's needed again ([YagmanX](https://www.youtube.com/watch?v=RR9-5FyKJOM)). **[new]**
 - **Fix the sightline, not the text.** Portal 2's Fizzler Intro tested badly until a single gap at eye level, valid from either side, made the shot obvious ([commentary](https://combineoverwiki.net/wiki/Developer_commentary/Portal_2)). Make the rule visible when it fires: shots now flash on Portal 2's fizzlers. Portal 2D already does this with the fizzler splash, the light barrier reaction and the miss ripple. **[covered: game feature]**
+- **Lead without seeming to lead.** Kim Swift's aim for Quantum Conundrum: "leading the player without making them feel like they're led" ([Game Developer 2012](https://www.gamedeveloper.com/design/the-inclusive-design-of-kim-swift)). In Portal 2D: steer with the layout, not with text. Put the first thing to use in view of the start, and let sightlines and antlines point at the next step; in the cold playtest, check that testers describe the answer as something they worked out, not something they were shown. **[new]**
 - **Show the wiring.** "Don't put a button on the ground and make the player stand on it to see what it does" (Grant, [30 lessons](https://www.youtube.com/watch?v=iUi2vMZajco)); Portal 2 draws every connection, and the Puzzle Maker's dotted lines are automatic ([Gallant](https://gangles.ca/2012/05/13/perpetual-testing-initiative/)). **[covered: G33]**, but **[tension]**: G33 lets later chambers drop antlines, which turns "which button does what" into part of the puzzle. The Portal 2 community calls hidden key information "artificial difficulty" ([Idolon](https://thinking.withportals.com/forum/topic/portal-2-level-design-guidelines-t4291)). Drop an antline only where finding the link is meant to be the puzzle.
 - **Don't drag.** Juul's testers of a casual game: "After 20 minutes, felt like I saw the whole game" ([Fear of Failing?](https://jesperjuul.net/text/fearoffailing/)). Mel skipped training and had to ship an easier mode ([Wikipedia](https://en.wikipedia.org/wiki/Portal_Stories:_Mel)). Both failures exist: one teach chamber per element, then move on.
 - **Show levels.** Trivial levels that just show a consequence, which Parabox players found "delightful": "You don't always need a challenge" (Traynor, GDC 2024). **[new]**
@@ -266,7 +216,7 @@ The full catalog, each pattern mapped to Portal 2D's elements, is in Part 4. The
 
 ## Part 4 — Pattern catalog, mapped to Portal 2D
 
-Patterns from the games and the generic writing, grouped by the Portal 2D element they rest on. Each row names the source, says how it's built with Portal 2D's elements, and adds a check against your rules where one applies. Sources are linked in Parts 2 and 3; the mechanic-specific writing (ice puzzles, one-way tiles, laser mazes, switch logic) is summarised at the end of each section.
+Patterns from the games and the generic writing, grouped by the Portal 2D element they rest on. Each row names the source, says how it's built with Portal 2D's elements, and adds a check against your rules where one applies. Part 3 links most of the sources; the mechanic-specific writing (ice puzzles, one-way tiles, laser mazes, switch logic) is summarised at the end of each section.
 
 **Five facts about Portal 2D that change how outside patterns translate:**
 1. **No AND gate.** Two buttons or receivers on one element close it when either is released or darkens (guideline 4). Portal 2's "several inputs on one door" becomes doors in series, or a receiver that switches on a second emitter whose ray reaches a second receiver.
