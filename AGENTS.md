@@ -2,7 +2,7 @@
 
 Portal 2D — a desktop-only, keyboard-driven puzzle game: the player crosses grid-based test chambers using a pair of portals (Vite + Vue 3, TypeScript, Composition API with `<script setup>`, vue-router, ESLint + @stylistic + type-aware typescript-eslint via @vue/eslint-config-typescript). It is a static site on Firebase Hosting; there is no backend.
 
-`todo/` holds the author's roadmap: one file per stage (`creator_platform.md`; stages 00, 01, 03 and 04a are done, stage 02 stopped after its prototype, and their files are removed; what stage 02 learned is in `docs/solver.md`), and `future.md`, ideas for mechanics beyond the plan and how a mechanic was built. They are not planned work; do not build any of it unless asked, and only tick a stage's checkboxes for steps you were asked to do and finished.
+`todo/` holds the author's roadmap: one file per stage (`campaign.md` and `creator_platform.md`; stages 00, 01, 03 and 04a are done, stage 02 stopped after its prototype, and their files are removed; what stage 02 learned is in `docs/solver.md`), and `future.md`, ideas for mechanics beyond the plan and how a mechanic was built. `campaign.md` is the work in progress: the campaign's decisions, its workflow for each chamber and where it stands. The rest are not planned work; do not build any of it unless asked, and only tick a stage's checkboxes for steps you were asked to do and finished.
 
 `docs/spoilers/` holds what gives chambers away: each campaign chamber's notes (`chamber_<id>.md`: its idea, intended route, lure, restrictions and playtests; `docs/level_design.md`, guideline 52) and the idea pool (`ideas.md`), chamber ideas with no chamber yet. The author plays every draft cold before reading its notes, so read and write them when designing chambers, but never tell the author a chamber's key move, layout or route before they have played it: hand over only its address.
 
@@ -23,6 +23,7 @@ src/
   services/                       catalogues, settings, key bindings, progress, analytics and other app services
   dev/                            development only: render profile, sprite gallery, playground chambers
 art/sprites/                      SVG sources of the chamber sprites (export steps in docs/sprites.md)
+docs/campaign.md                  the campaign plan: conventions, every run in order, the next run chamber by chamber
 docs/elements.md                  elements, chamber format, rules and their interactions
 docs/game_summary.md              the whole game in plain words
 docs/hints.md                     tutorial hints, designed but not built

@@ -4,6 +4,12 @@ Chamber ideas with no chamber yet, by element and part (`docs/level_design.md`, 
 
 What exists already, so the ideas avoid repeating it: the campaign's old chambers, now Playground 2 to 10, taught and tested slide floors (Playground 5 and 6), taught and twisted turnable arrows (Playground 7 and 8) and taught and tested rays through portals (Playground 9 and 10). None of them used a light barrier or a mirror box, and only Playground 2 and 4 used fizzlers.
 
+## Sketched for a run
+
+Combine chambers sketched before their run's other chambers (guideline 51), with what the earlier chambers of the run must plant.
+
+- **Run 1, chamber 5: the box beyond the ditch** (combine). The button, and the door it opens on the way to the exit, are on the subject's side; the box lies beyond a ditch, reached only by portal. The catch: carrying the box, the subject must cross by a portal it hasn't placed yet, and the portal keys don't shoot while a box is carried, so it puts the box down, shoots, picks it up and crosses (or places that portal before picking the box up). The lure: walk to the box, pick it up, head back. The layout must keep the portal the subject came out of from being the way back with the box, or the catch never bites. Plants: crossing (chambers 1 and 2), shots over a ditch (3), a box on a button (4). _Check:_ guideline 78 (a face to shoot back from), guideline 79 (a tile beyond the ditch to put the box down), guideline 40 (what the button's tile sees through the open door).
+
 ## Portals (basics)
 
 1. **Gated islands** (teach or test). Three or four floor islands in a row, separated by lasers or open ditches, each with exactly one wall face that takes portals and sees the next island. The only way forward is a crossing per island, in order; a wrong shot is fixed by re-shooting. _Teaches:_ aiming from the right tile, and that either portal can be the entrance. _Check:_ guideline 78 (each island has a face it can shoot from to come back), guideline 72 (no island's face is the wall at the end of a laser run).
