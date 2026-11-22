@@ -56,6 +56,7 @@ Points marked **[new]** in Part 3 that are concrete enough to become guidelines 
 | 15 | No one-off tricks: a technique a chamber requires is one the campaign taught or will reuse | Grant, BoxBoy (3.5) |
 | 16 | Give a run's teach and test chambers one route; let its twist and combine chambers allow several | Portal TC04, translated; tension with Teikari (3.3) |
 | 17 | Where a chamber shows something the player must notice, make the route stop in front of it, not run past it | Portal TC02, translated (3.3) |
+| 18 | Once part of a chamber is solved, make it plain which of its elements still matter, and keep the chamber compact | Portal 2 commentary, translated (3.8) |
 
 ## Part 1 — The games
 
@@ -63,10 +64,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 | Game | Maker, year | Overlap with Portal 2D | Best design source |
 |---|---|---|---|
-| Portal 2 (co-op, Puzzle Maker, community maps) | Valve, 2011 | Emitter, receiver and mirror box (its "laser", catcher and reflection cube), light barriers (hard light), antlines, fizzlers | Developer commentary; Adam Foster interview; ThinkingWithPortals forum |
-| Portal Stories: Mel | Prism Studios, 2015 | Portal 2's elements; what skipping the training cost | Prism's commentary videos |
-| Portal Reloaded | Jannis Brinkmann, 2021 | Order-dependent state | PC Gamer review; its FAQ |
-| Bridge Constructor Portal | ClockStone, 2017 | Fixed portals, execution vs insight | PC Gamer review |
 | The Talos Principle (+ Road to Gehenna) | Croteam, 2014 | Emitters, receivers, beam relays (≈ mirror boxes and portal pairs), boxes, plates | Alen Ladavac, Nordic Game 2016 |
 | The Talos Principle 2 | Croteam, 2023 | Asymmetric barriers (≈ ditch, laser, fizzler, light barrier) | Thinky Games interviews |
 | The Witness | Thekla, 2016 | Grid sequences taught without words; power cables (≈ antlines) | Blow and ten Bosch, IndieCade 2011; noclip documentary |
@@ -89,57 +86,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### Portal 2 (Valve, 2011), its co-op campaign and Puzzle Maker
-
-**A naming trap first.** Portal 2's "laser" (the Thermal Discouragement Beam that powers catchers) is Portal 2D's **emitter and ray**; its laser catcher is the **receiver** and its reflection cube the **mirror box** (aimed freely there, a fixed 45° mirror here). Portal 2D's **laser** (blocks walking, not shots) is closer to Portal 2's deadly Laser Field. The Hard Light Bridge is mostly a floor there; Portal 2D's light barrier is a switchable wall. Portal 2's indicator lights are Portal 2D's antlines. Portal 2's laser relays (a beam lighting several nodes in a row) have no counterpart: a Portal 2D receiver ends the ray.
-
-**How the levels were made.**
-- *Goal first.* Each chamber starts from one teaching goal, sketched as an isometric layout on a whiteboard: "We never sit down and throw random pieces at the whiteboard to see what sticks" ([Game Informer 2010](https://gameinformer.com/b/features/archive/2010/03/17/thinking-with-portals-making-a-test-chamber.aspx)).
-- *Two kinds of training per element.* "Checklisting": list the rules a new element imposes and give a "very clean room to safely experiment with it". Then a second, unnamed kind: list what the element can do and build lateral challenges that turn a learned rule on its head, "often the most rewarding for players" (same article).
-- *A pool, then a list.* Phil Co: "we built test chambers based on mechanics first", ordered by "a simple text file" so the whole game could be tested in any order ([Interlopers interview](https://www.valvearchive.com/archive/Other%20Files/Interviews/Text/Interlopers/2012%20Phil%20Co%20Interview/Phil_Co.txt)). Puzzles stayed bare until stable; art came last, and every map was retested after art.
-- *Tentpole first.* Matt T. Wood: ask "what is my ultimate challenge for the player", build it, find the "three or four things in here which the players don't really understand", then design the chambers before it that plant them ([Kiwi Talkz](https://www.youtube.com/watch?v=3dYAZxr2FbY)). Adam Foster on his map *Triple Axis*: "Every other gameplay element in the map is simply to support that moment" ([Radiator Blog interview](https://www.blog.radiator.debacle.us/p/level-with-me-adam-foster-part-2.html)).
-- *Fix a hard chamber by changing the ones before it.* Foster: "The usual route when dealing with a puzzle that seems too complicated is not to change it directly, but modify previous puzzles."
-- *Execution is not difficulty.* Steam data showed Portal 1 quitters "almost universally" quit after one of its two hardest-to-execute puzzles, so Portal 2 moved difficulty into thinking ([Engadget, Wolpaw](https://www.engadget.com/2011-03-13-valves-erik-wolpaw-on-portal-2s-difficulty-ps3-steam-features.html)). Timing puzzles "regularly" frustrate players (Jeep Barnett, [Animex 2012](https://www.youtube.com/watch?v=VT1Eoq38H-k)).
-- *Never test what you haven't taught.* Wolpaw: "At no point are we going to ask you do something that we haven't prepared you to do." The map names show the cadence: Laser Intro → Laser Stairs → Dual Lasers → Laser Over Goo; Turret Intro → Laser Relays → … → Laser Chaining → Triple Laser ([map list](https://wiki.portal2.sr/List_of_Singleplayer_maps)).
-- *The laser run.* Laser Intro: one portal where the beam hits, one facing the catcher. Laser Stairs: a reflection cube turns the beam into the catcher, then the same cube is needed on a button. Dual Lasers: two beams, one cube; the cube solves one, portals the other. Laser Over Goo flips the lesson: blocking the beam is what helps ([Portal Wiki chamber pages](https://theportalwiki.com/wiki/Portal_2_Chapter_2_Test_Chamber_1)). Lasers replaced Portal 1's energy pellets because they "stayed in one place and always let the player know how they will affect the environment" ([GDC 2012 report](https://www.gamedeveloper.com/design/gdc-2012-i-portal-2-i-making-a-sequel-to-a-perfect-game)).
-- *What the developer commentary records* ([Combine OverWiki](https://combineoverwiki.net/wiki/Developer_commentary/Portal_2)):
-  - Fizzler Intro: two fizzlers and three areas meant "almost none of our playtesters could solve the puzzle". Even simplified, players "could not figure out which side of the fizzler they needed to be on" until one gap at eye level, valid from either side, gave a single clear sightline.
-  - Testers couldn't describe fizzlers they had walked through in almost every map, so shots now flash on them.
-  - An extra puzzle hidden beyond the reflection cube "took players so long to get to it, that they were confused about which elements were still relevant": the space was condensed and the exit put near the start.
-  - Testers fixated on the funnel, "forgetting that they had a portal gun", so an event before the chamber forces the same portal move in another context.
-  - "Elevator fatigue": too many complex chambers in a row tired testers, so a ride became a rest.
-  - Co-op's *Bonk Heads*: a puzzle just before it "where two cubes repeatedly collide" cut the solve time but "almost completely robbed the appeal". Planting fragments four maps earlier and framing the path with the room's layout let players "own that exciting dual collision epiphany".
-  - When players could wander between areas, "they logically assumed that the individual puzzles were part of one big puzzle", so airlocks separate them.
-  - Long death animations made players "afraid to take risks", so respawn became instant.
-  - Co-op's hub, where players picked any chamber, "prevented us from doing sufficient training"; going linear "could guarantee prior knowledge".
-- *Small changes, big swings.* Triple Laser had players "permanently stuck" until "some incredibly subtle changes in the cubes' initial positions" fixed it: "We don't really know why" (Foster). Start positions are a difficulty dial.
-- *Done when* most testers find it fun and get through "without getting irretrievably stuck"; "it's absolutely fine to take a while", "Getting the puzzle immediately is bad, but it still has to be solveable" (Foster).
-- *Co-op uniqueness rule.* "If one person can figure out how to solve it with just one set of portals then it's back to the drawing board" ([PC Gamer](https://www.pcgamer.com/interview-valve-on-their-insane-portal-2-ideas/)).
-- *A dissent.* Jonathan Blow argued focus testing a puzzle game risks that "you start to get rid of the puzzles" ([PC Gamer](https://www.pcgamer.com/jonathan-blow-talks-portal-2-and-player-freedom/)).
-- *No solver.* No source mentions automated checking; Portal 2D's recorded solutions and solver go beyond anything Portal 2 had.
-
-**The Puzzle Maker and the mapping community.** Matthew Gallant on the editor: a closed, grid-aligned test chamber with one entrance and one exit, binary inputs and outputs, several inputs on one device meaning AND, and connections "always visible to the player" as dotted lines ([The Quixotic Engineer](https://gangles.ca/2012/05/13/perpetual-testing-initiative/)). Portal 2D shares this grammar but for one thing: **it has no AND**. Two buttons or receivers on one element close it when either is released (guideline 4), so an AND has to be built as doors in series, or as a receiver switching on a second emitter. The community's rules, from the ThinkingWithPortals forum and Tuts+:
-- "The player should always have all of the information in front of them"; "Teach cause and effect, not just cause or effect" (Idolon, [guidelines](https://thinking.withportals.com/forum/topic/portal-2-level-design-guidelines-t4291)).
-- Portal surfaces are the difficulty dial: too few black walls opens simpler routes; white walls only in the exact spots removes choice (Silverman, [Tuts+](https://code.tutsplus.com/portal-2-level-design-creating-puzzles-to-challenge-your-players--gamedev-4828t)).
-- 2–4 elements per chamber, each reused at least twice; "Dilemmas are your friend", such as one button that raises a panel you need and also one that stops you; an unused stretch of portal wall is fine, but not "a singled out portable wall between black walls that looks like it HAS to be used" ([puzzle producing process](https://thinking.withportals.com/forum/topic/puzzle-producing-process-t5983)).
-- Make the central concept the final move, then add steps backwards (Demon Arisen, [video](https://www.youtube.com/watch?v=snZAq2GMOMU)).
-- Make the first draft impossible, then add one interesting fix; remove skips that use "timing and accuracy, not thought", but not every solution that isn't yours; add a row of floor so a player arriving without the cube can walk back (Silverman, [Tuts+](https://code.tutsplus.com/portal-2-level-design-from-initial-idea-to-finished-level--gamedev-5321t)).
-- "Popular maps are almost always dead easy", because only players who finish can vote (Mike Daas, [video](https://www.youtube.com/watch?v=L9BD004V9bI)).
-
-**Portal Stories: Mel (Prism Studios, 2015).** A 22-level mod that skipped training ("we assume that you already know how to fire your portal"); reviews called it the Dark Souls of Portal games, and two months later Prism shipped an easier Story Mode as the default, keeping the originals as Advanced ([Wikipedia](https://en.wikipedia.org/wiki/Portal_Stories:_Mel)). From its developer commentary ([part 2](https://www.youtube.com/watch?v=zja9oCowbX4)): even "obvious" rules need training; "we don't want people to be punished for trying things out", so a button opens a shortcut back to the cube source once an area is solved; a button used only once was cut; designers forgot how to solve their own puzzles after long breaks.
-
-**Portal Reloaded (2021) and Bridge Constructor Portal (2017).** Reloaded's single developer refused to pad ("do something new with every puzzle"); its reviewers' main complaint was fragile state: bumping the present cube rewrote the future one and forced a full redo ([PC Gamer](https://www.pcgamer.com/portal-reloaded-is-the-closest-were-likely-to-get-to-portal-3/)). Bridge Constructor Portal kept portals fixed in the level, and reviewers missed placing them; its tiresome moments came "when you've solved the puzzle mentally but need to fine-tune the physical solution" ([PC Gamer review](https://www.pcgamer.com/bridge-constructor-portal-review/)).
-
-**Borrow for Portal 2D.**
-- Ray run on Portal 2's model: portal the ray (teach) → mirror box turns it in, then the box is also wanted on a button (test: when to take it out of the ray) → two rays, one mirror box, one portal pair (each solves one) → cut the ray on purpose (twist).
-- "Cut it on purpose" works in Portal 2D because a receiver going dark switches its links back on: a lit receiver holding a light barrier off can be darkened by a box in the ray, switching the barrier on to stop a slide or block a shot.
-- Fizzle to respawn: when the box is needed back at its start, destroying it is the move.
-- Pull the rug: a box resting on a bridged ditch is destroyed when the link releases and returns to its start.
-- One sightline past a fizzler: a single gap or a single wall that takes portals beyond it is the whole puzzle.
-- A progress latch: once the first half is solved, a switch opens the way back to the box's start, so a lost box costs little.
-
-**Doesn't carry over.** Flings, faith plates, gels, funnels carrying objects, turrets, timed buttons, analogue laser aiming, laser relays, AND-wired inputs.
 
 ### The Talos Principle (Croteam, 2014), Road to Gehenna (2015) and The Talos Principle 2 (2023)
 
@@ -492,6 +438,7 @@ The full catalog, each pattern mapped to Portal 2D's elements, is in Part 4. The
   - *Test:* whether it regularly misleads testers, whatever the intent (Spira). **[new]**
 - **Confirm progress.** "Realizing that you're on the right track is one of the most dopaminergic things" (Grant). In Portal 2D, an antline turning amber, a door opening or a receiver lighting is a confirmer; a first sure sub-goal within the first few moves hooks the player (Gilbert: "Letting the player know at least the first sub-goal is essential"). **[new]**
 - **Separate independent sub-puzzles visibly.** Portal 2 co-op players who could wander between areas "logically assumed that the individual puzzles were part of one big puzzle" (commentary, airlocks). **[new]**
+- **Let a solved part read as done.** An extra Portal 2 puzzle hidden beyond the reflection cube "took players so long to get to it, that they were confused about which elements were still relevant", so the space was condensed and the exit put near the start ([commentary](https://combineoverwiki.net/wiki/Developer_commentary/Portal_2)). Portal 2D keeps the whole chamber on screen, so a finished part stays in view: keep the chamber compact, and let what is done look done (its door open, its antline lit) so the player can tell which elements still matter. **[new]**
 - **Hints.** Portal 2D has none, and the evidence doesn't push for them: in Refraction (50,000 students) every hint design tested lowered performance ([O'Rourke et al. 2014](https://grail.cs.washington.edu/wp-content/uploads/2015/08/orourke2014hsm.pdf); children in an educational game, so transfer is unproven). Talos's own hint system was "too hard to get any hints at all" (Ladavac). Clearer chambers and earlier fragments beat hints. **[new]**
 
 ## Part 4 — Pattern catalog, mapped to Portal 2D
