@@ -8,7 +8,7 @@ import {drawChamberPreview} from '@/game/chamber_preview'
 import type {ChamberEntry} from '@/services/chamber_catalogue'
 
 export interface ChamberMapProps {
-  chamber: ChamberEntry
+  chamber: Pick<ChamberEntry, 'data'> // A campaign or playground chamber, whose layout is drawn
 }
 
 const props = defineProps<ChamberMapProps>()

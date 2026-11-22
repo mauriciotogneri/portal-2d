@@ -8,19 +8,23 @@ import type {ElementDefinition} from '@/game/rules/element_definition'
 import {CORE_STEP_EVENTS, ELEMENT_REGISTRY} from '@/game/rules/element_registry'
 import {loadChamber, readChamber} from '@/game/rules/load_chamber'
 import {CHAMBERS} from '@/services/chamber_catalogue'
-import {CHAMBER_FILES, CHAMBERS_DIRECTORY, chamberFileName, listChamberFiles, PLAYGROUND_DATA, PLAYGROUND_FILE} from '@scripts/chamber_files'
+import {PLAYGROUND_LAYOUTS} from '@/services/playground_catalogue'
+import {CHAMBER_FILES, CHAMBERS_DIRECTORY, chamberFileName, listChamberFiles, listPlaygroundFiles, PLAYGROUND_DIRECTORY, PLAYGROUND_FILES, playgroundFileName} from '@scripts/chamber_files'
 import {listFixtureChambers} from '@scripts/fixtures/fixtures'
 import {CHAMBER_CASES, type ChamberCase, FORMAT_V2_EXAMPLE} from '@scripts/fixtures/format_examples'
 
 // Loads every chamber file the way the game does (every field read, the
-// layout checked). Every chamber in src/chambers and the playground must load
-// without an error. The play order (src/services/chamber_catalogue.ts) must give
-// every chamber an id that is a whole number of 0 or more, used once, whose
-// file, chamber_<id>.json, holds exactly the layout the game loads for it.
+// layout checked). Every chamber in src/chambers and every playground chamber in
+// src/dev/playground must load without an error. The play order
+// (src/services/chamber_catalogue.ts) must give every chamber an id that is a
+// whole number of 1 or more, used once, whose file, chamber_<id>.json, holds
+// exactly the layout the game loads for it, and the playground list
+// (src/services/playground_catalogue.ts) must list every playground file, the
+// one at place N being playground_N.json.
 // Each case in scripts/fixtures/format_examples.ts must report exactly
 // the problems pinned for it. The format 2 example, compiled, must reach
 // exactly the pinned links (its link group expanded) and refuse portals for
-// good on exactly the pinned walls. Every chamber file, the playground, every fixture
+// good on exactly the pinned walls. Every chamber file, every playground chamber, every fixture
 // chamber and the format 2 example, compiled, must answer wall, no portals and no element on
 // the ring of tiles just outside its edge. Then checks the element registry
 // against the format: every element's field is one the parser accepts and
@@ -108,12 +112,30 @@ function checkChamberFile(file: string): boolean {
 }
 
 /**
+ * Loads one of the playground chambers' files.
+ * @param file - Its file name
+ * @returns Whether it loaded without an error
+ */
+function checkPlaygroundFile(file: string): boolean {
+  const data = PLAYGROUND_FILES[file]
+
+  if (data === undefined) {
+    console.error(`${file} FAILED: not in the playground list (src/services/playground_catalogue.ts)`)
+
+    return false
+  }
+
+  return checkChamberData(file, data)
+}
+
+/**
  * Reads a chamber file as raw JSON, as it is on disk.
- * @param file - Its file name in src/chambers
+ * @param file - Its file name
+ * @param directory - The folder it is in, src/chambers unless given
  * @returns Its contents, or undefined when there is no such file
  */
-function readChamberFile(file: string): unknown {
-  const location = new URL(file, CHAMBERS_DIRECTORY)
+function readChamberFile(file: string, directory: URL = CHAMBERS_DIRECTORY): unknown {
+  const location = new URL(file, directory)
 
   if (!existsSync(location)) {
     return undefined
@@ -124,7 +146,7 @@ function readChamberFile(file: string): unknown {
 
 /**
  * Checks the play order against the chamber files: every chamber's id a
- * whole number of 0 or more, used by no earlier chamber, and its file,
+ * whole number of 1 or more, used by no earlier chamber, and its file,
  * chamber_<id>.json, holding exactly the layout the game loads for it, since
  * the id names its files and keys its progress, analytics and recorded
  * solution. A chamber file missing from the play order has already failed
@@ -138,8 +160,8 @@ function checkCatalogue(): boolean {
   for (const chamber of CHAMBERS) {
     const label = `chamber ${chamber.number} (id ${chamber.id})`
 
-    if (!Number.isInteger(chamber.id) || chamber.id < 0) {
-      problems.push(`${label}: its id is not a whole number of 0 or more`)
+    if (!Number.isInteger(chamber.id) || chamber.id < 1) {
+      problems.push(`${label}: its id is not a whole number of 1 or more`)
     } else if (seenIds.has(chamber.id)) {
       problems.push(`${label}: its id is already used by an earlier chamber`)
     } else {
@@ -172,7 +194,43 @@ function checkCatalogue(): boolean {
 }
 
 /**
- * Loads a chamber the game plays, a chamber file or the playground.
+ * Checks the playground list against the playground files: the layout at
+ * place N must be exactly the one in playground_N.json, since the number
+ * names its file and its address. A playground file missing from the list
+ * has already failed on its own line.
+ * @returns Whether the playground list passed
+ */
+function checkPlaygroundList(): boolean {
+  const problems: string[] = []
+
+  PLAYGROUND_LAYOUTS.forEach((layout, index) => {
+    const file = playgroundFileName(index + 1)
+    const contents = readChamberFile(file, PLAYGROUND_DIRECTORY)
+
+    if (contents === undefined) {
+      problems.push(`playground ${index + 1}: src/dev/playground/${file} doesn't exist`)
+    } else if (!isDeepStrictEqual(contents, layout)) {
+      problems.push(`playground ${index + 1}: its layout isn't the one in src/dev/playground/${file}`)
+    }
+  })
+
+  if (problems.length === 0) {
+    console.log(`playground list OK: ${PLAYGROUND_LAYOUTS.length} chambers, each at the place its file's number names`)
+
+    return true
+  }
+
+  console.error(`playground list FAILED: ${countProblems(problems.length)}`)
+
+  for (const problem of problems) {
+    console.error(`  ${problem}`)
+  }
+
+  return false
+}
+
+/**
+ * Loads a chamber the game plays, a chamber file or a playground chamber.
  * @param file - Its file name
  * @param data - The chamber JSON
  * @returns Whether it loaded without an error
@@ -450,7 +508,7 @@ function checkRegistryFlags(): boolean {
 }
 
 /**
- * Checks every chamber file in src/chambers, the play order, the playground, every case, the
+ * Checks every chamber file in src/chambers, the play order, every playground chamber and their list, every case, the
  * compiled format 2 example, the ring outside every chamber's edge and the
  * element registry.
  * @returns Whether all of them passed
@@ -463,7 +521,12 @@ function runAll(): boolean {
   }
 
   passed = checkCatalogue() && passed
-  passed = checkChamberData(PLAYGROUND_FILE, PLAYGROUND_DATA) && passed
+
+  for (const file of listPlaygroundFiles()) {
+    passed = checkPlaygroundFile(file) && passed
+  }
+
+  passed = checkPlaygroundList() && passed
 
   for (const chamberCase of CHAMBER_CASES) {
     passed = checkCase(chamberCase) && passed
@@ -480,7 +543,14 @@ function runAll(): boolean {
     }
   }
 
-  passed = checkOutsideEdge(PLAYGROUND_FILE, PLAYGROUND_DATA) && passed
+  // A playground file missing from its list has already failed above
+  for (const file of listPlaygroundFiles()) {
+    const data = PLAYGROUND_FILES[file]
+
+    if (data !== undefined) {
+      passed = checkOutsideEdge(file, data) && passed
+    }
+  }
 
   for (const fixtureChamber of listFixtureChambers()) {
     passed = checkOutsideEdge(`fixture chamber of ${fixtureChamber.name}`, fixtureChamber.chamber) && passed

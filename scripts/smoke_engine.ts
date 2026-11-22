@@ -2,9 +2,9 @@ import type {ChamberData} from '@/game/chamber_data'
 import {CompiledChamber} from '@/game/rules/compiled_chamber'
 import {loadChamber} from '@/game/rules/load_chamber'
 import {startChamber} from '@/game/rules/step'
-import {CHAMBER_FILES, listChamberFiles, PLAYGROUND_DATA, PLAYGROUND_FILE} from '@scripts/chamber_files'
+import {CHAMBER_FILES, listChamberFiles, listPlaygroundFiles, PLAYGROUND_FILES} from '@scripts/chamber_files'
 
-// Loads every chamber, and the playground, with the rules under Node and
+// Loads every chamber, and every playground chamber, with the rules under Node and
 // settles its start, proving the rules need no browser. Prints one line per
 // chamber, with the size and hash of its settled start, and exits non-zero
 // on any failure
@@ -46,7 +46,7 @@ function runChamber(file: string, data: ChamberData): boolean {
 }
 
 /**
- * Runs every chamber file in src/chambers, then the playground, and reports each one.
+ * Runs every chamber file in src/chambers, then every playground chamber, and reports each one.
  * @returns Whether every chamber ran
  */
 function runAll(): boolean {
@@ -64,7 +64,19 @@ function runAll(): boolean {
     passed = runChamber(file, data) && passed
   }
 
-  return runChamber(PLAYGROUND_FILE, PLAYGROUND_DATA) && passed
+  for (const file of listPlaygroundFiles()) {
+    const data = PLAYGROUND_FILES[file]
+
+    if (data === undefined) {
+      console.error(`${file} FAILED: not in the playground list (src/services/playground_catalogue.ts)`)
+      passed = false
+      continue
+    }
+
+    passed = runChamber(file, data) && passed
+  }
+
+  return passed
 }
 
 if (!runAll()) {

@@ -4,12 +4,12 @@ import {Action, ACTIONS} from '@/game/rules/action'
 import {CompiledChamber} from '@/game/rules/compiled_chamber'
 import {type ChamberLoadResult, loadChamber, readChamber} from '@/game/rules/load_chamber'
 import {startChamber, step} from '@/game/rules/step'
-import {CHAMBER_FILES, listChamberFiles, PLAYGROUND_DATA, PLAYGROUND_FILE} from '@scripts/chamber_files'
+import {CHAMBER_FILES, listChamberFiles, listPlaygroundFiles, PLAYGROUND_FILES} from '@scripts/chamber_files'
 import {listFixtureChambers} from '@scripts/fixtures/fixtures'
 import {readNumberOption} from '@scripts/number_option'
 import {createRandom} from '@scripts/seeded_random'
 
-// Plays seeded random actions on every chamber and the playground with the
+// Plays seeded random actions on every chamber and playground chamber with the
 // rules under Node, then on every fixture chamber (scripts/fixtures/), which
 // are made to reach the rules' edge cases, read without the layout checks so
 // the one open at the edge still plays. Every step must settle within the rules' pass cap
@@ -122,7 +122,7 @@ function walkChamberFile(file: string, data: ChamberData, steps: number, seed: n
 }
 
 /**
- * Walks every chamber file in src/chambers, the playground and every fixture
+ * Walks every chamber file in src/chambers, every playground chamber and every fixture
  * chamber, and reports each one.
  * @returns Whether every walk finished
  */
@@ -155,7 +155,17 @@ function runAll(): boolean {
     passed = walkChamberFile(file, data, steps, seed) && passed
   }
 
-  passed = walkChamberFile(PLAYGROUND_FILE, PLAYGROUND_DATA, steps, seed) && passed
+  for (const file of listPlaygroundFiles()) {
+    const data = PLAYGROUND_FILES[file]
+
+    if (data === undefined) {
+      console.error(`${file} FAILED: not in the playground list (src/services/playground_catalogue.ts)`)
+      passed = false
+      continue
+    }
+
+    passed = walkChamberFile(file, data, steps, seed) && passed
+  }
 
   for (const fixtureChamber of listFixtureChambers()) {
     const label = `fixture chamber of ${fixtureChamber.name}`

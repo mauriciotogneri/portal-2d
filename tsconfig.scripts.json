@@ -38,8 +38,9 @@
     "src/game/sprite_set.ts",
     "src/game/text_hash.ts",
     "src/services/chamber_catalogue.ts",
+    "src/services/playground_catalogue.ts",
     "src/chambers/*.json",
-    "src/dev/playground.json",
+    "src/dev/playground/*.json",
     "scripts/fixtures/*.json",
     "scripts/solver_fixtures/*.json"
   ]

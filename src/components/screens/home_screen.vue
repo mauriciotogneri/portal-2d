@@ -22,9 +22,10 @@
  * Custom also opens its dialog, where each key is set. Settings ends with
  * Reset progress, which asks first in a dialog. While either dialog is open the menu ignores
  * the keyboard and Escape closes it, with a click. In development the first
- * column starts with Playground, highlighted on the first arrival, which opens
- * no section: Enter, Space or a click starts the playground, a chamber for
- * trying every element.
+ * column starts with Playground, highlighted on the first arrival, a section
+ * like Play listing the playground chambers, chambers for trying elements and
+ * ideas, with the highlighted one's map; they keep no progress, so their rows
+ * show no best time and no figure.
  */
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useTemplateRef} from 'vue'
 import {useRouter} from 'vue-router'
@@ -41,11 +42,12 @@ import {Sound} from '@/game/sound'
 import {trackChangelogOpen, trackFeedbackOpen, trackLinkOpen, trackProgressReset} from '@/services/analytics'
 import {CHAMBERS} from '@/services/chamber_catalogue'
 import {chooseControlLayout, ControlLayout, controlLayout} from '@/services/key_bindings'
-import {lastChamber, playgroundOpenedLast} from '@/services/last_chamber'
+import {lastChamber} from '@/services/last_chamber'
+import {PLAYGROUND_CHAMBERS} from '@/services/playground'
 import {bestTime, hasStartedAnyChamber, isCompleted, resetProgress} from '@/services/progress'
 import {AUDIO_VOLUMES, playMusic, setVolume, VOLUME_STEP} from '@/services/settings'
 
-/** A row listed in the first column: a section, or in development the playground, which opens none. */
+/** A section listed in the first column, Playground only in development. */
 type MenuSection = 'play' | 'settings' | 'about' | 'playground'
 
 /** The column that has the keyboard: the sections, the open section's items, or the third column (About's pages or changelog, or the controls). */
@@ -92,7 +94,7 @@ type AboutEntry =
   }
 
 const SECTIONS: SectionEntry[] = [
-  // Development only: starts the playground; production builds leave the row out
+  // Development only: lists the playground chambers; production builds leave the row out
   ...(import.meta.env.DEV ? [
     {
       section: 'playground' as const,
@@ -184,24 +186,26 @@ const LAYOUTS: LayoutEntry[] = [
 
 const CUSTOM_LAYOUT_INDEX = LAYOUTS.findIndex((entry) => entry.layout === ControlLayout.CUSTOM) // The Custom row, which the keyboard goes back to when its dialog closes
 
-const TUTORIAL_ID = 0 // The tutorial's permanent chamber id, which Play opens straight away until any chamber has been opened
+const TUTORIAL_ID = 1 // The tutorial's permanent chamber id (Chamber 1), which Play opens straight away until any chamber has been opened
 
 const router = useRouter()
 const menuId = useId()
 const itemColumnId = `${menuId}-items`
 const detailColumnId = `${menuId}-details`
 
-// Back from a chamber, Play is open with that chamber highlighted and the keyboard in the second
-// column; on the first arrival only the sections show, with Play highlighted and nothing open.
-// In development, the first arrival and the way back from the playground highlight Playground instead
-const rememberedChamber = CHAMBERS.findIndex((chamber) => chamber.number === lastChamber())
-const backFromPlayground = playgroundOpenedLast()
-const returning = rememberedChamber !== -1 && !backFromPlayground
+// Back from a chamber, Play (or in development Playground, back from a playground chamber) is
+// open with that chamber highlighted and the keyboard in the second column; on the first arrival
+// only the sections show, with Play highlighted and nothing open, or Playground in development
+const remembered = lastChamber()
+const rememberedChamber = remembered?.list === 'campaign' ? CHAMBERS.findIndex((chamber) => chamber.number === remembered.number) : -1
+const rememberedPlayground = remembered?.list === 'playground' ? PLAYGROUND_CHAMBERS.findIndex((entry) => entry.number === remembered.number) : -1
+const returningSection = findReturningSection()
 
-const highlightedSection = ref<MenuSection>(import.meta.env.DEV && !returning ? 'playground' : 'play')
-const openSection = ref<MenuSection | null>(returning ? 'play' : null)
-const activeColumn = ref<MenuColumn>(returning ? 'items' : 'sections')
+const highlightedSection = ref<MenuSection>(returningSection ?? (import.meta.env.DEV ? 'playground' : 'play'))
+const openSection = ref<MenuSection | null>(returningSection)
+const activeColumn = ref<MenuColumn>(returningSection === null ? 'sections' : 'items')
 const highlightedChamber = ref(Math.max(rememberedChamber, 0))
+const highlightedPlayground = ref(Math.max(rememberedPlayground, 0)) // The playground chamber highlighted under Playground, which keeps it while closed
 const highlightedSetting = ref(0)
 const highlightedAbout = ref(0)
 const highlightedLink = ref(0)
@@ -222,12 +226,16 @@ const highlightedItem = computed(() => {
   if (openSection.value === 'play') {
     return highlightedChamber.value
   }
+  if (openSection.value === 'playground') {
+    return highlightedPlayground.value
+  }
   if (openSection.value === 'about') {
     return highlightedAbout.value
   }
   return highlightedSetting.value
 })
-const highlightedChamberEntry = computed(() => CHAMBERS[highlightedChamber.value])
+// The chamber whose map the third column shows, under Play or Playground
+const highlightedChamberEntry = computed(() => openSection.value === 'playground' ? PLAYGROUND_CHAMBERS[highlightedPlayground.value] : CHAMBERS[highlightedChamber.value])
 // The chamber Play highlights as it opens: the first one not yet completed, or the first when all are
 const nextChamberIndex = computed(() => Math.max(CHAMBERS.findIndex((chamber) => !isCompleted(chamber)), 0))
 const highlightedAboutEntry = computed(() => ABOUT[highlightedAbout.value])
@@ -249,6 +257,20 @@ const detailRowCount = computed(() => controlsShown.value ? LAYOUTS.length : hig
 const highlightedDetail = computed(() => controlsShown.value ? highlightedLayout.value : highlightedLink.value)
 
 /**
+ * Finds the section the menu comes back to, open, from the chamber just left.
+ * @returns Play, after a chamber of the campaign; Playground, after a playground chamber; or null on the first arrival
+ */
+function findReturningSection(): MenuSection | null {
+  if (rememberedChamber !== -1) {
+    return 'play'
+  }
+  if (rememberedPlayground !== -1) {
+    return 'playground'
+  }
+  return null
+}
+
+/**
  * Finds the layout in use in the Controls column.
  * @returns Its row's index
  */
@@ -263,6 +285,9 @@ function layoutInUseIndex(): number {
 function itemCount(): number {
   if (openSection.value === 'play') {
     return CHAMBERS.length
+  }
+  if (openSection.value === 'playground') {
+    return PLAYGROUND_CHAMBERS.length
   }
   if (openSection.value === 'settings') {
     return settings.length + 2
@@ -316,6 +341,8 @@ function sectionIndex(section: MenuSection): number {
 function highlightItem(index: number): void {
   if (openSection.value === 'play') {
     highlightedChamber.value = index
+  } else if (openSection.value === 'playground') {
+    highlightedPlayground.value = index
   } else if (openSection.value === 'about') {
     // Another About row brings another list into the third column, which starts at its top
     if (index !== highlightedAbout.value) {
@@ -433,12 +460,11 @@ function moveHighlight(offset: number): void {
 
 /**
  * Opens the highlighted section and steps into its items, with a click. Does
- * nothing with the keyboard already in the items or the third column, or on
- * Playground, which has no section.
+ * nothing with the keyboard already in the items or the third column.
  * @param click - The click to play: the move sound for Right, the accept sound for Enter, Space or a click
  */
 function openHighlightedSection(click: Sound): void {
-  if (activeColumn.value !== 'sections' || highlightedSection.value === 'playground') {
+  if (activeColumn.value !== 'sections') {
     return
   }
   openSection.value = highlightedSection.value
@@ -458,17 +484,9 @@ function openHighlightedSection(click: Sound): void {
 /**
  * Enter, Space or a click on the highlighted section: opens it, except Play
  * on a device where no chamber has been opened yet, which starts the tutorial
- * instead, and Playground, which starts the playground. Right always just
- * opens the section.
+ * instead. Right always just opens the section.
  */
 function pressHighlightedSection(): void {
-  if (activeColumn.value === 'sections' && highlightedSection.value === 'playground') {
-    Sound.START.play()
-    void router.push({
-      name: 'playground',
-    })
-    return
-  }
   const tutorial = CHAMBERS.find((chamber) => chamber.id === TUTORIAL_ID)
   if (activeColumn.value !== 'sections' || highlightedSection.value !== 'play' || hasStartedAnyChamber() || tutorial === undefined) {
     openHighlightedSection(Sound.MENU_ACCEPT)
@@ -893,7 +911,7 @@ function handleKeydown(event: KeyboardEvent): void {
       break
     case ' ':
       // Chamber, Feedback and page rows are links, which Space doesn't press; keep it from scrolling the room instead
-      if ((activeColumn.value === 'items' && openSection.value === 'play') || document.activeElement instanceof HTMLAnchorElement) {
+      if ((activeColumn.value === 'items' && (openSection.value === 'play' || openSection.value === 'playground')) || document.activeElement instanceof HTMLAnchorElement) {
         event.preventDefault()
       }
       break
@@ -941,7 +959,7 @@ onBeforeUnmount(() => {
               'menu-row-active': entry.section === highlightedSection && activeColumn === 'sections',
             }"
             type="button"
-            :aria-expanded="entry.section === 'playground' ? undefined : entry.section === openSection"
+            :aria-expanded="entry.section === openSection"
             :aria-controls="entry.section === openSection ? itemColumnId : undefined"
             :tabindex="entry.section === highlightedSection ? 0 : -1"
             @pointerdown="handleSectionPointerDown(entry.section)"
@@ -969,6 +987,7 @@ onBeforeUnmount(() => {
           <ol v-if="openSection === 'play'" class="home-row-list">
             <li v-for="(chamber, index) in CHAMBERS" :key="chamber.number">
               <ChamberRow
+                list="campaign"
                 :chamber="chamber"
                 :completed="isCompleted(chamber)"
                 :best-time="bestTime(chamber)"
@@ -977,6 +996,24 @@ onBeforeUnmount(() => {
                   'menu-row-active': index === highlightedChamber && activeColumn === 'items',
                 }"
                 :tabindex="index === highlightedChamber ? 0 : -1"
+                @focus="handleItemFocus(index)"
+                @pointermove="handleItemPointerMove(index, $event)"
+                @pointerleave="handleItemPointerLeave"
+              />
+            </li>
+          </ol>
+          <ol v-else-if="openSection === 'playground'" class="home-row-list">
+            <li v-for="(entry, index) in PLAYGROUND_CHAMBERS" :key="entry.number">
+              <ChamberRow
+                list="playground"
+                :chamber="entry"
+                :completed="false"
+                :best-time="null"
+                :class="{
+                  'menu-row-selected': index === highlightedPlayground,
+                  'menu-row-active': index === highlightedPlayground && activeColumn === 'items',
+                }"
+                :tabindex="index === highlightedPlayground ? 0 : -1"
                 @focus="handleItemFocus(index)"
                 @pointermove="handleItemPointerMove(index, $event)"
                 @pointerleave="handleItemPointerLeave"
@@ -1095,7 +1132,7 @@ onBeforeUnmount(() => {
           </ul>
         </section>
 
-        <div v-if="openSection === 'play'" class="home-column home-detail">
+        <div v-if="openSection === 'play' || openSection === 'playground'" class="home-column home-detail">
           <div class="home-detail-frame">
             <ChamberMap v-if="highlightedChamberEntry !== undefined" :chamber="highlightedChamberEntry" />
           </div>

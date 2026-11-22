@@ -2,14 +2,16 @@
 /**
  * A chamber in the home menu: a row with its name on the left and, on the
  * right, the best time and a test-subject figure that turns green once the
- * player has completed it. Picking the row starts the chamber.
+ * player has completed it. A playground chamber, which keeps no progress,
+ * shows neither. Picking the row starts the chamber.
  */
 import {Sound} from '@/game/sound'
-import type {ChamberEntry} from '@/services/chamber_catalogue'
+import type {ChamberEntry, ChamberList} from '@/services/chamber_catalogue'
 import {formatTime} from '@/services/format_time'
 
 export interface ChamberRowProps {
-  chamber: ChamberEntry
+  list: ChamberList // The list the chamber is in, which names its address: the campaign, or in development the playground chambers
+  chamber: Pick<ChamberEntry, 'number' | 'name'> // The chamber's number in its list and the name shown
   completed: boolean
   bestTime: number | null // Best time in hundredths of a second, null when none is saved
 }
@@ -21,7 +23,7 @@ defineProps<ChamberRowProps>()
   <RouterLink
     class="chamber-row menu-row"
     :to="{
-      name: 'chamber',
+      name: list === 'playground' ? 'playground' : 'chamber',
       params: {
         number: String(chamber.number),
       },
@@ -32,6 +34,7 @@ defineProps<ChamberRowProps>()
     <span class="menu-row-label">{{ chamber.name }}</span>
     <span v-if="bestTime !== null" class="chamber-row-time">{{ formatTime(bestTime) }}</span>
     <span
+      v-if="list === 'campaign'"
       class="chamber-row-subject"
       :class="{
         'chamber-row-subject-completed': completed,

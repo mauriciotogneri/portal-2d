@@ -16,30 +16,23 @@
 // the thing): a dozen of one thing side by side, read without the layout checks.
 //
 // `step` counts actions of the chamber's recorded solution: 0 is the settled
-// start, `chambers[index].steps` the completed chamber. The playground has no
-// recorded solution, so only step 0.
+// start, `chambers[index].steps` the completed chamber. The playground chambers
+// have no recorded solution, so only step 0. The list keeps the order it had
+// when chambers 1–9 were in the campaign, so the pages' indices still name the
+// same layouts.
 
-import chamber0 from '@/chambers/chamber_0.json'
-import solution0 from '@/chambers/chamber_0.solution.json'
 import chamber1 from '@/chambers/chamber_1.json'
 import solution1 from '@/chambers/chamber_1.solution.json'
-import chamber2 from '@/chambers/chamber_2.json'
-import solution2 from '@/chambers/chamber_2.solution.json'
-import chamber3 from '@/chambers/chamber_3.json'
-import solution3 from '@/chambers/chamber_3.solution.json'
-import chamber4 from '@/chambers/chamber_4.json'
-import solution4 from '@/chambers/chamber_4.solution.json'
-import chamber5 from '@/chambers/chamber_5.json'
-import solution5 from '@/chambers/chamber_5.solution.json'
-import chamber6 from '@/chambers/chamber_6.json'
-import solution6 from '@/chambers/chamber_6.solution.json'
-import chamber7 from '@/chambers/chamber_7.json'
-import solution7 from '@/chambers/chamber_7.solution.json'
-import chamber8 from '@/chambers/chamber_8.json'
-import solution8 from '@/chambers/chamber_8.solution.json'
-import chamber9 from '@/chambers/chamber_9.json'
-import solution9 from '@/chambers/chamber_9.solution.json'
-import playground from '@/dev/playground.json'
+import playground1 from '@/dev/playground/playground_1.json'
+import playground2 from '@/dev/playground/playground_2.json'
+import playground3 from '@/dev/playground/playground_3.json'
+import playground4 from '@/dev/playground/playground_4.json'
+import playground5 from '@/dev/playground/playground_5.json'
+import playground6 from '@/dev/playground/playground_6.json'
+import playground7 from '@/dev/playground/playground_7.json'
+import playground8 from '@/dev/playground/playground_8.json'
+import playground9 from '@/dev/playground/playground_9.json'
+import playground10 from '@/dev/playground/playground_10.json'
 import type {ChamberData} from '@/game/chamber_data'
 import {Renderer} from '@/game/renderer'
 import type {Action} from '@/game/rules/action'
@@ -66,7 +59,7 @@ import {SubjectTurn} from '@/game/subject_turn'
 type Listing = {
   name: string // What the page calls it
   data: unknown // Its chamber file
-  actions: readonly string[] // Its recorded solution's actions, none for the playground
+  actions: readonly string[] // Its recorded solution's actions, none for a playground chamber
   board?: string // For a line-up board, the thing it lines up; read without the layout checks
 }
 
@@ -134,17 +127,17 @@ type RenderOptions = {
 }
 
 const LIST: Listing[] = [
-  {name: 'Tutorial', data: chamber0, actions: solution0.actions},
   {name: 'Chamber 1', data: chamber1, actions: solution1.actions},
-  {name: 'Chamber 2', data: chamber2, actions: solution2.actions},
-  {name: 'Chamber 3', data: chamber3, actions: solution3.actions},
-  {name: 'Chamber 4', data: chamber4, actions: solution4.actions},
-  {name: 'Chamber 5', data: chamber5, actions: solution5.actions},
-  {name: 'Chamber 6', data: chamber6, actions: solution6.actions},
-  {name: 'Chamber 7', data: chamber7, actions: solution7.actions},
-  {name: 'Chamber 8', data: chamber8, actions: solution8.actions},
-  {name: 'Chamber 9', data: chamber9, actions: solution9.actions},
-  {name: 'Playground', data: playground, actions: []},
+  {name: 'Playground 2', data: playground2, actions: []},
+  {name: 'Playground 3', data: playground3, actions: []},
+  {name: 'Playground 4', data: playground4, actions: []},
+  {name: 'Playground 5', data: playground5, actions: []},
+  {name: 'Playground 6', data: playground6, actions: []},
+  {name: 'Playground 7', data: playground7, actions: []},
+  {name: 'Playground 8', data: playground8, actions: []},
+  {name: 'Playground 9', data: playground9, actions: []},
+  {name: 'Playground 10', data: playground10, actions: []},
+  {name: 'Playground 1', data: playground1, actions: []},
   ...BOARDS,
 ]
 

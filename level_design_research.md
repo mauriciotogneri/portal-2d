@@ -63,45 +63,33 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 | # | Game | Maker, year | Overlap with Portal 2D | Best design source |
 |---|---|---|---|---|
-| 1 | Portal | Valve, 2007 | Portals, walls that refuse portals, box on button, fizzlers, indicator lights | Developer commentary; GDC 2008 postmortem |
-| 2 | Portal: The Flash Version | We Create Stuff, 2007 | A 2D portal game; its "blue plasma wall" is exactly Portal 2D's laser; dashed link lines | Its in-game text; Ido Tal's retrospective |
-| 3 | Narbacular Drop | DigiPen students, 2005 | Portal's predecessor; what its team learned | Kim Swift, IGS 2007 |
-| 4 | Portal 2 (co-op, Puzzle Maker, community maps) | Valve, 2011 | Emitter, receiver and mirror box (its "laser", catcher and reflection cube), light barriers (hard light), antlines, fizzlers | Developer commentary; Adam Foster interview; ThinkingWithPortals forum |
-| 5 | Portal Stories: Mel | Prism Studios, 2015 | Portal 2's elements; what skipping the training cost | Prism's commentary videos |
-| 6 | Portal Reloaded | Jannis Brinkmann, 2021 | Order-dependent state | PC Gamer review; its FAQ |
-| 7 | Bridge Constructor Portal | ClockStone, 2017 | Fixed portals, execution vs insight | PC Gamer review |
-| 8 | The Talos Principle (+ Road to Gehenna) | Croteam, 2014 | Emitters, receivers, beam relays (≈ mirror boxes and portal pairs), boxes, plates | Alen Ladavac, Nordic Game 2016 |
-| 9 | The Talos Principle 2 | Croteam, 2023 | Asymmetric barriers (≈ ditch, laser, fizzler, light barrier) | Thinky Games interviews |
-| 10 | The Witness | Thekla, 2016 | Grid sequences taught without words; power cables (≈ antlines) | Blow and ten Bosch, IndieCade 2011; noclip documentary |
-| 11 | Chip's Challenge 1 and 2, and its level packs | Chuck Sommerville, 1989/2015 | Ice (≈ slide floors), force floors (≈ arrows, loosely), toggle walls, blocks and buttons, water (≈ ditches), teleports | Sommerville interviews; J.B. Lewis's essays; the Bit Busters wiki |
-| 12 | Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
-| 13 | Sokoban and Microban | Hiroyuki Imabayashi, 1981; David W. Skinner, 2000 | Boxes on buttons | Imabayashi interview; Sokoban difficulty research |
-| 14 | Stephen's Sausage Roll | Stephen Lavelle, 2016 | New consequences of old elements (the twist chamber) | Draknek & Friends podcast; GMTK |
-| 15 | Sokobond, A Good Snowman Is Hard to Build, Cosmic Express, A Monster's Expedition | Alan Hazelden and collaborators, 2013–2020 | Grid, turn-based, small rooms | Hazelden's talks and interviews |
-| 16 | Bonfire Peaks | Corey Martin, 2021 | The one game here whose boxes are carried | Game Developer interview |
-| 17 | Snakebird | Noumenon Games, 2015 | "The thing you need also gets in your way" (≈ the carried box) | GMTK; Snakebird solver research |
-| 18 | Patrick's Parabox | Patrick Traynor, 2022 | Entering boxes joins far places (≈ portals, loosely) | Traynor, GDC 2024; his idea strategies |
-| 19 | Baba Is You | Arvi Teikari, 2019 | Turn-based single-screen grid, solo designer | Teikari's talks; GMTK |
-| 20 | Lara Croft GO, Hitman GO | Square Enix Montréal, 2014–2015 | Levers (≈ switches), plates, pillars (≈ boxes), line-of-sight "eyes" (≈ rays) | Antoine Routon's GDC 2016 postmortem |
-| 21 | Q.U.B.E. and Q.U.B.E. 2 | Toxic Games, 2011/2018 | Surfaces that respond or don't (≈ walls that take portals or don't), light-beam rooms | Game Developer; 80.lv |
-| 22 | Quantum Conundrum | Airtight Games (Kim Swift), 2012 | Per-room limits on the strongest tool | Kim Swift interviews |
-| 23 | Antichamber | Alexander Bruce, 2013 | Beams cut by blocks; ordering by introductoriness | Bruce, GDC 2014 |
-| 24 | Mechanic sources: Ricochet Robots, Pokémon and Zelda ice puzzles, Zelda dungeons, Laser Maze, Khet, Puzzledorf | Various | Slide stoppers, one-way structure, beam routing, switch logic | Kluiver's ice-block thesis; Mark Brown's Boss Keys; ThinkFun rules; Stuart Burfield's posts |
+| 1 | Narbacular Drop | DigiPen students, 2005 | Portal's predecessor; what its team learned | Kim Swift, IGS 2007 |
+| 2 | Portal 2 (co-op, Puzzle Maker, community maps) | Valve, 2011 | Emitter, receiver and mirror box (its "laser", catcher and reflection cube), light barriers (hard light), antlines, fizzlers | Developer commentary; Adam Foster interview; ThinkingWithPortals forum |
+| 3 | Portal Stories: Mel | Prism Studios, 2015 | Portal 2's elements; what skipping the training cost | Prism's commentary videos |
+| 4 | Portal Reloaded | Jannis Brinkmann, 2021 | Order-dependent state | PC Gamer review; its FAQ |
+| 5 | Bridge Constructor Portal | ClockStone, 2017 | Fixed portals, execution vs insight | PC Gamer review |
+| 6 | The Talos Principle (+ Road to Gehenna) | Croteam, 2014 | Emitters, receivers, beam relays (≈ mirror boxes and portal pairs), boxes, plates | Alen Ladavac, Nordic Game 2016 |
+| 7 | The Talos Principle 2 | Croteam, 2023 | Asymmetric barriers (≈ ditch, laser, fizzler, light barrier) | Thinky Games interviews |
+| 8 | The Witness | Thekla, 2016 | Grid sequences taught without words; power cables (≈ antlines) | Blow and ten Bosch, IndieCade 2011; noclip documentary |
+| 9 | Chip's Challenge 1 and 2, and its level packs | Chuck Sommerville, 1989/2015 | Ice (≈ slide floors), force floors (≈ arrows, loosely), toggle walls, blocks and buttons, water (≈ ditches), teleports | Sommerville interviews; J.B. Lewis's essays; the Bit Busters wiki |
+| 10 | Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
+| 11 | Sokoban and Microban | Hiroyuki Imabayashi, 1981; David W. Skinner, 2000 | Boxes on buttons | Imabayashi interview; Sokoban difficulty research |
+| 12 | Stephen's Sausage Roll | Stephen Lavelle, 2016 | New consequences of old elements (the twist chamber) | Draknek & Friends podcast; GMTK |
+| 13 | Sokobond, A Good Snowman Is Hard to Build, Cosmic Express, A Monster's Expedition | Alan Hazelden and collaborators, 2013–2020 | Grid, turn-based, small rooms | Hazelden's talks and interviews |
+| 14 | Bonfire Peaks | Corey Martin, 2021 | The one game here whose boxes are carried | Game Developer interview |
+| 15 | Snakebird | Noumenon Games, 2015 | "The thing you need also gets in your way" (≈ the carried box) | GMTK; Snakebird solver research |
+| 16 | Patrick's Parabox | Patrick Traynor, 2022 | Entering boxes joins far places (≈ portals, loosely) | Traynor, GDC 2024; his idea strategies |
+| 17 | Baba Is You | Arvi Teikari, 2019 | Turn-based single-screen grid, solo designer | Teikari's talks; GMTK |
+| 18 | Lara Croft GO, Hitman GO | Square Enix Montréal, 2014–2015 | Levers (≈ switches), plates, pillars (≈ boxes), line-of-sight "eyes" (≈ rays) | Antoine Routon's GDC 2016 postmortem |
+| 19 | Q.U.B.E. and Q.U.B.E. 2 | Toxic Games, 2011/2018 | Surfaces that respond or don't (≈ walls that take portals or don't), light-beam rooms | Game Developer; 80.lv |
+| 20 | Quantum Conundrum | Airtight Games (Kim Swift), 2012 | Per-room limits on the strongest tool | Kim Swift interviews |
+| 21 | Antichamber | Alexander Bruce, 2013 | Beams cut by blocks; ordering by introductoriness | Bruce, GDC 2014 |
+| 22 | Mechanic sources: Ricochet Robots, Pokémon and Zelda ice puzzles, Zelda dungeons, Laser Maze, Khet, Puzzledorf | Various | Slide stoppers, one-way structure, beam routing, switch logic | Kluiver's ice-block thesis; Mark Brown's Boss Keys; ThinkFun rules; Stuart Burfield's posts |
 
 ## Part 2 — How each game's levels were designed
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### Portal: The Flash Version (We Create Stuff, 2007)
-
-**What it is.** A free side-view 2D Flash game by Hen Mazolski (levels, art) and Ido Tal (code), built from Portal's trailers alone and released a day before Portal; about 40 "tasks" ([Combine OverWiki](https://combineoverwiki.net/wiki/Portal:_The_Flash_Version), [Gamezebo interview](https://www.gamezebo.com/news/countdown-to-the-zeebys-portal-the-flash-version/)). Mazolski later rebuilt the tasks in 3D as a map pack, and Valve took some of them for Portal: Still Alive ([Dread Central](https://www.dreadcentral.com/editorials/480683/from-mod-to-main-event-in-sound-mind-interview-with-ido-tal/)).
-
-**Overlap.** Portal-proof walls; a "blue plasma wall" that blocks the body but not shots (exactly Portal 2D's laser); buttons held by the player or a cube; energy balls into receivers; elements linked by dashed yellow lines (antlines).
-
-**What its makers learned.** Tal, looking back: "our level design focused a bit much on agility and speed rather than actual puzzle-solving" ([Medium retrospective](https://medium.com/super-jump/portal-the-flash-version-10e986930d1f), seen in search snippets only). Every element came with an on-screen text paragraph, the approach Valve had dropped. Its order front-loads movement skill and holds back buttons and cubes until task 19. When the tasks went to 3D, the single-element intro tasks were the ones dropped; the real puzzles survived the change of dimension ([map pack page](https://combineoverwiki.net/wiki/Portal:_The_Flash_Version_MapPack)).
-
-**Borrow.** "Shoot past what you can't walk past" (a laser run, a wall beyond it that takes portals): the laser's teach chamber. Task 04's move: right after the free-portal tasks, take options away with portal-proof walls.
 
 ### Narbacular Drop (DigiPen students, 2005)
 

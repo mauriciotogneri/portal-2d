@@ -15,6 +15,7 @@ import {SPRITE_OVERHANG, SPRITE_SHAPES, SPRITE_TILE_SIZE, STRIP_TILES, type Spri
 import {loadSprites, spriteFileReport, spriteOf} from '@/game/sprite_sources'
 import {TilePainter} from '@/game/tile_painter'
 import {CHAMBERS} from '@/services/chamber_catalogue'
+import {PLAYGROUND_CHAMBERS} from '@/services/playground'
 
 // Development only (src/dev/sprite_gallery.html, served by `npm run dev`,
 // never built): where the author checks the chamber sprites while drawing
@@ -455,12 +456,15 @@ function joinBoardState(kind: JoinBoardKind): RulesState {
 
 /**
  * The smallest tile the home menu's map draws a chamber at in a 1920 × 1080
- * window, at pixel ratio 1: the largest chamber's, fitted to the map as the
- * renderer fits it.
+ * window, at pixel ratio 1: the largest chamber's, a playground chamber's
+ * included, fitted to the map as the renderer fits it.
  * @returns Side of a tile, in canvas pixels
  */
 function menuMapTileSize(): number {
-  const sizes = CHAMBERS.map((entry) => Math.min(Math.trunc(MENU_MAP_WIDTH / entry.data.size.width), Math.trunc(MENU_MAP_HEIGHT / entry.data.size.height)))
+  const sizes = [
+    ...CHAMBERS,
+    ...PLAYGROUND_CHAMBERS,
+  ].map((entry) => Math.min(Math.trunc(MENU_MAP_WIDTH / entry.data.size.width), Math.trunc(MENU_MAP_HEIGHT / entry.data.size.height)))
 
   return Math.min(...sizes)
 }
@@ -568,14 +572,25 @@ function buildJoins(): void {
 }
 
 /**
- * Fills the chambers section: each chamber's settled start.
+ * Fills the chambers section: each chamber's settled start, the campaign's,
+ * then the playground chambers'.
  */
 function buildChambers(): void {
   const section = findElement('chambers-list')
   const figures: HTMLElement[] = []
+  const listed = [
+    ...CHAMBERS.map((entry) => ({
+      caption: (entry.name === `Chamber ${entry.number}`) ? entry.name : `${entry.name} (chamber ${entry.number})`,
+      data: entry.data,
+    })),
+    ...PLAYGROUND_CHAMBERS.map((entry) => ({
+      caption: entry.name,
+      data: entry.data,
+    })),
+  ]
 
-  for (const entry of CHAMBERS) {
-    const caption = (entry.name === `Chamber ${entry.number}`) ? entry.name : `${entry.name} (chamber ${entry.number})`
+  for (const entry of listed) {
+    const caption = entry.caption
 
     try {
       figures.push(makeFigure(drawState(playChamber(entry.data, []), CHAMBER_TILE_SIZE), caption))

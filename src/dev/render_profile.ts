@@ -1,4 +1,4 @@
-import chamberThreeData from '@/chambers/chamber_3.json'
+import playgroundFourData from '@/dev/playground/playground_4.json'
 import {Renderer} from '@/game/renderer'
 import {CompiledChamber} from '@/game/rules/compiled_chamber'
 import {loadChamber} from '@/game/rules/load_chamber'
@@ -8,7 +8,7 @@ import {loadSprites} from '@/game/sprite_sources'
 
 // Development only (src/dev/render_profile.html, served by `npm run dev`,
 // never built): the baseline for the 60 fps checks, its numbers kept in
-// docs/performance.md. Draws chamber 3,
+// docs/performance.md. Draws playground 4 (chamber 3 until it left the campaign),
 // the largest, at its settled start with the game's renderer, sized as the
 // chamber screen sizes it in a 1920 × 1080 window, and redraws it on every
 // animation frame, with what moves with time alone (the glows) at that
@@ -211,15 +211,15 @@ function readGpuName(): string {
 }
 
 /**
- * Loads chamber 3 and settles its start, as a load shows it.
+ * Loads playground 4 and settles its start, as a load shows it.
  * @returns The compiled chamber and its settled start
  * @throws Error when the rules can't load the chamber
  */
 function loadChamberThree(): ProfiledChamber {
-  const loaded = loadChamber(chamberThreeData)
+  const loaded = loadChamber(playgroundFourData)
 
   if (loaded.chamber === null) {
-    throw new Error(`The rules can't load chamber 3: ${loaded.problems.map((problem) => problem.message).join('; ')}`)
+    throw new Error(`The rules can't load playground 4: ${loaded.problems.map((problem) => problem.message).join('; ')}`)
   }
 
   const chamber = new CompiledChamber(loaded.chamber)
@@ -327,7 +327,7 @@ async function profile(): Promise<void> {
   }
 
   const lines = [
-    `Chamber 3 (${chamber.width} × ${chamber.height} tiles), its settled start redrawn every frame`,
+    `Playground 4 (${chamber.width} × ${chamber.height} tiles), its settled start redrawn every frame`,
     `Stage: ${STAGE_WIDTH} × ${STAGE_HEIGHT} page pixels, as the chamber screen leaves it in a 1920 × 1080 window`,
     `Browser: ${navigator.userAgent}`,
     `GPU: ${readGpuName()}`,
