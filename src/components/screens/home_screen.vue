@@ -5,7 +5,8 @@
  * nothing else. Opening a section with Enter, Right or a click shows its
  * chambers, settings or About rows in the second column, starting level with
  * the section's row, Play's on the first chamber not yet completed (the first
- * chamber when all are). Until any chamber has been opened on this device, Enter
+ * chamber when all are); Play's and Playground's rows scroll on their own, so
+ * the logo, the sections and the map stay put. Until any chamber has been opened on this device, Enter
  * or a click on Play starts the tutorial instead, and only Right opens its
  * list. The third column follows the highlight there: Play shows the
  * chamber's map, About shows a list of pages or the changelog, and Settings'
@@ -31,6 +32,7 @@ import {computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useTemplateR
 import {useRouter} from 'vue-router'
 import ChamberMap from '@/components/chamber_map.vue'
 import ChamberRow from '@/components/chamber_row.vue'
+import ChamberScroller from '@/components/chamber_scroller.vue'
 import ChangelogList from '@/components/changelog_list.vue'
 import ConfirmDialog from '@/components/confirm_dialog.vue'
 import CustomControlsDialog from '@/components/custom_controls_dialog.vue'
@@ -221,6 +223,10 @@ const sectionColumn = useTemplateRef<HTMLElement>('sectionColumn')
 const itemColumn = useTemplateRef<HTMLElement>('itemColumn')
 const detailColumn = useTemplateRef<HTMLElement>('detailColumn')
 const changelogScroller = useTemplateRef<HTMLElement>('changelogScroller')
+const chamberScroller = useTemplateRef<InstanceType<typeof ChamberScroller>>('chamberScroller')
+
+// Whether the open section lists chambers, Play's or the playground's, whose list scrolls on its own
+const chamberListOpen = computed(() => openSection.value === 'play' || openSection.value === 'playground')
 
 const highlightedItem = computed(() => {
   if (openSection.value === 'play') {
@@ -397,6 +403,21 @@ function focusRow(column: MenuColumn, index: number, preventScroll = false): voi
 }
 
 /**
+ * Gives a row of the open section the keyboard. A chamber list scrolls itself
+ * to the row instead of the browser, keeping one more row in view beyond it.
+ * @param index - The row's index in the second column
+ * @param glide - True for a chamber list to glide to the row (a key moving the highlight), false to jump (the list appearing)
+ */
+function focusItem(index: number, glide: boolean): void {
+  if (!chamberListOpen.value) {
+    focusRow('items', index)
+    return
+  }
+  focusRow('items', index, true)
+  chamberScroller.value?.reveal(index, glide)
+}
+
+/**
  * Gives the third column the keyboard: the highlighted page or layout, or the changelog.
  */
 function focusDetail(): void {
@@ -455,7 +476,7 @@ function moveHighlight(offset: number): void {
     highlightItem(nextIndex)
     Sound.MENU_MOVE.play()
   }
-  focusRow('items', nextIndex)
+  focusItem(nextIndex, true)
 }
 
 /**
@@ -477,7 +498,7 @@ function openHighlightedSection(click: Sound): void {
   click.play()
   // The item rows are only drawn once the section is open
   void nextTick(() => {
-    focusRow('items', highlightedItem.value)
+    focusItem(highlightedItem.value, false)
   })
 }
 
@@ -923,7 +944,7 @@ onMounted(() => {
   playMusic('menu')
   // The focus handlers find the state already set, so arriving makes no click
   if (activeColumn.value === 'items') {
-    focusRow('items', highlightedItem.value)
+    focusItem(highlightedItem.value, false)
   } else {
     focusRow('sections', sectionIndex(highlightedSection.value))
   }
@@ -979,47 +1000,53 @@ onBeforeUnmount(() => {
           ref="itemColumn"
           :key="`items-${openSection}`"
           class="home-column home-items"
+          :class="{
+            'home-items-scrolling': chamberListOpen,
+          }"
           :style="{
             '--menu-cascade-rows': sectionIndex(openSection),
           }"
           :aria-labelledby="sectionRowId(openSection)"
         >
-          <ol v-if="openSection === 'play'" class="home-row-list">
-            <li v-for="(chamber, index) in CHAMBERS" :key="chamber.number">
-              <ChamberRow
-                list="campaign"
-                :chamber="chamber"
-                :completed="isCompleted(chamber)"
-                :best-time="bestTime(chamber)"
-                :class="{
-                  'menu-row-selected': index === highlightedChamber,
-                  'menu-row-active': index === highlightedChamber && activeColumn === 'items',
-                }"
-                :tabindex="index === highlightedChamber ? 0 : -1"
-                @focus="handleItemFocus(index)"
-                @pointermove="handleItemPointerMove(index, $event)"
-                @pointerleave="handleItemPointerLeave"
-              />
-            </li>
-          </ol>
-          <ol v-else-if="openSection === 'playground'" class="home-row-list">
-            <li v-for="(entry, index) in PLAYGROUND_CHAMBERS" :key="entry.number">
-              <ChamberRow
-                list="playground"
-                :chamber="entry"
-                :completed="false"
-                :best-time="null"
-                :class="{
-                  'menu-row-selected': index === highlightedPlayground,
-                  'menu-row-active': index === highlightedPlayground && activeColumn === 'items',
-                }"
-                :tabindex="index === highlightedPlayground ? 0 : -1"
-                @focus="handleItemFocus(index)"
-                @pointermove="handleItemPointerMove(index, $event)"
-                @pointerleave="handleItemPointerLeave"
-              />
-            </li>
-          </ol>
+          <!-- A chamber list scrolls on its own, so the logo, the sections and the map stay put -->
+          <ChamberScroller v-if="chamberListOpen" ref="chamberScroller" :active="activeColumn === 'items'">
+            <ol v-if="openSection === 'play'" class="home-row-list">
+              <li v-for="(chamber, index) in CHAMBERS" :key="chamber.number">
+                <ChamberRow
+                  list="campaign"
+                  :chamber="chamber"
+                  :completed="isCompleted(chamber)"
+                  :best-time="bestTime(chamber)"
+                  :class="{
+                    'menu-row-selected': index === highlightedChamber,
+                    'menu-row-active': index === highlightedChamber && activeColumn === 'items',
+                  }"
+                  :tabindex="index === highlightedChamber ? 0 : -1"
+                  @focus="handleItemFocus(index)"
+                  @pointermove="handleItemPointerMove(index, $event)"
+                  @pointerleave="handleItemPointerLeave"
+                />
+              </li>
+            </ol>
+            <ol v-else class="home-row-list">
+              <li v-for="(entry, index) in PLAYGROUND_CHAMBERS" :key="entry.number">
+                <ChamberRow
+                  list="playground"
+                  :chamber="entry"
+                  :completed="false"
+                  :best-time="null"
+                  :class="{
+                    'menu-row-selected': index === highlightedPlayground,
+                    'menu-row-active': index === highlightedPlayground && activeColumn === 'items',
+                  }"
+                  :tabindex="index === highlightedPlayground ? 0 : -1"
+                  @focus="handleItemFocus(index)"
+                  @pointermove="handleItemPointerMove(index, $event)"
+                  @pointerleave="handleItemPointerLeave"
+                />
+              </li>
+            </ol>
+          </ChamberScroller>
           <ul v-else-if="openSection === 'settings'" class="home-row-list">
             <li v-for="(setting, index) in settings" :key="setting.label">
               <VolumeRow
@@ -1235,24 +1262,33 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* The logo clear of the menu below it; with the logo, as much height as the menu had below the
-   earlier text wordmark, so the open Play section still fits the same windows */
+/* The logo clear of the menu below it, and exactly the window's height, so the menu below takes
+   what the logo leaves and a chamber list can scroll within it; a window too short for the menu
+   scrolls the room instead */
 .home-inner {
   display: flex;
   flex-direction: column;
   gap: 3rem;
-  min-height: 100%;
+  height: 100%;
+}
+
+.room-title {
+  flex: none;
 }
 
 /* Three fixed tracks, so the sections stay put when the open section's items (wide enough for the
    longest volume's name beside its ramp) and, widest, Play's chamber map appear beside them. The
-   sections' track is wide enough for the longest of them, the development-only Playground */
+   sections' track is wide enough for the longest of them, the development-only Playground. One row
+   as tall as the room leaves, which a chamber list fills */
 .home-menu {
   --menu-row-gap: 0.25rem;
 
   display: grid;
+  flex: 1 1 auto;
   grid-template-columns: minmax(16.5rem, 1fr) minmax(28rem, 1.7fr) 2.6fr;
+  grid-template-rows: minmax(0, 1fr);
   align-items: start;
+  min-height: 0;
   column-gap: 3rem;
 }
 
@@ -1266,6 +1302,14 @@ onBeforeUnmount(() => {
 
 .home-items {
   grid-column: 2;
+}
+
+/* A chamber list's column runs down to the room's foot, and its list takes what the cascade leaves */
+.home-items-scrolling {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  min-height: 0;
 }
 
 .home-detail {

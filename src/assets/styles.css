@@ -146,11 +146,12 @@ a {
   background: var(--color-wall) url('@/assets/images/facility_room.webp') center / cover no-repeat;
 }
 
-/* Padding keeps the content on the room's back wall, clear of the side walls and floor */
+/* Padding keeps the content on the room's back wall, clear of the side walls and floor: a chamber
+   list scrolling in the home menu ends 8vh above the window's foot, where the wall meets the floor */
 .room-inner {
   max-width: calc(90rem + 20vw);
   margin: 0 auto;
-  padding: 3.5rem 10vw 12vh;
+  padding: 3.5rem 10vw 8vh;
 }
 
 /* Lets the sign title inside set its own size */
