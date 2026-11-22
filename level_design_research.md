@@ -64,7 +64,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 | Game | Maker, year | Overlap with Portal 2D | Best design source |
 |---|---|---|---|
-| Baba Is You | Arvi Teikari, 2019 | Turn-based single-screen grid, solo designer | Teikari's talks; GMTK |
 | Lara Croft GO, Hitman GO | Square Enix Montréal, 2014–2015 | Levers (≈ switches), plates, pillars (≈ boxes), line-of-sight "eyes" (≈ rays) | Antoine Routon's GDC 2016 postmortem |
 | Q.U.B.E. and Q.U.B.E. 2 | Toxic Games, 2011/2018 | Surfaces that respond or don't (≈ walls that take portals or don't), light-beam rooms | Game Developer; 80.lv |
 | Quantum Conundrum | Airtight Games (Kim Swift), 2012 | Per-room limits on the strongest tool | Kim Swift interviews |
@@ -75,28 +74,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### Baba Is You (Arvi Teikari, 2019)
-
-**What it is.** A turn-based, single-screen block pusher whose rules ("WALL IS STOP", "FLAG IS WIN") are themselves pushable words. About 220 levels, one designer, two years of testers. Its rule editing doesn't carry over, but its turn-based grid, whole level on screen and single designer make its process the closest to Portal 2D's situation.
-
-**How the levels were made.**
-- *Reverse engineering.* Teikari combined elements to find what surprised him ("what would happen if I have this and this thing coexisting?"), then built a level that forces that interaction so "the player has to see the cool thing to solve the level" ([GDC Plays](https://www.youtube.com/watch?v=RCk0bipJx84); [Game Developer 2019](https://www.gamedeveloper.com/design/designing-i-baba-is-you-i-s-delightfully-innovative-rule-writing-system)). GMTK's breakdown of *Baba Doesn't Respond*: the solution is simple, and Teikari then added one restriction per shortcut, working backwards, "locking up doors behind him", which the player opens in the opposite order ([GMTK](https://www.youtube.com/watch?v=7zLwa4bztWs)).
-- *Restrictions must lead to the catch.* Adding elements to hide an obvious answer "was sometimes also bad", because it could "drive the player's attention away from the cool twist" (GDC Plays). GMTK: the restrictions are "never red herrings or pointless busy work".
-- *First levels fall out of the exhaustive pass.* Going through every meaningful interaction, "eventually I get levels where the 'trick' is mostly just the basic functionality of a specific element"; those open each area (GMTK).
-- *Same room, roles swapped.* Level 2 is level 1's room with every role swapped, teaching that objects have no fixed meaning (GMTK).
-- *Difficulty from what's missing.* Level 7 drops the WALL IS STOP rule almost every earlier level had, and players take a long time to notice they can walk through walls; he sees more potential in "difficulty [that] comes from what is missing instead of what is there" ([Gamelab 2019](https://www.youtube.com/watch?v=8eTFea_UZcc)).
-- *Overload.* "The levels very easily become overwhelming as the number of initially-active rules increases" (Game Developer 2019).
-- *Wrong lessons.* Belts moving you inside walls felt intuitive to him, not to testers, so he removed them; "Almost every single level in the game was changed at least once" ([Talk & Dev](https://www.youtube.com/watch?v=v7ICYHL5MD4)). "DOOR IS SHUT" made players think SHUT meant solid: a naming failure of his teaching (GDC Plays).
-- *Unintended solutions.* Allowed early, because "even the unintended, more trivial solutions often contain some element that's new to the player", then progressively restricted ([Road to the IGF](https://www.gamedeveloper.com/business/road-to-the-igf-hempuli-oy-s-i-baba-is-you-i-)). Some tester solutions became variant levels of their own ([MCV](https://mcvuk.com/development-news/when-we-made-baba-is-you/)). One level kept an unintended solution he never fixed, "so most people don't solve it the way I thought" (Gamelab).
-- *Engine edge cases.* Where rule combinations worked badly, he designed levels that never show them, "kind towards the players" ([GDC 2020](https://www.youtube.com/watch?v=Jf5O8S5GiOo)).
-- *Ordering.* Areas are grouped by the words they introduce, so each "resets the difficulty curve at least a little bit"; the map always offers several open levels, because "it's very easy to get mentally stuck"; only about 30 levels are needed to reach the end. He underestimated the difficulty: "very easy for that designer to become blind to a lot of the difficulty" (MCV).
-- *Aim.* A surprised laugh: "it makes sense but I didn't expect it" (Talk & Dev).
-
-**Borrow.**
-- *Restriction layering.* Build the room where the intended move works with nothing else, then play it as an adversary; for each shortcut, add exactly one restriction and note what it blocks. Portal 2D's restriction kit: blocked walls, moving a wall that takes portals out of a sightline, a fizzler across the approach, a light barrier (blocks walking, shots and rays), a laser (walking only), shrinking the floor where a box can rest. Delete any restriction that blocks nothing: it has become a red herring.
-- *The missing rule.* After several chambers where lasers and light barriers both appear as barriers, a chamber whose only wall that takes portals lies across a laser row: shots fly over lasers, where a light barrier would stop them. Or a door with an antline to a button and no box, so the subject holds the button itself and then reaches the door by portal.
-- *Sacrifice as transport* (from GMTK's reading of *Tiny Pond*). A destroyed box goes back to its start, and a start can be a button: carrying the box into a fizzler from far away presses its start button again. Your guide lists this as a bypass to avoid (guideline 6); used on purpose, it's a twist.
 
 ### Lara Croft GO (2015) and Hitman GO (2014) (Square Enix Montréal)
 
