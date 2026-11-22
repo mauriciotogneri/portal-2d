@@ -4,7 +4,7 @@ Portal 2D — a desktop-only, keyboard-driven puzzle game: the player crosses gr
 
 `todo/` holds the author's roadmap: one file per stage (`creator_platform.md`; stages 00, 01, 03 and 04a are done, stage 02 stopped after its prototype, and their files are removed; what stage 02 learned is in `docs/solver.md`), and `future.md`, ideas for mechanics beyond the plan and how a mechanic was built. They are not planned work; do not build any of it unless asked, and only tick a stage's checkboxes for steps you were asked to do and finished.
 
-`level_design_research.md` (in the root) is outside research on puzzle level design: tips by topic for designing this game's chambers, drawn from the makers of similar games and generic writing, those `docs/level_design.md` lacks listed as candidate guidelines, a pattern catalog mapped to this game's elements, and chamber ideas. Read it when designing chambers; it is reference, not rules or planned work.
+`docs/spoilers/` holds what gives chambers away: each campaign chamber's notes (`chamber_<id>.md`: its idea, intended route, lure, restrictions and playtests; `docs/level_design.md`, guideline 52) and the idea pool (`ideas.md`), chamber ideas with no chamber yet. The author plays every draft cold before reading its notes, so read and write them when designing chambers, but never tell the author a chamber's key move, layout or route before they have played it: hand over only its address.
 
 ## Layout
 
@@ -27,11 +27,12 @@ docs/elements.md                  elements, chamber format, rules and their inte
 docs/game_summary.md              the whole game in plain words
 docs/hints.md                     tutorial hints, designed but not built
 docs/interface.md                 screens, menus, dialogs, keys, sounds, music, saved data, analytics, loading screen and look
-docs/level_design.md              guidelines for designing chambers
+docs/level_design.md              the handbook for designing chambers: principles, the campaign, building, element rules, patterns, checks
 docs/performance.md               the 60 fps checks and how to run the render profile
 docs/solver.md                    the solver: running it, how it works, what was measured
 docs/solving_by_hand.md           solving a chamber by reasoning, for chambers the solver can't handle
 docs/sprites.md                   sprites, drawing order and the effects drawn in code
+docs/spoilers/                    each campaign chamber's notes and the idea pool (see above)
 public/                           favicon only
 scripts/                          deploy, audio evening and engine check scripts, with their fixtures
 tools/detail_mixer/               mixer pages for choosing a look, never shipped (its README.md explains them)
@@ -55,7 +56,7 @@ todo/                             the author's roadmap (not planned work, see ab
 - **No test suite**: This project has no tests by design. TypeScript, the type-aware lint rules and the engine checks (the recorded solutions, behaviour fixtures and solver fixtures replayed by `npm run replay:check`, the solver check, and the random walk) are the safety net — do not weaken `strict` or `noUncheckedIndexedAccess`, and do not add `any` to silence an error.
 - **TypeScript projects**: `tsconfig.json` only references `tsconfig.app.json` (browser, `src/`, extends `@vue/tsconfig/tsconfig.dom.json`), `tsconfig.node.json` (`vite.config.ts`, extends `@tsconfig/node24`) and `tsconfig.scripts.json` (Node without the DOM, extends `@tsconfig/node24`: `scripts/`, the rules in `src/game/rules/`, the solver in `src/solver/`, the shared files they import (the chamber catalogue and the playground list among them), the chamber JSON, the playground chambers' and the fixture and solver fixture chambers; a file the scripts reach must be in its `include`, or the build fails; scripts import each other through its own `@scripts/` alias). An option the bases don't already cover must be set in all three.
 - **Deploy**: `npm run deploy` runs `npm run verify` (which builds into `dist/`, git-ignored), stopping if any check fails, then `firebase deploy --only hosting` (project `portal-2d`); `npm run deploy -- -f` skips the checks and runs only `npm run build` before deploying. `firebase.json` rewrites every path to `/index.html` for history-mode routing.
-- **Doc maintenance**: After changes, check whether `AGENTS.md`, `docs/elements.md`, `docs/game_summary.md`, `docs/hints.md`, `docs/interface.md`, `docs/level_design.md`, `docs/performance.md`, `docs/solver.md`, `docs/solving_by_hand.md` and `docs/sprites.md` need updating. `docs/level_design.md` grows with what we learn: whenever designing, changing or playing a chamber, or changing a rule or an element, turns up a new pitfall or tip for chamber design, add it there as a guideline, and fix or remove any guideline that no longer holds.
+- **Doc maintenance**: After changes, check whether `AGENTS.md`, `docs/elements.md`, `docs/game_summary.md`, `docs/hints.md`, `docs/interface.md`, `docs/level_design.md`, `docs/performance.md`, `docs/solver.md`, `docs/solving_by_hand.md` and `docs/sprites.md` need updating. `docs/level_design.md` grows with what we learn: whenever designing, changing or playing a chamber, or changing a rule or an element, turns up a new pitfall or tip for chamber design, add it there as a guideline marked `Must` or `Should`, and fix or remove any guideline that no longer holds.
 
 ## TypeScript
 
