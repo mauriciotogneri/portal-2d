@@ -57,7 +57,8 @@ function moveFocus(offset: number): void {
 /**
  * The arrow keys along the actions move between them (Up and Down when
  * stacked, Left and Right in a row); the other two do nothing. Tab wraps
- * inside the dialog. A held (repeating) Enter or Space presses nothing.
+ * inside the dialog. A held (repeating) Enter or Space presses nothing, and a
+ * held arrow moves nothing.
  * @param event - Keyboard event
  */
 function handleKeydown(event: KeyboardEvent): void {
@@ -75,14 +76,16 @@ function handleKeydown(event: KeyboardEvent): void {
     case 'ArrowDown':
     case 'ArrowRight':
       event.preventDefault()
-      if (stacked === (event.key === 'ArrowDown')) {
+      // Nor must a held arrow, such as a move key kept down while walking out
+      // of the exit, move focus off it
+      if (!event.repeat && stacked === (event.key === 'ArrowDown')) {
         moveFocus(1)
       }
       break
     case 'ArrowUp':
     case 'ArrowLeft':
       event.preventDefault()
-      if (stacked === (event.key === 'ArrowUp')) {
+      if (!event.repeat && stacked === (event.key === 'ArrowUp')) {
         moveFocus(-1)
       }
       break
