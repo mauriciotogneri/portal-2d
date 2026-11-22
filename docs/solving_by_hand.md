@@ -75,8 +75,9 @@ print('    ' + ''.join(f'{x:<{cell_width}}' for x in range(width)))
 for y in range(height - 1, -1, -1):
     print(f'{y:>2}  ' + ''.join(f'{cells.get((x, y)) or ".":<{cell_width}}' for x in range(width)))
 
-# The moving parts: every element with an id, how it starts, and what acts on it;
-# then any element without an id that starts unblocked, since it stays that way
+# The moving parts: every element with an id, how it starts (blocked when a link
+# reaches it, before the start settles), and what acts on it; then any element
+# without an id that starts unblocked, since it stays that way
 STATES = {
     'blockedWalls': ('refusing portals', 'taking portals'),
     'emitters': ('off', 'on'),
@@ -101,7 +102,8 @@ for field, entry in sorted(parts, key=lambda part: part[1].get('id', 0)):
     if field == 'arrows':
         start = f"pointing {entry['direction']}" + (f" (turns to {entry['turnedDirection']})" if 'turnedDirection' in entry else '')
     elif field in STATES:
-        start = STATES[field][0 if entry.get('blocked', field != 'emitters') else 1]
+        linked = bool(acted_on_by.get(entry.get('id')))
+        start = STATES[field][0 if linked or entry.get('blocked', field != 'emitters') else 1]
     else:
         start = None
     if 'xFrom' in entry:
@@ -206,14 +208,14 @@ The script proves the route plays. To make it the chamber's recorded solution, p
 
 `docs/elements.md` is the authority; this is what a solver has to keep in mind, in one place. Positions are `(x,y)` with y growing upwards, so up is a higher y and the map's top row is the highest. A wall's face is written as the wall tile and the side it is on: `(4,16)E` is the east face of wall `(4,16)`, which looks onto `(5,16)`.
 
-**What never changes.** `blocked` is true when a file leaves it out, but on an emitter, where it is false. Only a link changes it, and only an element with an `id` can be linked. So an element without an id keeps its starting state for good: a laser without an id is always on, a ditch always open, a fizzler always on, a blocked wall never takes a portal. In most chambers nearly everything is fixed. The few elements with ids are the puzzle's moving parts.
+**What never changes.** `blocked` is true when a file leaves it out, but on an emitter, where it is false; an element a link reaches never has it, and starts blocked (an emitter off) until the start settles. Only a link changes it, and only an element with an `id` can be linked. So an element without an id keeps its starting state for good: a laser without an id is always on, a ditch always open, a fizzler always on, a blocked wall never takes a portal. In most chambers nearly everything is fixed. The few elements with ids are the puzzle's moving parts.
 
 **Moving.**
 - A move key faces that way and steps in one action. A turn (a move key with the turn key held) only faces, unless the subject already faces that way, when it steps.
 - Walking into anything it can't enter only turns the subject that way.
 - It can't enter an open ditch, a laser or light barrier that is on, a closed door or exit, a tile where a box rests, or an arrow from any way but the arrow's own. Fizzlers, buttons, switches and rays never stop it.
 - On an arrow, the subject can move only the arrow's way; the other three keys do nothing.
-- A linked arrow (one with an id and a turned way) points its turned way, a quarter turn from its own, while its link unblocks it: for good once a switch is used, while a button is held or a receiver lit. Turning, it turns a subject standing on it to face its new way, which is then the only way off.
+- A linked arrow (one with an id and a turned way) points its turned way, a quarter turn from its own, while every button, switch and receiver linking it is active: a button held, a receiver lit, a switch once used. Turning, it turns a subject standing on it to face its new way, which is then the only way off.
 - A move counts when the subject ends on another tile (a crossing counts as one, a slide as one); turning and shooting cost no move.
 
 **Shots and portals.**
@@ -242,12 +244,13 @@ The script proves the route plays. To make it the chamber's recorded solution, p
 - Interact picks up the box on the tile faced, and puts the carried box down on the tile faced, never the subject's own.
 - Put down needs that tile to be one the subject could step onto now, with no box, no fizzler that is on, and not the exit or a switch.
 - A resting box keeps the subject off its tile but lets shots through. A tile holds one box.
-- A box lying where a door closes, a ditch opens, or a laser, a light barrier or a fizzler switches on goes back to its start. So does a box a link names, each time its button goes down, its switch is used or its receiver lights (unless it is carried): a switch linked to a box is the chamber's undo for it, and a way to move that box back across the chamber in one step.
+- A box lying where a door closes, a ditch opens, or a laser, a light barrier or a fizzler switches on goes back to its start. So does a box a link names (unless it is carried), each time its button goes down, its switch is used or its receiver lights while every other one linking it is active: a switch linked to a box is the chamber's undo for it, and a way to move that box back across the chamber in one step.
 
 **Buttons, switches and receivers.**
+- An element a link reaches is open (unblocked) exactly while every button, switch and receiver linking it is active: a button held, a receiver lit, a switch used. Releasing any one button, or darkening any one receiver, closes it.
 - A button is held while the subject or a box stands on it; it acts on its links at once.
 - Picking a box up off a button releases the button in the same step. A slide passing over a button doesn't press it; stopping on it does.
-- A switch is used by standing on it and pressing interact, not while carrying a box, and only ever unblocks its links (opens, switches off, bridges); it never undoes them.
+- A switch is used by standing on it and pressing interact, not while carrying a box, and stays active from then until the chamber is loaded again, so it never closes anything: what it links opens (opens, switches off, bridges) once every other button and receiver linking it is active too.
 - A receiver acts as a button held while a ray reaches its listening face.
 
 **Slide floors.** Entering one, by walking or out of a portal, keeps the subject going the way it moves until a tile isn't slide floor, or something it can't enter is ahead (it stops in front of it). A wall ahead holding a portal, with the other open, sends it through. Fizzlers on the way still close portals and destroy a carried box. A slide counts as one move, and the subject can't stop part way.
@@ -262,7 +265,7 @@ The script proves the route plays. To make it the chamber's recorded solution, p
 
 ### 1. Find the moving parts
 
-Run the chamber map. The parts list names every element a link can switch, how it starts and what acts on it; every other element is scenery. Write the links as a short table: each button, switch and receiver, what it opens, and whether it holds (a button or a receiver: its links close again when released or dark) or latches (a switch: they stay open).
+Run the chamber map. The parts list names every element a link can switch, how it starts and what acts on it; every other element is scenery. Write the links as a short table: each button, switch and receiver, what it opens, and whether it holds (a button or a receiver: its links close again when released or dark) or latches (a switch: it stays active once used). An element several of them link opens only while all of them are active.
 
 Note any element without an id that starts unblocked (the list's "always" lines): an always-open exit means the puzzle is just reaching it, and an always-off laser lets the subject and shots through, though the walls at the ends of its run still take no portal.
 
@@ -270,7 +273,7 @@ Note any element without an id that starts unblocked (the list's "always" lines)
 
 Group the floor tiles into regions the subject can walk between with the scenery as it is. Mark each edge between regions:
 
-- **Conditional:** a linked door, ditch, laser or light barrier, open only while its link is held, or a linked arrow, turned only while its link is held. Note what holds it.
+- **Conditional:** a linked door, ditch, laser or light barrier, open only while every link to it is held, or a linked arrow, turned only while every link to it is held. Note what holds it.
 - **One way:** an arrow, which lets the subject in its way only and never back. Several arrows in a row make a one-way corridor. A linked arrow's way, and so the edge, turns with its link.
 - **A fizzler that is on:** walkable both ways, but crossing it closes both portals and destroys a carried box. Treat it as a reset of everything the subject carries.
 - **Slide floor:** an edge from each tile and way to wherever the slide stops, which may be far away or through a portal.
@@ -306,7 +309,7 @@ Start at the exit and ask what reaching it needs, then what each of those needs,
 
 1. Is the exit open? If not, which link opens it, and where does the subject stand to work it?
 2. How is that place reached: walking, a hop, or a conditional edge?
-3. Each conditional edge the subject walks through needs its link held while the subject is somewhere else, so it needs a box on the button (or a ray on the receiver). An edge only a shot needs to cross can be held by the subject standing on the button and shooting from there, if the line runs from that tile.
+3. Each conditional edge the subject walks through needs every link to it held while the subject is somewhere else, so it needs a box on each button (or a ray on each receiver, and each switch used). An edge only a shot needs to cross can be held by the subject standing on the button and shooting from there, if the line runs from that tile.
 4. Each box needed: which side of every cut is it on, and how does it reach its button?
 
 Writing the chain as a list makes the gaps plain: a goal with no way to reach it means a wrong assumption about a region, a sightline or a rule.
@@ -366,7 +369,7 @@ When every crossing is ruled out with a reason, the argument holds for every ord
 ## Pitfalls
 
 1. **The map is upside down.** y grows upwards: the map prints the highest row first, and "up" is towards it.
-2. **A field left out is blocked.** A door, laser, light barrier, fizzler or exit without `blocked` starts closed or on, a ditch open and a blocked wall refusing portals, and an emitter starts on.
+2. **A field left out is blocked.** A door, laser, light barrier, fizzler or exit without `blocked` starts closed or on, a ditch open and a blocked wall refusing portals, and an emitter starts on, unless a link reaches it: then it starts off, as every linked element starts blocked.
 3. **Lasers don't stop shots; light barriers and fizzlers do while on.** A pocket sealed by lasers is reachable by portal; one sealed by light barriers may not be.
 4. **Faces that refuse a portal.** Check the end plate or a fizzler's connector, the door or exit beside the wall, the neighbouring face of a wall already holding a portal, and blocked walls: four misses that look like hits on the map.
 5. **A box blocks a crossing onto its tile.** A box left on a button can make a portal face looking onto that button unusable.
