@@ -2,14 +2,14 @@
 
 How to solve a chamber by reasoning rather than by search, and how to prove the solution right by playing it through the rules. It is for the chambers the solver can't help with:
 
-- **Too large to finish.** The solver gives up on Playground 2 and Playground 3 (chambers 1 and 2 until they left the campaign), and finds only a long route for Playground 4 (chamber 3 then; `docs/solver.md`).
+- **Too large to finish.** The solver gives up on Playground 2 and Playground 3, and finds only a long route for Playground 4 (`docs/solver.md`).
 - **A receiver.** The solver's fast search refuses any chamber with one, since the subject cuts a ray by walking into it.
 - **Proving a new chamber solvable** before its solution is recorded.
 - **Arguing that something can't be done.** For example, that no route skips an element, or that a shortcut doesn't exist (`docs/level_design.md`, guideline 38).
 
 The approach: treat the chamber as a set of regions joined by walking, by portal shots and by boxes, work back from the exit to what each step needs, write the route forward, then play it through the game's own rules with a short script. A route that plays to completion is a proof that the chamber is solvable, since the script runs the same `step` the game runs.
 
-Playground 2 was solved this way on 2026-11-20, as chamber 1, with no search: 169 actions, 100 moves and 29 portals (its recorded solution then took 260 actions, 167 moves and 34 portals; it was deleted when the chamber left the campaign, and git history keeps it). The [worked example](#worked-example-playground-2) at the end walks through it.
+Playground 2 was solved this way on 2026-11-20, with no search: 169 actions, 100 moves and 29 portals, and the route still plays under the rules as they stood on 2026-11-22. The recorded solution the chamber had while it was in the campaign took 260 actions, 167 moves and 34 portals; it was deleted when the chamber left the campaign, and git history keeps it. The [worked example](#worked-example-playground-2) at the end walks through it.
 
 To check a chamber for shortcuts, solve it before reading its recorded solution. A route found on its own is what shows a way the design didn't intend; compare the two afterwards.
 
@@ -204,62 +204,15 @@ The route is the actions by their replay names (`up`, `down`, `left`, `right`, `
 
 The script proves the route plays. To make it the chamber's recorded solution, play it in `npm run dev` and press Download solution (`AGENTS.md`, "Recorded solutions").
 
-## The rules that decide most puzzles
+## The rules
 
-`docs/elements.md` is the authority; this is what a solver has to keep in mind, in one place. Positions are `(x,y)` with y growing upwards, so up is a higher y and the map's top row is the highest. A wall's face is written as the wall tile and the side it is on: `(4,16)E` is the east face of wall `(4,16)`, which looks onto `(5,16)`.
+This doc doesn't restate the rules, since a copy drifts from them; read them where they are kept. `docs/game_summary.md` tells the whole game in plain words and is the place to start. `docs/elements.md` is the authority: its "Rules" section says exactly what each action does and how a step settles, and its "Interactions" table names the rules that bring each pair of elements together. When the route check does something unexpected, the answer is there.
+
+Two things matter here beyond the rules themselves: how this doc writes positions, and what in a chamber can change at all.
+
+**Positions.** A tile is written `(x,y)`, with y growing upwards, so up is a higher y and the map's top row is the highest. A wall's face is written as the wall tile and the side it is on: `(4,16)E` is the east face of wall `(4,16)`, which looks onto `(5,16)`.
 
 **What never changes.** `blocked` is true when a file leaves it out, but on an emitter, where it is false; an element a link reaches never has it, and starts blocked (an emitter off) until the start settles. Only a link changes it, and only an element with an `id` can be linked. So an element without an id keeps its starting state for good: a laser without an id is always on, a ditch always open, a fizzler always on, a blocked wall never takes a portal. In most chambers nearly everything is fixed. The few elements with ids are the puzzle's moving parts.
-
-**Moving.**
-- A move key faces that way and steps in one action. A turn (a move key with the turn key held) only faces, unless the subject already faces that way, when it steps.
-- Walking into anything it can't enter only turns the subject that way.
-- It can't enter an open ditch, a laser or light barrier that is on, a closed door or exit, a tile where a box rests, or an arrow from any way but the arrow's own. Fizzlers, buttons, switches and rays never stop it.
-- On an arrow, the subject can move only the arrow's way; the other three keys do nothing.
-- A linked arrow (one with an id and a turned way) points its turned way, a quarter turn from its own, while every button, switch and receiver linking it is active: a button held, a receiver lit, a switch once used. Turning, it turns a subject standing on it to face its new way, which is then the only way off.
-- A move counts when the subject ends on another tile (a crossing counts as one, a slide as one); turning and shooting cost no move.
-
-**Shots and portals.**
-- A shot leaves the way the subject faces and flies straight. It passes ditches, lasers on or off, boxes, buttons, switches, arrows, slide floors, rays, and anything unblocked: a fizzler or a light barrier that is off, an open door, the open exit.
-- It stops at a fizzler or a light barrier that is on, a closed door, the closed exit (each a miss), or at the first wall, which takes the portal on the face looking at the subject.
-- No portal opens on:
-  - a blocked wall while it is blocked;
-  - an emitter or a receiver, on any face;
-  - a face looking onto a door or the exit, open or closed;
-  - the face of the wall at either end of a run of lasers or light barriers, on or off (behind the end plate; a wall alongside the run still takes one);
-  - the face of either wall a fizzler's field spans between, on or off (behind its connector; the wall at the end of its way through still takes one);
-  - the chamber's edge;
-  - a face of a wall tile that already holds a portal on that face or a neighbouring one (only the opposite face is still free).
-- Shots never go through portals; rays do.
-- No shot leaves while the subject carries a box (refused) or stands in a fizzler that is on (nothing happens).
-- Shooting a colour moves that portal: the old one closes.
-- Crossing: with both portals open, walking into a wall face that holds one puts the subject on the tile in front of the other, facing away from its wall. That tile is checked as a step onto it: a box resting there, an open ditch, a laser that is on or an arrow pointing another way refuses the crossing. A carried box comes along.
-- A portal stays until it is shot elsewhere, or:
-  - the subject enters a fizzler that is on (both close);
-  - a linked fizzler switches on with the portal on a face looking onto its tile;
-  - a linked blocked wall becomes blocked under it.
-
-**Fizzlers.** Walking into one that is on, or coming out of a portal into it, or one switching on under the subject, closes both portals and destroys a carried box: the box goes back to its start tile. The subject can always walk through one. A box can't be put down on one that is on, or picked up from one.
-
-**Boxes.**
-- Interact picks up the box on the tile faced, and puts the carried box down on the tile faced, never the subject's own.
-- Put down needs that tile to be one the subject could step onto now, with no box, no fizzler that is on, and not the exit or a switch.
-- A resting box keeps the subject off its tile but lets shots through. A tile holds one box.
-- A box lying where a door closes, a ditch opens, or a laser, a light barrier or a fizzler switches on goes back to its start. So does a box a link names (unless it is carried), each time its button goes down, its switch is used or its receiver lights while every other one linking it is active: a switch linked to a box is the chamber's undo for it, and a way to move that box back across the chamber in one step.
-
-**Buttons, switches and receivers.**
-- An element a link reaches is open (unblocked) exactly while every button, switch and receiver linking it is active: a button held, a receiver lit, a switch used. Releasing any one button, or darkening any one receiver, closes it.
-- A button is held while the subject or a box stands on it; it acts on its links at once.
-- Picking a box up off a button releases the button in the same step. A slide passing over a button doesn't press it; stopping on it does.
-- A switch is used by standing on it and pressing interact, not while carrying a box, and stays active from then until the chamber is loaded again, so it never closes anything: what it links opens (opens, switches off, bridges) once every other button and receiver linking it is active too.
-- A receiver acts as a button held while a ray reaches its listening face.
-
-**Slide floors.** Entering one, by walking or out of a portal, keeps the subject going the way it moves until a tile isn't slide floor, or something it can't enter is ahead (it stops in front of it). A wall ahead holding a portal, with the other open, sends it through. Fizzlers on the way still close portals and destroy a carried box. A slide counts as one move, and the subject can't stop part way.
-
-**Rays.**
-- A ray runs from an emitter that is on, through portals, turned a quarter turn by a resting mirror box.
-- It is stopped by the subject, a plain box, a closed door or exit, a light barrier that is on, and walls.
-- It passes everything else, fizzlers and lasers included.
-- The subject standing in a ray cuts it, so a receiver it lit goes dark and its links close, within that step.
 
 ## The method
 
@@ -282,7 +235,7 @@ Name each region in plain words (the start room, the door pocket) and keep a lis
 
 ### 3. Map the sightlines
 
-For each region, list the wall faces a shot from inside it can reach, and which region each face looks onto. Walk each row and column from the region's tiles both ways and note where the shot stops, using the shot rules above.
+For each region, list the wall faces a shot from inside it can reach, and which region each face looks onto. Walk each row and column from the region's tiles both ways and note where the shot stops. `docs/game_summary.md` ("Portals") says what stops a shot and which wall faces refuse a portal, and `docs/elements.md` ("Shoot blue or orange") gives every case.
 
 A portal hop from region P to region Q needs two things, both done from P:
 
@@ -381,7 +334,7 @@ When every crossing is ruled out with a reason, the argument holds for every ord
 
 ## Worked example: Playground 2
 
-Playground 2 (20 × 20), then chamber 1, as it stood on 2026-11-20. The solver gave up on it after 10 minutes, past 6 million states (`docs/solver.md`).
+Playground 2 (20 × 20), as it stood on 2026-11-20. The solver gave up on it after 10 minutes, past 6 million states (`docs/solver.md`).
 
 ```
     0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
@@ -496,6 +449,6 @@ turnDown blue down down 5,16 blue left 13,16 down down turnRight blue turnLeft o
 orange turnLeft blue down 1,11 turnDown orange left 1,1 right right down 3,0
 ```
 
-The route check ends with `completed: true, actions: 169, moves: 100, portals: 29`. A change to Playground 2 or to the rules can break it; run the check again before relying on it.
+The route check ends with `completed: true, actions: 169, moves: 100, portals: 29`, last checked on 2026-11-22. A change to Playground 2 or to the rules can break it; run the check again before relying on it.
 
 Every moving part took part but one: both boxes, all five buttons, the exit switch, both linked fizzlers, the linked ditch, the door and laser (4,18). Box A's switch (11,8) was never needed. It is the undo for a box A left somewhere useless.

@@ -1,13 +1,13 @@
 # Solver
 
-A program that searches the states a chamber can reach, to prove it can be finished and to find its par (the fewest moves, the fewest portals). It was built as stage 02's prototype, which stopped on 2026-11-08: it is too slow on the large chambers (chambers 1 to 3 then, now Playground 2 to 4, outside the campaign) for what was planned on top of it (see [Why it stopped](#why-it-stopped)). The code stays, runs under Node by hand, and its check runs in `npm run verify`, so it keeps working as the rules change. This file is what the stage learned, and what a revisit would start from.
+A program that searches the states a chamber can reach, to prove it can be finished and to find its par (the fewest moves, the fewest portals). It was built as stage 02's prototype, which stopped on 2026-11-08: it is too slow on the large chambers (Playground 2 to 4, outside the campaign) for what was planned on top of it (see [Why it stopped](#why-it-stopped)). The code stays, runs under Node by hand, and its check runs in `npm run verify`, so it keeps working as the rules change. This file is what the stage learned, and what a revisit would start from. The records below name the chambers as they were then: chamber 0, the tutorial, is now Chamber 1, and chamber N, 1 to 9, is now Playground N + 1.
 
 ## Running it
 
 | # | Command | What it does |
 |---|---------|--------------|
 | 1 | `npm run solve [chamber files]` | Prints each chamber's size (tiles, portal wall sides, flags, boxes, buttons, the state's values, a rough upper bound on its states, its key's width); every chamber in `src/chambers/` (the campaign's) when no file is given, so a playground chamber only when its file is named. `--baseline` adds the baseline search for both pars, `--solvable` the macro search for any route, `--par` the macro search for both pars; each prints its result, states, effort, time and route, a macro search also its peak memory, and a macro route is replayed through the rules; on a chamber with a receiver, each macro search prints that it refused and why. `--max-states=` (default 1,000,000) caps each search, and `--max-seconds=` (default 300) each macro search |
-| 2 | `npm run solver:check` | Part of `npm run verify`: everything under [How it's checked](#how-its-checked), in about 6 seconds |
+| 2 | `npm run solver:check` | Part of `npm run verify`: everything under [How it's checked](#how-its-checked), in about 5 seconds |
 | 3 | `npm run state-set:bench` | By hand: 10 million keys in and out of the state set, with the time and memory |
 
 The large chambers (Playground 2 to 4) need `--max-states=40000000` to search for 5 minutes without running out of room.
@@ -50,22 +50,22 @@ The tiny chambers are in `scripts/solver_fixtures/` (`solver_fixtures.ts` lists 
 
 All in Node 24 on the author's machine (8 cores), one search at a time unless said otherwise.
 
-Size of the problem, as the chambers were on 2026-11-21 (`npm run solve`), when chambers 1 to 9 were still in the campaign, with the name each has now. The upper bound is tiles × 4 facings × (wall sides + 1)² for the portals × (tiles + 1)^boxes for the boxes × 2^flags (since switches stay used, `npm run solve` also multiplies it by 2^switches and adds a bit per switch to the key, so a chamber with a switch now shows a higher bound and a wider key than here):
+Size of the problem, as the chambers were on 2026-11-21 (`npm run solve`), when chambers 1 to 9 were still in the campaign. The upper bound is tiles × 4 facings × (wall sides + 1)² for the portals × (tiles + 1)^boxes for the boxes × 2^flags (since switches stay used, `npm run solve` also multiplies it by 2^switches and adds a bit per switch to the key, so a chamber with a switch now shows a higher bound and a wider key than here):
 
 | # | Chamber | Size | Tiles | Portal wall sides | Flags | Boxes | Buttons | Upper bound | Key bits |
 |---|---------|------|-------|-------------------|-------|-------|---------|-------------|----------|
-| 1 | 0, the tutorial (now Chamber 1) | 12×10 | 61 | 58 | 2 | 1 | 2 | ~10^8.3 | 29 |
-| 2 | 1 (now Playground 2) | 20×20 | 252 | 187 | 6 | 2 | 5 | ~10^14.2 | 50 |
-| 3 | 2 (now Playground 3) | 23×13 | 185 | 161 | 9 | 2 | 2 | ~10^14.5 | 53 |
-| 4 | 3 (now Playground 4) | 23×17 | 241 | 165 | 5 | 2 | 4 | ~10^13.7 | 49 |
-| 5 | 4 (now Playground 5) | 13×9 | 65 | 61 | 0 | 0 | 0 | ~10^6.0 | 21 |
-| 6 | 5 (now Playground 6) | 9×13 | 40 | 36 | 0 | 0 | 0 | ~10^5.3 | 20 |
-| 7 | 6 (now Playground 7) | 10×7 | 27 | 28 | 1 | 0 | 0 | ~10^5.3 | 18 |
-| 8 | 7 (now Playground 8) | 10×9 | 36 | 44 | 2 | 1 | 2 | ~10^7.6 | 29 |
-| 9 | 8 (now Playground 9; a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
-| 10 | 9 (now Playground 10; a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
+| 1 | 0, the tutorial | 12×10 | 61 | 58 | 2 | 1 | 2 | ~10^8.3 | 29 |
+| 2 | 1 | 20×20 | 252 | 187 | 6 | 2 | 5 | ~10^14.2 | 50 |
+| 3 | 2 | 23×13 | 185 | 161 | 9 | 2 | 2 | ~10^14.5 | 53 |
+| 4 | 3 | 23×17 | 241 | 165 | 5 | 2 | 4 | ~10^13.7 | 49 |
+| 5 | 4 | 13×9 | 65 | 61 | 0 | 0 | 0 | ~10^6.0 | 21 |
+| 6 | 5 | 9×13 | 40 | 36 | 0 | 0 | 0 | ~10^5.3 | 20 |
+| 7 | 6 | 10×7 | 27 | 28 | 1 | 0 | 0 | ~10^5.3 | 18 |
+| 8 | 7 | 10×9 | 36 | 44 | 2 | 1 | 2 | ~10^7.6 | 29 |
+| 9 | 8 (a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
+| 10 | 9 (a receiver: the macro search refuses it) | 9×7 | 33 | 27 | 1 | 0 | 0 | ~10^5.3 | 19 |
 
-The searches below ran on 2026-11-08 and are a record, not today's figures; chamber N there is now Playground N + 1, and the recorded solutions they mention were deleted when those chambers left the campaign (git history keeps them). The chambers' barriers have since become blocked walls; their floor tiles then still counted as tiles (262, 189 and 268, with a key of 52–53 bits), but nothing could stand on them, so that only renumbered the states. The rules have changed too (shooting takes free hands, and a tile holds one box, both 2026-11-15; the walls beside a door or the exit, and those behind a laser's or a light barrier's end plate, take no portal, which also left fewer wall sides to number, and a fizzler switching on closes a portal facing it, both 2026-11-16; the walls behind a fizzler's connector take no portal either, 2026-11-21, which left chamber 1 four fewer wall sides and chamber 3 two), which changes the states a chamber can reach.
+The searches below ran on 2026-11-08 and are a record, not today's figures; the recorded solutions they mention were deleted when those chambers left the campaign (git history keeps them). The chambers' barriers have since become blocked walls; their floor tiles then still counted as tiles (262, 189 and 268, with a key of 52–53 bits), but nothing could stand on them, so that only renumbered the states. The rules have changed too (shooting takes free hands, and a tile holds one box, both 2026-11-15; the walls beside a door or the exit, and those behind a laser's or a light barrier's end plate, take no portal, which also left fewer wall sides to number, and a fizzler switching on closes a portal facing it, both 2026-11-16; the walls behind a fizzler's connector take no portal either, 2026-11-21, which left chamber 1 four fewer wall sides and chamber 3 two), which changes the states a chamber can reach.
 
 States expanded in 5 minutes as the shortcuts were added (the par searches don't use regions or limited drops):
 
@@ -113,7 +113,7 @@ The prototype had to pass these before anything was built on it:
 | 3 | Browser worker: the next move to the next milestone, from a mid-game state | ≤ 1 s for 95% of states, ≤ 256 MB | No live next-move hints, no dead-end warning |
 | 4 | Node: any route on a 12×12 chamber with one box | ≤ 2 s | No generated chambers |
 
-Test 1 failed: chamber 3 (now Playground 4) took 110 s, and chambers 1 and 2 (now Playground 2 and Playground 3) hadn't finished after 10 minutes, past 6 million states each, so passing would take well over 10× more speed. Test 2 failed with it (no par search finished in 5 minutes). Tests 3 and 4 weren't run. What was dropped: the solvability and par checks, par in the chamber files, the shortcut report, hints and the dead-end warning, solver difficulty metrics (difficulty was to come from measured clear rates instead, until difficulty from player data was dropped too: the chamber order comes from playtests) and generated chambers.
+Test 1 failed: chamber 3 took 110 s, and chambers 1 and 2 hadn't finished after 10 minutes, past 6 million states each, so passing would take well over 10× more speed. Test 2 failed with it (no par search finished in 5 minutes). Tests 3 and 4 weren't run. What was dropped: the solvability and par checks, par in the chamber files, the shortcut report, hints and the dead-end warning, solver difficulty metrics (difficulty was to come from measured clear rates instead, until difficulty from player data was dropped too: the chamber order comes from playtests) and generated chambers.
 
 ## If it's revisited
 

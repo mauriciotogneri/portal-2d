@@ -1,46 +1,21 @@
 # Performance
 
-The checks that the chamber drawing holds 60 fps, kept from stages 03 and 04a's notes when their files were removed. To run the render profile again, open `/src/dev/render_profile.html` in `npm run dev`, with the window in front (a covered or minimized window slows its frames, and the page then says its numbers are not valid). It sizes Playground 4 for the stage the chamber screen leaves in a 1920 × 1080 window, 1488 × 1016 page pixels, but draws it without the chamber screen's see-through exit (so it keeps the black exit shadow and doesn't clear the canvas each frame) and without its 16-tile minimum, which changes nothing for a chamber as large as Playground 4. The sections below name the chambers as they were when measured: the tutorial is now Chamber 1, chamber N (1 to 9) is now Playground N + 1 (so chamber 3, the render profile's, is Playground 4), and the playground is Playground 1; chambers 1 to 9's recorded solutions, which some checks below replayed, were deleted when they left the campaign (git history keeps them).
+The checks that the chamber drawing holds 60 fps, kept from stages 03 and 04a's notes when their files were removed. To run the render profile again, open `/src/dev/render_profile.html` in `npm run dev`, with the window in front (a covered or minimized window slows its frames, and the page then says its numbers are not valid). It sizes Playground 4 for the stage the chamber screen leaves in a 1920 × 1080 window, 1488 × 1016 page pixels, but draws it without the chamber screen's see-through exit (so it keeps the black exit shadow and doesn't clear the canvas each frame) and without its 16-tile minimum, which changes nothing for a chamber as large as Playground 4. The older sections below name the chambers as they were when measured: the tutorial is now Chamber 1, chamber N (1 to 9) is now Playground N + 1 (so chamber 3, the render profile's, is Playground 4), and the playground is Playground 1; chambers 1 to 9's recorded solutions, which some checks below replayed, were deleted when they left the campaign (git history keeps them).
 
-The whole-frame numbers (the baseline, the real-screen recheck and the depth check, 2026-11-09 to 11-13) predate most of today's renderer: the rays and the turnable arrows, drawn on every frame rather than kept in the backdrop (2026-11-19), the surface detail (11-20), and the element detail, the portals' particles, the fizzlers' fields, the light barriers' bands, the boxes flying home and the see-through exit (11-21). The later sections measure the detail, the particles, the fields and the bands one at a time; the render profile hasn't been run again since, and nothing measures the rays, traced and drawn on every frame in a chamber with an emitter, or the see-through exit, which clears the canvas every frame.
+The render profile was last run on 2026-11-22, with today's renderer (see [profiling baseline](#profiling-baseline-2026-11-22)), but its chamber has no emitter and is drawn without the see-through exit, so nothing measures the rays, traced and drawn on every frame in a chamber with an emitter, or the see-through exit, which clears the canvas every frame. The later sections measure the surface detail, the element detail, the particles, the fields and the bands one at a time.
 
-## Profiling baseline (2026-11-09)
+## Profiling baseline (2026-11-22)
 
-Stage 03's "Profile first" step: chamber 3 (23 × 17, the largest canvas and the most elements), its settled start redrawn every frame, sized as the chamber screen then sized it in a 1920 × 1080 window, 1486 × 1014 page pixels (the canvas has since lost its 1 px border, and today's 1488 × 1016 gives chamber 3 the same 59 and 119 px tiles). Chrome 155 on Linux, Intel UHD Graphics 620 (Mesa, through ANGLE), 8 cores, a 59.9 Hz display at pixel ratio 1, so ratio 2 is simulated by the canvas size (drawn at twice the size and shown at half). Median of 3 runs of 600 frames each, the range in brackets where runs differed:
-
-| # | Pixel ratio | Canvas | Draw time median / p95 / max | Frame interval median / p95 | Frames skipping a refresh |
-|---|---|---|---|---|---|
-| 1 | 1 | 1357 × 1003 | 0.5 / 0.7 / 1.0 ms (max 0.9–2.0) | 16.7 / 16.7 ms (p95 16.7–16.8) | 0 |
-| 2 | 2 | 2737 × 2023 | 0.5 / 0.7 / 1.0 ms (p95 0.7–0.8, max 0.9–1.1) | 16.7 / 16.8 ms | 0 |
-
-Both ratios hold 60 fps with a wide margin: drawing takes about 3 % of a frame, and no frame missed a refresh. About a quarter (ratio 1) to half (ratio 2) of the intervals read 16.8 ms instead of 16.7, which is timer rounding at a 59.9 Hz display, not a dropped frame. Draw time is what the canvas calls take on the main thread; the GPU's share shows only in the frame interval. The page draws on a plain background, while the chamber screen then drew over a blurred photo beside the rail, so the real screen may cost more; recheck it there once the animation layer draws every frame.
-
-## Real-screen recheck (2026-11-10)
-
-Stage 03's "Animation layer" step: chamber 3 on the chamber screen itself (over the blurred photo the stage had then, beside the rail; the stage has since become a graphite gradient, 2026-11-21, and the exit see-through), same machine and display, in a maximized window with a 1920 × 910 page area, at pixel ratio 1. Left and Right presses, alternating every 50 ms for 10 s, kept a step animating, so the level drew on nearly every frame. Time per frame is everything the main thread runs in a frame, the level's frame and the screen's timer together. Median of 3 runs of about 600 frames each, the range in brackets where runs differed:
-
-| # | Pixel ratio | Canvas | Time per frame median / p95 / max | Frame interval median / p95 | Frames skipping a refresh |
-|---|---|---|---|---|---|
-| 1 | 1 | 1127 × 833 | 0.6 / 0.9 / 1.0 ms (median 0.6–0.7, max 1.0–1.2) | 16.7 / 16.7 ms (p95 16.7–16.8) | 0 |
-
-Drawing every frame on the real screen still takes about 4 % of a frame, and no frame missed a refresh.
-
-## Depth and ambient life check (2026-11-13)
-
-Stage 03's "Depth" and "Ambient life" steps: same machine and display, with every sprite still a placeholder plus three temporary glow files (the laser's and both portals', 384 px, removed afterwards), since a glow with no file isn't drawn. First the render profile: chamber 3's settled start, its backdrop copied, its ten laser tiles glowing and its two fizzlers shimmering (a shimmer since removed), every frame. Median of 3 runs of 600 frames each, the range in brackets where runs differed:
+Playground 4 (23 × 17, the largest canvas and the most elements), its settled start redrawn every frame with today's renderer: its backdrop, surface detail included, copied, its element detail, its ten lasers glowing and its two fizzlers' fields moving, both always on, but no portal, no ray and no see-through exit. Sized as the chamber screen sizes it in a 1920 × 1080 window, 1488 × 1016 page pixels, so 59 and 119 px tiles. Chrome 155 on Linux, Intel UHD Graphics 620 (Mesa, through ANGLE), 8 cores, a 59.9 Hz display at pixel ratio 1, in a maximized window, so ratio 2 is simulated by the canvas size (drawn at twice the size and shown at half). Median of 3 runs of 600 frames each, the range in brackets where runs differed:
 
 | # | Pixel ratio | Canvas | Draw time median / p95 / max | Frame interval median / p95 | Frames skipping a refresh |
 |---|---|---|---|---|---|
-| 1 | 1 | 1357 × 1003 | 0.8 / 1.2 / 1.7 ms (max 1.6–4.8) | 16.7 / 16.7 ms (p95 16.7–16.8) | 0 |
-| 2 | 2 | 2737 × 2023 | 0.8 / 1.3 / 2.1 ms (p95 1.2–1.3, max 1.6–3.0) | 16.7 / 16.7 ms (p95 16.7–16.8) | 0 |
+| 1 | 1 | 1357 × 1003 | 1.0 / 1.4 / 2.6 ms (median 1.0–1.1, p95 1.4–1.5, max 2.1–2.8) | 16.7 / 16.8 ms (p95 16.7–16.8) | 0 |
+| 2 | 2 | 2737 × 2023 | 1.0 / 1.4 / 2.7 ms (max 2.0–2.9) | 16.7 / 16.7 ms (p95 16.7–16.8) | 0 |
 
-Then chamber 3 on the chamber screen at pixel ratio 2, both portals open, so the level drew every frame for the glows and the shimmer alone. The page's `devicePixelRatio` was made to read 2 before the chamber opened, so the canvas was drawn at twice its size and shown at half, as on a dense screen (maximized window, 1920 × 910 page area). Time per frame is everything the main thread runs in a frame, as in the recheck above. Median of 3 runs of 659 frames each:
+Both ratios hold 60 fps with a wide margin: drawing takes about 6 % of a frame, and no frame missed a refresh. About a third (ratio 1) to half (ratio 2) of the intervals read 16.8 ms instead of 16.7, which is timer rounding at a 59.9 Hz display, not a dropped frame. Draw time is what the canvas calls take on the main thread; the GPU's share shows only in the frame interval. A first try, with the window covered, ran at about 1.5 frames a second and never finished.
 
-| # | Pixel ratio | Canvas | Time per frame median / p95 / max | Frame interval median / p95 | Frames skipping a refresh |
-|---|---|---|---|---|---|
-| 1 | 2 | 2277 × 1683 | 1.0 / 1.6 / 2.2 ms (p95 1.5–1.6, max 2.0–2.6) | 16.7 / 16.7 ms (p95 16.7–16.8) | 0 |
-
-Every effect so far takes about 6 % of a frame at pixel ratio 2, and no frame missed a refresh, so the renderer stays on the 2D canvas (stage 03's renderer go/no-go point). With the page's reduced-motion query made to match, chamber 3 with its lasers and fizzlers on and a portal open drew nothing over 3 idle seconds, and a move drew one frame, with no glide. A first try, with the browser window behind another, ran idle frames at 30 Hz and drawn ones at 20 Hz; the render profile took that run as valid, since it only rejects idle frames slower than 50 ms.
+The whole-frame checks before it (2026-11-09 to 11-13), on a far plainer renderer, with placeholder sprites and none of the detail, fields, bands or particles: the profile drew chamber 3's start in 0.5 ms a frame at either ratio, and in 0.8 ms once its lasers glowed and its fizzlers shimmered; the chamber screen itself, drawing every frame for a step or the glows, took 0.6 ms a frame at pixel ratio 1 and 1.0 ms at ratio 2; no frame missed a refresh, so the renderer stayed on the 2D canvas (stage 03's go/no-go point), and with reduced motion an idle chamber drew nothing and a move drew one frame. A try then with the window covered ran idle frames at 30 Hz and passed the profile's check, which only rejects idle frames slower than 50 ms.
 
 ## High-DPI check (2026-11-13)
 
@@ -88,7 +63,7 @@ Once a size's images are made, the detail costs nothing measurable, per frame or
 
 ## Portal particles check (2026-11-21)
 
-The portals' particles (`docs/sprites.md`) are drawn every frame while a portal is open, when the level already draws every frame for the glows, so they add only their own drawing. Chrome 155 on the development machine, `npm run dev`: in the sprite gallery, which runs no frame loop, chamber 3 after 54 actions of its recorded solution (both portals open) drawn on one renderer at 99 px tiles, a 2277 × 1683 canvas, the size the chamber screen gives it at pixel ratio 2 (as in the depth and ambient life check), each frame drawn with and without the particles at times 16.7 ms apart, timed on the main thread with `performance.now()` (0.1 ms steps). Medians of 60 frames each:
+The portals' particles (`docs/sprites.md`) are drawn every frame while a portal is open, when the level already draws every frame for the glows, so they add only their own drawing. Chrome 155 on the development machine, `npm run dev`: in the sprite gallery, which runs no frame loop, chamber 3 after 54 actions of its recorded solution (both portals open) drawn on one renderer at 99 px tiles, a 2277 × 1683 canvas, the size the chamber screen gives it at pixel ratio 2, each frame drawn with and without the particles at times 16.7 ms apart, timed on the main thread with `performance.now()` (0.1 ms steps). Medians of 60 frames each:
 
 | # | Run | Without particles | With particles |
 |---|---|---|---|
@@ -113,7 +88,7 @@ So the fields cost nothing this timing can tell apart from its noise. A first bu
 
 ## Light barrier band check (2026-11-21)
 
-The light barriers' bands (`docs/sprites.md`) are drawn in code, and while one is on its edges flicker, so a chamber with a light barrier on now draws every frame, as one with a fizzler's field or a laser on already did. No chamber has a light barrier yet, so the playground (now Playground 1, 15 × 15, its three light barriers in one run, on at its start) stood in. Chrome 155 on the development machine, `npm run dev`: in the sprite gallery, which runs no frame loop, the playground's settled start drawn on one renderer at 63 and 126 px tiles (the chamber screen's size at pixel ratio 1 and 2), whole frames and the bands' drawing alone (`LightBarrierBand.draw`, ten calls a sample), at times 16.7 ms apart, timed on the main thread with `performance.now()` (0.1 ms steps). Medians of 60 samples each, three runs:
+The light barriers' bands (`docs/sprites.md`) are drawn in code, and while one is on its edges flicker, so a chamber with a light barrier on now draws every frame, as one with a fizzler's field or a laser on already did. No chamber has a light barrier yet, so the playground (15 × 15, its three light barriers in one run, on at its start) stood in. Chrome 155 on the development machine, `npm run dev`: in the sprite gallery, which runs no frame loop, the playground's settled start drawn on one renderer at 63 and 126 px tiles (the chamber screen's size at pixel ratio 1 and 2), whole frames and the bands' drawing alone (`LightBarrierBand.draw`, ten calls a sample), at times 16.7 ms apart, timed on the main thread with `performance.now()` (0.1 ms steps). Medians of 60 samples each, three runs:
 
 | # | Canvas | Whole frame | Bands, steady | Bands, switching |
 |---|---|---|---|---|

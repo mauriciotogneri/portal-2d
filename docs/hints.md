@@ -47,7 +47,7 @@ With `prefers-reduced-motion` the game should show and remove it at once, like e
 
 ### Screen sizes
 
-The chamber screen sizes tiles from the stage, so the lit tile is as large as the chamber's tiles. On Playground 2 (20 × 20 tiles; chamber 1 until it left the campaign), where the page was made:
+The chamber screen sizes tiles from the stage, so the lit tile is as large as the chamber's tiles. On Playground 2 (20 × 20 tiles), where the page was made:
 
 | # | Window | Tile | Lit area with brackets |
 |---|--------|------|------------------------|
@@ -126,7 +126,7 @@ https://claude.ai/artifact/C5MwvnphSuw5qpWG9ZBttP, private to its owner, titled 
 | 1 | 1 | Round 1: seven hint styles | A to G, the large view with a picker and a side-by-side compare, all seven in step, a notes table |
 | 2 | 2 | Round 2: spotlight on one tile | B2 large (at the chosen window size), then B2 at 1920 × 1080, 1440 × 900 and 1280 × 720 in step; round 1 kept below, collapsed, drawn only while open |
 
-**The scene.** Playground 2 (then chamber 1, permanent id 1, the second in the list) from its recorded solution of the time (then `src/chambers/chamber_1.solution.json`, a path that now holds the tutorial's; deleted when the chamber left the campaign, and kept by git history, so an engine built today draws only its start), steps 96 to 116: the blue portal on the wall at (12, 7) facing right, the orange one at (15, 7), then moved to (14, 12) facing down (step 99); at step 101 the subject walks into the blue portal and comes out at (14, 11); steps 102 to 105 walk right to (18, 11); step 106 walks up into the fizzler at (18, 12), which no link reaches (always on): `fizzled`, both portals close. Each step shows for 0.42 s at 1×, and the loop is 11.5 s: the hint at 2.25 s (step 101), Enter at 7.0 s, the game going on at 7.6 s, the fizzle at 9.55 s. The page sets the clock on the sign to 01:12.40 at step 96 (not a measured time).
+**The scene.** Playground 2 from its recorded solution of the time (`src/chambers/chamber_1.solution.json` before commit 9021c28, a path that now holds the tutorial's; git history keeps it, but an engine built today draws only the chamber's start), steps 96 to 116: the blue portal on the wall at (12, 7) facing right, the orange one at (15, 7), then moved to (14, 12) facing down (step 99); at step 101 the subject walks into the blue portal and comes out at (14, 11); steps 102 to 105 walk right to (18, 11); step 106 walks up into the fizzler at (18, 12), which no link reaches (always on): `fizzled`, both portals close. Each step shows for 0.42 s at 1×, and the loop is 11.5 s: the hint at 2.25 s (step 101), Enter at 7.0 s, the game going on at 7.6 s, the fizzle at 9.55 s. The page sets the clock on the sign to 01:12.40 at step 96 (not a measured time).
 
 **Its controls.** Play and pause, a scrubber with the moments marked, speed (0.25×, 0.5×, 1×), screen (1920 × 1080, 1440 × 900, 1280 × 720), text (short, long), large view (fit, actual size), and a lamp beside each screen showing the key being pressed.
 
