@@ -61,39 +61,34 @@ Points marked **[new]** in Part 3 that are concrete enough to become guidelines 
 
 Chosen because they share a Portal 2D mechanic or are known for their puzzle design writing. "Overlap" names the Portal 2D elements each one's ideas map onto.
 
-| # | Game | Maker, year | Overlap with Portal 2D | Best design source |
-|---|---|---|---|---|
-| 1 | Narbacular Drop | DigiPen students, 2005 | Portal's predecessor; what its team learned | Kim Swift, IGS 2007 |
-| 2 | Portal 2 (co-op, Puzzle Maker, community maps) | Valve, 2011 | Emitter, receiver and mirror box (its "laser", catcher and reflection cube), light barriers (hard light), antlines, fizzlers | Developer commentary; Adam Foster interview; ThinkingWithPortals forum |
-| 3 | Portal Stories: Mel | Prism Studios, 2015 | Portal 2's elements; what skipping the training cost | Prism's commentary videos |
-| 4 | Portal Reloaded | Jannis Brinkmann, 2021 | Order-dependent state | PC Gamer review; its FAQ |
-| 5 | Bridge Constructor Portal | ClockStone, 2017 | Fixed portals, execution vs insight | PC Gamer review |
-| 6 | The Talos Principle (+ Road to Gehenna) | Croteam, 2014 | Emitters, receivers, beam relays (≈ mirror boxes and portal pairs), boxes, plates | Alen Ladavac, Nordic Game 2016 |
-| 7 | The Talos Principle 2 | Croteam, 2023 | Asymmetric barriers (≈ ditch, laser, fizzler, light barrier) | Thinky Games interviews |
-| 8 | The Witness | Thekla, 2016 | Grid sequences taught without words; power cables (≈ antlines) | Blow and ten Bosch, IndieCade 2011; noclip documentary |
-| 9 | Chip's Challenge 1 and 2, and its level packs | Chuck Sommerville, 1989/2015 | Ice (≈ slide floors), force floors (≈ arrows, loosely), toggle walls, blocks and buttons, water (≈ ditches), teleports | Sommerville interviews; J.B. Lewis's essays; the Bit Busters wiki |
-| 10 | Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
-| 11 | Sokoban and Microban | Hiroyuki Imabayashi, 1981; David W. Skinner, 2000 | Boxes on buttons | Imabayashi interview; Sokoban difficulty research |
-| 12 | Stephen's Sausage Roll | Stephen Lavelle, 2016 | New consequences of old elements (the twist chamber) | Draknek & Friends podcast; GMTK |
-| 13 | Sokobond, A Good Snowman Is Hard to Build, Cosmic Express, A Monster's Expedition | Alan Hazelden and collaborators, 2013–2020 | Grid, turn-based, small rooms | Hazelden's talks and interviews |
-| 14 | Bonfire Peaks | Corey Martin, 2021 | The one game here whose boxes are carried | Game Developer interview |
-| 15 | Snakebird | Noumenon Games, 2015 | "The thing you need also gets in your way" (≈ the carried box) | GMTK; Snakebird solver research |
-| 16 | Patrick's Parabox | Patrick Traynor, 2022 | Entering boxes joins far places (≈ portals, loosely) | Traynor, GDC 2024; his idea strategies |
-| 17 | Baba Is You | Arvi Teikari, 2019 | Turn-based single-screen grid, solo designer | Teikari's talks; GMTK |
-| 18 | Lara Croft GO, Hitman GO | Square Enix Montréal, 2014–2015 | Levers (≈ switches), plates, pillars (≈ boxes), line-of-sight "eyes" (≈ rays) | Antoine Routon's GDC 2016 postmortem |
-| 19 | Q.U.B.E. and Q.U.B.E. 2 | Toxic Games, 2011/2018 | Surfaces that respond or don't (≈ walls that take portals or don't), light-beam rooms | Game Developer; 80.lv |
-| 20 | Quantum Conundrum | Airtight Games (Kim Swift), 2012 | Per-room limits on the strongest tool | Kim Swift interviews |
-| 21 | Antichamber | Alexander Bruce, 2013 | Beams cut by blocks; ordering by introductoriness | Bruce, GDC 2014 |
-| 22 | Mechanic sources: Ricochet Robots, Pokémon and Zelda ice puzzles, Zelda dungeons, Laser Maze, Khet, Puzzledorf | Various | Slide stoppers, one-way structure, beam routing, switch logic | Kluiver's ice-block thesis; Mark Brown's Boss Keys; ThinkFun rules; Stuart Burfield's posts |
+| Game | Maker, year | Overlap with Portal 2D | Best design source |
+|---|---|---|---|
+| Portal 2 (co-op, Puzzle Maker, community maps) | Valve, 2011 | Emitter, receiver and mirror box (its "laser", catcher and reflection cube), light barriers (hard light), antlines, fizzlers | Developer commentary; Adam Foster interview; ThinkingWithPortals forum |
+| Portal Stories: Mel | Prism Studios, 2015 | Portal 2's elements; what skipping the training cost | Prism's commentary videos |
+| Portal Reloaded | Jannis Brinkmann, 2021 | Order-dependent state | PC Gamer review; its FAQ |
+| Bridge Constructor Portal | ClockStone, 2017 | Fixed portals, execution vs insight | PC Gamer review |
+| The Talos Principle (+ Road to Gehenna) | Croteam, 2014 | Emitters, receivers, beam relays (≈ mirror boxes and portal pairs), boxes, plates | Alen Ladavac, Nordic Game 2016 |
+| The Talos Principle 2 | Croteam, 2023 | Asymmetric barriers (≈ ditch, laser, fizzler, light barrier) | Thinky Games interviews |
+| The Witness | Thekla, 2016 | Grid sequences taught without words; power cables (≈ antlines) | Blow and ten Bosch, IndieCade 2011; noclip documentary |
+| Chip's Challenge 1 and 2, and its level packs | Chuck Sommerville, 1989/2015 | Ice (≈ slide floors), force floors (≈ arrows, loosely), toggle walls, blocks and buttons, water (≈ ditches), teleports | Sommerville interviews; J.B. Lewis's essays; the Bit Busters wiki |
+| Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
+| Sokoban and Microban | Hiroyuki Imabayashi, 1981; David W. Skinner, 2000 | Boxes on buttons | Imabayashi interview; Sokoban difficulty research |
+| Stephen's Sausage Roll | Stephen Lavelle, 2016 | New consequences of old elements (the twist chamber) | Draknek & Friends podcast; GMTK |
+| Sokobond, A Good Snowman Is Hard to Build, Cosmic Express, A Monster's Expedition | Alan Hazelden and collaborators, 2013–2020 | Grid, turn-based, small rooms | Hazelden's talks and interviews |
+| Bonfire Peaks | Corey Martin, 2021 | The one game here whose boxes are carried | Game Developer interview |
+| Snakebird | Noumenon Games, 2015 | "The thing you need also gets in your way" (≈ the carried box) | GMTK; Snakebird solver research |
+| Patrick's Parabox | Patrick Traynor, 2022 | Entering boxes joins far places (≈ portals, loosely) | Traynor, GDC 2024; his idea strategies |
+| Baba Is You | Arvi Teikari, 2019 | Turn-based single-screen grid, solo designer | Teikari's talks; GMTK |
+| Lara Croft GO, Hitman GO | Square Enix Montréal, 2014–2015 | Levers (≈ switches), plates, pillars (≈ boxes), line-of-sight "eyes" (≈ rays) | Antoine Routon's GDC 2016 postmortem |
+| Q.U.B.E. and Q.U.B.E. 2 | Toxic Games, 2011/2018 | Surfaces that respond or don't (≈ walls that take portals or don't), light-beam rooms | Game Developer; 80.lv |
+| Quantum Conundrum | Airtight Games (Kim Swift), 2012 | Per-room limits on the strongest tool | Kim Swift interviews |
+| Antichamber | Alexander Bruce, 2013 | Beams cut by blocks; ordering by introductoriness | Bruce, GDC 2014 |
+| Mechanic sources: Ricochet Robots, Pokémon and Zelda ice puzzles, Zelda dungeons, Laser Maze, Khet, Puzzledorf | Various | Slide stoppers, one-way structure, beam routing, switch logic | Kluiver's ice-block thesis; Mark Brown's Boss Keys; ThinkFun rules; Stuart Burfield's posts |
 
 ## Part 2 — How each game's levels were designed
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### Narbacular Drop (DigiPen students, 2005)
-
-Portal's student predecessor. What its team learned shaped Portal directly: playtest early (they tested only in the last month, too late to fix anything), don't hand over both portals at once, players don't read on-screen text ("The words were there but they never actually formed into a sentence"), and shooting a portal through a portal let players bypass the training, so Portal banned it ([Swift, IGS 2007](https://www.youtube.com/watch?v=2F0SVZA9fIo); [GDC 2008 Q&A](https://www.youtube.com/watch?v=c2YRVWZupwo)).
 
 ### Portal 2 (Valve, 2011), its co-op campaign and Puzzle Maker
 

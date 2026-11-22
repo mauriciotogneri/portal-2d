@@ -12,6 +12,7 @@ These are tutorial hints. They are not the solver's hints (a nudge, a highlight,
 | 2 | How is it shown? | As a spotlight: the whole screen darkens except the element's own tile, and a card beside it holds the text and a Continue button |
 | 3 | What does the spotlight light? | Only the tile of the element the hint is about, not the tiles round it (round 1 lit a 3 × 3 block; the author asked for one tile) |
 | 4 | Where was it chosen? | On an Artifact page that draws the real chamber screen with the game's own renderer: https://claude.ai/artifact/C5MwvnphSuw5qpWG9ZBttP (see [The artifact](#the-artifact)) |
+| 5 | How much text? | As little as will do: the shorter and clearer, the better (the author's rule, 2026-11-22) |
 
 The request that started it: hints during the first chambers, of two kinds to compare, intrusive (the game stops, the player reads, dismisses it, and the game continues) and non-intrusive (shown without interrupting the game), each tried in different places on the screen. Round 1 showed seven styles (A to G, [below](#what-was-considered)); round 2 kept only B, the spotlight, with its light cut down to the element's own tile. That round 2 design, called B2 on the page, is the one chosen.
 
@@ -100,7 +101,7 @@ None of these was decided. Each needs an answer before building.
 | 9 | Several elements at once | One hint at a time, in what order, and whether the spotlight can light several tiles (a run of fizzlers or lasers spans several) |
 | 10 | Screen readers | The card as a `role="dialog"` with `aria-modal`, labelled by its title, as the other dialogs are |
 | 11 | Analytics | Whether to send an event when a hint shows or closes (event names are permanent) |
-| 12 | Which text, short or long | See [The fizzler hint](#the-fizzler-hint) |
+| 12 | Which text, short or long | See [The fizzler hint](#the-fizzler-hint); decision 5 favours the short one |
 
 ## Notes for building
 
