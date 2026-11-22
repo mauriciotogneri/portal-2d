@@ -1,22 +1,3 @@
-### [a/error-handling/asset-preloader/stalled-download-never-settles] A download that stalls keeps Start from ever appearing
-
-- **Location:** `src/services/asset_preloader.ts:112` (`downloadFile`: `fetch` and `reader.read()` with no timeout or abort). Related: `src/services/asset_preloader.ts:227` (`Promise.all` over every file), `src/components/screens/loading_screen.vue:62-77` (`preload` shows Start only after it resolves).
-- **Severity:** Medium
-- **Confidence:** Low
-- **Likelihood:** Low. Most broken connections end in an error, which is already caught. A permanent hang needs a connection that stays open but stops sending, for example a misbehaving proxy or a stalled server.
-- **Defect:** The loading screen waits for every file to download or fail. A response that never answers, or stops part way through its body, never settles, so `preloadAssets` never resolves. Start never appears and the game can't be entered for that visit. The bar also stays at 0 until every server has answered. AGENTS.md promises that "A file that fails is skipped and loads on demand later". A stalled file never fails, so it is never skipped.
-- **Trigger:** Any one audio or image request under `src/assets/audio/` or `src/assets/images/` that hangs mid-response during the loading screen.
-- **Evidence / verification:**
-  - Traced: there is no AbortSignal, timer or race anywhere in `downloadFile`, `preloadAssets` or `preload`. The loading screen offers no other way to Start.
-  - Not reproduced: it would need a server that holds a response open.
-  - Remaining assumption: how often real connections stall without the browser erroring them out.
-- **Suggested fix:**
-  - Give each download an inactivity timeout: an AbortController whose timer is reset on every chunk received and aborts after some seconds with no progress.
-  - Treat the abort as a download failure, so the file is reported and left to load on demand.
-  - Use an inactivity timer, not a total-time cap, so a slow download that is still progressing is never cut off.
-
-## Low
-
 ### [a/repeated-and-interrupted-operations/dialogs/held-arrow-repeats-move-dialog-focus] A move key held into the completion dialog moves its focus on every repeat
 
 - **Location:** `src/components/dialog_frame.vue:75` (`handleKeydown`, ArrowDown/ArrowUp). Related: `src/components/dialog_frame.vue:67-74` (only Enter/Space repeats suppressed), `src/components/completion_dialog.vue` (stacked actions).

@@ -9,7 +9,9 @@
  * files cached for a year (firebase.json), so later visits read them from disk.
  * A file that fails is skipped and loads on demand later, as it would without
  * the preload; a chamber sprite that fails isn't drawn for the rest of the
- * visit. Each file that fails is reported to analytics.
+ * visit. Once nothing has arrived from any file for a while, every file still
+ * downloading fails, so a stalled download can't hold the preload open.
+ * Each file that fails is reported to analytics.
  */
 import {useAudioFile} from '@/game/audio_sources'
 import {useSpriteFile} from '@/game/sprite_sources'
@@ -44,6 +46,10 @@ const IMAGE_FILES = Object.entries(import.meta.glob<string>('@/assets/images/**/
 
 // Where the paths the glob finds start
 const ASSETS_FOLDER = '/src/assets/'
+
+// Milliseconds the preload waits with nothing arriving from any file before every file still downloading fails;
+// measured across all files, so a file that is only waiting its turn behind others is never cut off
+const STALL_TIME = 15000
 
 // The font faces index.html requests from Google Fonts; keep the two in step
 const FONT_FACES = [
@@ -107,12 +113,15 @@ function createDownload(path: string, url: string): FileDownload {
  * Never rejects: a file that fails is marked finished and left to load on demand.
  * @param download - The file to download, updated as it arrives
  * @param report - Called whenever the download moves forward
+ * @param stalled - Aborted when the preload has stalled, failing the download
  * @returns The whole file, or null if it failed
  */
-async function downloadFile(download: FileDownload, report: () => void): Promise<Blob | null> {
+async function downloadFile(download: FileDownload, report: () => void, stalled: AbortSignal): Promise<Blob | null> {
   let file: Blob | null = null
   try {
-    const response = await fetch(download.url)
+    const response = await fetch(download.url, {
+      signal: stalled,
+    })
     if (response.ok && response.body !== null) {
       const length = Number(response.headers.get('Content-Length'))
       download.size = length > 0 ? length : null
@@ -133,7 +142,7 @@ async function downloadFile(download: FileDownload, report: () => void): Promise
       })
     }
   } catch (_error) {
-    // Offline or blocked: the file loads on demand later
+    // Offline, blocked or stalled: the file loads on demand later
   }
 
   download.answered = true
@@ -147,10 +156,11 @@ async function downloadFile(download: FileDownload, report: () => void): Promise
  * A file that fails leaves its players to fetch it when they first play.
  * @param download - The file to download, updated as it arrives
  * @param report - Called whenever the download moves forward
+ * @param stalled - Aborted when the preload has stalled, failing the download
  * @returns Why the file can't be used, or null when it can
  */
-async function preloadAudio(download: FileDownload, report: () => void): Promise<AssetFailure | null> {
-  const file = await downloadFile(download, report)
+async function preloadAudio(download: FileDownload, report: () => void, stalled: AbortSignal): Promise<AssetFailure | null> {
+  const file = await downloadFile(download, report, stalled)
   if (file === null) {
     return 'download'
   }
@@ -164,10 +174,11 @@ async function preloadAudio(download: FileDownload, report: () => void): Promise
  * drawn.
  * @param download - The file to download, updated as it arrives
  * @param report - Called whenever the download moves forward
+ * @param stalled - Aborted when the preload has stalled, failing the download
  * @returns Why the file can't be used, or null when it can
  */
-async function preloadImage(download: FileDownload, report: () => void): Promise<AssetFailure | null> {
-  const file = await downloadFile(download, report)
+async function preloadImage(download: FileDownload, report: () => void, stalled: AbortSignal): Promise<AssetFailure | null> {
+  const file = await downloadFile(download, report, stalled)
   if (file === null) {
     return 'download'
   }
@@ -200,10 +211,26 @@ export async function preloadAssets(onProgress: (share: number) => void): Promis
     ...imageDownloads,
   ]
 
+  // Aborted once nothing has arrived from any file for STALL_TIME, failing every download still running
+  const stall = new AbortController()
+  let stallTimer: number | undefined = undefined // Aborts the downloads unless something arrives first
+
   /**
-   * Passes the current share to the caller.
+   * Starts the stall countdown again from now.
+   */
+  const watchForStall = (): void => {
+    window.clearTimeout(stallTimer)
+    stallTimer = window.setTimeout(() => {
+      stall.abort()
+    }, STALL_TIME)
+  }
+
+  /**
+   * Passes the current share to the caller. Called whenever a download moves
+   * forward, so it also restarts the stall countdown.
    */
   const report = (): void => {
+    watchForStall()
     onProgress(downloadedShare(downloads))
   }
 
@@ -224,15 +251,17 @@ export async function preloadAssets(onProgress: (share: number) => void): Promis
     trackAssetFailed(download.name, kind, failure)
   }
 
+  watchForStall()
   await Promise.all([
     ...audioDownloads.map(async (download) => {
-      noteFailure(download, 'audio', await preloadAudio(download, report))
+      noteFailure(download, 'audio', await preloadAudio(download, report, stall.signal))
     }),
     ...imageDownloads.map(async (download) => {
-      noteFailure(download, 'image', await preloadImage(download, report))
+      noteFailure(download, 'image', await preloadImage(download, report, stall.signal))
     }),
     ...FONT_FACES.map((face) => loadFont(face)),
   ])
+  window.clearTimeout(stallTimer)
 
   return failedUrls.size
 }
