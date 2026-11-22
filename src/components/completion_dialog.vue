@@ -5,19 +5,19 @@
  * chamber, followed by Play again and Back to menu; after the last chamber it
  * goes back to the menu, followed by Play again. In development it also
  * offers to download the run as the chamber's recorded solution, except on
- * the playground, which has no best time and no recorded solution.
+ * a playground chamber, which has no best time and no recorded solution.
  */
 import DialogFrame from '@/components/dialog_frame.vue'
 import {formatTime} from '@/services/format_time'
 
 export interface CompletionDialogProps {
-  chamberName: string // What the player sees the chamber called, such as "Chamber 2" or "Tutorial"
+  chamberName: string // What the player sees the chamber called, such as "Chamber 2" or "Playground 3"
   time: number // This run's time, in hundredths of a second
   bestTime: number // The chamber's best time after this run, in hundredths of a second
   newBest: boolean // Whether this run set the best time
   hasNextChamber: boolean // Whether a chamber follows this one
   solutionFailed: boolean // Whether the last download was refused, because the run doesn't replay the same way
-  playground: boolean // Development only: whether the chamber is the playground, which keeps no best time and has no recorded solution
+  playground: boolean // Development only: whether the chamber is a playground chamber, which keeps no best time and has no recorded solution
 }
 
 defineProps<CompletionDialogProps>()

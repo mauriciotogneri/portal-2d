@@ -14,6 +14,8 @@ import ElementPictogram from '@/components/element_pictogram.vue'
 import type {PictogramKind} from '@/components/element_pictogram.vue'
 import type {ChamberData} from '@/game/chamber_data'
 import {CHAMBERS} from '@/services/chamber_catalogue'
+import type {ChamberList} from '@/services/chamber_catalogue'
+import {PLAYGROUND_CHAMBERS} from '@/services/playground'
 
 /** A field of a chamber file that lists elements. */
 type ElementListField = {
@@ -28,7 +30,8 @@ type SignElement = {
 }
 
 export interface ChamberSignProps {
-  chamberNumber: number | null // Which chamber in the list, counted from 0, or null for the playground
+  list: ChamberList // The list the chamber is in: the campaign, or in development the playground chambers
+  chamberNumber: number // Which chamber in that list, counted from 1
   layout: ChamberData | undefined // The chamber's file, read for the elements it holds
 }
 
@@ -108,9 +111,9 @@ const SIGN_ELEMENTS: readonly SignElement[] = [
 
 const props = defineProps<ChamberSignProps>()
 
-const signNumber = computed(() => formatSignNumber(props.chamberNumber)) // Two digits, as on a test chamber sign; blank for the playground
-const lastNumber = computed(() => formatSignNumber(props.chamberNumber === null ? null : CHAMBERS.length - 1)) // The last chamber's number; blank for the playground, which is outside the list
-const heading = computed(() => props.chamberNumber === null ? 'Playground' : `Chamber ${signNumber.value} of ${lastNumber.value}`) // What a screen reader reads for the number and the place in the list
+const signNumber = computed(() => formatSignNumber(props.chamberNumber)) // Two digits, as on a test chamber sign
+const lastNumber = computed(() => formatSignNumber(props.list === 'playground' ? PLAYGROUND_CHAMBERS.length : CHAMBERS.length)) // The last chamber's number in its list
+const heading = computed(() => `${props.list === 'playground' ? 'Playground' : 'Chamber'} ${signNumber.value} of ${lastNumber.value}`) // What a screen reader reads for the number and the place in the list
 const elements = computed(() => SIGN_ELEMENTS.map((element) => ({
   kind: element.kind,
   name: element.name,
@@ -119,11 +122,11 @@ const elements = computed(() => SIGN_ELEMENTS.map((element) => ({
 
 /**
  * Writes a chamber's number as the sign shows it.
- * @param chamberNumber - Which chamber in the list, counted from 0, or null for none
- * @returns At least two digits, or "--" for none
+ * @param chamberNumber - Which chamber in its list, counted from 1
+ * @returns At least two digits
  */
-function formatSignNumber(chamberNumber: number | null): string {
-  return chamberNumber === null ? '--' : String(chamberNumber).padStart(2, '0')
+function formatSignNumber(chamberNumber: number): string {
+  return String(chamberNumber).padStart(2, '0')
 }
 </script>
 
