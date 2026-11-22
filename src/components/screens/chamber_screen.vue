@@ -26,6 +26,7 @@ import {findChamber, PLAYGROUND} from '@/services/chamber_catalogue'
 import {keyBindings} from '@/services/key_bindings'
 import {formatTime} from '@/services/format_time'
 import {rememberChamber, rememberPlayground} from '@/services/last_chamber'
+import {historyPosition, previousEntryIs} from '@/services/page_history'
 import {bestTime, isCompleted, markChamberCompleted, recordTime, startAttempt} from '@/services/progress'
 import {startChamberMusic} from '@/services/settings'
 
@@ -76,6 +77,7 @@ let resizeObserver: ResizeObserver | null = null // Refits the chamber when the 
 let densityQuery: MediaQueryList | null = null // Matches the screen's current pixel density, to notice it changing
 let leaveConfirmed = false // Set once the player has confirmed leaving, so the route guard lets them go
 let pendingRoute: string | null = null // Where browser Back was heading when the exit confirmation opened
+let pendingPosition: number | null = null // Where in the browser history that move was heading, as the router numbers its entries
 let readoutFrameId: number | null = null // The pending animation frame request that refreshes the timer
 let shownTime = '' // The text now in the timer, so the element is only written when it changes
 let attempt = 0 // The current run's attempt number at this chamber, counted on this device across visits
@@ -262,13 +264,32 @@ function openNextChamber(): void {
 }
 
 /**
- * Leaves the chamber for the home screen, or for wherever browser Back was heading.
+ * Leaves the chamber for the home screen, or for wherever browser Back was
+ * heading, without adding a history entry, so Back from there never comes back here.
  */
 function leaveChamber(): void {
   leaveConfirmed = true
-  void router.push(pendingRoute ?? {
-    name: 'home',
-  })
+  const historyState = router.options.history.state
+  if (pendingRoute === null) {
+    // Exit chamber or Back to menu: back to the home screen the chamber was opened from, or home in its place
+    if (previousEntryIs(router.resolve({
+      name: 'home',
+    }).fullPath, historyState)) {
+      router.back()
+    } else {
+      void router.replace({
+        name: 'home',
+      })
+    }
+    return
+  }
+  // Browser Back, Forward or a jump through its history menu, which the guard undid: finished from here
+  const currentPosition = historyPosition(historyState)
+  if (pendingPosition !== null && currentPosition !== null && pendingPosition !== currentPosition) {
+    router.go(pendingPosition - currentPosition)
+    return
+  }
+  void router.push(pendingRoute)
 }
 
 /**
@@ -286,6 +307,7 @@ function confirmExit(): void {
  */
 function cancelExit(): void {
   pendingRoute = null
+  pendingPosition = null
   dialog.value = 'pause'
 }
 
@@ -405,6 +427,8 @@ function guardExit(to: RouteLocationNormalized): boolean {
     return true
   }
   pendingRoute = to.fullPath
+  // Read while the browser is still on the entry it was heading to, before the router undoes the move
+  pendingPosition = historyPosition(router.options.history.state)
   setPaused(true)
   dialog.value = 'confirm-exit'
   return false

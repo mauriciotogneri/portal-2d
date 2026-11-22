@@ -6,6 +6,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import ChamberScreen from '@/components/screens/chamber_screen.vue'
 import HomeScreen from '@/components/screens/home_screen.vue'
 import {findChamber} from '@/services/chamber_catalogue'
+import {rememberFirstEntry} from '@/services/page_history'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -46,5 +47,8 @@ const router = createRouter({
     },
   ],
 })
+
+// The router's history has numbered the entry this page load starts on
+rememberFirstEntry(router.options.history.state)
 
 export default router

@@ -52,9 +52,9 @@ This stage's own decisions are numbered from 1. Stage 04a's, below them, keep th
 | 6 | 2026-11-08 | A mechanic's chambers go into the campaign in this same stage: its teach chamber and the rest of its run, as the campaign plan sets (replaces "a teach and a proof chamber per mechanic; full wings are stage 04's job"). Since README decision 15, this stage builds each mechanic's teach and proof chamber (R7), and stage 04b the rest of its run |
 | 7 | 2026-11-06 | Chamber links (`/chamber/N`, by position) stay as they are until this stage picks the numbering scheme (README decision 4); stage 03 only made the count start at 0 for the tutorial. Settled by README decision 13: links stay by position, with no redirects |
 | 10 | 2026-11-08 | The campaign is 20 chambers in total, numbered 0–19: the tutorial (0), chambers 1–3 and 16 new ones built here. No wings: one ordered list, with no wing manifest, wing menu level, wing unlocking, wing music or wing analytics parameter (replaces about 120 chambers in about 10 wings) |
-| 13 | 2026-11-09 | The author is the only player during development, and a few friends play later (README decision 13): no compatibility work, so links stay by position with no redirect table, no retired-id list and no migration of stored progress. Difficulty from player data and the histogram are dropped, since a few friends are far below any useful sample: the chamber order comes from playtests, with the friends' analytics informing them. Analytics stays. Lab chambers matter once friends play (decision 18) |
+| 13 | 2026-11-09 | The author is the only player during development, and a few friends play later (README decision 13): no compatibility work, so links stay by position with no redirect table, no retired-id list and no migration of stored progress. Difficulty from player data and the histogram are dropped, since a few friends are far below any useful sample: the chamber order comes from playtests, with the friends' analytics informing them. Analytics stays |
 | 16 | 2026-11-15 | The campaign's new mechanics are slide floors, turnable arrows and rays, about 4 chambers each, with about 4 for the existing elements. Echo, timed buttons and push blocks are dropped from the plan, with their phases, the open decisions only they needed (echo, what counts as a tick) and their go/no-go points; their specs stay in git history (README open decision 3 settled). The phases and open decisions left were renumbered |
-| 18 | 2026-11-15 | The other open decisions settled as recommended: lasers stay their own element; unfinished chambers go straight into the catalogue while only the author plays, and into a development-only lab list once friends play; a ray stops at the subject, which it leaves unharmed; a mirror box's angle is fixed in the chamber file; and the solver check skips, and names, each chamber it can't handle (built only for a chamber with a receiver; decision 1 keeps the failure on a key over 64 bits). With every open decision settled, the section was removed; their options stay in git history |
+| 18 | 2026-11-15 | The other open decisions settled as recommended: lasers stay their own element; unfinished chambers go straight into the catalogue; a ray stops at the subject, which it leaves unharmed; a mirror box's angle is fixed in the chamber file; and the solver check skips, and names, each chamber it can't handle (built only for a chamber with a receiver; decision 1 keeps the failure on a key over 64 bits). With every open decision settled, the section was removed; their options stay in git history |
 | 19 | 2026-11-15 | Loading chambers without a hand-kept list dropped: it would only save one import line per chamber, the play order stays a hand-typed list anyway, the engine scripts can't use Vite's loading and keep their own list, and TypeScript would stop checking each chamber file against the chamber type. Chambers stay imported by hand in `src/services/chamber_catalogue.ts`; the catalogue check stays |
 | 20 | 2026-11-17 | The subject can walk into, stand in and cross a ray. A ray blocks nothing; it stops at the subject and leaves it unharmed (decision 18), so standing in a ray switches its receiver off until the subject steps out. Lasers stay the light that blocks walking, and a ray is only a signal, so the two differ in what they do, not only in colour. This replaces the draft rule that a ray blocks walking like a laser that is on. That rule repeated the lasers, and it came bundled with decision 18's option without being weighed on its own |
 
@@ -103,7 +103,6 @@ Neither ray chamber uses the mirror box; this stage's combine chamber is the fir
 ### Phase 0 — Ready the stage
 
 - [x] **Revisit.** Re-read stage 04a's mechanics and chambers as built, and the catalogue, the router and the home menu as they are then. Rename everything in this file to their real names; set the status to Ready. Done 2026-11-22: names updated, and the solver check, the local checks, the Play menu, the catalogue check, the progress step and the authoring workflow brought in line with the code; decision 1 added.
-- [ ] **Lab chambers (only once friends play, 04a decision 18).** A lab folder of chamber files, a development-only way to open one (registered only when `import.meta.env.DEV`, so it never ships), and the local checks covering it. Verified by opening a lab chamber in `npm run dev` and confirming the production build contains none. It needs no new mechanic. Friends don't play yet (2026-11-22): build it the day they start; if they never do during this stage, tick it with "not applicable".
 
 ### Phase 1 — Catalogue and links that scale
 
@@ -122,7 +121,7 @@ Neither ray chamber uses the mirror box; this stage's combine chamber is the fir
 ### Phase 3 — Campaign content
 
 - [ ] **Chamber plan.** List the 10 new chambers left to make in this file, in play order together with chambers 0–9, each with its mechanic or element and its part (teach, test, twist or combine), following the campaign plan table and 04a decision 16. Starting order: the existing elements first, then the new mechanics in the order built. Later reorders follow playtests, with the friends' analytics informing them, and the ordering guideline (`docs/level_design.md`, guideline 43). Verify: every mechanic stage 04a shipped has chambers or a recorded reason it doesn't, and the total is 20.
-- [ ] **Authoring workflow before the editor.** Until stage 05's editor exists: hand-write the chamber file in format 2. Today the only development-only chamber route is the playground's, and saving a chamber file reloads the whole page, through the loading screen and Start (read from the code, not tried). Add a development-only route (behind `import.meta.env.DEV`, never in production builds) that loads a chamber file from disk and reloads on save, extending this stage's lab route (Phase 0, if built by then) rather than adding a second one; record the solution by completing the chamber in `npm run dev` and pressing Download solution in the completion dialog; tick a per-chamber checklist (`docs/level_design.md`, guidelines 37 and 39). Verify: one chamber goes through the whole workflow; a production build has no development route.
+- [ ] **Authoring workflow before the editor.** Until stage 05's editor exists: hand-write the chamber file in format 2. Today the only development-only chamber route is the playground's, and saving a chamber file reloads the whole page, through the loading screen and Start (read from the code, not tried). Add a development-only route (behind `import.meta.env.DEV`, never in production builds) that loads a chamber file from disk and reloads on save; record the solution by completing the chamber in `npm run dev` and pressing Download solution in the completion dialog; tick a per-chamber checklist (`docs/level_design.md`, guidelines 37 and 39). Verify: one chamber goes through the whole workflow; a production build has no development route.
 - [ ] **Place chambers 0–9 in the campaign.** The tutorial, chambers 1–3 and stage 04a's chambers keep permanent ids 0–9 wherever the plan puts them; their links follow their new places. Verify: their completions and best times survive.
 - [ ] **Author release 1** (3–4 new chambers; each release ships with a changelog entry in `src/services/changelog.ts`, and release 1's also covers stage 04a's mechanics and chambers 4–9, which have none yet). Verify: `npm run verify` and the catalogue check pass; playtested.
 - [ ] **Author release 2.** Same checks.
@@ -131,13 +130,12 @@ Neither ray chamber uses the mirror box; this stage's combine chamber is the fir
 ### Phase 4 — Wrap-up
 
 - [ ] **Campaign plan table.** Fill in its teach notes with real results from the playtests. Verify: every row the plan keeps is filled in.
-- [ ] **Docs.** `AGENTS.md` (keyboard model, layout, chamber numbering and links, and the lab chambers if they were built) and the changelog match what shipped.
+- [ ] **Docs.** `AGENTS.md` (keyboard model, layout, and chamber numbering and links) and the changelog match what shipped.
 - [ ] **README.** Update the stage status and record any new decisions.
 - [ ] **Status.** Set this file to Done once every *Done when* box is ticked.
 
 ## Local checks added
 
-- Lab chambers, once built (04a decision 18), are included in the local checks.
 - Catalogue check: every chamber file in the play order exactly once, ids unique, each id matching its chamber's file (the replay check already requires a recorded solution for every chamber).
 
 ## Done when
@@ -155,7 +153,6 @@ None: stage 04's two go/no-go points, the hook check and ray oscillation, were a
 
 ## Risks
 
-- **Lab chambers leaking.** Once friends play, unfinished chambers in the catalogue reach them, and the Play menu overflows until Phase 2 makes it scroll. Switch to the lab list then (04a decision 18).
 - **Mechanics barely used.** With 16 new chambers, each mechanic gets about 4 (04a decision 16), so a full run doesn't fit; a combine chamber can serve two at once.
 - **Content volume.** The new chambers are most of this stage's work. Ship them in small releases, so the game grows instead of waiting.
 - **Reordering surprises players.** Display numbers and links change after a reorder, which friends will see. Progress is safe (keyed by id); say what changed in the changelog.
