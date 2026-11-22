@@ -2,7 +2,7 @@
 
 Short notes shown during the first chambers, so a new player understands what an element does: for example, that walking into a fizzler that is on closes both portals and destroys a box the subject carries. Nothing of this is built yet. This file records the design chosen on 2026-11-21, how it was chosen, what is still open, and what was learned about the code on the way, so the work can start from here.
 
-These are tutorial hints. They are not the solver's hints (a nudge, a highlight, the next move, on a key of their own) that were dropped with the solver (`docs/solver.md`).
+These are tutorial hints. They are not the solver's hints (a nudge, a highlight, the next move, on a key of their own), one of the player features dropped when the solver's prototype stopped (`docs/solver.md`); the solver itself is still in the code.
 
 ## The decision
 
@@ -96,7 +96,7 @@ None of these was decided. Each needs an answer before building.
 | 4 | After Restart chamber? | Whether the hint shows again after a restart or Play again |
 | 5 | Can the player read a hint again? | For example from the pause menu or the rail; nothing decided |
 | 6 | Where does the card go when the left has no room? | The page always put it to the left (Playground 2's fizzler is near the right edge). A rule is needed: the side with the most room on the stage, the card whole on the stage, never over the lit tile, the leader straight |
-| 7 | Which keys close it? | Enter on the page. Space too? A held key (a move key bound to Enter or Space) must not close it as it appears, as `dialog_frame.vue` already ignores a repeating Enter or Space. A click? |
+| 7 | Which keys close it? | Enter on the page. Space too? A held key must not close it as it appears (most likely the interact key, Space by default, or a key bound to Enter), as `dialog_frame.vue` already ignores a repeating Enter or Space. A click? |
 | 8 | Escape and pause | What Escape does while a hint shows: close it, or open the pause menu over it |
 | 9 | Several elements at once | One hint at a time, in what order, and whether the spotlight can light several tiles (a run of fizzlers or lasers spans several) |
 | 10 | Screen readers | The card as a `role="dialog"` with `aria-modal`, labelled by its title, as the other dialogs are |
@@ -115,7 +115,7 @@ What was learned about the code while making the page. These are findings, not d
 - **A pitfall the page hit.** The sign frames its pictograms with `padding: 7%`, which works in its grid cells. Put in a flex row, a percentage padding is taken from the row's width, not the frame's, and the pictogram shrinks to nothing: give the hint's frame a fixed padding (0.1875rem).
 - **Colours.** The page used black for the card's and the brackets' shadows; built in the game, every colour must be an `rgba()` token from `styles.css` (no new colours), and `border-radius` in rem.
 - **Sounds.** Not tried on the page. The dialogs play `Sound.MENU_ACCEPT` on pressing an action.
-- **Docs to update when it is built.** `AGENTS.md` (the chamber screen, keyboard ownership, the layout), `docs/game_summary.md` (the screens), `docs/level_design.md` if hints change how a chamber should introduce an element, and this file.
+- **Docs to update when it is built.** `AGENTS.md` (the chamber screen, keyboard ownership, the layout), `docs/interface.md` (the chamber screen, the keys, the dialogs), `docs/game_summary.md` (the screens), `docs/level_design.md` if hints change how a chamber should introduce an element, and this file.
 
 ## The artifact
 

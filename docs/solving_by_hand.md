@@ -2,10 +2,11 @@
 
 How to solve a chamber by reasoning rather than by search, and how to prove the solution right by playing it through the rules. It is for the chambers the solver can't help with:
 
-- **Too large to finish.** The solver gives up on Playground 2 and Playground 3, and finds only a long route for Playground 4 (`docs/solver.md`).
-- **A receiver.** The solver's fast search refuses any chamber with one, since the subject cuts a ray by walking into it.
+- **Too large to finish.** On 2026-11-08, under older rules, the solver gave up on Playground 2 and Playground 3 and found only a long route for Playground 4 (`docs/solver.md`). TUTORIAL_RESULT
+- **Too large for the key.** The solver packs a state into 64 bits; Playground 1 needs 79, so it refuses it.
+- **A receiver.** The solver's macro search refuses any chamber with one, since the subject cuts a ray by walking into it; only its exact reference search, far slower, runs there.
 - **Proving a new chamber solvable** before its solution is recorded.
-- **Arguing that something can't be done.** For example, that no route skips an element, or that a shortcut doesn't exist (`docs/level_design.md`, guideline 38).
+- **Arguing that something can't be done.** For example, that no route skips an element, or that a shortcut doesn't exist (`docs/level_design.md`, guideline 101).
 
 The approach: treat the chamber as a set of regions joined by walking, by portal shots and by boxes, work back from the exit to what each step needs, write the route forward, then play it through the game's own rules with a short script. A route that plays to completion is a proof that the chamber is solvable, since the script runs the same `step` the game runs.
 
@@ -121,7 +122,7 @@ for field, entry in sorted(parts, key=lambda part: part[1].get('id', 0)):
 |---|------|------|
 | 1 | `.` | Floor |
 | 2 | `#` | Wall, which takes portals |
-| 3 | `X` | Blocked wall: refuses portals while blocked, and for good when it has no id |
+| 3 | `X` | Blocked wall: refuses portals while blocked; with no id it keeps its start for good, refusing portals unless its file says `blocked: false` |
 | 4 | `e>` `r<` | Emitter, receiver, with the way its face looks |
 | 5 | `~` | Ditch |
 | 6 | `D` | Door |
@@ -206,13 +207,13 @@ The script proves the route plays. To make it the chamber's recorded solution, p
 
 ## The rules
 
-This doc doesn't restate the rules, since a copy drifts from them; read them where they are kept. `docs/game_summary.md` tells the whole game in plain words and is the place to start. `docs/elements.md` is the authority: its "Rules" section says exactly what each action does and how a step settles, and its "Interactions" table names the rules that bring each pair of elements together. When the route check does something unexpected, the answer is there.
+This doc restates only the few rules that trip a hand solution most often, as [pitfalls](#pitfalls), since a copy drifts from them; read the rules where they are kept. `docs/game_summary.md` tells the whole game in plain words and is the place to start. `docs/elements.md` is the authority: its "Rules" section says exactly what each action does and how a step settles, and its "Interactions" table names the rules that bring each pair of elements together. When the route check does something unexpected, the answer is there.
 
 Two things matter here beyond the rules themselves: how this doc writes positions, and what in a chamber can change at all.
 
 **Positions.** A tile is written `(x,y)`, with y growing upwards, so up is a higher y and the map's top row is the highest. A wall's face is written as the wall tile and the side it is on: `(4,16)E` is the east face of wall `(4,16)`, which looks onto `(5,16)`.
 
-**What never changes.** `blocked` is true when a file leaves it out, but on an emitter, where it is false; an element a link reaches never has it, and starts blocked (an emitter off) until the start settles. Only a link changes it, and only an element with an `id` can be linked. So an element without an id keeps its starting state for good: a laser without an id is always on, a ditch always open, a fizzler always on, a blocked wall never takes a portal. In most chambers nearly everything is fixed. The few elements with ids are the puzzle's moving parts.
+**What never changes.** Only a link changes an element's `blocked` flag, and only an element with an `id` can be linked. So an element without an id keeps the state its file gives it for good, whichever that is: with `blocked` left out, a laser is always on, a ditch always open, a fizzler always on and a blocked wall always refuses portals (pitfall 2 has every default), and one whose file says otherwise stays the other way, such as a blocked wall with `blocked: false`, which always takes portals. In most chambers nearly everything is fixed. The few elements with ids are the puzzle's moving parts.
 
 ## The method
 
@@ -279,13 +280,13 @@ A box that has to be in two places at once means another box is needed, or a dif
 
 ### 7. Write the route forward
 
-Turn the chain into phases, each from one safe position to the next: where the subject starts the phase, where each portal is, what it carries, and what the phase achieves. For each step, write down the colour of each portal before shooting: shooting a colour moves it, and the portal to keep is the one just come out of.
+Turn the chain into phases, each from one safe position to the next: where the subject starts the phase, where each portal is, what it carries, and what the phase achieves. For each step, write down the colour of each portal before shooting, since shooting a colour moves it (pitfall 10).
 
-Before trusting a phase, check its side effects. A box picked up off a button releases it, which can reopen a ditch, switch a fizzler back on, close a door. A fizzler switching on closes a portal on a face looking at it. Leaving a button closes what it held, perhaps on a box. Walking through a fizzler drops both portals.
+Before trusting a phase, check its side effects, pitfalls 6 and 8 first: leaving a button closes what it held, perhaps on a box, and a fizzler switching on closes a portal on a face looking at it.
 
 ### 8. Check the route through the rules
 
-Paste the phases into the route check with a checkpoint after each crossing and each phase, and run it. Fix the first failure, never more than one at a time: a missed checkpoint usually means the crossing came out of the other portal, or a shot stopped on a wall earlier than planned. A refused shot means it missed: a closed door, a fizzler that is on, an end plate, a portal already on a neighbouring face. Read the events to see what the step did. When the check ends with `completed: true`, the route is a proof that the chamber is solvable.
+Paste the phases into the route check with a checkpoint after each crossing and each phase, and run it. Fix the first failure, never more than one at a time: a missed checkpoint usually means the crossing came out of the other portal, or a shot stopped on a wall earlier than planned. A refused shot either missed (a closed door or exit, a fizzler or a light barrier that is on, a blocked wall, an emitter's or a receiver's face, an end plate or a fizzler's connector, a face beside a door or the exit, a portal already on that face or a neighbouring one) or was tried while carrying a box, when no shot leaves. A shot from inside a fizzler that is on fires nothing and reports no refusal, so the check doesn't stop on it: the next checkpoint or the events show it. Read the events to see what the step did. When the check ends with `completed: true`, the route is a proof that the chamber is solvable.
 
 ## Techniques
 
@@ -317,7 +318,7 @@ To show that a chamber can't be solved without an element, or that a shortcut do
 6. **Rays:** through portals and mirror boxes, lighting a receiver on the other side.
 7. **Links acting at a distance:** a button on one side switching an element on the other.
 
-When every crossing is ruled out with a reason, the argument holds for every order of play, which a search can't give on a large chamber. When the argument gets hard, cut the region out into a small chamber of its own and run `npm run solve -- --solvable` on it.
+When every crossing is ruled out with a reason, the argument holds for every order of play, which a search can't give on a large chamber. When the argument gets hard, cut the region out into a small chamber of its own and run `npm run solve -- --solvable path/to/small_chamber.json` on it (named by its file, since with none named `npm run solve` takes only the campaign's chambers). If the cut-down chamber has a receiver, the macro search behind `--solvable` refuses it: run `--baseline`, the exact reference search, instead.
 
 ## Pitfalls
 
@@ -334,7 +335,7 @@ When every crossing is ruled out with a reason, the argument holds for every ord
 
 ## Worked example: Playground 2
 
-Playground 2 (20 × 20), as it stood on 2026-11-20. The solver gave up on it after 10 minutes, past 6 million states (`docs/solver.md`).
+Playground 2 (20 × 20), as it stood on 2026-11-20. On 2026-11-08, under older rules, the solver gave up on it after 10 minutes, past 6 million states (`docs/solver.md`).
 
 ```
     0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19
