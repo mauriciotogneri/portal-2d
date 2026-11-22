@@ -7,39 +7,6 @@ Last revised: 2026-11-20
 
 The author can build chambers in an in-browser editor, prove each one solvable by solving it, and share it in a link, with no backend: the whole chamber (and the author's solution) lives in the link, so it works on today's static Firebase Hosting site. A solved chamber can also be exported as a chamber file and its recorded solution, for the campaign. Whether sharing by link is worth building is open decision 1 (recommended: yes, to send chambers to friends). The old Stage B (accounts and a community on Firebase) was removed, since a few friends are no audience (README decision 13).
 
-## Depends on
-
-This stage assumes the following exist when it starts. Re-check each when revisiting; if one is missing, it must be built first (in its own stage), not here.
-
-- **Stage 01 (engine v2)**, done 2026-11-07
-  - Chamber format 2 with a version number; the upgrader from format 1 was removed (README decision 13). The chamber loader (`src/game/rules/load_chamber.ts`) reads a chamber as raw JSON, checks its layout and reports each problem with its field and tile.
-  - Elements described by data: the element registry (`src/game/rules/element_registry.ts`) says what each element type blocks and holds, and its draw layer. Each type's drawing stays browser-side in `src/game/element_drawings.ts`, looked up by element kind. The editor's palette reads the registry and draws through the renderer, so stage 04a's mechanics appear in the editor without editor changes.
-  - The pure step: `step(chamber, state, action)` gives the next state and its events. The replay format is compact: `ReplayData` (`src/game/replay_data.ts`), a list of actions with the expected result and the hash of the chamber it was recorded on.
-  - An engine that loads under Node with no browser (the rules report events and play no sounds). A link's replay runs headless in the browser, and the local checks run the same code under Node.
-  - Releasing a button linked to a box does nothing to the box. The validator warns about a button linked to a box but still loads the chamber, so the editor can show that warning, or forbid the link if it chooses.
-  - "Moves" is settled: each step that puts the subject on another tile (README decision 8). Stage 04 dropped medals (README decision 14), so there are no ranked runs.
-  - JSON imports widen string literals to `string`, which is why format 2 keeps one optional list per element type rather than one list told apart by a `type` string, which would need a cast.
-- **Stage 02 (solver)**, stopped (README decision 10): no par and no shortcut report. The author's replay alone proves a chamber solvable.
-- **Stage 03 (look and sound)**, done 2026-11-14
-  - The reworked renderer, with the high-DPI fix from stage 00. The editor draws with it.
-- **Stage 04a (mechanics)**, done 2026-11-20
-  - Slide floors, turnable arrows, emitters, receivers and mirror boxes, in the element registry and format 2 (`docs/elements.md`). Left by its notes for the editor: a palette entry for each element, placement checked by the same rules as the chamber loader, and link editing for receivers (which link elements as buttons and switches do) and for turnable arrows.
-- **Home menu and links**
-  - A home menu that scales and has room for an Editor entry.
-  - Chamber links by position (`/chamber/N`, README decision 13, which settled open decision 6), so the new routes don't collide with them.
-- **Stage 00**: records keyed by permanent id. Shared chambers have no catalogue id, so they get their own records keyed by a content hash (step A2.4).
-
-## Decisions made
-
-- 2026-11-06 — Stage A first, with no backend: chambers are shared in the link itself (original roadmap).
-- 2026-11-06 — You can only share what you have solved; your replay is attached (original roadmap).
-- 2026-11-06 — Today's rules are deleted after v2 matches them (README decision 3), so every shared link and replay targets the v2 ruleset.
-- 2026-11-06 — No cloud CI (README decision 6): this stage's checks run locally.
-- 2026-11-09 — Stage A only, with no backend (README decision 13): the author plays alone during development and a few friends play later, which is no audience, so accounts, publishing, browsing, ratings, remixes, playlists, moderation, creator stats and leaderboards (the old Stage B, with its gate and its open decisions on when it starts, sign-in, security rules tests, thumbnails, leaderboard ranking and a staging project) are removed. Step numbers keep their A prefix. Old links needn't keep working: no upgrade chain.
-- 2026-11-09 — No par or shortcut report before sharing (README decision 10).
-- 2026-11-09 — The editor and shared-chamber analytics events planned in the old A5.1 stay out: they counted toward Stage B's gate. A revisit can add events if they're wanted.
-- Desktop only, as everywhere: no touch editor (AGENTS.md).
-
 ## Open decisions
 
 1. **Is sharing by link worth building?** (Added 2026-11-09, replacing "When does Stage B start?", which README decision 13 settled: never.) Links would go to a few friends (README decision 12), not a public audience.
