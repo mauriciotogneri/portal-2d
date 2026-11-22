@@ -33,6 +33,15 @@ type LinkTarget = {
   readonly field: string // Where in the file it is listed
   readonly tile: ProblemTile | null // Its tile, null for a group
   readonly links: readonly number[] // A group's ids, empty for an element
+  readonly setsBlocked: boolean // Whether its entry gives its blocked flag; false for a group
+}
+
+/**
+ * An entry of an element a link can name, as its id is noted.
+ */
+type LinkableEntry = PositionData & {
+  readonly id?: number // Target for links, when it has one
+  readonly blocked?: boolean // Its blocked flag at the start, when its file gives one
 }
 
 /** The walls: a tile holds at most one, and nothing else; emitters and receivers are wall tiles of their own */
@@ -113,7 +122,8 @@ function tileKey(x: number, y: number): string {
 /**
  * Checks how the parts of a format 2 chamber fit together: everything inside
  * the chamber, at most one fixed element per tile, emitters and receivers
- * facing the floor, ids unique and links naming something, antlines leading
+ * facing the floor, ids unique and links naming something, no blocked flag
+ * on an element a link reaches, antlines leading
  * from a button, switch or receiver to an element it links, an enclosed
  * edge, and the exit in that edge, away from its corners.
  */
@@ -393,7 +403,7 @@ class ChamberValidator {
    */
   private collectTargets(): void {
     const chamber = this.chamber
-    const addElements = (list: readonly (PositionData & {readonly id?: number})[] | undefined, kind: OccupantKind, name: string): void => {
+    const addElements = (list: readonly LinkableEntry[] | undefined, kind: OccupantKind, name: string): void => {
       list?.forEach((element, index) => this.addTarget(element.id, {
         kind: kind,
         field: `${name}[${index}]`,
@@ -402,6 +412,7 @@ class ChamberValidator {
           y: element.y,
         },
         links: [],
+        setsBlocked: element.blocked !== undefined,
       }))
     }
 
@@ -416,6 +427,7 @@ class ChamberValidator {
             y: wall.y,
           },
           links: [],
+          setsBlocked: wall.blocked !== undefined,
         })
       }
     })
@@ -433,6 +445,7 @@ class ChamberValidator {
         y: chamber.exit.y,
       },
       links: [],
+      setsBlocked: chamber.exit.blocked !== undefined,
     })
     addElements(chamber.arrows, 'arrow', 'arrows')
     addElements(chamber.emitters, 'emitter', 'emitters')
@@ -441,6 +454,7 @@ class ChamberValidator {
       field: `groups[${index}]`,
       tile: null,
       links: group.links,
+      setsBlocked: false,
     }))
   }
 
@@ -493,6 +507,37 @@ class ChamberValidator {
     checkTriggers(chamber.buttons, 'buttons', 'links a box: pressing sends it back to its start, releasing does nothing to it')
     checkTriggers(chamber.switches, 'switches', null)
     checkTriggers(chamber.receivers, 'receivers', 'links a box: lighting sends it back to its start, going dark does nothing to it')
+  }
+
+  /**
+   * Checks that no element a button, switch or receiver links, by its id or
+   * through a group, gives its blocked flag: a linked element starts blocked,
+   * and those linking it decide when it is unblocked. Each such element is
+   * reported once, in the order its id was noted.
+   */
+  private checkLinkedBlocked(): void {
+    const linkedIds = new Set<number>()
+    const triggers = [
+      ...(this.chamber.buttons ?? []),
+      ...(this.chamber.switches ?? []),
+      ...(this.chamber.receivers ?? []),
+    ]
+
+    for (const trigger of triggers) {
+      for (const id of trigger.links) {
+        const target = this.targets.get(id)
+
+        for (const member of (target?.kind === 'group') ? target.links : [id]) {
+          linkedIds.add(member)
+        }
+      }
+    }
+
+    this.targets.forEach((target, id) => {
+      if (linkedIds.has(id) && target.setsBlocked) {
+        this.problems.push(chamberError(target.field, target.tile, 'sets blocked, but it is linked: a linked element starts blocked, and the buttons, switches and receivers linking it decide when it is unblocked'))
+      }
+    })
   }
 
   /**
@@ -678,6 +723,7 @@ class ChamberValidator {
     this.checkDeviceFaces()
     this.collectTargets()
     this.checkLinks()
+    this.checkLinkedBlocked()
     this.checkArrows()
     this.chamber.antlines?.forEach((antline, index) => this.checkAntline(antline, `antlines[${index}]`))
     this.checkEdge()

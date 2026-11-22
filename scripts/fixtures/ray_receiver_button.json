@@ -7,7 +7,7 @@
     "subject": {
         "x": 3,
         "y": 2,
-        "direction": "LEFT"
+        "direction": "RIGHT"
     },
     "exit": {
         "x": 5,
@@ -70,6 +70,12 @@
             "x": 3,
             "y": 1,
             "id": 1
+        }
+    ],
+    "boxes": [
+        {
+            "x": 4,
+            "y": 2
         }
     ]
 }

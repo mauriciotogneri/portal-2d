@@ -4,8 +4,8 @@ import {defineElement} from '@/game/rules/element_definition'
 import type {StateDraft} from '@/game/rules/state_draft'
 
 /**
- * Switches an emitter on, when a link unblocks it: a button goes down, a
- * switch is used or a receiver lights; reported only when it was off.
+ * Switches an emitter on, when a link unblocks it: every button, switch and
+ * receiver linking it is active; reported only when it was off.
  * @param draft - The step's state
  * @param index - The emitter's index in the chamber's emitter list
  */
@@ -16,8 +16,8 @@ function switchEmitterOn(draft: StateDraft, index: number): void {
 }
 
 /**
- * Switches an emitter off, when a link blocks it: a button comes up or a
- * receiver goes dark; reported only when it was on.
+ * Switches an emitter off, when a link blocks it: a button, switch or
+ * receiver linking it isn't active; reported only when it was on.
  * @param draft - The step's state
  * @param index - The emitter's index in the chamber's emitter list
  */
@@ -27,7 +27,7 @@ function switchEmitterOff(draft: StateDraft, index: number): void {
   }
 }
 
-/** An emitter, a wall tile of its own that sends a ray from its firing face while it is on (blocked means off, and it starts on unless its file says otherwise); it stops walking and shots by being a wall, which the step reads apart, and takes no portal on any face */
+/** An emitter, a wall tile of its own that sends a ray from its firing face while it is on (blocked means off, and it starts on unless its file says otherwise, or off when a link reaches it); it stops walking and shots by being a wall, which the step reads apart, and takes no portal on any face */
 export const EMITTER_ELEMENT = defineElement<EmitterData>()({
   kind: 'emitter',
   fileKey: 'emitters',

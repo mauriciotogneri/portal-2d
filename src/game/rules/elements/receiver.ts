@@ -5,11 +5,12 @@ import type {StateDraft} from '@/game/rules/state_draft'
 
 /**
  * Judges a receiver in every pass, after the buttons: lit while a ray
- * reaches its listening face, the rays traced after every change made
- * before it, so two receivers that each open the other's door can't flip
- * together forever. Lighting, it reports it and unblocks its links; going
- * dark, it reports it and blocks them, as a button does going down and
- * coming up.
+ * reaches its listening face, on the rays traced after every change made
+ * before it in the step, not once per pass, so a receiver listed after
+ * another sees in the same pass what that one's links changed. Lighting or
+ * going dark, it reports it and runs its links, as a button does going down
+ * and coming up: each element it links is unblocked while every button,
+ * switch and receiver linking it is active, and blocked otherwise.
  * @param draft - The step's state
  * @param index - The receiver's index in the chamber's receiver list
  */
@@ -18,11 +19,11 @@ function judgeReceiver(draft: StateDraft, index: number): void {
 
   if (draft.setReceiverLit(index, lit)) {
     draft.emit(lit ? GameEvent.RECEIVER_LIT : GameEvent.RECEIVER_UNLIT)
-    draft.applyLinks('receiver', index, lit)
+    draft.applyLinks('receiver', index)
   }
 }
 
-/** A receiver, a wall tile of its own lit while a ray reaches its listening face: lighting unblocks its links (elements or link groups), going dark blocks them, as a button held down and let go; it stops walking and shots by being a wall, which the step reads apart, and takes no portal on any face */
+/** A receiver, a wall tile of its own lit while a ray reaches its listening face, which is when it is active, as a button held down: an element it links (directly or through a link group) is unblocked while it and every other button, switch and receiver linking it are active; it stops walking and shots by being a wall, which the step reads apart, and takes no portal on any face */
 export const RECEIVER_ELEMENT = defineElement<ReceiverData>()({
   kind: 'receiver',
   fileKey: 'receivers',

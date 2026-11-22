@@ -60,29 +60,32 @@ export const PORTAL_SLOTS: Readonly<Record<PortalColor, number>> = {
 /**
  * How one chamber's state is laid out as a list of 16-bit numbers: the
  * values every chamber has (StateSlot), then each box's column and row, each
- * button's pressed flag, each receiver's lit flag, and the blocked flag of
- * each element a link reaches, in registry order, then list order. An
- * element no link reaches keeps its blocked flag from the chamber file, so
- * the state doesn't hold it. A chamber with no receivers has no lit flags,
- * so its states are laid out as before receivers.
+ * button's pressed flag, each receiver's lit flag, each switch's used flag,
+ * and the blocked flag of each element a link reaches, in registry order,
+ * then list order. An element no link reaches keeps its blocked flag from
+ * the chamber file, so the state doesn't hold it. A chamber with no
+ * receivers has no lit flags, and one with no switches no used flags, so
+ * its states are laid out as before receivers and switch latches.
  */
 export class StateLayout {
   readonly boxCount: number // Boxes in the chamber
   readonly buttonCount: number // Buttons in the chamber
   readonly receiverCount: number // Receivers in the chamber
+  readonly switchCount: number // Switches in the chamber
   readonly flagCount: number // Blocked flags the state holds, one per element a link reaches
   readonly boxesOffset: number // Where the boxes' columns and rows start
   readonly buttonsOffset: number // Where the buttons' pressed flags start
   readonly receiversOffset: number // Where the receivers' lit flags start
+  readonly switchesOffset: number // Where the switches' used flags start
   readonly flagsOffset: number // Where the blocked flags start
   readonly length: number // How many values a state holds
   private readonly flagOffsets = new Map<BlockableKind, Int16Array>() // Per element type, each element's flag offset, or NOT_STORED
-  private readonly startBlocked = new Map<BlockableKind, Uint8Array>() // Per element type, each element's blocked flag in the chamber file
+  private readonly startBlocked = new Map<BlockableKind, Uint8Array>() // Per element type, each element's blocked flag at the start: 1 for one a link reaches, else as the chamber file sets it
   private readonly startValues: Int16Array // The state as the chamber file describes it, before it settles
 
   /**
    * @param data - The chamber, its fields already read; it is only read
-   * @param linked - Every element a button or switch link reaches
+   * @param linked - Every element a button, switch or receiver link reaches
    * @throws Error when the chamber is too large for a state's numbers
    */
   constructor(data: ChamberData, linked: readonly LinkTarget[]) {
@@ -95,10 +98,12 @@ export class StateLayout {
     this.boxCount = boxes.length
     this.buttonCount = (data.buttons ?? []).length
     this.receiverCount = (data.receivers ?? []).length
+    this.switchCount = (data.switches ?? []).length
     this.boxesOffset = FIXED_SLOT_COUNT
     this.buttonsOffset = this.boxesOffset + (this.boxCount * 2)
     this.receiversOffset = this.buttonsOffset + this.buttonCount
-    this.flagsOffset = this.receiversOffset + this.receiverCount
+    this.switchesOffset = this.receiversOffset + this.receiverCount
+    this.flagsOffset = this.switchesOffset + this.switchCount
 
     const linkedKeys = new Set(linked.map((target) => `${target.kind}:${target.index}`))
     let nextOffset = this.flagsOffset
@@ -113,9 +118,14 @@ export class StateLayout {
       const blocked = new Uint8Array(entries.length)
 
       entries.forEach((entry, index) => {
-        blocked[index] = (entry.blocked ?? definition.defaultBlocked) ? 1 : 0
+        const isLinked = linkedKeys.has(`${definition.kind}:${index}`)
 
-        if (linkedKeys.has(`${definition.kind}:${index}`)) {
+        // A linked element starts blocked whatever its file says, since its
+        // buttons, switches and receivers, all inactive before the chamber
+        // settles, decide; the validator rejects a blocked field on one
+        blocked[index] = (isLinked || (entry.blocked ?? definition.defaultBlocked)) ? 1 : 0
+
+        if (isLinked) {
           offsets[index] = nextOffset
           nextOffset++
         }
@@ -133,7 +143,8 @@ export class StateLayout {
   /**
    * Writes the state the chamber file describes: the subject where it starts,
    * empty-handed, both portals closed, every box on its start tile, every
-   * button up, every receiver dark and every flag as the file sets it.
+   * button up, every receiver dark, every switch unused and every element a
+   * link reaches blocked.
    * @param data - The chamber
    * @returns The values
    */
@@ -182,7 +193,9 @@ export class StateLayout {
   }
 
   /**
-   * An element's blocked flag as the chamber file sets it.
+   * An element's blocked flag before the chamber settles: blocked for an
+   * element a link reaches, whatever its file says, otherwise as the file
+   * sets it, which it keeps.
    * @param kind - The element type
    * @param index - The element's index in the type's list
    * @returns True when it starts blocked

@@ -101,9 +101,11 @@ function beam(x: number, y: number, direction: 'H' | 'V', on: boolean): BeamData
  * arrows point all four ways, and a turnable one beside them points up,
  * turned right while off by the button its box holds down, two lasers cross,
  * one box lies on a button,
- * another on the floor, and a third beside the subject, on its left. The
- * switch links the fizzler, never used, so an antline runs between them,
- * unlit while the fizzler is on and lit while it is off. Column 4 and row 3
+ * another on the floor, and a third beside the subject, on its left. While
+ * on, the switch links the fizzler, never used, so the fizzler stays on and
+ * an antline from the switch to it is unlit; while off, the button the box
+ * holds down links the fizzler too, switching it off, and the antline runs
+ * from that button, lit. Column 4 and row 3
  * stay clear but for that third box, which lets shots through, so the
  * subject's shots reach the walls.
  * @param on - Whether every element that can be blocked is: the turnable arrow pointing its own way, the inner blocked wall refusing portals, the light barriers on, ditches open, doors and the exit closed, the fizzler and lasers on; and the emitter on, which is the one unblocked while on
@@ -202,7 +204,8 @@ function specimenData(on: boolean): ChamberData {
     ],
     fizzlers: [
       {
-        ...blockable(6, 5, on),
+        x: 6,
+        y: 5,
         id: 1,
       },
     ],
@@ -254,7 +257,10 @@ function specimenData(on: boolean): ChamberData {
       {
         x: 5,
         y: 1,
-        links: on ? [] : [2],
+        links: on ? [] : [
+          2,
+          1,
+        ],
       },
       {
         x: 5,
@@ -266,14 +272,18 @@ function specimenData(on: boolean): ChamberData {
       {
         x: 5,
         y: 6,
-        links: [1],
+        links: on ? [1] : [],
       },
     ],
     antlines: [
       {
         link: 1,
-        path: [
+        path: on ? [
           at(5, 6),
+          at(5, 5),
+          at(6, 5),
+        ] : [
+          at(5, 1),
           at(5, 5),
           at(6, 5),
         ],

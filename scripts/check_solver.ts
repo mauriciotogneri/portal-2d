@@ -500,6 +500,7 @@ function checkOversizedKey(): string {
       tiles: 2 ** 20,
       sides: 2 ** 20,
       boxes: 2,
+      switches: 0,
       flags: 0,
     })
   } catch (error) {

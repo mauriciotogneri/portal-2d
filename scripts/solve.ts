@@ -38,14 +38,15 @@ const MEBIBYTE = 1024 * 1024
 /**
  * The rough upper bound on a chamber's states, as a power of ten: every
  * tile and facing, both portals on any wall side or closed, every box on
- * any tile or carried, and every flag either way.
+ * any tile or carried, and every switch's used flag and every blocked
+ * flag either way.
  * @param index - The chamber's numbered tiles and wall sides
  * @returns The bound's exponent
  */
 function upperBoundExponent(index: ChamberIndex): number {
   const layout = index.chamber.stateLayout
 
-  return Math.log10(index.tileCount * 4) + (2 * Math.log10(index.sideCount + 1)) + (layout.boxCount * Math.log10(index.tileCount + 1)) + (layout.flagCount * Math.log10(2))
+  return Math.log10(index.tileCount * 4) + (2 * Math.log10(index.sideCount + 1)) + (layout.boxCount * Math.log10(index.tileCount + 1)) + ((layout.switchCount + layout.flagCount) * Math.log10(2))
 }
 
 /**

@@ -9,7 +9,8 @@ import type {TilePainter} from '@/game/tile_painter'
 // How the antlines are drawn (docs/sprites.md): dotted lines on the floor
 // from a button, switch or receiver to an element it links (from a receiver,
 // under its wall tile up to the floor), drawn by code, unlit in
-// cyan and lit in amber while the element they lead to is unblocked, each
+// cyan and lit in amber while the button, switch or receiver they start on
+// is active (a button held down, a switch used, a receiver lit), each
 // dot ringed by a darker border. They lie over the floor and under
 // everything else, so the renderer draws them into its backdrop; where a
 // line crosses a plain wall, its dots are drawn again over the wall's top,
@@ -60,18 +61,17 @@ const HIDING_WALL_KINDS: readonly PlacedKind[] = [
 ]
 
 /**
- * Whether an antline is lit: while the element it leads to is unblocked (a
- * door or the exit open, a laser, a light barrier or a fizzler off, a ditch
- * bridged, a blocked wall taking portals, an emitter on, an arrow turned). A
- * box has no blocked flag, so a line to it is never lit.
+ * Whether an antline is lit: while the button, switch or receiver it starts
+ * on is active (a button held down, a switch used, a receiver lit), whatever
+ * the element it leads to does, a box included, so a line shows which of
+ * the element's buttons, switches and receivers are still to be made
+ * active.
  * @param state - The state drawn
  * @param antline - The antline
  * @returns True when it is lit
  */
 export function isAntlineLit(state: RulesState, antline: CompiledAntline): boolean {
-  const kind = antline.target.kind
-
-  return (kind !== 'box') && (!state.isBlocked(kind, antline.target.index))
+  return state.isActivatorActive(antline.source)
 }
 
 /**

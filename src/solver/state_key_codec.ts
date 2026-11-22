@@ -23,6 +23,7 @@ export type KeyCounts = {
   readonly tiles: number // Tiles that aren't wall
   readonly sides: number // Wall sides a portal can open on
   readonly boxes: number // Boxes
+  readonly switches: number // Switches, each with its used flag
   readonly flags: number // Blocked flags the state holds
 }
 
@@ -56,7 +57,7 @@ export function measureKey(counts: KeyCounts): KeyWidths {
   const tile = bitsFor(counts.tiles)
   const carriedBox = bitsFor(counts.boxes + 1)
   const portal = bitsFor(counts.sides + 1)
-  const total = tile + FACING_BITS + carriedBox + (2 * portal) + (counts.boxes * tile) + counts.flags
+  const total = tile + FACING_BITS + carriedBox + (2 * portal) + (counts.boxes * tile) + counts.switches + counts.flags
 
   if (total > MAX_KEY_BITS) {
     throw new Error(`The state key needs ${total} bits, at most ${MAX_KEY_BITS}`)
@@ -91,7 +92,8 @@ function valueAt(values: Int16Array, offset: number): number {
  * Packs a settled state of one chamber into a key of two 32-bit words, and
  * back. The key holds the subject's tile and facing, the carried box, each
  * portal's wall side, each box's tile (none for the carried box, which is on
- * the subject's tile) and each blocked flag. It leaves out what a settled
+ * the subject's tile), each switch's used flag and each blocked flag, the
+ * last field. It leaves out what a settled
  * state determines: each button is pressed exactly when the subject or a box
  * is on it, each receiver is lit exactly when a ray reaches it, and the
  * chamber is completed exactly when the subject is on the exit, so unpacking
@@ -116,6 +118,7 @@ export class StateKeyCodec {
       tiles: index.tileCount,
       sides: index.sideCount,
       boxes: layout.boxCount,
+      switches: layout.switchCount,
       flags: layout.flagCount,
     })
   }
@@ -234,6 +237,10 @@ export class StateKeyCodec {
       this.write(tile, this.widths.tile)
     }
 
+    for (let switchIndex = 0; switchIndex < layout.switchCount; switchIndex++) {
+      this.write(valueAt(values, layout.switchesOffset + switchIndex), 1)
+    }
+
     for (let flag = 0; flag < layout.flagCount; flag++) {
       this.write(valueAt(values, layout.flagsOffset + flag), 1)
     }
@@ -297,6 +304,10 @@ export class StateKeyCodec {
       values[layout.boxesOffset + (box * 2)] = this.index.tileX(tile)
       values[layout.boxesOffset + (box * 2) + 1] = this.index.tileY(tile)
       boxTiles.add(tile)
+    }
+
+    for (let switchIndex = 0; switchIndex < layout.switchCount; switchIndex++) {
+      values[layout.switchesOffset + switchIndex] = this.read(1)
     }
 
     for (let flag = 0; flag < layout.flagCount; flag++) {

@@ -1,6 +1,6 @@
 import {DELTAS, type Direction} from '@/game/direction'
 import type {GameEvent} from '@/game/game_event'
-import type {CompiledChamber, PlacedKind} from '@/game/rules/compiled_chamber'
+import type {ActivatorKind, CompiledChamber} from '@/game/rules/compiled_chamber'
 import {type BlockableKind, findElementDefinition} from '@/game/rules/element_registry'
 import {PORTAL_COLORS, type PortalColor} from '@/game/rules/portal_color'
 import {type RayTrace, traceRays} from '@/game/rules/rays'
@@ -277,6 +277,16 @@ export class StateDraft extends StateReader {
   }
 
   /**
+   * Marks a switch as used, which it stays until the chamber is loaded
+   * again.
+   * @param index - The switch's index in the chamber's switch list
+   * @returns Whether it changed: false once it has been used before
+   */
+  markSwitchUsed(index: number): boolean {
+    return this.write(this.switchOffset(index), 1)
+  }
+
+  /**
    * Sets an element's blocked flag.
    * @param kind - The element type
    * @param index - The element's index in the type's list
@@ -302,17 +312,22 @@ export class StateDraft extends StateReader {
   }
 
   /**
-   * Runs a button's, switch's or receiver's links, in order: each linked
-   * element's linkUnblocked or linkBlocked hook, a link group's elements in
-   * its place.
+   * Runs a button's, switch's or receiver's links once it changed, or a
+   * switch was used, in order, a link group's elements in its place, each
+   * element once: an element every button, switch and receiver linking it
+   * finds active is unblocked (its linkUnblocked hook), any other blocked
+   * (its linkBlocked hook). Those hooks change nothing on an element already
+   * that way (no portal is open on a blocked wall that is blocked, or faces
+   * a fizzler that is on, for blocking it again to close), but a box, which
+   * goes back to its start each time it is unblocked.
    * @param kind - The element whose links act, a button, a switch or a receiver
    * @param index - Its index in the type's list
-   * @param unblock - True to unblock the linked elements, false to block them
    */
-  applyLinks(kind: PlacedKind, index: number, unblock: boolean): void {
+  applyLinks(kind: ActivatorKind, index: number): void {
     for (const target of this.chamber.linksOf(kind, index)) {
       const hooks = findElementDefinition(target.kind).hooks
-      const hook = unblock ? hooks?.linkUnblocked : hooks?.linkBlocked
+      const unblocked = this.chamber.activatorsOf(target).every((activator) => this.isActivatorActive(activator))
+      const hook = unblocked ? hooks?.linkUnblocked : hooks?.linkBlocked
 
       hook?.(this, target.index)
     }

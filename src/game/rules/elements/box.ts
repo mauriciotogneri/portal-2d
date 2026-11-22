@@ -4,9 +4,11 @@ import {defineElement} from '@/game/rules/element_definition'
 import type {StateDraft} from '@/game/rules/state_draft'
 
 /**
- * Sends a box back to its start tile, when a link unblocks it, unless the
- * subject carries it, reporting it only if the box was away from there.
- * Blocking it does nothing.
+ * Sends a box back to its start tile, when a link unblocks it (a change
+ * leaves every button, switch and receiver linking it active, or a linked
+ * switch is used again while they all are), unless the subject carries it,
+ * reporting it only if the box was away from there. Blocking it does
+ * nothing.
  * @param draft - The step's state
  * @param index - The box's index in the chamber's box list
  */
@@ -60,7 +62,7 @@ export function destroyBoxesOnBlockedTiles(draft: StateDraft): void {
   })
 }
 
-/** A box the subject can carry, mainly to hold buttons down, listed at its start tile; resting, it keeps the subject off its tile (checked by the core step, since boxes move) but lets shots through; a link sends it back there, and so does a door closing, a ditch opening or a laser, a light barrier or a fizzler switching on where it lies */
+/** A box the subject can carry, mainly to hold buttons down, listed at its start tile; resting, it keeps the subject off its tile (checked by the core step, since boxes move) but lets shots through; a link sends it back there whenever it unblocks it, and so does a door closing, a ditch opening or a laser, a light barrier or a fizzler switching on where it lies */
 export const BOX_ELEMENT = defineElement<BoxData>()({
   kind: 'box',
   fileKey: 'boxes',

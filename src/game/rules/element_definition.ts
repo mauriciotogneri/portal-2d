@@ -51,16 +51,17 @@ export type RayBlocking = 'never' | 'whenBlocked'
  * in its type's list. A step runs them in this order: the action (interact
  * reaches the element on the subject's tile), then, in every pass of the
  * repeat loop, first subjectInside for the elements on the subject's tile,
- * then everyPass for every element, type by type in registry order; links
- * run linkUnblocked or linkBlocked on their targets whenever a button, a
- * switch or a receiver acts.
+ * then everyPass for every element, type by type in registry order; whenever
+ * a button or a receiver changes, or a switch is used, its links run
+ * linkUnblocked on each element it links that every button, switch and
+ * receiver linking it finds active, and linkBlocked on the others.
  */
 export type ElementHooks = {
   readonly interact?: (draft: StateDraft, index: number) => boolean // The interact key on its tile; true when it took the key, so nothing else does (a switch)
   readonly subjectInside?: (draft: StateDraft, index: number) => void // Each pass, while the subject stands on its tile (a fizzler's rule)
   readonly everyPass?: (draft: StateDraft, index: number) => void // Each pass, in list order (a button judging whether it is held down, a receiver whether a ray reaches it)
-  readonly linkUnblocked?: (draft: StateDraft, index: number) => void // A link unblocks it: a button goes down, a switch is used or a receiver lights
-  readonly linkBlocked?: (draft: StateDraft, index: number) => void // A link blocks it: a button comes up or a receiver goes dark
+  readonly linkUnblocked?: (draft: StateDraft, index: number) => void // A link unblocks it: one linking it changed or a switch linking it was used, and every button, switch and receiver linking it is active (held down, used, lit)
+  readonly linkBlocked?: (draft: StateDraft, index: number) => void // A link blocks it: one linking it changed or a switch linking it was used, and one of them isn't active
 }
 
 // Never exists at runtime: only its type is used, as the key that carries a
@@ -80,7 +81,7 @@ export type ElementDefinition<Entry = unknown> = {
   readonly sitsOn: ElementGround // Which tiles it can sit on
   readonly layer: DrawLayer // Where it is drawn
   readonly linkable: boolean // Whether a button or switch link can name it
-  readonly defaultBlocked: boolean | null // Its blocked flag when the file leaves it out, or null when it has none
+  readonly defaultBlocked: boolean | null // Its blocked flag when the file leaves it out, or null when it has none; one a link reaches starts blocked whatever its file says
   readonly blocksWalking: WalkBlocking // When it keeps the subject off its tile
   readonly blocksShots: ShotBlocking // When it stops a portal shot on its tile
   readonly stopsShootingFrom: ShootingFromBlocking // When standing on it keeps the portal keys from shooting

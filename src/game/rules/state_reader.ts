@@ -1,5 +1,5 @@
 import type {Direction} from '@/game/direction'
-import {type CompiledChamber, NO_ELEMENT} from '@/game/rules/compiled_chamber'
+import {type Activator, type CompiledChamber, NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import type {BlockableKind, OneWayKind} from '@/game/rules/element_registry'
 import type {PortalColor} from '@/game/rules/portal_color'
 import {CLOSED_PORTAL, DIRECTIONS, NO_BOX, NOT_STORED, PORTAL_SLOTS, StateSlot} from '@/game/rules/state_layout'
@@ -83,6 +83,20 @@ export abstract class StateReader {
     }
 
     return this.chamber.stateLayout.receiversOffset + index
+  }
+
+  /**
+   * Where a switch's used flag is kept.
+   * @param index - The switch's index in the chamber's switch list
+   * @returns The offset
+   * @throws RangeError for a switch the chamber doesn't have
+   */
+  protected switchOffset(index: number): number {
+    if ((index < 0) || (index >= this.chamber.stateLayout.switchCount)) {
+      throw new RangeError(`no switch ${index} in the chamber`)
+    }
+
+    return this.chamber.stateLayout.switchesOffset + index
   }
 
   /**
@@ -259,6 +273,36 @@ export abstract class StateReader {
    */
   isReceiverLit(index: number): boolean {
     return this.read(this.receiverOffset(index)) === 1
+  }
+
+  /**
+   * Whether a switch has been used since the chamber was loaded: a switch
+   * stays active from its first use on.
+   * @param index - The switch's index in the chamber's switch list
+   * @returns True once it has been used
+   */
+  isSwitchUsed(index: number): boolean {
+    return this.read(this.switchOffset(index)) === 1
+  }
+
+  /**
+   * Whether a button, switch or receiver is active: a button held down, a
+   * switch used, a receiver lit. An element is unblocked exactly while every
+   * one linking it is active.
+   * @param activator - The button, switch or receiver
+   * @returns True when it is active
+   */
+  isActivatorActive(activator: Activator): boolean {
+    switch (activator.kind) {
+      case 'button':
+        return this.isButtonPressed(activator.index)
+
+      case 'switch':
+        return this.isSwitchUsed(activator.index)
+
+      case 'receiver':
+        return this.isReceiverLit(activator.index)
+    }
   }
 
   /**

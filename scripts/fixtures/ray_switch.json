@@ -48,8 +48,7 @@
             "x": 0,
             "y": 3,
             "direction": "RIGHT",
-            "id": 1,
-            "blocked": true
+            "id": 1
         }
     ],
     "receivers": [

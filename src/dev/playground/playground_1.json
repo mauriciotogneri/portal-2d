@@ -259,8 +259,7 @@
             "x": 14,
             "y": 10,
             "direction": "LEFT",
-            "id": 81,
-            "blocked": true
+            "id": 81
         }
     ],
     "receivers": [

@@ -13,6 +13,7 @@ import boxOnSwitchedElement from '@scripts/fixtures/box_on_switched_element.json
 import boxOutOfReach from '@scripts/fixtures/box_out_of_reach.json'
 import boxPutDownInFront from '@scripts/fixtures/box_put_down_in_front.json'
 import boxPutDownOnOpenDitch from '@scripts/fixtures/box_put_down_on_open_ditch.json'
+import boxTwoLinks from '@scripts/fixtures/box_two_links.json'
 import buttonBehindCarriedBox from '@scripts/fixtures/button_behind_carried_box.json'
 import buttonBox from '@scripts/fixtures/button_box.json'
 import carriedBoxLink from '@scripts/fixtures/carried_box_link.json'
@@ -23,6 +24,7 @@ import fizzlerConnector from '@scripts/fixtures/fizzler_connector.json'
 import fizzlerShot from '@scripts/fixtures/fizzler_shot.json'
 import fizzlersInARow from '@scripts/fixtures/fizzlers_in_a_row.json'
 import lightBarrier from '@scripts/fixtures/light_barrier.json'
+import linkedBlockedField from '@scripts/fixtures/linked_blocked_field.json'
 import noPortalBehindEndPlate from '@scripts/fixtures/no_portal_behind_end_plate.json'
 import noPortalBesideDoor from '@scripts/fixtures/no_portal_beside_door.json'
 import openEdge from '@scripts/fixtures/open_edge.json'
@@ -62,6 +64,7 @@ import slidePortals from '@scripts/fixtures/slide_portals.json'
 import slideRingBlocked from '@scripts/fixtures/slide_ring_blocked.json'
 import slideRingOpen from '@scripts/fixtures/slide_ring_open.json'
 import switchBox from '@scripts/fixtures/switch_box.json'
+import switchButtonDoor from '@scripts/fixtures/switch_button_door.json'
 import twoBoxesFizzler from '@scripts/fixtures/two_boxes_fizzler.json'
 import twoButtonsOneDoor from '@scripts/fixtures/two_buttons_one_door.json'
 import underSubject from '@scripts/fixtures/under_subject.json'
@@ -176,19 +179,43 @@ export const FIXTURES: readonly Fixture[] = [
     },
   },
   {
-    name: 'carried_box_buttons_in_list_order',
-    behaviour: 'Carrying a box off a button onto a second button linked to the same door judges the buttons in list order, so the door ends open and the subject walks into the doorway.',
+    name: 'door_opens_once_both_buttons_held',
+    behaviour: 'A door two buttons link opens only once both are held: with a box resting on the first from the start it stays closed, and it opens when a second box is put down on the second, so the subject walks out through it.',
     chamber: twoButtonsOneDoor,
     actions: [
       'interact',
       'right',
+      'turnUp',
+      'interact',
       'right',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: true,
+      moves: 4,
+      portals: 0,
+      finalHash: '8713280b',
+    },
+  },
+  {
+    name: 'door_closes_when_either_button_released',
+    behaviour: 'Once both buttons hold the door open, picking the box up off the first lets it up, and the door closes though the second is still held.',
+    chamber: twoButtonsOneDoor,
+    actions: [
+      'interact',
+      'right',
+      'turnUp',
+      'interact',
+      'turnLeft',
+      'left',
+      'interact',
     ],
     expected: {
       completed: false,
       moves: 2,
       portals: 0,
-      finalHash: 'dd686733',
+      finalHash: '380a8892',
     },
   },
   {
@@ -237,7 +264,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 1,
       portals: 0,
-      finalHash: '090aa887',
+      finalHash: 'd491364e',
     },
   },
   {
@@ -674,7 +701,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 6,
       portals: 0,
-      finalHash: '6193fc1b',
+      finalHash: '860d4513',
     },
   },
   {
@@ -690,7 +717,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 0,
       portals: 0,
-      finalHash: '13ad7228',
+      finalHash: 'b904a710',
     },
   },
   {
@@ -707,7 +734,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 1,
       portals: 0,
-      finalHash: '384488c0',
+      finalHash: '78f15b68',
     },
   },
   {
@@ -723,7 +750,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 0,
       portals: 0,
-      finalHash: 'c9ff4773',
+      finalHash: 'f87d5783',
     },
   },
   {
@@ -739,7 +766,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 1,
       portals: 0,
-      finalHash: '803703a3',
+      finalHash: 'dd686733',
     },
   },
   {
@@ -1096,14 +1123,21 @@ export const FIXTURES: readonly Fixture[] = [
   },
   {
     name: 'slide_passes_button',
-    behaviour: 'Sliding over a button doesn\'t press it, so neither of its doors changes: the closed one stays closed, and the open one, which a press and a release on the way would have closed, stays open.',
+    behaviour: 'Sliding over a button doesn\'t press it: its door stays closed, and the box it also links, put down away from its start, stays there, where a press on the way would have sent it back.',
     chamber: slideButtons,
-    actions: ['right'],
+    actions: [
+      'up',
+      'interact',
+      'down',
+      'turnUp',
+      'interact',
+      'right',
+    ],
     expected: {
       completed: false,
-      moves: 1,
+      moves: 3,
       portals: 0,
-      finalHash: '6ba2cb65',
+      finalHash: 'b84a262f',
     },
   },
   {
@@ -1112,6 +1146,7 @@ export const FIXTURES: readonly Fixture[] = [
     chamber: slideButtons,
     actions: [
       'up',
+      'interact',
       'up',
       'right',
     ],
@@ -1119,7 +1154,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 3,
       portals: 0,
-      finalHash: 'eef8f80b',
+      finalHash: '7d6ef0b2',
     },
   },
   {
@@ -1173,7 +1208,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 3,
       portals: 0,
-      finalHash: '00ab08f6',
+      finalHash: 'ae8427f7',
     },
   },
   {
@@ -1337,18 +1372,20 @@ export const FIXTURES: readonly Fixture[] = [
   },
   {
     name: 'ray_held_door_closes_behind_subject',
-    behaviour: 'A door that starts open lets its own receiver\'s ray through; stepping into that ray in front of it darkens the receiver, the door closes and then stops the ray itself, so it stays closed once the subject steps away.',
+    behaviour: 'A door its own receiver holds open: a second emitter\'s ray, turned by a mirror box, lights the receiver and opens the door; picking the box up lets the first emitter\'s ray through the open door to the receiver instead; stepping into that ray in front of the door darkens the receiver, the door closes and then stops the ray itself, so it stays closed once the subject steps away.',
     chamber: rayOwnDoor,
     actions: [
-      'up',
-      'up',
+      'interact',
+      'left',
+      'left',
       'down',
+      'up',
     ],
     expected: {
       completed: false,
-      moves: 3,
+      moves: 4,
       portals: 0,
-      finalHash: '3c9bd467',
+      finalHash: '0fb13790',
     },
   },
   {
@@ -1574,7 +1611,7 @@ export const FIXTURES: readonly Fixture[] = [
   },
   {
     name: 'switch_switches_emitter_on',
-    behaviour: 'Using a switch switches on the emitter it links, which starts off, and its ray passes over another switch to light a receiver that opens a door.',
+    behaviour: 'Using a switch switches on the emitter it links, which a link reaches and so starts off, and its ray passes over another switch to light a receiver; the door that receiver links stays closed, since the other switch, which links it too, hasn\'t been used yet.',
     chamber: raySwitch,
     actions: [
       'left',
@@ -1584,24 +1621,24 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 1,
       portals: 0,
-      finalHash: 'bc3c5b58',
+      finalHash: 'c4fb9d90',
     },
   },
   {
-    name: 'receivers_hold_each_others_doors',
-    behaviour: 'Two rays, each through the door the other\'s receiver opens: a button opening the first door lights the first receiver, which opens the second door, which lights the second receiver, and settling ends with both lit.',
+    name: 'receivers_chain_open_exit',
+    behaviour: 'Each receiver is judged on the rays as every change before it in the step left them: a button opening the first door lights the first receiver, which opens the second door, which lights the second receiver, which opens the exit, all in the step the button goes down.',
     chamber: rayReceiversDoors,
     actions: ['left'],
     expected: {
       completed: false,
       moves: 1,
       portals: 0,
-      finalHash: '24877157',
+      finalHash: '543ef2af',
     },
   },
   {
-    name: 'receivers_let_go_together',
-    behaviour: 'The button coming up closes the first door, which darkens the first receiver, which closes the second door, and settling ends with both dark.',
+    name: 'receivers_chain_let_go_together',
+    behaviour: 'The button coming up closes the first door, which darkens the first receiver, which closes the second door, which darkens the second receiver, which closes the exit, all in the same step.',
     chamber: rayReceiversDoors,
     actions: [
       'left',
@@ -1611,27 +1648,79 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 2,
       portals: 0,
-      finalHash: '7bbf365e',
+      finalHash: '681492f7',
     },
   },
   {
-    name: 'receiver_and_button_latest_wins',
-    behaviour: 'A lit receiver and a button link one door: the button coming up closes it, the latest change, though the receiver stays lit.',
+    name: 'receiver_alone_leaves_door_closed',
+    behaviour: 'A door a button and a receiver link starts closed though the receiver is lit from the start: an element is unblocked only while every button, switch and receiver linking it is active, and the button is up.',
+    chamber: rayReceiverButton,
+    actions: [],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 0,
+      finalHash: 'd5c50d0f',
+    },
+  },
+  {
+    name: 'box_in_ray_closes_button_held_door',
+    behaviour: 'The subject carrying a box onto the button opens the door with the receiver lit; putting the box down in the ray darkens the receiver, and the door closes though the button is still held.',
     chamber: rayReceiverButton,
     actions: [
+      'interact',
       'left',
-      'right',
+      'turnUp',
+      'interact',
     ],
     expected: {
       completed: false,
-      moves: 2,
+      moves: 1,
       portals: 0,
-      finalHash: 'df21f199',
+      finalHash: 'd105661e',
     },
   },
   {
-    name: 'receiver_and_switch_latest_wins',
-    behaviour: 'A receiver and a switch link one door: stepping onto the switch in the ray darkens the receiver, which closes the door, and using the switch opens it again, the latest change, though the receiver stays dark.',
+    name: 'box_out_of_ray_reopens_door',
+    behaviour: 'Picking the box back up out of the ray lights the receiver again, and with the button still held the door opens again.',
+    chamber: rayReceiverButton,
+    actions: [
+      'interact',
+      'left',
+      'turnUp',
+      'interact',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: '7bbe5151',
+    },
+  },
+  {
+    name: 'button_pressed_while_ray_cut_leaves_door_closed',
+    behaviour: 'With the box left in the ray, stepping off the button and back onto it leaves the door closed: the button going down, the latest change, doesn\'t open it while the receiver is dark.',
+    chamber: rayReceiverButton,
+    actions: [
+      'interact',
+      'left',
+      'turnUp',
+      'interact',
+      'turnRight',
+      'right',
+      'left',
+    ],
+    expected: {
+      completed: false,
+      moves: 3,
+      portals: 0,
+      finalHash: '556354a0',
+    },
+  },
+  {
+    name: 'switch_used_in_ray_leaves_door_closed',
+    behaviour: 'A receiver and a switch link one door: stepping onto the switch in the ray darkens the receiver, and using the switch there, the latest change, leaves the door closed while the receiver is dark.',
     chamber: raySwitch,
     actions: [
       'left',
@@ -1643,7 +1732,44 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 2,
       portals: 0,
-      finalHash: '43c8abc6',
+      finalHash: 'cfaf03b7',
+    },
+  },
+  {
+    name: 'leaving_ray_opens_switch_held_door',
+    behaviour: 'A switch stays active once used: stepping back out of the ray lights the receiver, and the door opens without another use of the switch.',
+    chamber: raySwitch,
+    actions: [
+      'left',
+      'interact',
+      'up',
+      'interact',
+      'down',
+    ],
+    expected: {
+      completed: false,
+      moves: 3,
+      portals: 0,
+      finalHash: 'd1cef16f',
+    },
+  },
+  {
+    name: 'stepping_into_ray_closes_switch_held_door',
+    behaviour: 'Stepping into the ray again darkens the receiver, and the door the used switch and the receiver hold open closes.',
+    chamber: raySwitch,
+    actions: [
+      'left',
+      'interact',
+      'up',
+      'interact',
+      'down',
+      'up',
+    ],
+    expected: {
+      completed: false,
+      moves: 4,
+      portals: 0,
+      finalHash: 'cfaf03b7',
     },
   },
   {
@@ -1708,7 +1834,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: true,
       moves: 5,
       portals: 0,
-      finalHash: '1e3fc83e',
+      finalHash: '8e68a567',
     },
   },
   {
@@ -1763,7 +1889,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 2,
       portals: 3,
-      finalHash: '33309cf3',
+      finalHash: '1840ce8a',
     },
   },
   {
@@ -1781,7 +1907,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 0,
       portals: 1,
-      finalHash: '6ce5a04e',
+      finalHash: 'ed2febfe',
     },
   },
   {
@@ -1831,7 +1957,110 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 9,
       portals: 0,
-      finalHash: '31350335',
+      finalHash: '30ad1854',
+    },
+  },
+  {
+    name: 'switch_linked_door_stays_closed_on_button',
+    behaviour: 'A door a switch and a button link stays closed while the subject holds the button down, since the switch hasn\'t been used.',
+    chamber: switchButtonDoor,
+    actions: ['right'],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: '632b9fe6',
+    },
+  },
+  {
+    name: 'button_release_closes_switch_linked_door',
+    behaviour: 'Once the switch has been used, the button going down opens the door, and the button coming up closes it again.',
+    chamber: switchButtonDoor,
+    actions: [
+      'left',
+      'interact',
+      'right',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: false,
+      moves: 4,
+      portals: 0,
+      finalHash: 'd59bfe2d',
+    },
+  },
+  {
+    name: 'button_reopens_door_without_switch',
+    behaviour: 'A switch stays active from its first use until the chamber is loaded again: stepping back onto the button opens the door again without another use of the switch.',
+    chamber: switchButtonDoor,
+    actions: [
+      'left',
+      'interact',
+      'right',
+      'right',
+      'right',
+      'left',
+    ],
+    expected: {
+      completed: false,
+      moves: 5,
+      portals: 0,
+      finalHash: 'bed36ccf',
+    },
+  },
+  {
+    name: 'box_stays_with_one_of_two_links_active',
+    behaviour: 'A box a switch and a button both link, put down away from its start, stays there when the button goes down while the switch hasn\'t been used.',
+    chamber: boxTwoLinks,
+    actions: [
+      'interact',
+      'turnUp',
+      'interact',
+      'left',
+    ],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: '3cde0288',
+    },
+  },
+  {
+    name: 'box_goes_home_once_both_links_active',
+    behaviour: 'Using the switch with the button up leaves the box where it is; the button going down afterwards, with the switch used, sends it back to its start.',
+    chamber: boxTwoLinks,
+    actions: [
+      'interact',
+      'turnUp',
+      'interact',
+      'left',
+      'left',
+      'left',
+      'interact',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: false,
+      moves: 5,
+      portals: 0,
+      finalHash: 'e35ec092',
+    },
+  },
+  {
+    name: 'linked_door_starts_closed_whatever_its_file_says',
+    behaviour: 'A door a button links starts closed though its file says it starts open, which only a chamber read without the layout checks can say: the button, still up, decides, so the subject stops in front of it.',
+    chamber: linkedBlockedField,
+    actions: [
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: 'febafaf6',
     },
   },
   {
@@ -1902,7 +2131,7 @@ export const FIXTURES: readonly Fixture[] = [
       completed: false,
       moves: 4,
       portals: 0,
-      finalHash: '1cfea966',
+      finalHash: 'b7fa16d6',
     },
   },
   {

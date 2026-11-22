@@ -4,6 +4,7 @@ import brokenAntlines from '@scripts/fixtures/broken_antlines.json'
 import brokenArrows from '@scripts/fixtures/broken_arrows.json'
 import brokenDeviceFields from '@scripts/fixtures/broken_device_fields.json'
 import brokenDevices from '@scripts/fixtures/broken_devices.json'
+import brokenLinkedBlocked from '@scripts/fixtures/broken_linked_blocked.json'
 import brokenChamberFields from '@scripts/fixtures/broken_chamber_fields.json'
 import brokenChamberLayout from '@scripts/fixtures/broken_chamber_layout.json'
 import brokenSlideFloors from '@scripts/fixtures/broken_slide_floors.json'
@@ -181,6 +182,15 @@ export const CHAMBER_CASES: readonly ChamberCase[] = [
       'error receivers[0] at (2, 4): links id 9, which nothing has',
       'warning receivers[1] at (4, 0): links a box: lighting sends it back to its start, going dark does nothing to it',
       'warning receivers[2] at (6, 3): links a box: lighting sends it back to its start, going dark does nothing to it',
+    ],
+  },
+  {
+    name: 'broken_linked_blocked',
+    // A linked element starts blocked and its buttons, switches and receivers decide, so giving one a blocked flag, either way, is an error: the door a button and a receiver link directly, reported once, and the emitter a switch links through a group; the ditch the group also names gives none, and the laser that sets blocked is linked by nothing, which is right
+    data: brokenLinkedBlocked,
+    problems: [
+      'error doors[0] at (4, 1): sets blocked, but it is linked: a linked element starts blocked, and the buttons, switches and receivers linking it decide when it is unblocked',
+      'error emitters[0] at (0, 3): sets blocked, but it is linked: a linked element starts blocked, and the buttons, switches and receivers linking it decide when it is unblocked',
     ],
   },
   {

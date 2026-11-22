@@ -45,7 +45,7 @@ export type SlideFloorData = PositionData | WallRangeData
  */
 export type BlockedWallData = (PositionData & {
   readonly id?: number // Target for button, switch and receiver links; absent means it cannot be linked
-  readonly blocked?: boolean // Initial state; true when absent
+  readonly blocked?: boolean // Initial state; true when absent; never given on one a link reaches, which starts blocked
 }) | (WallRangeData & {
   readonly blocked?: boolean // Initial state; true when absent
 })
@@ -56,7 +56,7 @@ export type BlockedWallData = (PositionData & {
  */
 export type BlockableData = PositionData & {
   readonly id?: number // Target for button, switch and receiver links; absent means it cannot be linked
-  readonly blocked?: boolean // Initial state; true when absent
+  readonly blocked?: boolean // Initial state; true when absent; never given on one a link reaches, which starts blocked
 }
 
 /**
@@ -93,7 +93,7 @@ export type ArrowData = PositionData & {
 export type EmitterData = PositionData & {
   readonly direction: string // 'UP', 'DOWN', 'LEFT' or 'RIGHT': the face it fires from
   readonly id?: number // Target for button, switch and receiver links; absent means it cannot be linked
-  readonly blocked?: boolean // Initial state, blocked meaning off; false when absent, so it starts on
+  readonly blocked?: boolean // Initial state, blocked meaning off; false when absent, so it starts on; never given on one a link reaches, which starts off
 }
 
 /**
@@ -131,7 +131,8 @@ export type LinkGroupData = {
 
 /**
  * An antline: a dotted line on the floor from a button, switch or receiver
- * to one element it links, drawn only, lit while that element is unblocked.
+ * to one element it links, drawn only, lit while that button, switch or
+ * receiver is active (held down, used, lit).
  * Its path runs straight along rows and columns from corner to corner, from
  * the button's, switch's or receiver's tile to the element's.
  */

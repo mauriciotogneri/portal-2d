@@ -45,12 +45,29 @@ export type LinkTarget = {
 }
 
 /**
- * An antline as the game draws it: the element it leads to, whose blocked
- * flag lights it, and its corner tiles.
+ * An element type whose links act on the elements they name: a button, a
+ * switch or a receiver.
+ */
+export type ActivatorKind = 'button' | 'switch' | 'receiver'
+
+/**
+ * A button, switch or receiver, which is active while held down, once used
+ * or while lit.
+ */
+export type Activator = {
+  readonly kind: ActivatorKind // Its type
+  readonly index: number // Its index in that type's list in the chamber file
+}
+
+/**
+ * An antline as the game draws it: the button, switch or receiver it starts
+ * on, which lights it while active, the element it leads to, and its corner
+ * tiles.
  */
 export type CompiledAntline = {
+  readonly source: Activator // The button, switch or receiver on its first corner that links the element
   readonly target: LinkTarget // The element it leads to
-  readonly path: readonly PositionData[] // Its corner tiles, from the button or switch to the element
+  readonly path: readonly PositionData[] // Its corner tiles, from the button, switch or receiver to the element
 }
 
 /**
@@ -94,6 +111,16 @@ const BEAM_ALONG_SIDE: Readonly<Record<Direction, BeamOrientation>> = {
 
 /** The links of an element that has none */
 const NO_LINKS: readonly LinkTarget[] = []
+
+/** The buttons, switches and receivers linking an element no link reaches */
+const NO_ACTIVATORS: readonly Activator[] = []
+
+/** The element types whose links act, in the order an antline's first corner is searched for the one it starts on */
+const ACTIVATOR_KINDS: readonly ActivatorKind[] = [
+  'button',
+  'switch',
+  'receiver',
+]
 
 /** The element types that are wall tiles of their own and take no portal on any face: emitters and receivers */
 const DEVICE_KINDS = [
@@ -172,22 +199,27 @@ function collectLinkIds(data: ChamberData): LinkIds {
 }
 
 /**
- * Turns a button's or switch's link ids into the elements they reach, in
- * order: a group's elements take its place, in the group's order. An id that
- * names nothing, and a group's id naming another group, both of which the
- * validator rejects, reach nothing.
+ * Turns a button's, switch's or receiver's link ids into the elements they
+ * reach, in order: a group's elements take its place, in the group's order.
+ * An id that names nothing, and a group's id naming another group, both of
+ * which the validator rejects, reach nothing.
  * @param ids - The link ids, as the chamber file lists them
  * @param linkIds - What each id names
- * @returns The elements reached, a repeated one as often as it is named
+ * @returns The elements reached, each once, where it is first named, so one named directly and through a group counts once
  */
 function resolveLinks(ids: readonly number[], linkIds: LinkIds): readonly LinkTarget[] {
   const result: LinkTarget[] = []
+  const add = (element: LinkTarget): void => {
+    if (!result.some((known) => (known.kind === element.kind) && (known.index === element.index))) {
+      result.push(element)
+    }
+  }
 
   for (const id of ids) {
     const element = linkIds.elements.get(id)
 
     if (element !== undefined) {
-      result.push(element)
+      add(element)
       continue
     }
 
@@ -195,7 +227,7 @@ function resolveLinks(ids: readonly number[], linkIds: LinkIds): readonly LinkTa
       const memberElement = linkIds.elements.get(member)
 
       if (memberElement !== undefined) {
-        result.push(memberElement)
+        add(memberElement)
       }
     }
   }
@@ -206,7 +238,8 @@ function resolveLinks(ids: readonly number[], linkIds: LinkIds): readonly LinkTa
 /**
  * The fixed part of a chamber, built once per load: its
  * size, its walls and which of them can take portals, where each element is and
- * which way it points, what each link reaches, where the subject and each
+ * which way it points, what each link reaches and which buttons, switches
+ * and receivers link each element, where the subject and each
  * box start and which boxes hold a mirror, how its state is laid out, and
  * its antlines, for the drawing.
  * Every lookup takes the
@@ -220,7 +253,7 @@ export class CompiledChamber {
   readonly boxStarts: readonly PositionData[] // Each box's start tile, in list order
   readonly subjectStart: SubjectStart // Where the subject starts
   readonly stateLayout: StateLayout // How this chamber's state is laid out
-  readonly antlines: readonly CompiledAntline[] // The antlines, which are only drawn; one leading to no element, which the validator rejects, is left out
+  readonly antlines: readonly CompiledAntline[] // The antlines, which are only drawn; one leading to no element, or starting on no button, switch or receiver that links it, both of which the validator rejects, is left out
   private readonly walls: Uint8Array // 1 on each cell holding a wall, blocked walls, emitters and receivers included
   private readonly portalWalls: Uint8Array // 1 on each cell holding a wall that can take portals: a wall, or a blocked wall a link reaches or that starts unblocked
   private readonly mirrors: readonly (Mirror | null)[] // Each box's mirror, or null for a plain box, in list order
@@ -229,6 +262,7 @@ export class CompiledChamber {
   private readonly directions = new Map<PlacedKind, readonly (Direction | null)[]>() // Which way each element points, by type, then index
   private readonly turnedDirections = new Map<PlacedKind, readonly (Direction | null)[]>() // Which way each arrow a link can turn points while unblocked, by type, then index
   private readonly links = new Map<PlacedKind, readonly (readonly LinkTarget[])[]>() // What each element's links reach, by type, then index
+  private readonly activators = new Map<LinkableKind, Activator[][]>() // The buttons, switches and receivers linking each element, by type, then index; missing for an element none links
 
   /**
    * @param data - The chamber, its fields already read; it is only read
@@ -265,11 +299,16 @@ export class CompiledChamber {
       this.links.set(definition.kind, entries.map((entry) => resolveLinks(entry.links ?? [], linkIds)))
     }
 
+    this.collectActivators()
+
     this.antlines = (data.antlines ?? []).flatMap((antline) => {
       const target = linkIds.elements.get(antline.link)
+      const start = antline.path[0]
+      const source = ((target === undefined) || (start === undefined)) ? null : this.activatorOn(start, target)
 
-      return (target === undefined) ? [] : [
+      return ((target === undefined) || (source === null)) ? [] : [
         {
+          source: source,
           target: target,
           path: antline.path,
         },
@@ -287,6 +326,52 @@ export class CompiledChamber {
     this.stateLayout = new StateLayout(data, linked)
     this.placeBlockedWalls()
     this.placeDevices()
+  }
+
+  /**
+   * Notes, for each element a link reaches, the buttons, switches and
+   * receivers linking it, each once. Run once the links are resolved.
+   */
+  private collectActivators(): void {
+    for (const kind of ACTIVATOR_KINDS) {
+      const count = this.countOf(kind)
+
+      for (let index = 0; index < count; index++) {
+        for (const target of this.linksOf(kind, index)) {
+          const byElement = this.activators.get(target.kind) ?? []
+          const list = byElement[target.index] ?? []
+
+          list.push({
+            kind: kind,
+            index: index,
+          })
+          byElement[target.index] = list
+          this.activators.set(target.kind, byElement)
+        }
+      }
+    }
+  }
+
+  /**
+   * The button, switch or receiver on a tile that links an element, for the
+   * antline starting there.
+   * @param tile - The antline's first corner
+   * @param target - The element it leads to
+   * @returns The first one found, buttons first, then switches, then receivers, or null when none there links it
+   */
+  private activatorOn(tile: PositionData, target: LinkTarget): Activator | null {
+    for (const kind of ACTIVATOR_KINDS) {
+      for (let index = this.elementAt(kind, tile.x, tile.y); index !== NO_ELEMENT; index = this.nextOnTile(kind, index)) {
+        if (this.linksOf(kind, index).some((link) => (link.kind === target.kind) && (link.index === target.index))) {
+          return {
+            kind: kind,
+            index: index,
+          }
+        }
+      }
+    }
+
+    return null
   }
 
   /**
@@ -620,12 +705,24 @@ export class CompiledChamber {
   }
 
   /**
-   * What an element's links reach, groups expanded, in order.
+   * What an element's links reach, groups expanded, in order, each element
+   * once.
    * @param kind - The element type, a button, a switch or a receiver for any link
    * @param index - The element's index in the type's list
    * @returns The elements reached; empty for an element without links
    */
   linksOf(kind: PlacedKind, index: number): readonly LinkTarget[] {
     return this.links.get(kind)?.[index] ?? NO_LINKS
+  }
+
+  /**
+   * The buttons, switches and receivers linking an element, directly or
+   * through a group, each once: the element is unblocked exactly while all
+   * of them are active.
+   * @param target - The element
+   * @returns Them, buttons first, then switches, then receivers, each in list order; empty for an element no link reaches
+   */
+  activatorsOf(target: LinkTarget): readonly Activator[] {
+    return this.activators.get(target.kind)?.[target.index] ?? NO_ACTIVATORS
   }
 }
