@@ -18,9 +18,9 @@
 | 1 | `00_fixes.md` (file removed) | Done | Records keyed by permanent id (one-time migration, chamber number taken from list order), high-DPI blur fix, missing analytics events, first local check command |
 | 2 | `01_engine_v2.md` (file removed) | Done | Sounds out of the rules, engine runnable without a browser, replays on today's engine, recorded solutions and a local replay check, input rewrite (remappable keys), v2 rules and chamber format, the three inherited bugs fixed, v2 checked against the old rules, old engine deleted |
 | 3 | `02_solver.md` (file removed; see `docs/solver.md`) | Stopped | Solver prototype on the current chambers (go/no-go: no-go on 2026-11-08, decision 10); the rest was dropped: solvability and par in the local checks, shortcut finder, dead-end warning, hints, generated chambers |
-| 4 | `03_look_and_sound.md` (file removed) | Done | Visual rework, one tutorial chamber (chamber 0) |
+| 4 | `03_look_and_sound.md` (file removed) | Done | Visual rework, one tutorial chamber (chamber 0, now Chamber 1, decision 18) |
 | 5 | `04a_mechanics.md` (file removed, decision 17) | Done | Slide floors, turnable arrows and rays (emitters, receivers and mirror boxes, the "live lasers" of decisions 14 to 16), each with a teach and a proof chamber |
-| 6 | `04b_campaign.md` | Ready | The campaign completed at 20 chambers, a menu and catalogue that scale, chamber numbering and links |
+| 6 | `04b_campaign.md` | Ready | The campaign rebuilt to 20 chambers from the tutorial alone (decision 18), a menu and catalogue that scale, chamber numbering and links |
 | 7 | `05_creator_platform.md` | Draft | Editor, sharing in the link, share only what you solved |
 | 8 | `future.md` | — | Not a stage: ideas for mechanics beyond the plan, and how a mechanic was built (kept from stage 04a) |
 
@@ -55,6 +55,7 @@ The code as found on 2026-11-06, before stage 00 (three chambers, the old engine
 | 15 | 2026-11-16 | Stage 04 splits in two. 04a (`04a_mechanics.md`) builds slide floors, rotating arrows and live lasers, each with its rules, fixtures, docs and a teach and a proof chamber that prove it in play. 04b (`04b_campaign.md`) builds the rest of the 16 new chambers and their order, and the catalogue, links and Play menu that scale to 20. Stage 04's decisions 1–19 stay in 04a with their numbers, and 04b cites them as "04a decision N". 04b's parts that need no new mechanic (lab chambers, chambers for the existing elements, catalogue, links, menu) may start before 04a is done. Earlier decisions here that name stage 04 mean both halves |
 | 16 | 2026-11-20 | Stage 04a is done: slide floors, turnable arrows and live lasers each shipped with their rules, fixtures, docs and a teach and a proof chamber (chambers 4 to 9). Its file is kept, unlike the files of the stages done before it, because 04b cites its decisions by number |
 | 17 | 2026-11-20 | `04a_mechanics.md` is removed after all, as the files of the stages done before it were. What later stages still need moved out first: the decisions 04b cites, into 04b's "Decisions made" with their 04a numbers; a summary of chambers 4–9, into 04b; the editor's needs, into stage 05; stage 03's profiling numbers, into `docs/performance.md`; that settling's end is argued, not proven, into `docs/elements.md`; and the way a mechanic was built, step by step, into `future.md`. The rest (each mechanic's spec, plan and the code as found, and what each decision was chosen over) is in `docs/` as built, or in git history |
+| 18 | 2026-11-22 | The campaign restarts from the tutorial alone, now Chamber 1 with permanent id 1 (its files `src/chambers/chamber_1.json` and its solution). Chamber numbers and links count from 1 (`/chamber/1`), ids are 1 or more, and new campaign chambers take ids 2, 3 and so on. This replaces decision 11's tutorial numbered 0 (chamber numbers count from 0), and stage 04b's plan to keep chambers 0–9 in its campaign of 20. Chambers 1–9 left the campaign for good, which will be rebuilt from new chambers: with the old playground they became ten development-only playground chambers, Playground 1–10 (`src/dev/playground/playground_N.json`, at `/playground/N`, listed in the home menu's Playground section in development builds only, never shipped). Playground 1 is the old playground and Playground N (2–10) old chamber N−1, so stage 04a's teach and proof chambers (4–9) are Playground 5–10, outside the campaign. Playground chambers never need to be solvable: their recorded solutions were deleted (git history keeps them), and the replay and solver checks leave them out, running on Chamber 1 and the behaviour and solver fixtures only; they are still checked to load, settle and survive random play. Saved progress moved to version 3, so every save resets once, with no migration (decision 13), since the tutorial took old chamber 1's id. In analytics, `chamber_id` 1 and `chamber_number` 1 meant old chamber 1 before this change and the tutorial after it, so compare by date. The next deploy would show friends a single chamber and reset their saves, so the recommendation is to hold it until the campaign has new chambers |
 
 ## Open decisions
 
@@ -79,7 +80,7 @@ Each one belongs to the stage that must settle it, and appears there with option
 | 2 | 01 Engine v2 | 00 | Replays, a browser-free pure step, data-described elements, chamber format v2 |
 | 3 | 02 Solver | 01 | The prototype's measurements only (stopped after phase A, decision 10) |
 | 4 | 03 Look and sound | 01 | The visual rework, a tutorial chamber |
-| 5 | 04a Mechanics | 01, 03 | New element types, each with rule fixtures, docs and a teach and a proof chamber with recorded solutions |
+| 5 | 04a Mechanics | 01, 03 | New element types, each with rule fixtures and docs (its teach and proof chambers left the campaign as playground chambers, with no recorded solutions, decision 18) |
 | 6 | 04b Campaign | 01, 03, 04a (only for the chambers built around its mechanics) | 20 chambers; a catalogue, links and a Play menu that scale |
 | 7 | 05 Creator platform | 01, 03, 04a, 04b | Editor, shared chambers |
 
@@ -93,7 +94,7 @@ Local commands only, growing stage by stage:
 | 2 | 01 | Engine loads under Node; every recorded solution is replayed and must complete; v2 checked against the old rules |
 | 3 | 02 | The solver check in `npm run verify`; no solvability or par check (stopped after phase A, decision 10) |
 | 4 | 03–05 | Bundle size watch |
-| 5 | 04a | Each new mechanic ships with at least one chamber and a recorded solution |
+| 5 | 04a | Each new mechanic ships with at least one chamber and a recorded solution (since decision 18 those chambers are playground chambers with no solution, and the behaviour fixtures alone pin each mechanic) |
 | 6 | 04b | The catalogue check |
 
 ## What we deliberately skip

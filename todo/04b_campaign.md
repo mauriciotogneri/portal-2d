@@ -5,7 +5,7 @@ Last revised: 2026-11-22
 
 ## Goal
 
-The campaign grows to its full length: 20 handcrafted chambers in total, numbered 0–19 (stage 03's tutorial as chamber 0, chambers 1–3, and 16 new ones built around stage 04a's mechanics and the existing elements, six of them the teach and proof chambers stage 04a built with its mechanics, chambers 4–9, so 10 are left to make), in one list with no wings, with a catalogue, links and a Play menu that scale to that many, and an order set by playtests (the friends' analytics informing them). This stage and stage 04a were one stage until README decision 15 split them.
+The campaign grows to its full length: 20 handcrafted chambers in total, numbered 1–20 (stage 03's tutorial as Chamber 1, and 19 new ones built around stage 04a's mechanics and the existing elements, all 19 left to make), in one list with no wings, with a catalogue, links and a Play menu that scale to that many, and an order set by playtests (the friends' analytics informing them). The campaign restarted from the tutorial alone on 2026-11-22 (README decision 18): the old chambers 1–9, stage 04a's teach and proof chambers among them, left it for good as development-only playground chambers. This stage and stage 04a were one stage until README decision 15 split them.
 
 ## Depends on
 
@@ -22,19 +22,19 @@ Stages 00, 01, 03 and 04a are done, and stage 02 stopped after its prototype (RE
 
 **What stage 02 left** (stopped, README decision 10)
 
-- No solvability check, no par from a solver, no shortcut finder, no dead-end warning and no generated chambers. Every chamber is proven solvable by its recorded solution.
-- The solver check, `npm run solver:check`, which `npm run verify` runs on every chamber file (`docs/solver.md`). It fails when a chamber's state key needs more than 64 bits (decision 1): today's chambers need 18–53 (the tutorial 29, chambers 1–3 49–53, chambers 4–9 18–29). A box adds about 8 bits in a room the size of chambers 1–3, so a third box fits there and a fourth doesn't, and 6–7 bits in one the size of chambers 4–9. On a chamber with a receiver, which the macro search refuses since the subject cuts a ray by walking, it checks only the state key and skips the walk, shot, skip and region checks, saying why.
+- No solvability check, no par from a solver, no shortcut finder, no dead-end warning and no generated chambers. Every campaign chamber is proven solvable by its recorded solution; playground chambers need none (README decision 18).
+- The solver check, `npm run solver:check`, which `npm run verify` runs on every campaign chamber and the solver fixtures, not on the playground chambers (`docs/solver.md`, README decision 18). It fails when a chamber's state key needs more than 64 bits (decision 1): Chamber 1 needs 29, and the old chambers, measured before they left the campaign, needed 49–53 (old chambers 1–3, now Playground 2–4) and 18–29 (old chambers 4–9, now Playground 5–10). A box adds about 8 bits in a room the size of Playground 2–4, so a third box fits there and a fourth doesn't, and 6–7 bits in one the size of Playground 5–10. On a chamber with a receiver, which the macro search refuses since the subject cuts a ray by walking, it checks only the state key and skips the walk, shot, skip and region checks, saying why.
 
 **From stage 03 (look and sound)**, done 2026-11-14
 
-- The tutorial first in the list (permanent id 0), as chamber 0 (stage 03 settled that numbers count from 0). Links still follow position.
+- The tutorial first in the list, built with permanent id 0 as chamber 0 (stage 03 settled that numbers count from 0). Since README decision 18 it has id 1 and is Chamber 1, numbers count from 1, and it is the campaign's only chamber. Links still follow position.
 - Kept from stage 03's notes when its file was removed (2026-11-14):
   - Every chamber must fit the screen whole (`docs/level_design.md`, guideline 36): this stage's chambers stay within that, as does stage 05's grid cap.
   - The home menu's map doesn't redraw when only the pixel ratio changes (a window dragged to a denser screen without changing size), unlike the chamber screen.
 
 **From stage 04a (mechanics)**, done 2026-11-20
 
-- Slide floors, turnable arrows and rays (emitters, receivers and mirror boxes), each with its rules in `docs/elements.md`, its rule fixtures, and a teach and a proof chamber with recorded solutions, six chambers in all (4–9).
+- Slide floors, turnable arrows and rays (emitters, receivers and mirror boxes), each with its rules in `docs/elements.md`, its rule fixtures, and a teach and a proof chamber with recorded solutions, six chambers in all (4–9). Since README decision 18 those six are Playground 5–10, outside the campaign, with their recorded solutions deleted.
 - The interaction table in `docs/elements.md`. No step may need the rules' cap of 32 settling passes: one that does throws, which fails every engine check that plays it (`docs/elements.md` argues why settling always ends). There is no separate oscillation warning.
 
 ## Decisions made
@@ -45,8 +45,9 @@ This stage's own decisions are numbered from 1. Stage 04a's, below them, keep th
 |---|---|---|
 | 1 | 2026-11-22 | The solver check keeps failing on a chamber whose state key needs more than 64 bits, instead of skipping and naming it as 04a decision 18 settled: that part was never built, today's chambers need at most 53 bits, and `docs/level_design.md` (guideline 11) already treats 64 bits as a limit. A chamber that needs more is redesigned, or this decision is revisited |
 | 2 | 2026-11-22 | The engine scripts read their chambers from the game's play order (`src/services/chamber_catalogue.ts`), each chamber's file named by its id, instead of keeping a list of their own (replaces that part of 04a decision 19). The play order now uses nothing of Vite's, the playground's layout having moved to a file of its own, so the scripts can import it, and there is no second list to disagree with it |
+| 3 | 2026-11-22 | The campaign restarts from the tutorial alone (README decision 18): it is Chamber 1 with id 1, chambers 1–9 left the campaign for good as Playground 2–10, and the campaign's 20 chambers (04a decision 10) are now Chamber 1 and 19 new ones, numbered 1–20. Replaces 04a decision 10's numbering (0–19) and its chambers 1–3, 04a decision 7's count from 0, 04a decision 6's teach and proof chambers in the campaign, and this stage's plan to place chambers 0–9 in the campaign |
 
-**Stage 04a's decisions.** Decisions 6–19 were made while this stage and stage 04a were one stage (README decision 15), so "this stage" and "here" in them mean both; 20 is 04a's own, cited by a chamber idea below. The rest of 04a's decisions settled the mechanics as built (now in `docs/elements.md`, `docs/sprites.md` and `docs/solver.md`); all of them, with what each was chosen over, are in git history in `todo/04a_mechanics.md` (removed 2026-11-20, README decision 17). Their wording uses today's names: an emitter's light is a ray, while "beam" is a laser's or a light barrier's.
+**Stage 04a's decisions.** Decisions 6–19 were made while this stage and stage 04a were one stage (README decision 15), so "this stage" and "here" in them mean both; 20 is 04a's own, cited by a chamber idea below. Decision 3 above replaces parts of 6, 7 and 10. The rest of 04a's decisions settled the mechanics as built (now in `docs/elements.md`, `docs/sprites.md` and `docs/solver.md`); all of them, with what each was chosen over, are in git history in `todo/04a_mechanics.md` (removed 2026-11-20, README decision 17). Their wording uses today's names: an emitter's light is a ray, while "beam" is a laser's or a light barrier's.
 
 | # | Date | Decision |
 |---|---|---|
@@ -63,34 +64,34 @@ This stage's own decisions are numbered from 1. Stage 04a's, below them, keep th
 
 ### Campaign plan
 
-Each mechanic, and each existing element the campaign teaches, gets a run of chambers: teach, test, twist and combine (`docs/level_design.md`, guidelines 40–42). With 16 new chambers for the whole campaign (04a decision 10), a full run doesn't fit, so the campaign takes three mechanics at about 4 chambers each (04a decision 16). Stage 04a built the first two of each mechanic's run, a teach and a proof chamber (chambers 4–9), so 10 new chambers are left to make.
+Each mechanic, and each existing element the campaign teaches, gets a run of chambers: teach, test, twist and combine (`docs/level_design.md`, guidelines 40–42). With 19 new chambers for the whole campaign (04a decision 10, decision 3), a full run doesn't fit, so the campaign takes three mechanics at about 4 chambers each (04a decision 16). Stage 04a built the first two of each mechanic's run, a teach and a proof chamber (chambers 4–9), but they left the campaign as Playground 5–10 (README decision 18), so no mechanic has a campaign chamber yet and all 19 new chambers are left to make.
 
-The existing elements need chambers too (portal basics, boxes and buttons, doors and switches, blocked walls, light barriers and ditches, fizzlers, arrows, lasers); the tutorial (chamber 0) and chambers 1–3 already cover some of them. Blocked walls a link switches (already used in chambers 2 and 3) deserve a teach chamber of their own.
+The existing elements need chambers too (portal basics, boxes and buttons, doors and switches, blocked walls, light barriers and ditches, fizzlers, arrows, lasers); the tutorial (Chamber 1) already covers some of them, and old chambers 1–3 (now Playground 2–4) did. Blocked walls a link switches (used in old chambers 2 and 3, now Playground 3 and 4) deserve a teach chamber of their own.
 
-**Campaign plan table** (chamber counts set by 04a decision 16, each mechanic's including the two chambers stage 04a built; the teach notes filled in from the playtests, stage 04a's cold playtests first, then this stage's):
+**Campaign plan table** (chamber counts set by 04a decision 16, when each mechanic's included the two chambers stage 04a built; since those left the campaign (README decision 18), no row has a campaign chamber yet; the teach notes filled in from the playtests, stage 04a's cold playtests first, then this stage's):
 
 | # | Mechanic or element | New chambers | Teach notes (signage, confusion seen) |
 |---|---|---|---|
-| 1 | Existing elements | About 4 | — |
-| 2 | Slide floors | About 4 | Chambers 4 (teach) and 5 (test), stage 04a's cold playtest of 2026-11-19: no confusion seen |
-| 3 | Turnable arrows | About 4 | Chambers 6 (teach) and 7 (twist), stage 04a's cold playtest of 2026-11-19: no confusion seen |
-| 4 | Rays | About 4 | Chambers 8 (teach) and 9 (test), stage 04a's cold playtest of 2026-11-20: liked, no confusion reported |
-| 5 | Total | 16 (20 with chambers 0–3) | |
+| 1 | Existing elements | About 4, none built yet | — |
+| 2 | Slide floors | About 4, none built yet | Chambers 4 (teach) and 5 (test), now Playground 5 and 6, stage 04a's cold playtest of 2026-11-19: no confusion seen |
+| 3 | Turnable arrows | About 4, none built yet | Chambers 6 (teach) and 7 (twist), now Playground 7 and 8, stage 04a's cold playtest of 2026-11-19: no confusion seen |
+| 4 | Rays | About 4, none built yet | Chambers 8 (teach) and 9 (test), now Playground 9 and 10, stage 04a's cold playtest of 2026-11-20: liked, no confusion reported |
+| 5 | Total | 19 (20 with Chamber 1); the rows above add up to about 16, set when chambers 1–3 were in the campaign, and where the other 3 go is open | |
 
-**Chambers built by stage 04a** (each mechanic's first two, from layouts the author approved; what designing them taught became guidelines 26 and 28–30 in `docs/level_design.md`):
+**Chambers built by stage 04a** (each mechanic's first two, from layouts the author approved; what designing them taught became guidelines 26 and 28–30 in `docs/level_design.md`). Kept as a record: since README decision 18 they are Playground 5–10, outside the campaign, with their recorded solutions deleted (git history keeps them). Their layouts can serve as starting points for new chambers, but they are not in the campaign.
 
 | # | Chamber | Mechanic, part | What it asks | Best routes (moves, portals) |
 |---|---|---|---|---|
-| 1 | 4 | Slide floors, teach | The first step slides across a slide room to a ledge, from which a portal is aimed across a ditch at the far end of the exit lane; the slide out of it stops under the exit | Fewest portals: 2 portals |
-| 2 | 5 | Slide floors, test | The same move twice, where the second lane is entered only by sliding back into the portal just come out of, so the other portal is the one to move | Both: 3 portals |
-| 3 | 6 | Turnable arrows, teach (10 × 7) | The start room's way out is a gate arrow pointing into the wall until the switch, with an antline to it, turns it for good, onto a run of fixed arrows to the exit | Both: 12 moves, 0 portals |
-| 4 | 7 | Turnable arrows, twist (10 × 9) | Standing on the button beside the arrow turns it; stepping onto it releases the button, so it turns back under the subject and sends it into a lower corridor, whose exit door needs the box on its own button. Neither 6 nor 7 can be solved with the links to its turnable arrow removed | Fewest portals: 25 moves, 0 portals; fewest moves: 13 moves, 4 portals |
-| 5 | 8 | Rays, teach (9 × 7) | A portal pair through a stub sends the emitter's ray to a receiver in the right wall, which opens the exit | Fewest portals: 15 moves, 2 portals; fewest moves: 10 moves, 3 portals |
-| 6 | 9 | Rays, test (9 × 7) | The same room: the receiver is in the bottom wall, so the ray must come down from a portal on the ceiling, where chamber 8's answer only runs it into the right wall | Fewest portals: 14 moves, 2 portals; fewest moves: 11 moves, 3 portals |
+| 1 | 4 (now Playground 5) | Slide floors, teach | The first step slides across a slide room to a ledge, from which a portal is aimed across a ditch at the far end of the exit lane; the slide out of it stops under the exit | Fewest portals: 2 portals |
+| 2 | 5 (now Playground 6) | Slide floors, test | The same move twice, where the second lane is entered only by sliding back into the portal just come out of, so the other portal is the one to move | Both: 3 portals |
+| 3 | 6 (now Playground 7) | Turnable arrows, teach (10 × 7) | The start room's way out is a gate arrow pointing into the wall until the switch, with an antline to it, turns it for good, onto a run of fixed arrows to the exit | Both: 12 moves, 0 portals |
+| 4 | 7 (now Playground 8) | Turnable arrows, twist (10 × 9) | Standing on the button beside the arrow turns it; stepping onto it releases the button, so it turns back under the subject and sends it into a lower corridor, whose exit door needs the box on its own button. Neither 6 nor 7 can be solved with the links to its turnable arrow removed | Fewest portals: 25 moves, 0 portals; fewest moves: 13 moves, 4 portals |
+| 5 | 8 (now Playground 9) | Rays, teach (9 × 7) | A portal pair through a stub sends the emitter's ray to a receiver in the right wall, which opens the exit | Fewest portals: 15 moves, 2 portals; fewest moves: 10 moves, 3 portals |
+| 6 | 9 (now Playground 10) | Rays, test (9 × 7) | The same room: the receiver is in the bottom wall, so the ray must come down from a portal on the ceiling, where chamber 8's answer only runs it into the right wall | Fewest portals: 14 moves, 2 portals; fewest moves: 11 moves, 3 portals |
 
 Neither ray chamber uses the mirror box; this stage's combine chamber is the first to need it.
 
-**Chamber ideas left by stage 04a** (its slide floor phase built the teach and test chambers, its turnable arrow phase the teach and twist, its ray phase the teach and test):
+**Chamber ideas left by stage 04a** (its slide floor phase built the teach and test chambers, its turnable arrow phase the teach and twist, its ray phase the teach and test; since those left the campaign (README decision 18), the ideas below are for the later parts of each run, and the parts stage 04a built have no campaign chamber):
 
 | # | Mechanic | Part | Idea |
 |---|---|---|---|
@@ -107,26 +108,26 @@ Neither ray chamber uses the mirror box; this stage's combine chamber is the fir
 
 ### Phase 1 — Catalogue and links that scale
 
-- [x] **Catalogue check.** Today the engine scripts fail on a chamber file missing from their own list (`scripts/chamber_files.ts`), and the replay check fails on a listed chamber with no recorded solution. Nothing compares the scripts' list with the game's play order (`src/services/chamber_catalogue.ts`), a duplicate id is only logged in development, and nothing checks that the chamber with id N is the file `chamber_N.json` (Download solution names its file by id). Add a local check that every chamber file appears in the play order exactly once, ids are unique, and each id matches its chamber's file. Verify: break each rule once on purpose and the check fails. Done 2026-11-22: the engine scripts read the play order instead of a list of their own (decision 2), and `npm run chamber:check` fails on an id that isn't a whole number of 0 or more, is used twice, or names a file that doesn't hold its chamber's layout; a duplicate id, a negative id, two swapped layouts, a removed listing, an id with no file and a stray chamber file each failed it.
-- [x] **Numbering and links** (04a decision 7, settled by README decision 13). Links stay by position (`/chamber/N`): the route in `src/router.ts` doesn't change, and there is no redirect table; unknown chambers still fall back home. Verify: in `npm run preview`, the first and the last number open their chambers and an unknown one goes home. Done 2026-11-22, checked in `npm run dev` instead, since a preview sends real analytics events and the routes are the same in both but for the playground's: `/chamber/0` and `/chamber/9`, the last of today's ten, open their chambers, and `/chamber/10` and `/chamber/abc` go home.
-- [x] **Progress follows the chamber.** Progress is already keyed by id (00); links follow position, as today. The last chamber, which the home menu highlights on the way back, is kept by position in memory only, and a reorder needs a reload, which forgets it, so it has nothing to follow. Verify: reorder two chambers in the play order locally; their completions and best times follow them. Done 2026-11-22 in `npm run dev`: with only id 7 completed (best time 00:12.34), the home menu showed the green figure and the time on place 7; with ids 2 and 7 swapped in the play order, on place 2, place 7 turning grey; and back on place 7 once the order was restored.
-- [x] **Analytics stays comparable.** `chamber_number` keeps meaning the position in the list (0 for the tutorial, then 1, 2, 3…), like the links (04a decision 7), and `chamber_id` follows the chamber across reorders; no new parameter is needed. Verify: a production preview build sends the position as `chamber_number` (GA4 DebugView). Done 2026-11-22, checked in `npm run dev` instead, whose console shows each event with what a production build would send, since a preview sends real events: opening `/chamber/2` started with `chamber_id` 7 and `chamber_number` 2 while ids 2 and 7 were swapped in the play order, and with `chamber_id` 2 and `chamber_number` 2 once the order was restored.
+- [x] **Catalogue check.** Today the engine scripts fail on a chamber file missing from their own list (`scripts/chamber_files.ts`), and the replay check fails on a listed chamber with no recorded solution. Nothing compares the scripts' list with the game's play order (`src/services/chamber_catalogue.ts`), a duplicate id is only logged in development, and nothing checks that the chamber with id N is the file `chamber_N.json` (Download solution names its file by id). Add a local check that every chamber file appears in the play order exactly once, ids are unique, and each id matches its chamber's file. Verify: break each rule once on purpose and the check fails. Done 2026-11-22: the engine scripts read the play order instead of a list of their own (decision 2), and `npm run chamber:check` fails on an id that isn't a whole number of 0 or more, is used twice, or names a file that doesn't hold its chamber's layout; a duplicate id, a negative id, two swapped layouts, a removed listing, an id with no file and a stray chamber file each failed it. Since README decision 18, ids are 1 or more, and the check fails on one that isn't.
+- [x] **Numbering and links** (04a decision 7, settled by README decision 13). Links stay by position (`/chamber/N`): the route in `src/router.ts` doesn't change, and there is no redirect table; unknown chambers still fall back home. Verify: in `npm run preview`, the first and the last number open their chambers and an unknown one goes home. Done 2026-11-22, checked in `npm run dev` instead, since a preview sends real analytics events and the routes are the same in both but for the playground's: `/chamber/0` and `/chamber/9`, the last of today's ten, open their chambers, and `/chamber/10` and `/chamber/abc` go home. Since README decision 18, numbers count from 1 and the campaign holds only `/chamber/1`; links still follow position.
+- [x] **Progress follows the chamber.** Progress is already keyed by id (00); links follow position, as today. The last chamber, which the home menu highlights on the way back, is kept by position in memory only, and a reorder needs a reload, which forgets it, so it has nothing to follow. Verify: reorder two chambers in the play order locally; their completions and best times follow them. Done 2026-11-22 in `npm run dev`: with only id 7 completed (best time 00:12.34), the home menu showed the green figure and the time on place 7; with ids 2 and 7 swapped in the play order, on place 2, place 7 turning grey; and back on place 7 once the order was restored. Ids 2 and 7 were old chambers, outside the campaign since README decision 18.
+- [x] **Analytics stays comparable.** `chamber_number` keeps meaning the position in the list (0 for the tutorial, then 1, 2, 3…), like the links (04a decision 7), and `chamber_id` follows the chamber across reorders; no new parameter is needed. Verify: a production preview build sends the position as `chamber_number` (GA4 DebugView). Done 2026-11-22, checked in `npm run dev` instead, whose console shows each event with what a production build would send, since a preview sends real events: opening `/chamber/2` started with `chamber_id` 7 and `chamber_number` 2 while ids 2 and 7 were swapped in the play order, and with `chamber_id` 2 and `chamber_number` 2 once the order was restored. Since README decision 18, positions count from 1 (1 for the tutorial), and `chamber_id` 1 and `chamber_number` 1 meant old chamber 1 before 2026-11-22, so compare by date.
 
 ### Phase 2 — A Play menu that scales
 
-- [ ] **Design the scrolling chamber list** (uses the frontend-design skill). Today the home menu has up to three columns (sections, rows, detail). No column scrolls on its own, but the whole page does, and the keyboard's highlight scrolls it to the row. Ten chamber rows fit a 1080p window; twenty need about 1,200 px for the list alone (60 px a row, under the logo), and in development the Playground row pushes the list down one row more. So the chamber column scrolls, with the map staying in the third column. It must keep the keyboard model in `AGENTS.md` (Up/Down within a column with wrapping, Right/Enter steps in, Left/Escape steps back, one Tab stop per column, hover highlights, held Enter ignored), and leave room for stage 05's Editor entry. Verify: the design is written down here before building.
+- [ ] **Design the scrolling chamber list** (uses the frontend-design skill). Today the home menu has up to three columns (sections, rows, detail). No column scrolls on its own, but the whole page does, and the keyboard's highlight scrolls it to the row. Ten chamber rows fit a 1080p window; twenty need about 1,200 px for the list alone (60 px a row, under the logo), and in development Playground, first in the column, pushes the list down one row more; since README decision 18 it is a section of its own, listing ten playground chambers. So the chamber column scrolls, with the map staying in the third column. It must keep the keyboard model in `AGENTS.md` (Up/Down within a column with wrapping, Right/Enter steps in, Left/Escape steps back, one Tab stop per column, hover highlights, held Enter ignored), and leave room for stage 05's Editor entry. Verify: the design is written down here before building.
 - [ ] **Build the scrolling chamber list** (uses the frontend-design skill). The highlighted row scrolls into view, the cascade still lines up with `--menu-row-height`, and interface sounds play as `AGENTS.md` lists. Verify: keyboard-only and pointer-only walks through all 20 chambers, wrapping from the last to the first; `prefers-reduced-motion` respected.
 - [ ] **Back from a chamber.** Play opens with that chamber highlighted, focused and scrolled into view, as today. Verify: back from the first, a middle and the last chamber.
 - [ ] **Update `AGENTS.md`.** Keyboard ownership, the layout description and the UI direction for the new menu.
 
 ### Phase 3 — Campaign content
 
-- [ ] **Chamber plan.** List the 10 new chambers left to make in this file, in play order together with chambers 0–9, each with its mechanic or element and its part (teach, test, twist or combine), following the campaign plan table and 04a decision 16. Starting order: the existing elements first, then the new mechanics in the order built. Later reorders follow playtests, with the friends' analytics informing them, and the ordering guideline (`docs/level_design.md`, guideline 43). Verify: every mechanic stage 04a shipped has chambers or a recorded reason it doesn't, and the total is 20.
-- [ ] **Authoring workflow before the editor.** Until stage 05's editor exists: hand-write the chamber file in format 2. Today the only development-only chamber route is the playground's, and saving a chamber file reloads the whole page, through the loading screen and Start (read from the code, not tried). Add a development-only route (behind `import.meta.env.DEV`, never in production builds) that loads a chamber file from disk and reloads on save; record the solution by completing the chamber in `npm run dev` and pressing Download solution in the completion dialog; tick a per-chamber checklist (`docs/level_design.md`, guidelines 37 and 39). Verify: one chamber goes through the whole workflow; a production build has no development route.
-- [ ] **Place chambers 0–9 in the campaign.** The tutorial, chambers 1–3 and stage 04a's chambers keep permanent ids 0–9 wherever the plan puts them; their links follow their new places. Verify: their completions and best times survive.
-- [ ] **Author release 1** (3–4 new chambers; each release ships with a changelog entry in `src/services/changelog.ts`, and release 1's also covers stage 04a's mechanics and chambers 4–9, which have none yet). Verify: `npm run verify` and the catalogue check pass; playtested.
+- [ ] **Chamber plan.** List the 19 new chambers left to make in this file, in play order after Chamber 1, each with its mechanic or element and its part (teach, test, twist or combine), following the campaign plan table and 04a decision 16. Starting order: the existing elements first, then the new mechanics in the order built. Later reorders follow playtests, with the friends' analytics informing them, and the ordering guideline (`docs/level_design.md`, guideline 43). Playground 2–10 (the old chambers 1–9, README decision 18) can serve as starting points, but a chamber built from one joins the campaign as a new chamber, with a new id and its own recorded solution. Verify: every mechanic stage 04a shipped has chambers or a recorded reason it doesn't, and the total is 20.
+- [ ] **Authoring workflow before the editor.** Until stage 05's editor exists: hand-write the chamber file in format 2. Today the only development-only chamber routes are the playground chambers' (`/playground/N`, README decision 18), and saving a chamber file reloads the whole page, through the loading screen and Start (read from the code, not tried). Add a development-only route (behind `import.meta.env.DEV`, never in production builds) that loads a chamber file from disk and reloads on save; record the solution by completing the chamber in `npm run dev` and pressing Download solution in the completion dialog; tick a per-chamber checklist (`docs/level_design.md`, guidelines 37 and 39). Verify: one chamber goes through the whole workflow; a production build has no development route.
+- [ ] **Place chambers 0–9 in the campaign.** Obsolete since README decision 18: the tutorial stays first as Chamber 1 (id 1), and chambers 1–9 left the campaign for good as Playground 2–10, so there is nothing to place, and every save was reset once (progress version 3). Nothing to verify.
+- [ ] **Author release 1** (3–4 new chambers; each release ships with a changelog entry in `src/services/changelog.ts`, and release 1's also covers stage 04a's mechanics, which have none yet, and the restart: the old chambers gone and saves reset, README decision 18). README decision 18 recommends holding the deploy until the campaign has new chambers, which release 1 is the first to bring. Which new chambers it holds is open. The size of 3–4 chambers a release was set when 10 were left to make; with 19 left, three releases that size don't reach 20, so how many releases, or how large, is open. Verify: `npm run verify` and the catalogue check pass; playtested.
 - [ ] **Author release 2.** Same checks.
-- [ ] **Author release 3.** Same checks; the campaign reaches 20 chambers.
+- [ ] **Author release 3.** Same checks; the campaign reaches 20 chambers (see release 1 on the number of releases).
 
 ### Phase 4 — Wrap-up
 
@@ -137,15 +138,15 @@ Neither ray chamber uses the mirror box; this stage's combine chamber is the fir
 
 ## Local checks added
 
-- Catalogue check, in `npm run chamber:check`: every chamber file in the play order exactly once, ids unique, each id matching its chamber's file (the replay check already requires a recorded solution for every chamber).
+- Catalogue check, in `npm run chamber:check`: every chamber file in the play order exactly once, ids unique, each id matching its chamber's file (the replay check already requires a recorded solution for every campaign chamber; playground chambers need none, README decision 18).
 
 ## Done when
 
 - [ ] The campaign plan table is filled in.
-- [ ] 20 chambers ship, numbered 0–19, each with a recorded solution, with `npm run verify` and the catalogue check passing.
+- [ ] 20 chambers ship, numbered 1–20, each with a recorded solution, with `npm run verify` and the catalogue check passing.
 - [ ] Progress and best times follow chambers after a reorder.
 - [ ] The scrolling Play menu works fully by keyboard and by pointer, and `AGENTS.md` describes it.
-- [ ] Local checks pass: every chamber replays with its expected outcome, and no step reaches the rules' cap of 32 settling passes.
+- [ ] Local checks pass: every campaign chamber replays with its expected outcome, and no step reaches the rules' cap of 32 settling passes.
 - [ ] AGENTS.md and `todo/README.md` are up to date.
 
 ## Go/no-go points
@@ -154,8 +155,8 @@ None: stage 04's two go/no-go points, the hook check and ray oscillation, were a
 
 ## Risks
 
-- **Mechanics barely used.** With 16 new chambers, each mechanic gets about 4 (04a decision 16), so a full run doesn't fit; a combine chamber can serve two at once.
-- **Content volume.** The new chambers are most of this stage's work. Ship them in small releases, so the game grows instead of waiting.
+- **Mechanics barely used.** With 19 new chambers, each mechanic gets about 4 (04a decision 16), so a full run doesn't fit; a combine chamber can serve two at once.
+- **Content volume.** The 19 new chambers are most of this stage's work. Ship them in small releases, so the game grows instead of waiting.
 - **Reordering surprises players.** Display numbers and links change after a reorder, which friends will see. Progress is safe (keyed by id); say what changed in the changelog.
 
 ## Notes for later stages

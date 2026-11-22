@@ -64,8 +64,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 | Game | Maker, year | Overlap with Portal 2D | Best design source |
 |---|---|---|---|
-| The Talos Principle (+ Road to Gehenna) | Croteam, 2014 | Emitters, receivers, beam relays (≈ mirror boxes and portal pairs), boxes, plates | Alen Ladavac, Nordic Game 2016 |
-| The Talos Principle 2 | Croteam, 2023 | Asymmetric barriers (≈ ditch, laser, fizzler, light barrier) | Thinky Games interviews |
 | The Witness | Thekla, 2016 | Grid sequences taught without words; power cables (≈ antlines) | Blow and ten Bosch, IndieCade 2011; noclip documentary |
 | Chip's Challenge 1 and 2, and its level packs | Chuck Sommerville, 1989/2015 | Ice (≈ slide floors), force floors (≈ arrows, loosely), toggle walls, blocks and buttons, water (≈ ditches), teleports | Sommerville interviews; J.B. Lewis's essays; the Bit Busters wiki |
 | Adventures of Lolo / Eggerland | HAL Laboratory, 1985–2000 | Single-screen rooms, one-way arrows, line-of-sight statues (≈ rays cut by a box) | Hardcore Gaming 101; StrategyWiki |
@@ -86,46 +84,6 @@ Chosen because they share a Portal 2D mechanic or are known for their puzzle des
 
 Grouped by family. Each entry: what the game is, how its levels were made (process, principles, decisions, short quotes), what to borrow for Portal 2D, and what doesn't carry over.
 
-
-### The Talos Principle (Croteam, 2014), Road to Gehenna (2015) and The Talos Principle 2 (2023)
-
-**What it is.** First-person puzzle rooms (120+ in the first game) built from emitters, receivers, carried connectors that relay beams by line of sight (≈ Portal 2D's mirror box, portal pair, or a receiver that switches on another emitter), jammers that switch off doors and force fields while aimed at them, cubes, pressure plates, force fields, fans and a recorder. Optional "stars" hide behind unusual solutions.
-
-**How the levels were made.**
-- *Start from the catch.* "In the beginning, we used Lego elements to form labyrinths and gameplay elements, focusing only on the 'catch' of the puzzle"; most of those early puzzles survived into the final game (Davor Hunski, [GamingBolt](https://gamingbolt.com/the-talos-principle-interview-ps4s-very-own-first-person-philosophical-puzzler-that-is-not-portal)). Puzzles were greyboxed from preset walls, and a script later gave each room its world's look, so the world could be chosen after the puzzle worked ([Ladavac, Nordic Game 2016](https://www.youtube.com/watch?v=D0ErxdacTT8)).
-- *A hard puzzle creates the easy ones it needs.* Working on one interaction "forces you to create … several simpler versions"; when testers said a complex puzzle "would have been better if I knew before that I can use two jammers", the team made a puzzle that teaches exactly that first (Nordic Game 2016).
-- *Obvious paths rarely work.* "Puzzles are designed in a way that solution is rarely straightforward; obvious paths rarely work" (lead designer Davor Tomičić, GamingBolt).
-- *Rate, time and sort.* About 20 team members played all ~200 greyboxed puzzles, rated each for difficulty and fun and timed them; the team sorted them easy to hard, keeping duller teaching puzzles "so that people learn new concepts" with fun ones between (Nordic Game 2016).
-- *Stuck is personal.* Some testers stalled on a puzzle everyone else found simple, then solved everything after it, so the worlds became hubs of puzzles open in any order (Nordic Game 2016).
-- *A completion bot.* The game recorded each solution "in concept" (use this switch, put that item there) and a bot replayed it by pathfinding, so it survived geometry edits: a full run in about 20 minutes against about 10 hours for an expert, after every build. It caught a retextured door that no longer opened. "It cannot prove that there are no bugs … what it can prove [is] that it's possible to complete the game" (Nordic Game 2016; [PlayStation Blog](https://blog.playstation.com/?p=162597)).
-- *Stars.* Scattered stars delighted explorers and angered achievers, so every star became hard to earn, never found by accident (Nordic Game 2016).
-- *Too much.* Andrew Plotkin found the curve smooth but about 90 puzzle areas "more than necessary", and "a time limit on thinky-puzzles just sucks" ([Zarf Updates](https://blog.zarfhome.com/2014/12/the-talos-principle-design-ruminations)).
-
-**What Talos 2 changed.**
-- *Overproduce and measure.* "There is certainly the double number of puzzles than there will be in the game"; cut puzzles were too easy, too hard, or "recycling the same idea"; many testers graded difficulty and fun for "actual metrics" where Talos 1's choice had been "subjective". A whole cluster was cut because opinion split "half and half and you cannot have half of players not liking your thing" ([Thinky Games, Puzzle Pruning](https://www.youtube.com/watch?v=KbMIp3q2Tc0)).
-- *Sawtooth, not ramp.* In Talos 1 the last third was all complex puzzles, "mentally taxing … discouraging for some players", so Talos 2 spread the spikes: "not like a one continuous curve ramp … we have like many smaller ramps"; each area's new tool is taught in easy puzzles and combined with the others from about the fourth ([Thinky Games interview](https://www.youtube.com/watch?v=B3yoVxhld4Q); [Easy Allies](https://www.youtube.com/watch?v=e1TJ-vEB8-0)).
-- *Designing out dead ends instead of undo.* A rewind prototype dropped players "somewhere in the middle of steps" with their thought lost, so it was rejected; instead "we thought about every puzzle where you could get stuck", and once known, most puzzles take "30 seconds or probably a minute" to redo (Thinky Games interview). That is the bar for a game with restart but no undo.
-- *Timing removed.* The recorder: "some people liked it but most hated it", because "you have to be on the right spot at the right time" (same).
-- *Exploits patched, or a fair route added.* Patch 1.1.0 fixed "easy exploits where the player could enter a puzzle in an unintended way and/or finish the puzzle without solving it"; in one puzzle it added a way to "turn off the fan instead of jumping into it" ([patch notes via mp1st](https://mp1st.com/news/the-talos-principle-2-update-2-005-out-for-version-1-1-0-this-jan-26)).
-- *Mechanics as chess pieces.* Hunski: combined with other patterns of movement a mechanic "becomes like wow"; but "you cannot predict … how much potential does that have" (Easy Allies).
-
-**Borrow for Portal 2D** (Talos tricks rebuilt on Portal 2D's rules, not copied: a ray stops at a closed door, and a ray-held door that is cut closes and blocks the ray itself, so Talos's "aim through the closed door" fails as copied).
-- *A portal keeps what a door gave briefly.* Door D is held open by button B; while it's open, the only line to wall W runs through it. Put the box on B, shoot a portal onto W through the doorway, take the box to another button, let D close: the portal on W stays. A portal in the ray now sends it out beyond the door into the receiver. (Mind that the wall right behind a door takes no portal.)
-- *Two jobs at the bend.* One mirror box must turn the ray onto the receiver and hold a button. Rays pass buttons, so a button on the corner tile lets the box do both; set up the wrong assumption by making another corner look like the obvious one.
-- *Bootstrap chain.* Mirror box M1 waits behind door D1, which receiver R1 holds open; fetch M1 and use it to send the ray to R2, which opens D2 where M2 waits. The rules supply the catch: moving the ray off R1 closes D1, and a door closing on a box sends it home, so "carry it clear before you move the light".
-- *Light goes where you can't.* An open ditch or a laser that is on keeps the subject out but lets rays and shots through.
-- *Filters.* Portal 2D already has a full set of asymmetric barriers:
-
-| # | Barrier (blocked or on) | Subject | Carried box | Portal shot | Ray |
-|---|---|---|---|---|---|
-| 1 | Open ditch | Stopped | Stopped with the subject; a box lying there when it opens is destroyed | Passes | Passes |
-| 2 | Laser | Stopped | Stopped with the subject | Passes | Passes |
-| 3 | Fizzler | Passes, losing both portals | Destroyed | Stopped | Passes |
-| 4 | Light barrier | Stopped | Stopped with the subject | Stopped | Stopped |
-| 5 | Closed door or exit | Stopped | Stopped with the subject | Stopped | Stopped |
-
-  A chamber where the subject, the box, the shot and the ray each reach a different region is a puzzle with no new element: ferry each across its own barrier.
-- *Relay into a sealed room.* A receiver that switches on a second emitter relays the light past a wall, but cutting any segment darkens the whole chain.
 
 ### The Witness (Thekla, 2016) and Jonathan Blow's method
 
@@ -475,7 +433,7 @@ Patterns from the games and the generic writing, grouped by the Portal 2D elemen
 | 17 | **Reversal: don't use the core verb** | Braid's *Irreversible* (via GMTK) | A chamber where any portal placed loses something you need. Once, late |
 | 18 | **Alternate solution → its own chamber** | Traynor, Teikari, Hazelden | Block it in the original; make it the forced route of a new chamber |
 | 19 | **Joke level** (looks hard, one insight) | Traynor; Chip's *Easier Than It Looks* | A crowded-looking chamber whose answer ignores most of it. Rare, and never as the finale |
-| 20 | **Filters** (each actor has its own region) | Talos 2's driller and exclusion field | See the table in Part 2 (Talos): ferry the subject, the box, the shot and the ray each across its own barrier |
+| 20 | **Filters** (each actor has its own region) | Talos 2's driller and exclusion field | Ferry the subject, the box, the shot and the ray each across its own barrier (Part 5, idea 30) |
 
 ### 4.2 Portals
 
