@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 3, step 3.1: Chamber 1.1 drafted, waiting for the author's cold play
+Status: In progress. Now: phase 3, step 3.2: Chamber 1.2, not started (on hold until the author says to start)
 Last revised: 2026-11-22
 
 ## Goal
@@ -27,14 +27,14 @@ Settled with the author on 2026-11-22, before any chamber was designed.
 
 And the assumptions that follow from them:
 
-| #   | Assumption                                                                                                                             |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Each chamber's notes are a file of its own, `docs/spoilers/chamber_<id>.md`; ideas with no chamber yet are in `docs/spoilers/ideas.md` |
-| 2   | When a chamber is ready, the author gets only its address                                                                              |
-| 3   | The author's cold play, once the chamber is approved, becomes its recorded solution                                                    |
-| 4   | New chambers take fresh permanent ids (2, 3 and so on); a tweak keeps a chamber's id and its best times, a redesign gets a new id      |
-| 5   | Today's tutorial (id 1) moves to the playground, as the old chambers did, once the new first chamber is approved                       |
-| 6   | A run is finished when every chamber in it is approved, recorded and passes the checks, and friends have played it                     |
+| #   | Assumption                                                                                                                                                                                                                                   |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Each chamber's notes are a file of its own, `docs/spoilers/chamber_<id>.md`; ideas with no chamber yet are in `docs/spoilers/ideas.md`                                                                                                       |
+| 2   | When a chamber is ready, the author gets only its address                                                                                                                                                                                    |
+| 3   | The author's cold play, once the chamber is approved, becomes its recorded solution                                                                                                                                                          |
+| 4   | Chamber 1.1 took id 1 from today's tutorial, with stored progress reset (the author's call, 2026-11-22); later chambers take fresh permanent ids (2, 3 and so on); a tweak keeps a chamber's id and its best times, a redesign gets a new id |
+| 5   | Today's tutorial moves to the playground, as the old chambers did, once the new first chamber is approved (done: Playground 12)                                                                                                              |
+| 6   | A run is finished when every chamber in it is approved, recorded and passes the checks, and friends have played it                                                                                                                           |
 
 ## Workflow for each chamber
 
@@ -61,11 +61,11 @@ And the assumptions that follow from them:
 
 Cut from five chambers to four on 2026-11-22, with the author: walls alone can't make a portal crossing necessary, so 1.1 already crosses a ditch, and the ditch's own teach chamber was dropped (`docs/campaign.md`, run 1).
 
-- [ ] **3.1 Chamber 1.1** (teach: portals, over a ditch). Drafted as id 2, first in the play order; waiting for the author's cold play.
+- [x] **3.1 Chamber 1.1** (teach: portals, over a ditch). Approved by the author and recorded from their cold play, 2026-11-22; id 1.
 - [ ] **3.2 Chamber 1.2** (test: portals).
 - [ ] **3.3 Chamber 1.3** (teach: button and door).
 - [ ] **3.4 Chamber 1.4** (combine).
-- [ ] **3.5 Retire today's tutorial.** Once the new first chamber is approved, move today's tutorial (id 1, now Chamber 2) to the playground and update `AGENTS.md`, `docs/game_summary.md` and `docs/hints.md`, which describe it. Make the home menu's first-visit Play start the first chamber in the play order: today it starts permanent id 1 (`src/components/screens/home_screen.vue`), so with the new chambers listed it opens the old tutorial, and once that leaves the list it just opens the chamber list. Check it with empty progress.
+- [x] **3.5 Retire today's tutorial.** Done with 3.1, 2026-11-22: today's tutorial is Playground 12, chamber 1.1 took its id 1, and the stored progress was reset (version 4). First-visit Play starts id 1, now chamber 1.1, so it needed no change; checked with empty progress.
 - [ ] **3.6 Friends play run 1 cold.** Note what confused them in each chamber's notes.
 - [ ] **3.7 Revise the handbook** with what run 1 taught (decision 10).
 - [ ] **3.8 Detail run 2** in the outline, its combine chamber sketched first.

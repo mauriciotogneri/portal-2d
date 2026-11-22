@@ -8,7 +8,7 @@ import {ref} from 'vue'
 import type {ChamberEntry} from '@/services/chamber_catalogue'
 
 const PROGRESS_STORAGE_KEY = 'portal-2d.progress'
-const PROGRESS_VERSION = 3 // Format of the stored record; a record of any other version is ignored (3 since the tutorial took id 1 from the chamber that had it)
+const PROGRESS_VERSION = 4 // Format of the stored record; a record of any other version is ignored (4 since the new tutorial run's first chamber took id 1 from the old tutorial)
 
 /** What is stored for one chamber. */
 type ChamberRecord = {

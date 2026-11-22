@@ -21,7 +21,7 @@ Getting around:
 
 - Up and Down move the highlight within the column that has the keyboard, wrapping around; in the first column they change nothing else.
 - Right or Enter opens the highlighted section and steps into it; Left, Escape or Backspace closes it again.
-- Until any chamber has been opened on this device (no chamber has an attempt in the progress, so again after Reset progress), Enter, Space or a click on Play starts the old tutorial (permanent id 1, now Chamber 2, behind a draft of the new tutorial run's first chamber) instead, with the start sound, and Right still opens the chamber list.
+- Until any chamber has been opened on this device (no chamber has an attempt in the progress, so again after Reset progress), Enter, Space or a click on Play starts Chamber 1 (permanent id 1, the tutorial run's first chamber) instead, with the start sound, and Right still opens the chamber list.
 - A chamber list scrolls on its own: as the highlight moves, the list glides over 160 ms, eased out, to keep one more row in view beyond the highlighted one (at once with `prefers-reduced-motion`), and a wheel turn stops the glide. Opening Play or Playground and coming back from a chamber show the highlighted row at once, and the pointer highlighting a row never scrolls the list.
 - The menu's keys with Alt, Ctrl or Meta are left to the browser. Space presses any row but a link (a chamber, a playground chamber, a page, Feedback), where it does nothing.
 - Each column is one Tab stop (its highlighted row, or the changelog), and a held (repeating) Enter is ignored, so it can't carry over from the previous screen.
@@ -32,7 +32,7 @@ Arriving:
 
 - The first arrival shows only the sections, with Play highlighted and focused but not open; back from a chamber, Play is open with that chamber highlighted and focused.
 - Opening Play highlights the first chamber not yet completed, or the first chamber when all are.
-- In development the first column starts with Playground, a section like Play: Right, Enter, Space or a click opens it and steps into its rows, Playground 1 to 11, on the one highlighted last (Playground 1 at first), with the highlighted one's map in the third column. The first arrival highlights and focuses Playground instead of Play, with nothing open, and back from a playground chamber, Playground is open with that chamber highlighted and focused.
+- In development the first column starts with Playground, a section like Play: Right, Enter, Space or a click opens it and steps into its rows, Playground 1 to 12, on the one highlighted last (Playground 1 at first), with the highlighted one's map in the third column. The first arrival highlights and focuses Playground instead of Play, with nothing open, and back from a playground chamber, Playground is open with that chamber highlighted and focused.
 
 The sections:
 
@@ -135,7 +135,7 @@ The device keeps these in `localStorage`, every key prefixed `portal-2d.`:
   - A layout that isn't one (the retired `wasd-mouse` included), or Custom with no keys, falls back to Default; renaming a game key or a key name sends a stored binding of it back to Default.
   - Unlike the progress, it is not synced between tabs, so a tab keeps the controls it loaded until it reloads.
 - **The playlist's place,** `portal-2d.music-track`: the position in its list, from 0, of the last track it moved to, so the next visit's list carries on after it once the opener has played. Missing, malformed or past the end of the list, the list starts from its top. Written by every tab, read once per visit.
-- **The progress,** under one versioned key, `portal-2d.progress`: `{version: 3, chambers: {<id>: {completed, bestTime, attempts}}}`, by permanent chamber id. Best times are in hundredths of a second; attempts are counted on each opening, Restart chamber and Play again. Version 3 since the tutorial took id 1 from the chamber that had it, so every save from before is ignored. Every save writes the whole record, so each tab takes over the record whenever another tab saves it (the `storage` event). Reset progress stores an empty record.
+- **The progress,** under one versioned key, `portal-2d.progress`: `{version: 4, chambers: {<id>: {completed, bestTime, attempts}}}`, by permanent chamber id. Best times are in hundredths of a second; attempts are counted on each opening, Restart chamber and Play again. Version 4 since the tutorial run's first chamber took id 1 from the old tutorial, so every save from before is ignored. Every save writes the whole record, so each tab takes over the record whenever another tab saves it (the `storage` event). Reset progress stores an empty record.
 
 Malformed values, unknown fields and a record of another version are ignored, and a stored value that no longer reads falls back to its default. The last chamber opened (its list, the campaign or in development the playground chambers, and its number, which the home menu highlights on the way back) is kept in memory only.
 
@@ -143,7 +143,7 @@ Malformed values, unknown fields and a record of another version are ignored, an
 
 Production builds send these Firebase Analytics events (`src/services/analytics.ts`; `npm run dev` logs each to the console as `[analytics] <event>` with its parameters instead).
 
-The chamber events, each with `chamber_id`, `chamber_number` (its position in the play order, counted from 1, so the tutorial, id 1, now sends 2 as its number) and `attempt` (the chamber's attempt count on this device, cleared by Reset progress; a restart ends attempt N and the next run is N + 1):
+The chamber events, each with `chamber_id`, `chamber_number` (its position in the play order, counted from 1, so Chamber 1 sends 1 for both) and `attempt` (the chamber's attempt count on this device, cleared by Reset progress; a restart ends attempt N and the next run is N + 1):
 
 - `chamber_start`: the chamber opened, or Play again. Restart chamber sends none of its own, so runs = `chamber_start` + `chamber_restart`.
 - `chamber_restart`: Restart chamber confirmed.

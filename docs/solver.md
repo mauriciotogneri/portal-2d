@@ -1,6 +1,6 @@
 # Solver
 
-A program that searches the states a chamber can reach, to prove it can be finished and to find its par (the fewest moves, the fewest portals). It was built as stage 02's prototype, which stopped on 2026-11-08: it is too slow on the large chambers (Playground 2 to 4, outside the campaign) for what was planned on top of it (see [Why it stopped](#why-it-stopped)). The code stays, runs under Node by hand, and its check runs in `npm run verify`, so it keeps working as the rules change. This file is what the stage learned, and what a revisit would start from. A chamber the solver can't handle is solved by hand instead (`docs/solving_by_hand.md`). The records below name the chambers as they were then: chamber 0, the tutorial, is now the chamber with id 1, and chamber N, 1 to 9, is now Playground N + 1.
+A program that searches the states a chamber can reach, to prove it can be finished and to find its par (the fewest moves, the fewest portals). It was built as stage 02's prototype, which stopped on 2026-11-08: it is too slow on the large chambers (Playground 2 to 4, outside the campaign) for what was planned on top of it (see [Why it stopped](#why-it-stopped)). The code stays, runs under Node by hand, and its check runs in `npm run verify`, so it keeps working as the rules change. This file is what the stage learned, and what a revisit would start from. A chamber the solver can't handle is solved by hand instead (`docs/solving_by_hand.md`). The records below name the chambers as they were then: chamber 0, the tutorial, is now Playground 12, and chamber N, 1 to 9, is now Playground N + 1.
 
 ## Running it
 
@@ -40,7 +40,7 @@ The shortcuts the macro search takes, in its three modes (the reference search t
 
 `npm run solver:check` (`scripts/check_solver.ts`), part of `npm run verify`, prints a line for each chamber and each tiny chamber and fails on any of these:
 
-- **The key.** Every state along each chamber's recorded solution (only the campaign's chambers have one: today the tutorial's, id 1) and along 100,000 seeded random steps packs into the key and unpacks unchanged. A key that would need more than 64 bits is refused (checked on made-up counts, 2^20 tiles and wall sides, not on a chamber).
+- **The key.** Every state along each chamber's recorded solution (only the campaign's chambers have one: today Chamber 1's) and along 100,000 seeded random steps packs into the key and unpacks unchanged. A key that would need more than 64 bits is refused (checked on made-up counts, 2^20 tiles and wall sides, not on a chamber).
 - **The shortcuts against the rules' step.** From every state along the recorded solutions and every state the reference search finds on the tiny chambers, with the ways and canonical facings for each state's blocked flags:
   - each walk the walk graph allows gives the state the solver builds, and no move it leaves out (one into a resting box among them) lands on the plain tile next to the subject;
   - each turn gives the state the solver builds for that facing, or changes nothing where the subject may not move that way (on an arrow, any way but the one it points);
@@ -57,7 +57,7 @@ The tiny chambers are in `scripts/solver_fixtures/` (`solver_fixtures.ts` lists 
 
 All in Node 24 on the author's machine (8 cores), one search at a time unless said otherwise.
 
-The tutorial (id 1), under the rules as they stood on 2026-11-22 (`npm run solve -- --solvable --par src/chambers/chamber_1.json`, at the default caps of 1,000,000 states and 300 s a search), the only chamber searched since the prototype stopped:
+The old tutorial, now Playground 12, under the rules as they stood on 2026-11-22 (`npm run solve -- --solvable --par src/dev/playground/playground_12.json`, at the default caps of 1,000,000 states and 300 s a search), the only chamber searched since the prototype stopped:
 
 | # | Search | Result | States kept | Expanded | Time | Peak memory |
 |---|--------|--------|-------------|----------|------|-------------|

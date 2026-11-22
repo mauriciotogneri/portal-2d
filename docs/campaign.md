@@ -89,7 +89,7 @@ Nothing new: chambers that make the campaign's elements act on each other, endin
 
 ## Run 1 in detail
 
-The tutorial run: today's tutorial split into small chambers, about one new thing each, with fixed arrows and blocked walls that open left for their own runs (7 and 5). Every chamber works on its layout alone (guideline 31); the hint column names the element a hint would explain if hints are built. Walls alone can't make a portal crossing necessary, since a shot flies only over floor the subject could walk too (guideline 74), so chamber 1 already crosses a ditch, and the ditch's own teach chamber was cut (2026-11-22).
+The tutorial run: the old tutorial (now Playground 12) split into small chambers, about one new thing each, with fixed arrows and blocked walls that open left for their own runs (7 and 5). Every chamber works on its layout alone (guideline 31); the hint column names the element a hint would explain if hints are built. Walls alone can't make a portal crossing necessary, since a shot flies only over floor the subject could walk too (guideline 74), so chamber 1 already crosses a ditch, and the ditch's own teach chamber was cut (2026-11-22).
 
 | #   | Part    | Elements                            | The player already knows                | Should teach                                                                                                                                       | Hint (if built) |
 | --- | ------- | ----------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |

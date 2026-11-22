@@ -2,7 +2,7 @@
 
 How to solve a chamber by reasoning rather than by search, and how to prove the solution right by playing it through the rules. It is for the chambers the solver can't help with:
 
-- **Too large to finish.** On 2026-11-08, under older rules, the solver gave up on Playground 2 and Playground 3 and found only a long route for Playground 4 (`docs/solver.md`). Even on the tutorial (id 1), its fewest-portals search gave up at its default 5 minutes on 2026-11-22, and its fewest-moves search took nearly 4.
+- **Too large to finish.** On 2026-11-08, under older rules, the solver gave up on Playground 2 and Playground 3 and found only a long route for Playground 4 (`docs/solver.md`). Even on the old tutorial (now Playground 12), its fewest-portals search gave up at its default 5 minutes on 2026-11-22, and its fewest-moves search took nearly 4.
 - **Too large for the key.** The solver packs a state into 64 bits; Playground 1 needs 79, so it refuses it.
 - **A receiver.** The solver's macro search refuses any chamber with one, since the subject cuts a ray by walking into it; only its exact reference search, far slower, runs there.
 - **Proving a new chamber solvable** before its solution is recorded.

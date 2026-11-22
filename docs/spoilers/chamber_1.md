@@ -1,8 +1,8 @@
-# Chamber 2 (run 1, chamber 1.1)
+# Chamber 1 (run 1, chamber 1.1)
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: draft, played by the author; their run is recorded, waiting for their keep, tweak or redo. File: `src/chambers/chamber_2.json`, first in the play order.
+Status: approved by the author on 2026-11-22, their cold run its recorded solution. File: `src/chambers/chamber_1.json`, first in the play order; permanent id 1, taken from the old tutorial (now Playground 12), with stored progress reset.
 
 ## Entry
 
@@ -94,4 +94,4 @@ None is a dead end: there is no box, link, arrow or anything one-way, and portal
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-22 | The intended route with no wasted press: up to the middle row, right to the ditch, orange across, back left, blue on the near wall, through, then to the exit (8 moves, 2 portals). No shot missed, so they never shot steel: the case the lure section says can't be forced. Recorded as `chamber_2.solution.json` |
+| 1 | The author, cold | 2026-11-22 | The intended route with no wasted press: up to the middle row, right to the ditch, orange across, back left, blue on the near wall, through, then to the exit (8 moves, 2 portals). No shot missed, so they never shot steel: the case the lure section says can't be forced. Recorded as `chamber_1.solution.json`; kept |

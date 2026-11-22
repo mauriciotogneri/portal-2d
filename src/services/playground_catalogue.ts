@@ -17,6 +17,7 @@ import playgroundEightData from '@/dev/playground/playground_8.json'
 import playgroundNineData from '@/dev/playground/playground_9.json'
 import playgroundTenData from '@/dev/playground/playground_10.json'
 import playgroundElevenData from '@/dev/playground/playground_11.json'
+import playgroundTwelveData from '@/dev/playground/playground_12.json'
 import type {ChamberData} from '@/game/chamber_data'
 
 // In order, each at the place its file's number names. Playground 1 holds every element, each
@@ -36,4 +37,5 @@ export const PLAYGROUND_LAYOUTS: ChamberData[] = [
   playgroundNineData,
   playgroundTenData,
   playgroundElevenData,
+  playgroundTwelveData,
 ]
