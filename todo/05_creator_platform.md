@@ -24,7 +24,7 @@ This stage assumes the following exist when it starts. Re-check each when revisi
   - The reworked renderer, with the high-DPI fix from stage 00. The editor draws with it.
 - **Stage 04a (mechanics)**, done 2026-11-20
   - Slide floors, turnable arrows, emitters, receivers and mirror boxes, in the element registry and format 2 (`docs/elements.md`). Left by its notes for the editor: a palette entry for each element, placement checked by the same rules as the chamber loader, and link editing for receivers (which link elements as buttons and switches do) and for turnable arrows.
-- **Stage 04b (campaign)**
+- **Home menu and links**
   - A home menu that scales and has room for an Editor entry.
   - Chamber links by position (`/chamber/N`, README decision 13, which settled open decision 6), so the new routes don't collide with them.
 - **Stage 00**: records keyed by permanent id. Shared chambers have no catalogue id, so they get their own records keyed by a content hash (step A2.4).
@@ -62,7 +62,7 @@ This stage assumes the following exist when it starts. Re-check each when revisi
 - [ ] **A1.2 Encoder and decoder.** Plain TypeScript with no Vue import, so the local checks can run it under Node (for example `src/game/chamber_link.ts`, inside the lint boundary in `eslint.config.js`). Encode → deflate-raw → base64url, and back. Note that `CompressionStream` is asynchronous. Verify: a local check round-trips every bundled chamber to an identical result.
 - [ ] **A1.3 Size limits.** Reject encoded text above a cap (proposal: 8 KB) before decoding. Stop decompressing above a cap (proposal: 64 KB) while streaming, so a "zip bomb" can't freeze the tab. Cap the grid (proposal: 40×40, or smaller: there is no camera (stage 03), so the cap must keep a chamber fitting the screen) and the element counts. Verify: oversized and bomb fixtures are rejected within milliseconds.
 - [ ] **A1.4 Runtime validation of untrusted chambers.** The runtime validator exists: the chamber loader (`src/game/rules/load_chamber.ts`) reads a chamber as raw JSON and rejects what `docs/elements.md` lists under "What the validator rejects", reporting each problem with its field and tile. Reuse it for a decoded link and for the editor's draft, and add only the link's own checks: name and author length and characters. Return the problems with their tiles, so the editor can show them. Verify: each bad fixture produces its expected error, and every bundled chamber passes.
-- [ ] **A1.5 Measure link length.** Encode every bundled chamber (stage 04b's campaign by then) with and without its recorded solution. Write the smallest, middle and largest lengths into this file. Budget: 2,000 characters with the replay. Verify: a local check fails if a bundled chamber's link goes over budget.
+- [ ] **A1.5 Measure link length.** Encode every bundled chamber (the campaign's by then) with and without its recorded solution. Write the smallest, middle and largest lengths into this file. Budget: 2,000 characters with the replay. Verify: a local check fails if a bundled chamber's link goes over budget.
 
 ### Phase A2 — Opening a shared link
 
@@ -74,7 +74,7 @@ This stage assumes the following exist when it starts. Re-check each when revisi
 
 ### Phase A3 — The editor
 
-- [ ] **A3.1 Editor route and screen.** Add `/editor` to `src/router.ts` with its no-cache header in `firebase.json`, a new `src/components/screens/editor_screen.vue`, and an entry in the home menu placed by stage 04b's menu. Use the frontend-design skill. Verify: reachable and usable with the keyboard only.
+- [ ] **A3.1 Editor route and screen.** Add `/editor` to `src/router.ts` with its no-cache header in `firebase.json`, a new `src/components/screens/editor_screen.vue`, and an entry in the home menu after Play. Use the frontend-design skill. Verify: reachable and usable with the keyboard only.
 - [ ] **A3.2 Draw with the game's renderer.** Draw the draft with stage 03's renderer, at the screen's pixel ratio, plus a grid and a cursor overlay. Verify: a bundled chamber opened in the editor looks exactly as in the game, apart from the overlay.
 - [ ] **A3.3 Keyboard-first tools.** Arrows move the cursor; a palette, read from 01's element registry, picks the element type; keys place, erase, set the subject and exit, and turn directional elements; mouse click-and-drag paints. Use the frontend-design skill for the palette and the element inspector. Verify: rebuild chamber 1 from scratch with the keyboard only.
 - [ ] **A3.4 Link tool.** Pick a button or switch, then its targets; links are drawn as lines; ids are assigned automatically (authors never type ids). Use the frontend-design skill. Verify: links survive a round trip through the link; deleting a target removes its links.
