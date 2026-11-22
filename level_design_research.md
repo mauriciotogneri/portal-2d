@@ -74,7 +74,7 @@ Tips for designing Portal 2D's chambers, by topic. Some repeat `docs/level_desig
 
 **Expect waste.** Plan to keep a third to a half of what you draft: about 20–30 drafts for the 10 chambers still to make. Cut as you go, the weakest first when a better one arrives: a chamber that repeats another, or one whose route is a list of separate small jobs (open this door, cross that ditch, press that button) with no single moment, since problems that split into parts are easy (3.4). Tag every draft, kept or cut, by its elements and role, so the pool can be searched later.
 
-**Keep a card per chamber** (the 04b chamber plan table is most of this already): its sentence, its elements, its role (teach, test, twist, combine or rest), what the player must already know, and:
+**Keep a card per chamber**: its sentence, its elements, its role (teach, test, twist, combine or rest), what the player must already know, and:
 
 - _Its purpose_: teaching, reinforcing, a memorable moment, or a rest between hard chambers (3.4). If you can't name one, rework or cut the chamber.
 - _Its place and difficulty, re-read at every draft_: a chamber that outgrows its card moves later or splits in two. Laid side by side, the cards show gaps, such as a chamber that suddenly adds four new elements.
@@ -376,7 +376,7 @@ From the laser-and-mirror writing: always-on beams invite wiggling, and an accid
 
 Prose sketches, not layouts: none has been built, solved or tested. Each names its part (teach, test, twist, combine, as in guideline 40), the pattern it comes from, and the guidelines to check when building it. They're grouped by element and slotted into neither plan.
 
-What already exists, so the ideas avoid repeating it: chambers 4 and 5 teach and test slide floors, 6 and 7 teach and twist turnable arrows, 8 and 9 teach and test rays through portals, and the 04b file lists six ideas left by stage 04a (a fizzler mid-slide, a box carried across slides, an arrow held by a box, arrows changing where a slide ends, a ray crossing the tile before its own door, a mirror box carried around a fizzler). Gaps worth noting: **no chamber uses a light barrier or a mirror box yet**, and only chambers 1 and 3 use fizzlers.
+What already exists, so the ideas avoid repeating it: chambers 4 and 5 teach and test slide floors, 6 and 7 teach and twist turnable arrows, 8 and 9 teach and test rays through portals, and stage 04a left six ideas (a fizzler mid-slide, a box carried across slides, an arrow held by a box, arrows changing where a slide ends, a ray crossing the tile before its own door, a mirror box carried around a fizzler). Gaps worth noting: **no chamber uses a light barrier or a mirror box yet**, and only chambers 1 and 3 use fizzlers.
 
 ### 5.1 Portals (basics)
 
