@@ -20,7 +20,7 @@
 | 3 | `02_solver.md` (file removed; see `docs/solver.md`) | Stopped | Solver prototype on the current chambers (go/no-go: no-go on 2026-11-08, decision 10); the rest was dropped: solvability and par in the local checks, shortcut finder, dead-end warning, hints, generated chambers |
 | 4 | `03_look_and_sound.md` (file removed) | Done | Visual rework, one tutorial chamber (chamber 0) |
 | 5 | `04a_mechanics.md` (file removed, decision 17) | Done | Slide floors, turnable arrows and rays (emitters, receivers and mirror boxes, the "live lasers" of decisions 14 to 16), each with a teach and a proof chamber |
-| 6 | `04b_campaign.md` | Draft | The campaign completed at 20 chambers, a menu and catalogue that scale, chamber numbering and links |
+| 6 | `04b_campaign.md` | Ready | The campaign completed at 20 chambers, a menu and catalogue that scale, chamber numbering and links |
 | 7 | `05_creator_platform.md` | Draft | Editor, sharing in the link, share only what you solved |
 | 8 | `future.md` | — | Not a stage: ideas for mechanics beyond the plan, and how a mechanic was built (kept from stage 04a) |
 
