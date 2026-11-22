@@ -39,8 +39,8 @@ And the assumptions that follow from them:
 ## Workflow for each chamber
 
 1. Design it from its entry in the outline and the handbook, trying several variants privately; write its notes (guideline 52).
-2. Check it: guidelines 100–104 (the chamber check, the solver, the key move check, the forbidden facts, the near misses).
-3. Add it to the campaign list, at its place in the play order, and hand the author its address only. Until its solution is recorded, `npm run replay:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+2. Check it: guidelines 100–104 (loading it and the solver, the key move check, the forbidden facts, the near misses); the chamber check itself refuses a chamber file the play order doesn't list, so it runs in step 3.
+3. Add it to the campaign list, at its place in the play order, run `npm run chamber:check`, and hand the author its address only. Until its solution is recorded, `npm run replay:check`, and so `npm run verify` and `npm run deploy`, fail on it.
 4. The author plays it cold in `npm run dev`, then reads its notes and decides: keep, tweak or redo.
 5. On keep: the author's play becomes its recorded solution (Download solution); the chamber goes live at the next deploy.
 6. Lessons that hold beyond the chamber go into the handbook, the rest into its notes (guideline 107).
@@ -64,7 +64,7 @@ And the assumptions that follow from them:
 - [ ] **3.3 Chamber 1.3** (teach: ditch).
 - [ ] **3.4 Chamber 1.4** (teach: button and door).
 - [ ] **3.5 Chamber 1.5** (combine).
-- [ ] **3.6 Retire today's tutorial.** Once the new first chamber is approved, move today's Chamber 1 to the playground and update `AGENTS.md`, `docs/game_summary.md` and `docs/hints.md`, which describe it.
+- [ ] **3.6 Retire today's tutorial.** Once the new first chamber is approved, move today's Chamber 1 to the playground and update `AGENTS.md`, `docs/game_summary.md` and `docs/hints.md`, which describe it. Make the home menu's first-visit Play start the first chamber in the play order: today it starts permanent id 1 (`src/components/screens/home_screen.vue`), so with the new chambers listed it opens the old tutorial, and once that leaves the list it just opens the chamber list. Check it with empty progress.
 - [ ] **3.7 Friends play run 1 cold.** Note what confused them in each chamber's notes.
 - [ ] **3.8 Revise the handbook** with what run 1 taught (decision 10).
 - [ ] **3.9 Detail run 2** in the outline, its combine chamber sketched first.
