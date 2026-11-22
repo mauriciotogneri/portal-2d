@@ -46,8 +46,9 @@ This stage's own decisions are numbered from 1. Stage 04a's, below them, keep th
 | 1 | 2026-11-22 | The solver check keeps failing on a chamber whose state key needs more than 64 bits, instead of skipping and naming it as 04a decision 18 settled: that part was never built, today's chambers need at most 53 bits, and `docs/level_design.md` (guideline 11) already treats 64 bits as a limit. A chamber that needs more is redesigned, or this decision is revisited |
 | 2 | 2026-11-22 | The engine scripts read their chambers from the game's play order (`src/services/chamber_catalogue.ts`), each chamber's file named by its id, instead of keeping a list of their own (replaces that part of 04a decision 19). The play order now uses nothing of Vite's, the playground's layout having moved to a file of its own, so the scripts can import it, and there is no second list to disagree with it |
 | 3 | 2026-11-22 | The campaign restarts from the tutorial alone (README decision 18): it is Chamber 1 with id 1, chambers 1–9 left the campaign for good as Playground 2–10, and the campaign's 20 chambers (04a decision 10) are now Chamber 1 and 19 new ones, numbered 1–20. Replaces 04a decision 10's numbering (0–19) and its chambers 1–3, 04a decision 7's count from 0, 04a decision 6's teach and proof chambers in the campaign, and this stage's plan to place chambers 0–9 in the campaign |
+| 4 | 2026-11-22 | The 19 new chambers are split and shipped as follows. The existing elements get about 7, since old chambers 1–3, which taught portals, boxes, doors and fizzlers, left with decision 3, and about 4 can't cover their eight groups; the three mechanics keep about 4 each (04a decision 16), so the rows add up to 19. They ship in three releases: release 1 brings about 9, so the campaign is back to about 10 chambers, as many as the friends had before the restart, and releases 2 and 3 about 5 each. Each release takes the next chambers in play order, so later releases only add to the end of the list and no link or chamber number changes. Replaces 04a decision 16's about 4 for the existing elements, and the 3–4 chambers a release set when 10 were left to make |
 
-**Stage 04a's decisions.** Decisions 6–19 were made while this stage and stage 04a were one stage (README decision 15), so "this stage" and "here" in them mean both; 20 is 04a's own, cited by a chamber idea below. Decision 3 above replaces parts of 6, 7 and 10. The rest of 04a's decisions settled the mechanics as built (now in `docs/elements.md`, `docs/sprites.md` and `docs/solver.md`); all of them, with what each was chosen over, are in git history in `todo/04a_mechanics.md` (removed 2026-11-20, README decision 17). Their wording uses today's names: an emitter's light is a ray, while "beam" is a laser's or a light barrier's.
+**Stage 04a's decisions.** Decisions 6–19 were made while this stage and stage 04a were one stage (README decision 15), so "this stage" and "here" in them mean both; 20 is 04a's own, cited by a chamber idea below. Decision 3 above replaces parts of 6, 7 and 10, and decision 4 part of 16. The rest of 04a's decisions settled the mechanics as built (now in `docs/elements.md`, `docs/sprites.md` and `docs/solver.md`); all of them, with what each was chosen over, are in git history in `todo/04a_mechanics.md` (removed 2026-11-20, README decision 17). Their wording uses today's names: an emitter's light is a ray, while "beam" is a laser's or a light barrier's.
 
 | # | Date | Decision |
 |---|---|---|
@@ -72,11 +73,11 @@ The existing elements need chambers too (portal basics, boxes and buttons, doors
 
 | # | Mechanic or element | New chambers | Teach notes (signage, confusion seen) |
 |---|---|---|---|
-| 1 | Existing elements | About 4, none built yet | — |
+| 1 | Existing elements | About 7 (decision 4), none built yet | — |
 | 2 | Slide floors | About 4, none built yet | Chambers 4 (teach) and 5 (test), now Playground 5 and 6, stage 04a's cold playtest of 2026-11-19: no confusion seen |
 | 3 | Turnable arrows | About 4, none built yet | Chambers 6 (teach) and 7 (twist), now Playground 7 and 8, stage 04a's cold playtest of 2026-11-19: no confusion seen |
 | 4 | Rays | About 4, none built yet | Chambers 8 (teach) and 9 (test), now Playground 9 and 10, stage 04a's cold playtest of 2026-11-20: liked, no confusion reported |
-| 5 | Total | 19 (20 with Chamber 1); the rows above add up to about 16, set when chambers 1–3 were in the campaign, and where the other 3 go is open | |
+| 5 | Total | 19 (20 with Chamber 1) | |
 
 **Chambers built by stage 04a** (each mechanic's first two, from layouts the author approved; what designing them taught became guidelines 26 and 28–30 in `docs/level_design.md`). Kept as a record: since README decision 18 they are Playground 5–10, outside the campaign, with their recorded solutions deleted (git history keeps them). Their layouts can serve as starting points for new chambers, but they are not in the campaign.
 
@@ -125,9 +126,9 @@ Neither ray chamber uses the mirror box; this stage's combine chamber is the fir
 - [ ] **Chamber plan.** List the 19 new chambers left to make in this file, in play order after Chamber 1, each with its mechanic or element and its part (teach, test, twist or combine), following the campaign plan table and 04a decision 16. Starting order: the existing elements first, then the new mechanics in the order built. Later reorders follow playtests, with the friends' analytics informing them, and the ordering guideline (`docs/level_design.md`, guideline 43). Playground 2–10 (the old chambers 1–9, README decision 18) can serve as starting points, but a chamber built from one joins the campaign as a new chamber, with a new id and its own recorded solution. Verify: every mechanic stage 04a shipped has chambers or a recorded reason it doesn't, and the total is 20.
 - [ ] **Authoring workflow before the editor.** Until stage 05's editor exists: hand-write the chamber file in format 2. Today the only development-only chamber routes are the playground chambers' (`/playground/N`, README decision 18), and saving a chamber file reloads the whole page, through the loading screen and Start (read from the code, not tried). Add a development-only route (behind `import.meta.env.DEV`, never in production builds) that loads a chamber file from disk and reloads on save; record the solution by completing the chamber in `npm run dev` and pressing Download solution in the completion dialog; tick a per-chamber checklist (`docs/level_design.md`, guidelines 37 and 39). Verify: one chamber goes through the whole workflow; a production build has no development route.
 - [ ] **Place chambers 0–9 in the campaign.** Obsolete since README decision 18: the tutorial stays first as Chamber 1 (id 1), and chambers 1–9 left the campaign for good as Playground 2–10, so there is nothing to place, and every save was reset once (progress version 3). Nothing to verify.
-- [ ] **Author release 1** (3–4 new chambers; each release ships with a changelog entry in `src/services/changelog.ts`, and release 1's also covers stage 04a's mechanics, which have none yet, and the restart: the old chambers gone and saves reset, README decision 18). README decision 18 recommends holding the deploy until the campaign has new chambers, which release 1 is the first to bring. Which new chambers it holds is open. The size of 3–4 chambers a release was set when 10 were left to make; with 19 left, three releases that size don't reach 20, so how many releases, or how large, is open. Verify: `npm run verify` and the catalogue check pass; playtested.
-- [ ] **Author release 2.** Same checks.
-- [ ] **Author release 3.** Same checks; the campaign reaches 20 chambers (see release 1 on the number of releases).
+- [ ] **Author release 1** (about 9 new chambers, the first in play order, so the campaign reaches about 10, decision 4; each release ships with a changelog entry in `src/services/changelog.ts`, and release 1's also covers stage 04a's mechanics, which have none yet, and the restart: the old chambers gone and saves reset, README decision 18). README decision 18 recommends holding the deploy until the campaign has new chambers, which release 1 is the first to bring. Verify: `npm run verify` and the catalogue check pass; playtested.
+- [ ] **Author release 2** (about 5 new chambers, the next in play order, decision 4). Same checks.
+- [ ] **Author release 3** (about 5 new chambers, the last in play order, decision 4). Same checks; the campaign reaches 20 chambers.
 
 ### Phase 4 — Wrap-up
 
@@ -155,8 +156,8 @@ None: stage 04's two go/no-go points, the hook check and ray oscillation, were a
 
 ## Risks
 
-- **Mechanics barely used.** With 19 new chambers, each mechanic gets about 4 (04a decision 16), so a full run doesn't fit; a combine chamber can serve two at once.
-- **Content volume.** The 19 new chambers are most of this stage's work. Ship them in small releases, so the game grows instead of waiting.
+- **Mechanics barely used.** With 19 new chambers, about 7 of them for the existing elements (decision 4), each mechanic gets about 4 (04a decision 16), so a full run doesn't fit; a combine chamber can serve two at once.
+- **Content volume.** The 19 new chambers are most of this stage's work. Ship them in three releases (decision 4), so the game grows instead of waiting.
 - **Reordering surprises players.** Display numbers and links change after a reorder, which friends will see. Progress is safe (keyed by id); say what changed in the changelog.
 
 ## Notes for later stages
