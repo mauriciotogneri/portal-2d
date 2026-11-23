@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-23, checked and independently reviewed, waiting for the author's cold play. File: `src/chambers/chamber_11.json`, eleventh in the play order; permanent id 11. Designed together with chambers 5.2 (id 12) and 5.3 (id 13), all three before the author plays any (the author's call, 2026-11-23, as for runs 2 to 4). It has no recorded solution yet, so `npm run replay:check` and `npm run solver:check`, and with them `npm run verify` and `npm run deploy`, fail on it until the author's play is recorded.
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_11.json`, eleventh in the play order; permanent id 11. Designed together with chambers 5.2 (built as id 12, cut on the author's play: the idea pool, "Cut drafts") and 5.3 (built as id 13, now id 12), all three before the author played any (the author's call, 2026-11-23, as for runs 2 to 4).
 
 ## Entry
 
@@ -38,7 +38,7 @@ Built as its prototype, tile for tile: the counts below are the sketch's. The bo
 
 ## Purpose
 
-Teaching: steel a button opens, a new element, and the laser, new but asking no new rule (an open ditch's part, run 1), and a shot over a resting box, which no earlier route had to make. Its plants: for 5.2 and 5.3, steel a button holds open takes portals, and its likeliest wrong try, the lure below, shows the portal on it closing as it shuts; for 5.3, the room itself, which 5.2 and 5.3 keep.
+Teaching: steel a button opens, a new element, and the laser, new but asking no new rule (an open ditch's part, run 1), and a shot over a resting box, which no earlier route had to make. Its plants for 5.3: steel a button holds open takes portals, and its likeliest wrong try, the lure below, shows the portal on it closing as it shuts; and the room itself, which 5.3 keeps (as the cut 5.2 did).
 
 Gem, a small one: one step, the box onto B so the steel stays open without the subject, then a plain crossing.
 
@@ -55,7 +55,7 @@ Solver: 6 moves and 2 portals, both the fewest; the state walk's fewest presses 
 
 ## Lure and where the player should get stuck
 
-The subject starts facing B: stepping on it (chamber 1.3's step onto the button) slides K's steel back and lights B's line; a shot puts a portal on K (chamber 2.4's shot from the button); the step off shuts the steel, and the portal goes with it. Three presses from the start, plain at once, nothing lost (guideline 28): the shot can be made again. Not forced (guideline 108): a player who brings the box first never meets it, so 5.2 forces the closing. Where the player should get stuck: hardly at all; seeing that the box, not the subject, has to hold K, and then shooting over it.
+The subject starts facing B: stepping on it (chamber 1.3's step onto the button) slides K's steel back and lights B's line; a shot puts a portal on K (chamber 2.4's shot from the button); the step off shuts the steel, and the portal goes with it. Three presses from the start, plain at once, nothing lost (guideline 28): the shot can be made again. Not forced (guideline 108): a player who brings the box first never meets it. 5.2 forced the closing and was cut, so no chamber forces it before 5.3, whose own lure shows it as no loss. Where the player should get stuck: hardly at all; seeing that the box, not the subject, has to hold K, and then shooting over it.
 
 ## Restrictions
 
@@ -108,14 +108,17 @@ None is a dead end.
 - The lure: up, blue, down closes K's portal in three presses.
 - `npm run chamber:check` passes.
 - An independent check (a fresh agent with only the file and the plan's entry, no notes) found no shortcut, no dead end and no `Must` breached: its own walk found 1,546 states, 1,017 without the turn key, none dead; 6 moves and 2 portals; copies without the box, with K unlinked steel or with N steel are unsolvable, and without the laser it is a 6-move walk with no portal; every route shoots past the box on B and past the laser, and no chamber from 1 to 10 forces a shot past a resting box. Its judgment calls:
-  - The lure shows a portal closing by itself, a likely false loss (guideline 28), before 5.2 shows it as no loss. Accepted: it is the natural first try, fails within three presses, shows "while the button is held", and a shot puts the portal back.
+  - The lure shows a portal closing by itself, a likely false loss (guideline 28), before any chamber forces it as no loss (5.2 did, and was cut). Accepted: it is the natural first try, fails within three presses, shows "while the button is held", and a shot puts the portal back.
   - 5.3's lesson can be met here: the box on B, both portals placed, then the box lifted, and K shuts on its portal. Accepted: nothing past the laser needs the box, so few will lift it, and meeting it here only plants 5.3's lure (guideline 47 warns against rehearsing the answer, the shot from past the laser, which no route here makes).
   - "A laser stops the subject" is only a refusal (guideline 108). Accepted, as the outline does: every route works round it.
   - It may read as 1.3 plus 1.1 (guideline 113); moderate risk, for the author's play.
   - B's line runs under the laser, whose beam may hide that tile's middle dot: checked in the game below.
+- `npm run replay:check` passes on the author's recorded run: 6 moves and 2 portals.
 - Played through in the real game (`npm run dev` in Chrome, the tab muted): the lure (up, a shot, down) opens K, puts a portal on it and closes it on the step off, B's line lighting and going dark; then the route without the turn key (the box onto B from beside it, a shot over it onto K, one onto N, the crossing, the walk out), completing the chamber with no console error. B's line reads as one straight line from B to K: the beam hides only the dot under it, the dots either side show. The turn key wasn't tried in the game, since the browser tool sends Shift only as a modifier, not as the held key the game reads.
 
 ## Playtests
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-23 | Kept ("ok"). Their recorded run is the intended route: the box from the corner onto B, put down with a turn in place, a portal on N, then one on K over the box, the crossing and the walk out (6 moves and 2 portals, both the fewest). The lure doesn't show in it; earlier tries, if any, leave no trace in a recording. Recorded as `chamber_11.solution.json` (Download solution) |
+| 2 | Friends, cold | 2026-11-23 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

@@ -1,92 +1,94 @@
-# Chamber 12 (run 5, chamber 5.2)
+# Chamber 12 (run 5, chamber 5.3)
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-23, checked and independently reviewed, waiting for the author's cold play. File: `src/chambers/chamber_12.json`, twelfth in the play order; permanent id 12. Designed together with chambers 5.1 (id 11) and 5.3 (id 13), all three before the author plays any (the author's call, 2026-11-23). It has no recorded solution yet, so `npm run replay:check` and `npm run solver:check`, and with them `npm run verify` and `npm run deploy`, fail on it until the author's play is recorded.
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_12.json`, twelfth in the play order; permanent id 12. Designed as id 13 together with chambers 5.1 (id 11) and 5.2 (id 12), all three before the author played any (the author's call, 2026-11-23). The author cut 5.2 on their play the same day (the idea pool, "Cut drafts"), so this chamber took id 12, the id after the last chamber's, so none is skipped (the author's rule), as run 2's kept chamber took 5; neither id had been deployed (the author's word, 2026-11-23). Its name in the plan stays 5.3, as run 2's kept chamber stayed 2.4.
 
 ## Entry
 
-Run 5, chamber 2, twist. Elements: steel a button opens, a box, two buttons, a switch, a laser, the exit, and antlines; walls and steel are known from run 1. The player knows runs 1 to 4 and chamber 5.1. It should teach that a switch linked to a box sends it home from wherever it lies, and the box isn't lost; and that a portal on steel closes as the button holding the steel lets go and it shuts. Hint: none (convention 7).
+Run 5, chamber 3, combine, and the run's last chamber. Elements: steel a button opens, a box, two buttons, a laser, the exit, and antlines; walls and steel are known from run 1. The player knows runs 1 to 4 and chamber 5.1 (5.2 was cut). It should teach that the box that holds steel open can be needed past it, though lifting it shuts the steel and the portal on it, where a portal past a door outlasts the door. Hint: none (convention 7).
 
 ## Layout
 
-7 × 6, chamber 5.1's room with one change: the box starts on a second button, **B1**, in the subject's side's bottom left corner, which holds the exit open. As in 5.1, the subject starts in the middle of the lower row, facing up at **B2** one step ahead, which links **K**, the one-tile blocked wall straight above in the top wall, past the laser and the far row; **N** is the plain face right under the start. In the far row, one tile left of K's column, the switch, linked to the box. Every wall is steel but K and N.
+7 × 7: 5.1's room with a second row past the laser. The near side, 5 × 2, holds the subject, starting as in 5.1 in the middle of the lower row, facing up, over **N**, the near side's only plain face, in the bottom wall; the button **B**, one tile right of K's column, in the upper row; and the box, at the upper row's left end. The far side, 5 × 2 above the laser, holds the button **B2** in its lower row, linked to the exit, which stands at the far side's upper right, in the chamber's right wall; **K**, the one-tile blocked wall B links, in the top wall straight above the start, the only far face the near side sees; and **P**, a plain face at the far side's upper left, in the chamber's left wall, which no near tile is in line with. Every other wall is steel.
 
 ```
-y5  ■ ■ ■ K ■ ■ ■
-y4  ■ . s . . . E
+y6  ■ ■ ■ K ■ ■ ■
+y5  P . . . . . E
+y4  ■ . . . Q . ■
 y3  ■ L L L L L ■
-y2  ■ . . P . . ■
-y1  ■ B . S . . ■
+y2  ■ x . . B . ■
+y1  ■ . . S . . ■
 y0  ■ ■ ■ N ■ ■ ■
     0 1 2 3 4 5 6
 ```
 
-`■` steel, `S` the subject's start (3, 1), facing up, `B` B1 (1, 1), linked to the exit, with the box resting on it (its start), `P` B2 (3, 2), linked to K, `L` the laser run (1, 3) to (5, 3), horizontal, on, `s` the switch (2, 4), linked to the box, `K` the blocked wall (3, 5), linked, `N` a plain wall (3, 0), `E` the exit (6, 4), linked to B1, so it starts closed and opens as the start settles, the box holding B1.
+`■` steel, `S` the subject's start (3, 1), facing up, `x` the box (1, 2), `B` B (4, 2), linked to K, `L` the laser run (1, 3) to (5, 3), horizontal, on, `Q` B2 (4, 4), linked to the exit, `K` the blocked wall (3, 6), linked, `P` a plain wall (0, 5), `N` a plain wall (3, 0), `E` the exit (6, 5), linked, so it starts closed.
 
-Antlines, three:
+Antlines, two:
 
-- B1 to the exit: (1, 1), (6, 1), (6, 4): right along the lower row, turning on the right wall and up it into the exit from below; lit at the start.
-- B2 to K: (3, 2), (3, 5), straight up, as 5.1's.
-- The switch to the box: (2, 4), (1, 4), (1, 1): left one tile, then down under the laser into B1 from above, ending on the box.
+- B to K: (4, 2), (3, 2), (3, 6): one tile left on the floor, turning there, then up under the laser and across the far side into K from below.
+- B2 to the exit: (4, 4), (6, 4), (6, 5): right across the floor, turning on the right wall and up into the exit from below.
 
 ## Idea
 
-The box holds the exit open and is needed on B2 to get past the laser, so it goes onto B2, and the switch past the laser sends it home onto B1, which opens the exit as the steel behind the subject shuts on its portal.
+The box opens the way (on B, K takes a portal) and is needed past it (on B2), and lifting it shuts K and the portal on it, so the portal the subject came out of on K is moved, from the far side, onto P, the far side's own face, before the box is fetched through N and P.
 
-From the idea pool, where an independent reviewer sketched it while run 5 was detailed:
+From the idea pool, where it was sketched before run 5's other chambers (guideline 51):
 
-> - **Run 5, chamber 2: the box the switch sends home past the steel** (twist; built 2026-11-23 by the proposal's independent reviewer, to show that run 5 can force a box sent home from elsewhere with one box). A laser run splits the chamber wall to wall, the exit beyond it, in a far side with no plain face. The box rests on its start, button **B1**, linked to the exit, so the exit stands open, out of reach; beside B1 a second button, **B2**, opens **K**, a one-tile blocked wall past the laser, the only far face the near side sees; the near side has one face, **N**; past the laser, a switch linked to the box. The catch: the box holds the exit open and is needed on B2 to get to it. It resolves by the switch: the box from B1 onto B2 (the exit shuts), a pair on N and K, cross, use the switch: the box flies home onto B1 (the exit opens), B2 lets go, K shuts and the portal on it closes behind the subject, harmlessly, and out. Forced on every route: a box sent home from elsewhere, seen as no loss (guideline 28; carried from run 4 and asked of step 6.5), drawn as a destroyed box's flight home is (`docs/sprites.md`, "Fly home"), so run 6's fizzler can rely on it; a portal on steel closing as the steel shuts, also no loss, what 5.3 turns on, shown first (guideline 25); and one box for two buttons in turn. Neither can be avoided: the box can't be put back on B1 by hand, since the subject then has no way past the laser (guideline 116), and the far side has no face to move K's portal to. A flow (guideline 11): one real step, lifting the box off the button that holds the exit open; it may be stumbled through, as a show may (guideline 32), but its two consequences are met on every route. It is run 4's set-aside show, "the box flies home onto its button" (above), with the steel and the laser in place of its door and back room. _Check:_ 64 and 65 (the subject is past the laser as the box lands on B1); 70 (the box's start is seen held at the start, and the switch's antline ends on it); 59 and 60; 18 (five kinds of element: blocked wall, laser, box, button, switch, one over the guideline's four, the laser being the only barrier a shot crosses and the subject doesn't); 47 (it plants 5.3's closing portal, not 5.3's answer: no route shoots from past the laser); 113 (what every route does that none did before: send a box home from elsewhere, and lose a portal to shutting steel). Feasibility, 2026-11-23: the reviewer's prototype (7 × 6: the near side 5 × 2 below a laser row, one row above it with the switch and the exit, every wall steel but K, in the top wall, and N, in the bottom wall; B1 under B2 in the near side's left column), rechecked: 13 moves and 2 portals, both the fewest; all 1,426 reachable states can be finished, none of 999 dead without the turn key; no completion without a box sent home, or without K's portal closing as K shuts; the copy without the switch is unsolvable from `--baseline` and `--par`; the box never lands under the subject.
+> - **Run 5, chamber 3: the steel that shuts on its portal** (combine; sketched 2026-11-23, before run 5's other chambers, guideline 51). A laser run splits the chamber wall to wall. The near side holds the subject, the box, button **B** and one face that takes portals, **N**; the far side holds the exit, linked to button **B2**, and two faces: **K**, a one-tile blocked wall B links, the only far face the near side sees (along a column, over the laser), and **P**, a plain face that no near tile is in line with, so only the far side sees it. The catch: the box opens the way (on B, K takes a portal) and is needed past it (on B2); picking it up off B shuts K, and the portal on K closes with it. It resolves by making a lasting way while K is open: the box on B, a pair on N and K, the subject crosses out of K and, from the far side, moves the portal just come out of onto P; back through P to N, it lifts the box (K shuts with nothing on it) and carries it through N and P onto B2. One key move, the shot onto P from the far side; every route moves the portal on K by a shot fired past the laser, which is run 3's carried item, the portal just come out of forced to move (guideline 27), forced by the steel rather than by a box in front of it: once the author has played this chamber, the outline's carried item can be marked answered. What it turns over: chamber 2.4's lesson, a door shutting closes no portal, which a player can take for any wall; on steel a button opens, the portal goes with it (guideline 41, a twist that breaks a trained belief, here inside the combine). Every route also uses one box for two buttons in turn (run 4), met again, not taught. The lure: 5.1's answer, the box on B and a pair through K, then back for the box: the steel shuts as it lifts, the portal on it gone, plain at once and within a few moves (guideline 4); put back, the box opens K again, so nothing is lost (guideline 28). Plants: 5.2 (a portal on steel closes as the steel shuts, forced on every route there as no loss); 5.1 (steel a button holds open takes portals; its likeliest wrong try shows the closing too); 1.4 and 2.4 (a part left through the colour come out of; carrying the box through portals). Keep it unrehearsed (guideline 47): no earlier chamber has the subject shoot a lasting face from beyond a gate it can't hold open, and 5.2's far side has no plain face. Two rules its layout must keep, both found by the prototype's state walk (guidelines 33 and 111): N is the near side's only face, so once the box is across, both portals can never be on the near side (with three near faces, 2,160 of 23,012 states were dead: the box left across, both portals moved home, P out of reach); and B is off K's line, or the subject standing on B, the box across, moves the portal on P onto K, which closes on the step off (with N alone but B on K's line, 1,224 of 7,674 dead). The first prototype broke both, four near faces and B on K's line: 7,920 of 41,324 dead. N lies in a column the far side sees down over the laser, so the far side always has a way back (guideline 78). Its fresh reviewer's notes: P, the far side's only plain face in a steel frame, in view on arrival, may be shot because it stands alone (guideline 16) by a player who hasn't seen why, a risk for the author's play; and the key move comes after a stretch that replays 5.1 (guideline 34, mild), as a reprise of 5.1's room does (guideline 43). _Check:_ guideline 111 (walk every state after any change to the faces); 60 (neither button in front of a plain face); 59 (neither button beside what it links); 67 (the box put down in front of P or N bars that way in: recoverable in the prototype, check again); 17 (the laser does here what an open ditch would: it is there to be met before runs 8 and 9 set it apart); 113 and 43 (built on 5.1's room, it may read as 5.1 until K shuts on its portal); 112 and 97 (B's antline to K turns on floor, not on the wall's edge). Feasibility, 2026-11-23: a prototype (7 × 7: the near side 5 × 2 below a laser row, the far side 5 × 2 above it, every wall steel but N, under the start, K, in the top wall, and P, at the far side's left end; B beside K's column, B2 in the far side's lower row, the exit in its right wall): 17 moves and 3 portals, both the fewest; all 5,418 reachable states can be finished, none of 3,749 dead without the turn key; copies with P steel, with K unlinked steel, or without the box are unsolvable from `--baseline` and `--par`; the state walks refusing every shot from past the laser, or every shot that moves the portal off K, reach no completion; with the exit open and unlinked it takes 9 moves and 2 portals, 5.1's route, so B2 and P are what make it a combine. A fresh reviewer, given only the file and the entry, found the same counts, no dead end and no shortcut.
 
-Built in 5.1's room rather than the reviewer's prototype layout (B1 under B2 in the left column), so it reads as 5.1 with one change: the box is busy (Variants tried).
+Built as its prototype: the same state counts, 5,418 and 3,749 without the turn key; 16 moves where the prototype took 17, so B2 or the exit may sit a tile from where it was (the prototype's file wasn't kept).
 
 ## Purpose
 
-Twist: the box run 5.1 used is the one holding the exit open. Forced on every route, all three met as no loss: a box sent home from elsewhere (carried from run 4, asked of step 6.5, guideline 28), so run 6's fizzler can rely on it; a portal on steel closing as the steel shuts, what 5.3 turns on, shown first (guideline 25); and one box for two buttons in turn (run 4).
+Combine, and the run's end. The key move, the shot onto P from the far side, moves the portal just come out of, run 3's carried item (guideline 27), forced here by the steel rather than by a box in front of it. It turns over chamber 2.4's lesson, a door shutting closes no portal, which a player can take for any wall: on steel a button opens, the portal goes with it (a twist inside the combine, guideline 41). One box for two buttons in turn (run 4) is met again on every route.
 
-Flow (guideline 11): one real step, taking the box off the button that holds the exit open, trusting the switch's line to bring it back; the rest is 5.1's route and a walk. It may be stumbled through, as a show may (guideline 32), but both consequences are met on every route.
+Gem: one key move, the shot onto P from past the laser, with 5.1's crossing before it and a carry after it.
 
 ## Intended route
 
-1. Step left to (2, 1); interact: lift the box off B1. The exit shuts and B1's line goes dark.
-2. Step right to (3, 1); turn up in place; interact: the box goes down on B2. K's steel slides back and B2's line lights.
-3. Shoot blue up, over the box, onto K; press down (it only turns the subject); shoot orange onto N.
-4. Press down: walk into N and come out of K onto (3, 4), facing down.
-5. Step left onto the switch; interact: the box flies home onto B1, the exit opens and B1's line lights; B2 lets go, K's steel shuts behind the subject and the portal on it goes.
-6. Walk right four tiles and out through the exit.
+1. Step up to (3, 2), left to (2, 2); interact: pick up the box.
+2. Step right to (3, 2), facing right; interact: the box goes down on B. K's steel slides back and B's line lights.
+3. Step down to (3, 1), facing down; shoot blue onto N; turn up in place and shoot orange, over (3, 2) and the laser, onto K.
+4. Press down: walk into N and come out of K onto (3, 5), facing down.
+5. Step left to (2, 5); shoot orange left onto P: the portal leaves K. The key move.
+6. Walk left into P and come out of N onto (3, 1), facing up; step up to (3, 2) and press right (the box ahead only turns the subject); interact: lift the box off B. K's steel shuts, with nothing on it.
+7. Step down to (3, 1); press down: carry the box into N and out of P onto (1, 5), facing right.
+8. Walk right to (4, 5), turn down in place, interact: the box goes down on B2 and the exit opens; walk right twice and out.
 
-Solver: 8 moves and 2 portals, both the fewest; the state walk's fewest presses (15) are this route, the portals in either order. Without the turn key, 19 presses.
+Solver: 16 moves and 3 portals, both the fewest; the state walk's fewest presses (26) are this route. Without the turn key, 27 presses.
 
 ## Lure and where the player should get stuck
 
-5.1's answer is in view, the same room, start and facing, but its box is busy: lifting it off B1 shuts the exit, which reads as a loss; put back, the exit opens again (guideline 28). 5.1's own lure, standing on B2 and shooting K, still shows K shutting on its portal. On the far side, with the box on B2, the exit stands shut, B1's line dark, and the switch's line runs to the box's start. Where the player should get stuck: deciding to take the box off B1 at all; the switch's line, ending on the box, is the hint that it comes back.
+5.1's answer gets the subject across: the box on B, a pair on N and K, the crossing. Past the laser the exit is shut, its line from B2 dark, and B2 wants the box. The natural next move is back through K and N to fetch it: lifting it shuts K's steel, and the portal on it goes, as 5.1's lure showed to a player who met it, leaving the subject on the near side with the box and only N, plain at once and within a few moves (guideline 4); put back, the box opens K again, and nothing is lost (guideline 28). Standing on B and shooting up, the other try, misses: B is a column off K. Where the player should get stuck: seeing that the portal on K has to move before the box is lifted, and that only the far side can move it, onto P.
 
 ## Restrictions
 
 | # | Restriction | What it blocks |
 |---|-------------|----------------|
-| 1 | The exit linked to B1, the box resting there at the start | Leaving with the box elsewhere: the subject can't hold B1 from past the laser |
-| 2 | The switch linked to the box, past the laser | Without it, no completion: the copy without the switch is unsolvable from `--baseline` and `--par`, and the walk refusing every box sent home reaches no completion |
-| 3 | The far row with no plain face | Moving K's portal off K before the switch: the far side sees only K and N, so the walk refusing K's portal closing as K shuts reaches no completion; and carrying the box home by hand (guideline 116): with the box on B1 the subject has no way past the laser |
-| 4 | K linked to B2 | Crossing without the box on B2: the copy with K unlinked steel is unsolvable |
-| 5 | Every wall steel but K and N | Faces the idea doesn't need (guidelines 56 and 75) |
-| 6 | B1 away from the exit, neither button in front of a plain face, the switch where no box goes down | Guidelines 59, 60 and 80: the box never crosses the laser, since K is open only while it rests on B2 |
+| 1 | K linked to B | Crossing without the box on B: the copy with K unlinked steel is unsolvable from `--baseline` and `--par` |
+| 2 | P, the far side's only plain face, in line with no near tile | Making the lasting way from the near side: the copy with P steel is unsolvable; the walks refusing every shot from past the laser, or every shot that moves the portal off K, reach no completion |
+| 3 | The exit linked to B2, past the laser | The box left on B: with the exit open and unlinked, 8 moves and 2 portals, 5.1's route; B2 and P are what make it a combine |
+| 4 | N the near side's only face | A dead end: with the box across, both portals can never be on the near side (the sketch's prototype walk, with three near faces: 2,160 of 23,012 states dead; guideline 111, since run 5) |
+| 5 | B off K's column | A dead end: the subject on B, the box across, moving the portal on P onto K, which closes on the step off (the sketch's prototype walk, B on K's column: 1,224 of 7,674 states dead; guideline 118, since run 5); and the lure's shortcut, holding B with the subject and shooting K |
+| 6 | N in a column the far side sees down over the laser | Being stranded past the laser (guideline 78): the far side can always put a portal on N |
+| 7 | Every other wall steel | Faces the idea doesn't need (guidelines 56 and 75) |
+| 8 | Neither button beside what it links nor in front of a plain face | Guidelines 59 and 60 |
 
 ## Facts that must never be possible
 
-- Finishing without the switch sending the box home. Checked: the walk refusing it reaches no completion.
-- Finishing without K's portal closing as K shuts. Checked: the walk refusing it reaches no completion.
-- The box landing under the subject. Checked: no reachable state has it; the subject is on the switch, past the laser, whenever the box flies home (guidelines 64 and 65).
-- The box past the laser, or the switch refusing a carried box. Checked by argument: K takes a portal only while the box rests on B2, so the box never crosses.
-- The subject in the laser. Checked: no reachable state has it.
-- A dead state. Checked: all 1,586 reachable states can be finished, and none of 1,053 without the turn key.
+- Finishing without a shot fired from past the laser. Checked: the walk refusing it reaches no completion.
+- Finishing without a shot moving the portal off K. Checked: the walk refusing it reaches no completion.
+- Finishing without the box on B2, or without P. Checked: the copies are unsolvable, or need the exit open.
+- The subject in the laser, or the box under the subject. Checked: no reachable state has either.
+- A dead state. Checked: all 5,418 reachable states can be finished, and none of 3,749 without the turn key (guideline 111).
 
 ## Guidelines broken on purpose
 
-- 18, bent: five kinds of element (blocked wall, laser, box, button, switch), one over the guideline's four; the laser is the only barrier a shot crosses and the subject doesn't, and the chamber plays as a flow. Named in the outline.
 - 17, bent: the laser plays an open ditch's part, as in 5.1. Named in the outline.
-- 113, a risk: the room is 5.1's with one change (a reprise, guideline 43), so its first half replays 5.1's route. What every route adds that none did before: a box sent home from elsewhere, and a portal lost to shutting steel.
-- 96, a risk: the switch's line ends on B1 from above and B1's line leaves it to the right, so where they meet they read as one line from the switch to the exit while both are dark (the box on B2) or both lit (after the switch). At the start one is lit and the other not, and the box flying home onto B1 shows the switch's part. Unavoidable with the switch linked to a box resting on a button, which the twist needs (guideline 70); to watch in the author's play.
+- 34, mild: the key move comes after a stretch that replays 5.1, as a reprise of 5.1's room does (guideline 43). Its sketch's reviewer named it.
+- 16, a risk: P, the far side's only plain face in a steel frame, in view on arrival, may be shot because it stands alone by a player who hasn't seen why. Its sketch's reviewer named it; to watch in the author's play.
 
 ## Near misses and wrong tries
 
@@ -94,34 +96,37 @@ None is a dead end.
 
 | # | Wrong try | What the game shows |
 |---|-----------|---------------------|
-| 1 | Standing on B2, shooting K, stepping off | K's steel slides shut and the portal on it goes; shot again later |
-| 2 | The box lifted off B1 and put back | The exit shuts, then opens again |
-| 3 | The box on B2, across, and to the exit | The exit stays shut, B1's line dark |
-| 4 | Standing on B1 with the box on B2 | The exit opens while the subject stands there, out of reach past the laser |
-| 5 | The box put down on (3, 1), in front of N | Nothing crosses onto N's tile while it rests there; picked up again from beside it |
-| 6 | Using the switch again | Nothing more: the box is home |
+| 1 | Back through K and N to lift the box, the portal still on K | K's steel shuts and the portal on it goes; the box put back on B opens K again, and a shot puts the portal back |
+| 2 | Walking into N, the box in hand, after that | With one portal open, it only turns the subject |
+| 3 | Standing on B and shooting up | A miss ripple on the steel: B is a column off K |
+| 4 | From the far side, moving N's portal onto P instead | Both portals past the laser; the far side can put one on N again, down column 3 |
+| 5 | The box put down in front of N or of P | Nothing crosses onto that tile while it rests there; picked up again from beside it |
+| 6 | Standing on B2 | The exit opens while the subject stands there and shuts on the step off |
 | 7 | Shooting the steel | A miss ripple |
 
 ## Variants tried
 
-- The switch at (1, 4), its line straight down into B1: the same 1,586 states, none dead, 10 moves; the walk back to the exit two tiles longer for nothing.
-- B2 above B1 in the left column, as the sketch's prototype had them, with K above B2 and the switch at (3, 4): 1,586 states, none dead (1,095 without the turn key), 10 moves; the switch's line had to wind round B2 to reach B1, three turns, and the room no longer read as 5.1's. Set aside for the reprise.
+- P at (0, 4), in the far side's lower row: the same 5,418 states, none dead, 18 moves and 3 portals; the carry out of P then runs straight along B2's row, handing over the last step. P kept in the upper row.
+- The sketch's prototypes, from its walk: four near faces with B on K's column (7,920 of 41,324 states dead), then N alone with B still on K's column (1,224 of 7,674 dead), before this one (Restrictions 4 and 5).
 
 ## Checks
 
-- `npm run solve -- --baseline --par`: 8 moves and 2 portals, both searches; 2 portal wall sides; key 20 bits.
-- Copies without the switch, or with K unlinked steel: unsolvable from `--baseline` and `--par`.
-- Every reachable state (1,586, two completed) explored through the rules' step: none dead, none breaking a fact above. With every turn action refused: 1,053 states, none dead.
-- The walks refusing every box sent home, and refusing K's portal closing as K shuts: no completion.
+- `npm run solve -- --baseline --par`: 16 moves and 3 portals, both searches; 3 portal wall sides; key 19 bits.
+- Copies with P steel, with K unlinked steel, or without the box: unsolvable from `--baseline` and `--par`. With the exit open and unlinked: 8 moves and 2 portals.
+- Every reachable state (5,418, two completed) explored through the rules' step: none dead, none breaking a fact above. With every turn action refused: 3,749 states, none dead.
+- The walks refusing every shot from past the laser, and every shot that moves the portal off K: no completion.
+- `npm run replay:check` passes on the author's recorded run: 18 moves and 3 portals.
 - `npm run chamber:check` passes.
-- Played through in the real game (`npm run dev` in Chrome, the tab muted), along the route without the turn key: at the start B1's line lit and the switch's dark, two lines meeting at the box; with the box lifted both dark, reading as one L from the switch to the exit (Guidelines broken on purpose); at the switch the box flies home, the exit opens, B1's and the switch's lines light, B2's goes dark and K shuts, its portal gone; then out, with no console error.
-- An independent check (a fresh agent with only the file, the plan's entry and 5.1's file, no notes) found no shortcut, no dead end and no `Must` breached: its own walk found 1,586 states, 1,053 without the turn key, none dead; 8 moves and 2 portals; every completing route uses the switch, sends the box home and sees K's portal close as K shuts, the portal on K always open when the switch is used, since every shot from the far row misses; the box is never destroyed and never lands under the subject; without the switch it is unsolvable, with the exit always open it needs no switch, without the laser neither. Its judgment calls:
-  - It reads as 5.1 plus one press (guidelines 47 and 113): 5.1's fewest route is 5.2's first nine actions, and the switch, one tile from where the subject comes out and the only thing to do there, needs no foresight, so a player can finish on 5.1's habit. Accepted as the outline's flow (guidelines 11 and 32), whose two consequences every route meets; the author's cold play decides whether it earns its place, as run 2's drafts did.
-  - The portal closing on K may go unnoticed (guidelines 20 and 25): it is silent and comes in the same step as the box flying home, the exit opening and two lines lighting, and the player may credit the switch. Accepted: the steel shutting is in view beside the switch, 5.1's lure shows it alone, and 5.3's lure shows it again where it matters.
-  - B1's line runs along the floor's lower row, through the start and the box's way, and meets the switch's line at the box as one L. Kept: the bottom wall would carry it over N, the only face on that side, and run it straight on from the switch's line, reading as one line through B1; checked in the game above.
-  - Both the switch's line and B2's run under the laser: in the game each shows on both sides of the beam.
+- Played through in the real game (`npm run dev` in Chrome, the tab muted), along the route without the turn key: the box onto B, a pair on K and N, the crossing, the portal on K moved onto P from (1, 5), back through P, the box lifted (K shutting with nothing on it), carried through N and P onto B2, the exit opening, out, with no console error. At the start B's line and B2's read apart: B's runs up column 3 beside B2 and B2's leaves it to the right.
+- An independent check (a fresh agent with only the file, the plan's entry and the files of 5.1 and 5.2, no notes) found no shortcut, no dead end and no `Must` breached: its own walk found 5,418 states, 3,749 without the turn key, none dead; 16 moves and 3 portals; copies with P or N steel are unsolvable, and without the laser it is a 9-move walk with no portal; every route carries the box through N and P after a first crossing through K; the far side always sees two faces it can shoot, and the near side keeps P whenever the box is across (guidelines 78, 79 and 111); no crossing is ever refused. Its judgment calls:
+  - The key move can be stumbled into (guidelines 8 and 108): P is the far side's only face that takes a portal, so a player who shoots it out of curiosity with the colour on K has the lasting pair without meeting the catch, and lifts the box off empty steel; only players who try the lure feel it. Accepted for the run's last chamber, nothing depending on it (guideline 50), and every route still makes the move; the same risk as guideline 16's, named at the sketch, for the author's play.
+  - The training wheels are still on (guidelines 49 and 113): the same frame as 5.1 and 5.2, its first five steps 5.1's whole route, and B's line again runs up the column to shoot K from. Kept: the line is convention 4's, and the cue it gives is for 5.1's half, not the key move, which nothing points at but P standing alone.
+  - B's line runs up beside B2: checked in the game above, the two read apart.
+  - "A portal past a door outlasts the door" can only be a contrast with chamber 2.4: no route here can force it. As the entry means it.
 
 ## Playtests
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-23 | Kept ("ok"). Their recorded run makes the key move at once: the box onto B, a pair on K and N, the crossing, then the portal on K moved onto P from (2, 5) before going back; the box lifted off B from below it, K shutting with nothing on it, carried through N and P and put down on B2 from (3, 4), then out (18 moves and 3 portals; the fewest are 16, the two over being the walks round to lift the box and to reach B2). The lure doesn't show in it; earlier tries, if any, leave no trace in a recording. Recorded as `chamber_13.solution.json`, renamed `chamber_12.solution.json` with the chamber's id (the hash it keeps is the layout's, unchanged) |
+| 2 | Friends, cold | 2026-11-23 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded, so whether P was shot because it stood alone, its reviewers' worry, can't be shown (guideline 105) |

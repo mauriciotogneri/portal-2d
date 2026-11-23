@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 7, steps 7.1 to 7.3: chambers 5.1 to 5.3 built and in the play order, waiting for the author's cold play
+Status: In progress. Now: phase 7, step 7.5: detail run 6
 Last revised: 2026-11-23
 
 ## Goal
@@ -104,13 +104,13 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 4 in detail"): two teaches and a c
 
 ### Phase 7 — Run 5: lasers, and walls that switch
 
-Detailed 2026-11-23 (`docs/campaign.md`, "Run 5 in detail"): a teach, a twist and a combine, the combine sketched first in the idea pool. All three are designed before the author plays any (the author's call, 2026-11-23, as for runs 2 to 4), taking ids 11, 12 and 13; the next chamber after them takes id 14. Each sketch names the layout rules its build must keep and the risks to watch in the author's play; the handbook lessons the drafts turned up wait until after that play, since they give the chambers away.
+Detailed 2026-11-23 (`docs/campaign.md`, "Run 5 in detail"): a teach, a twist and a combine, the combine sketched first in the idea pool. All three were designed before the author played any (the author's call, 2026-11-23, as for runs 2 to 4), taking ids 11, 12 and 13. On their cold play the same day the author kept the teach and the combine and cut the twist, "basically the same as chamber 11", so run 5 is two chambers (guideline 113), and the combine took id 12 in place of 13, the id after the last chamber's, so none is skipped (the author's rule), as run 2's kept chamber took 5; the next chamber takes id 13. Each sketch named the layout rules its build had to keep and the risks to watch in the author's play; the handbook lessons the drafts turned up waited until after that play, since they gave the chambers away, and went in then: guideline 113's second example (the cut twist), guideline 111 widened to steel a button opens, and guideline 118.
 
-- [ ] **7.1 Chamber 5.1** (teach: steel a button opens, and the laser). Its route may read as an earlier chamber, as cut 2.2 did (guideline 113): kept on the author's call, to be judged on their cold play. Built 2026-11-23 as id 11, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_11.md`).
-- [ ] **7.2 Chamber 5.2** (twist: a box sent home from elsewhere, and a portal on steel closing as it shuts). Built 2026-11-23 as id 12, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_12.md`).
-- [ ] **7.3 Chamber 5.3** (combine: steel a button opens, one box needed on both sides of it). Built 2026-11-23 as id 13, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_13.md`).
-- [ ] **7.4 Friends play run 5 cold.**
-- [ ] **7.5 Detail run 6** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 6).
+- [x] **7.1 Chamber 5.1** (teach: steel a button opens, and the laser). Its route may read as an earlier chamber, as cut 2.2 did (guideline 113): kept on the author's call, to be judged on their cold play. Built 2026-11-23 as id 11; kept by the author and recorded from their cold play the same day (`docs/spoilers/chamber_11.md`).
+- [x] **7.2 Chamber 5.2** (twist: a box sent home from elsewhere, and a portal on steel closing as it shuts). Built (id 12), played cold by the author and cut, 2026-11-23: "basically the same as chamber 11"; in the idea pool ("Cut drafts"). A box sent home from elsewhere, which it forced, is carried to run 6; the portal on steel closing shows on the likeliest wrong tries of 5.1 and 5.3.
+- [x] **7.3 Chamber 5.3** (combine: steel a button opens, one box needed on both sides of it). Built 2026-11-23 as id 13, renumbered to id 12 when 5.2 was cut, twelfth in the play order; kept by the author and recorded from their cold play the same day (`docs/spoilers/chamber_12.md`).
+- [x] **7.4 Friends play run 5 cold.** Friends played chambers 5.1 and 5.3 (now `/chamber/11` and `/chamber/12`) cold, 2026-11-23, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 5 is finished (assumption 6).
+- [ ] **7.5 Detail run 6** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 6), forcing a box sent home from elsewhere, as no loss, before any chamber relies on it (carried from runs 4 and 5, guideline 28).
 
 ### Later runs
 
