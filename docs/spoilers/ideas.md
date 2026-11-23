@@ -8,7 +8,7 @@ What exists already, so the ideas avoid repeating it: the campaign's old chamber
 
 Combine chambers sketched before their run's other chambers (guideline 51), with what the earlier chambers of the run must plant.
 
-Run 1's sketch, the box beyond the ditch, became chamber 1.4, and its text moved to `chamber_4.md`; run 2's, the box beyond the window, became chamber 2.4, and its text moved to `chamber_8.md`.
+Run 1's sketch, the box beyond the ditch, became chamber 1.4, and its text moved to `chamber_4.md`; run 2's, the box beyond the window, became chamber 2.4, and its text moved to `chamber_5.md`.
 
 ## Portals (basics)
 
@@ -76,9 +76,9 @@ Run 1's sketch, the box beyond the ditch, became chamber 1.4, and its text moved
 
 ## Cut drafts
 
-Chambers built, checked and played cold by the author, then cut, kept here so their ideas aren't tried again unchanged (guideline 58). Each gives its layout (x grows right, y up, from the bottom row; `W` plain wall, `#` steel, `~` open ditch, `S` the start, `b` box, `o` button, `D` door, `E` exit), its idea, its numbers, the author's verdict and why it was cut. Their files were deleted; their chamber files and notes, as played, are in commit `62a5572`.
+Chambers built, checked and played cold by the author, then cut, kept here so their ideas aren't tried again unchanged (guideline 58). Each gives its layout (x grows right, y up, from the bottom row; `W` plain wall, `#` steel, `~` open ditch, `S` the start, `b` box, `o` button, `D` door, `E` exit), its idea, its numbers, the author's verdict and why it was cut. Their files were deleted, and since none was deployed their ids went to later chambers (the kept chamber took 5, the next takes 6); their chamber files and notes, as played, are in commit `62a5572`, where `chamber_5.json` and `chamber_5.md` are still the cut 2.1.
 
-- **Run 2's 2.1: the pillar beside the exit** (test; walls, ditches, the exit; id 5, built and cut 2026-11-23). 7 × 5, every wall plain:
+- **Run 2's 2.1: the pillar beside the exit** (test; walls, ditches, the exit; built as id 5 and cut 2026-11-23). 7 × 5, every wall plain:
 
   ```
   y4  W W W W W W W
@@ -89,7 +89,7 @@ Chambers built, checked and played cold by the author, then cut, kept here so th
   ```
 
   The landing (3, 1) over the exit has one face in front of it, the pillar's west side, hit only along the bottom row from the stone (1, 1), which the ledge reaches down column 1; the first shot from the start opens a portal on the pillar's top, facing the ditch, and crossing into it is refused. 6 moves and 3 portals; no dead state among 3,980. The author's verdict: "very similar to chamber 4 but even simpler; it doesn't teach anything; chamber 4 did the same and a better job". Why: a portal facing a ditch leads nowhere only as a refused crossing, which a wrong try meets and the route avoids (guideline 108), and what is left is two hops between islands, as in chambers 1.2 and 1.4. Facing away from the wall come out of never mattered, since there is no slide yet.
-- **Run 2's 2.2: the window over a ditch** (twist; a box, a button, a door, a ditch; id 6, built and cut 2026-11-23). 6 × 6, every wall plain, the button linked to the door:
+- **Run 2's 2.2: the window over a ditch** (twist; a box, a button, a door, a ditch; built as id 6 and cut 2026-11-23). 6 × 6, every wall plain, the button linked to the door:
 
   ```
   y5  W W W W W W
@@ -101,7 +101,7 @@ Chambers built, checked and played cold by the author, then cut, kept here so th
   ```
 
   The door stands behind a ditch, so it is never walked through: held open by the box on the button (off the door's column), it lets a shot from (4, 1) through onto the ceiling over the one landing tile (4, 4), beside the exit. 7 moves and 2 portals without the turn key; no dead state among 37,242. The author's verdict: "same as chamber 5" (as chamber 4, teaching nothing). Why: once walking into the ditch has turned the subject up, the shot through the door is simply the shot across a ditch of chamber 1.1, so the door never reads as a window; and the walls facing a door, the entry's other half, can only be shot from inside the doorway, so it was never shown. A variant with two tiles past the door let the box be carried past the door through the window's portal and stranded (guideline 111); the draft its reviewer first saw put the box's start on the antline (guideline 112).
-- **Run 2's 2.3: the button on the landing** (twist; a box, a button, a door, ditches; id 7, built and cut 2026-11-23). 7 × 6, the room's walls plain, the ledge's two faces (6, 4) and (5, 1) plain, the rest round it steel, the button linked to the door:
+- **Run 2's 2.3: the button on the landing** (twist; a box, a button, a door, ditches; built as id 7 and cut 2026-11-23). 7 × 6, the room's walls plain, the ledge's two faces (6, 4) and (5, 1) plain, the rest round it steel, the button linked to the door:
 
   ```
   y5  W W W W # # #

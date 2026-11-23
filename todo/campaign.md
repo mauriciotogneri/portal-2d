@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 4, step 4.4: Chamber 2.4 kept, waiting for its recorded solution
+Status: In progress. Now: phase 4, step 4.5: friends play run 2 cold
 Last revised: 2026-11-23
 
 ## Goal
@@ -32,7 +32,7 @@ And the assumptions that follow from them:
 | 1   | Each chamber's notes are a file of its own, `docs/spoilers/chamber_<id>.md`; ideas with no chamber yet are in `docs/spoilers/ideas.md`                                                                                                       |
 | 2   | When a chamber is ready, the author gets only its address                                                                                                                                                                                    |
 | 3   | The author's cold play, once the chamber is approved, becomes its recorded solution                                                                                                                                                          |
-| 4   | Chamber 1.1 took id 1 from today's tutorial, with stored progress reset (the author's call, 2026-11-22); later chambers take fresh permanent ids (2, 3 and so on); a tweak keeps a chamber's id and its best times, a redesign gets a new id |
+| 4   | Chamber 1.1 took id 1 from today's tutorial, with stored progress reset (the author's call, 2026-11-22); later chambers take fresh permanent ids (2, 3 and so on), each the id after the last chamber's, so none is skipped (the author's rule, 2026-11-23); a tweak keeps a chamber's id and its best times, a redesign gets a new id |
 | 5   | Today's tutorial moves to the playground, as the old chambers did, once the new first chamber is approved (done: Playground 12)                                                                                                              |
 | 6   | A run is finished when every chamber in it is approved, recorded and passes the checks, and friends have played it                                                                                                                           |
 
@@ -77,8 +77,8 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 2 in detail"): four chambers, with
 - [x] **4.1 Chamber 2.1** (test: where the subject comes out of a portal). Built (id 5), played cold by the author and cut, 2026-11-23: it taught nothing chamber 1.4 hadn't.
 - [x] **4.2 Chamber 2.2** (twist: what an open door lets through). Built (id 6), played cold by the author and cut, 2026-11-23, for the same reason.
 - [x] **4.3 Chamber 2.3** (twist: a box in front of a portal). Built (id 7), played cold by the author and cut, 2026-11-23, for the same reason; its lesson moves to run 3.
-- [ ] **4.4 Chamber 2.4** (combine). Kept by the author after their cold play, 2026-11-23; id 8, fifth in the play order (`/chamber/5`). Waiting for its recorded solution (the author's play, or a new one at `/chamber/5`); then `docs/solver.md` ("The key") names Chambers 1 to 5. Two handbook guidelines came out of the drafts, 111 and 112, and one out of the cut, 113.
-- [ ] **4.5 Friends play run 2 cold.** Note each friend's route, or their analytics counts, in the chamber's notes (guideline 105). Watch whether chamber 2.4 needs a warm-up for the shot through an open door now that 2.2 is gone (`docs/spoilers/chamber_8.md`, Purpose).
+- [x] **4.4 Chamber 2.4** (combine). Kept by the author and recorded from their cold play, 2026-11-23; built with id 8, renumbered to id 5, the id after the last chamber's, so none is skipped (the author's rule), fifth in the play order; the cut drafts' ids were never deployed. Two handbook guidelines came out of the drafts, 111 and 112, and one out of the cut, 113. The next chamber takes id 6.
+- [ ] **4.5 Friends play run 2 cold.** Note each friend's route, or their analytics counts, in the chamber's notes (guideline 105). Watch whether chamber 2.4 needs a warm-up for the shot through an open door now that 2.2 is gone (`docs/spoilers/chamber_5.md`, Purpose).
 - [ ] **4.6 Detail run 3** in the outline, its combine chamber sketched first, with what run 2's cut chambers were to teach (`docs/campaign.md`, run 3).
 
 ### Later runs

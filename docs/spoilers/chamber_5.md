@@ -1,8 +1,8 @@
-# Chamber 8 (run 2, chamber 2.4, the run's only chamber)
+# Chamber 5 (run 2, chamber 2.4, the run's only chamber)
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: kept by the author on 2026-11-23 after their cold play; its solution is still to be recorded. File: `src/chambers/chamber_8.json`, fifth in the play order (`/chamber/5`); permanent id 8. It was built as 2.4, the last of four; the other three, 2.1 to 2.3 (ids 5 to 7), were cut on the same play (the idea pool, "Cut drafts"), so it is now run 2's only chamber and comes straight after chamber 1.4.
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_5.json`, fifth in the play order; permanent id 5. It was built as 2.4, the last of four, with id 8; the other three, 2.1 to 2.3 (ids 5 to 7), were cut on the same play (the idea pool, "Cut drafts"), so it is now run 2's only chamber and comes straight after chamber 1.4, and it took id 5, the id after the last chamber's, so none is skipped (the author's rule, 2026-11-23; `AGENTS.md`, "Chambers"); the cut drafts' ids were never deployed.
 
 ## Entry
 
@@ -122,6 +122,6 @@ None is a dead end: every reachable state can still be finished, and while the d
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-23 | Played after the cut drafts 2.1 to 2.3, so with the window and the carry through portals freshly planted. Kept: "this one is ok because it forces the player to shoot a portal through an open door". Its route isn't recorded yet; the solution file will be its record |
+| 1 | The author, cold | 2026-11-23 | Played after the cut drafts 2.1 to 2.3, so with the window and the carry through portals freshly planted. Left and up onto the button from below, turned to face the door with the turn key, blue through the open door onto P; turned left and shot orange along the button's row onto the room's west wall (0, 2), walked into it, took the box, back through P, out at (1, 2), the box onto the button from (2, 2), then round to the door and out (15 moves, 2 portals; the fewest are 11 and 2). The turn key, which run 3 teaches, did what a step left and back would have. Kept: "this one is ok because it forces the player to shoot a portal through an open door". Recorded as `chamber_5.solution.json` (Download solution, while it still had id 8) |
 
 Lesson (guideline 107): its three companions, cut on the same play, gave guideline 113: keep only chambers whose every route does something the last combine didn't, and that doesn't look like an old move. This one's forced, new key move is what kept it.
