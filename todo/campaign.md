@@ -1,7 +1,7 @@
 # Campaign
 
-Status: In progress. Now: phase 3, step 3.3: Chamber 1.3, not started (on hold until the author says to start)
-Last revised: 2026-11-22
+Status: In progress. Now: phase 3, steps 3.3 and 3.4: Chambers 1.3 and 1.4 drafted, waiting for the author's cold play; step 3.8 drafted ahead of 3.6 and 3.7, waiting for the author's review
+Last revised: 2026-11-23
 
 ## Goal
 
@@ -63,12 +63,12 @@ Cut from five chambers to four on 2026-11-22, with the author: walls alone can't
 
 - [x] **3.1 Chamber 1.1** (teach: portals, over a ditch). Approved by the author and recorded from their cold play, 2026-11-22; id 1.
 - [x] **3.2 Chamber 1.2** (test: portals). Kept by the author and recorded from their cold play, 2026-11-22; id 2. Their run never walked into one of the two colours, so run 2 should force "either portal can be the way in" (`docs/spoilers/chamber_2.md`, Playtests).
-- [ ] **3.3 Chamber 1.3** (teach: button and door).
-- [ ] **3.4 Chamber 1.4** (combine).
+- [ ] **3.3 Chamber 1.3** (teach: button and door). Drafted and checked 2026-11-23, id 3, third in the play order; waiting for the author's cold play. Exceptionally, 1.3 and 1.4 were both designed before the author played either (the author's call, 2026-11-23), so 1.4 was designed without 1.3's playtest, and a redo of 1.3 may call for a rework of 1.4.
+- [ ] **3.4 Chamber 1.4** (combine). Drafted after 1.3, id 4, fourth in the play order; waiting for the author's cold play, after 1.3's.
 - [x] **3.5 Retire today's tutorial.** Done with 3.1, 2026-11-22: today's tutorial is Playground 12, chamber 1.1 took its id 1, and the stored progress was reset (version 4). First-visit Play starts id 1, now chamber 1.1, so it needed no change; checked with empty progress.
 - [ ] **3.6 Friends play run 1 cold.** Note what confused them in each chamber's notes.
 - [ ] **3.7 Revise the handbook** with what run 1 taught (decision 10).
-- [ ] **3.8 Detail run 2** in the outline, its combine chamber sketched first.
+- [ ] **3.8 Detail run 2** in the outline, its combine chamber sketched first. Drafted 2026-11-23, ahead of 3.6 and 3.7 at the author's request: the proposal is `run_2_detail.md` at the repo root, waiting for the author's review, and its combine sketch is in the idea pool. Once approved, its section moves into `docs/campaign.md` and the file goes.
 
 ### Later runs
 

@@ -129,7 +129,7 @@ Every chamber is closed in by walls (or blocked walls, emitters, receivers, door
 
 ## Chambers and progress
 
-- Two chambers so far, the first two of the tutorial run: Chamber 1 (9 × 5 tiles) and Chamber 2 (7 × 7 tiles). The old tutorial (12 × 10 tiles) and the nine chambers that used to follow it left the game for good and are kept only in development, as playground chambers for trying elements and ideas.
+- Four chambers so far, the tutorial run: Chamber 1 (9 × 5 tiles), Chamber 2 (7 × 7 tiles), Chamber 3 (8 × 5 tiles) and Chamber 4 (9 × 5 tiles). The old tutorial (12 × 10 tiles) and the nine chambers that used to follow it left the game for good and are kept only in development, as playground chambers for trying elements and ideas.
 - The timer starts with the first press of a move, portal or interact key in a chamber and stops when the chamber is complete. The only score is the time: there are no medals or move targets.
 - Finishing a chamber shows the time and the best time (or "New best time"), with Next chamber, Play again and Back to menu (after the last chamber, only Back to menu and Play again).
 - The pause menu offers Continue, Settings (the sound effects and music volumes, as under the home screen's Settings), Restart chamber and Exit chamber; restarting or leaving asks for confirmation first.
