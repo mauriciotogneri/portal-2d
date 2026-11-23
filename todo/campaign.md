@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 3, step 3.8: recheck the run 2 draft against the revised handbook, then move it into the outline
+Status: In progress. Now: phase 4, step 4.1: Chamber 2.1, not started
 Last revised: 2026-11-23
 
 ## Goal
@@ -68,7 +68,18 @@ Cut from five chambers to four on 2026-11-22, with the author: walls alone can't
 - [x] **3.5 Retire today's tutorial.** Done with 3.1, 2026-11-22: today's tutorial is Playground 12, chamber 1.1 took its id 1, and the stored progress was reset (version 4). First-visit Play starts id 1, now chamber 1.1, so it needed no change; checked with empty progress.
 - [x] **3.6 Friends play run 1 cold.** A friend played run 1 cold, 2026-11-23, and was fine with every chamber: nothing confused them, by the author's account, and their routes weren't recorded. Noted in each chamber's notes. With this, run 1 is finished (assumption 6).
 - [x] **3.7 Revise the handbook** with what run 1 taught (decision 10). Done 2026-11-23 from a proposal the author approved: 20 changes, among them three new guidelines, 108 to 110 (teach only what every route forces; force which portal moves; a fresh reviewer checks each draft), with today's numbers kept for good and the handbook 3% longer.
-- [ ] **3.8 Detail run 2** in the outline, its combine chamber sketched first. Drafted 2026-11-23, ahead of 3.6 and 3.7 at the author's request: the proposal is `run_2_detail.md` at the repo root, waiting for the author's review, and its combine sketch is in the idea pool. Once approved, its section moves into `docs/campaign.md` and the file goes.
+- [x] **3.8 Detail run 2** in the outline, its combine chamber sketched first. Drafted 2026-11-23 ahead of 3.6 and 3.7 at the author's request, rechecked against the revised handbook and approved the same day: four chambers (a test, two twists, a combine), in `docs/campaign.md` ("Run 2 in detail"), the combine's sketch in the idea pool.
+
+### Phase 4 — Run 2: portals in depth
+
+Detailed 2026-11-23 (`docs/campaign.md`, "Run 2 in detail"): four chambers, with the combine sketched first in the idea pool. Every put-down and every shot a route needs works without the turn key, which run 3 teaches (guideline 66).
+
+- [ ] **4.1 Chamber 2.1** (test: where the subject comes out of a portal).
+- [ ] **4.2 Chamber 2.2** (twist: what an open door lets through).
+- [ ] **4.3 Chamber 2.3** (twist: a box in front of a portal).
+- [ ] **4.4 Chamber 2.4** (combine).
+- [ ] **4.5 Friends play run 2 cold.** Note each friend's route, or their analytics counts, in each chamber's notes (guideline 105).
+- [ ] **4.6 Detail run 3** in the outline, its combine chamber sketched first.
 
 ### Later runs
 
