@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: drafted, waiting for the author's cold play. File: `src/chambers/chamber_4.json`, fourth in the play order; permanent id 4. It has no recorded solution yet, so `npm run replay:check` and `npm run solver:check` fail on it.
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_4.json`, fourth in the play order; permanent id 4.
 
 ## Entry
 
@@ -142,3 +142,6 @@ None is a dead end: every reachable state can still be finished, without the tur
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-23 | The intended route with no wasted press: right, blue onto r, up (a turn at the ditch), orange onto b, through r onto the ledge, the box picked up, back through b, the box put down on the island at once, orange moved from b to s, the box picked up again, through r, the box onto the button from (2, 1), then up three times out through the exit (8 moves, 3 portals, both the fewest). No shot missed, so the near miss beside b never fired: the third chamber with shots in a row where the author never shot steel. They put the box down before any shot, so the refused shot (wrong try 2, the lure) never sounded, the case the lure section says isn't forced. Blue was the way in twice and orange once, the way back from the ledge, which its single face forces in every route, so chamber 1.2's lesson that either portal can be the way in is met here. Recorded as `chamber_4.solution.json`; kept |
+
+Lesson (guideline 107): none for the handbook yet. The author knows the rules, so their run skipping the refused shot says little about players who don't; what friends do on the island in step 3.6 will.
