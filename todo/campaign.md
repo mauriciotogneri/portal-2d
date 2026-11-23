@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 6, step 6.5: detailing run 5
+Status: In progress. Now: phase 7, step 7.1: chamber 5.1
 Last revised: 2026-11-23
 
 ## Goal
@@ -100,7 +100,17 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 4 in detail"): two teaches and a c
 - [x] **6.2 Chamber 4.2** (teach: the box that starts absent). Built 2026-11-23 as id 9; kept by the author and recorded from their cold play the same day (`docs/spoilers/chamber_9.md`).
 - [x] **6.3 Chamber 4.3** (combine: a door a switch and a button link, one box for two buttons in turn). Its sketch was built as id 10, checked and independently reviewed, and played cold by the author on 2026-11-23, who got stuck in its dead end and ruled dead ends out (decision 13); it was cut to the idea pool ("Cut drafts"), its sketch's risks moot. With these elements no catch both avoids a dead end and can't be got round, so the author chose a milder one, built the same day with the same id (none of them deployed); its independent check found it showed only half of the door's rule, so, on the author's choice, a third design replaced it: both halves on every route, a run 3 move as its catch, no dead end; checked and independently reviewed, kept by the author and recorded from their play the same day, and played by friends, who liked it (`docs/spoilers/chamber_10.md`). Two handbook guidelines came out of its drafts, 115 and 116.
 - [x] **6.4 Friends play run 4 cold.** Friends played chambers 4.1, 4.2 and 4.3 (`/chamber/8`, `/chamber/9` and `/chamber/10`) cold, 2026-11-23, and liked 4.3, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 4 is finished (assumption 6).
-- [ ] **6.5 Detail run 5** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 5), forcing a box sent home from elsewhere before any chamber relies on it (guideline 28).
+- [x] **6.5 Detail run 5** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 5), forcing a box sent home from elsewhere before any chamber relies on it (guideline 28). Drafted 2026-11-23 from a proposal two fresh reviewers checked, one against the handbook and one on the prototypes alone, and approved by the author the same day: three chambers (a teach, a twist and a combine), in `docs/campaign.md` ("Run 5 in detail"), all three sketched in the idea pool, each checked with a throwaway prototype. The twist, from the handbook reviewer, forces the box sent home from elsewhere with one box and a switch. Carried forward: the laser a link switches to run 9, the ditch a link switches (and a box falling as it opens) to run 10, the portal just come out of forced to move by a box in front of it, and a used switch acting again; the walls behind an end plate and facing a door are left to guideline 75.
+
+### Phase 7 — Run 5: lasers, and walls that switch
+
+Detailed 2026-11-23 (`docs/campaign.md`, "Run 5 in detail"): a teach, a twist and a combine, the combine sketched first in the idea pool. All three are designed before the author plays any (the author's call, 2026-11-23, as for runs 2 to 4), taking ids 11, 12 and 13; the next chamber after them takes id 14. Each sketch names the layout rules its build must keep and the risks to watch in the author's play; the handbook lessons the drafts turned up wait until after that play, since they give the chambers away.
+
+- [ ] **7.1 Chamber 5.1** (teach: steel a button opens, and the laser). Its route may read as an earlier chamber, as cut 2.2 did (guideline 113): kept on the author's call, to be judged on their cold play.
+- [ ] **7.2 Chamber 5.2** (twist: a box sent home from elsewhere, and a portal on steel closing as it shuts).
+- [ ] **7.3 Chamber 5.3** (combine: steel a button opens, one box needed on both sides of it).
+- [ ] **7.4 Friends play run 5 cold.**
+- [ ] **7.5 Detail run 6** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 6).
 
 ### Later runs
 
