@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 4, step 4.6: run 3's detail drafted, waiting for the author's review
+Status: In progress. Now: phase 5, step 5.1: chamber 3.1
 Last revised: 2026-11-23
 
 ## Goal
@@ -76,10 +76,19 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 2 in detail"): four chambers, with
 
 - [x] **4.1 Chamber 2.1** (test: where the subject comes out of a portal). Built (id 5), played cold by the author and cut, 2026-11-23: it taught nothing chamber 1.4 hadn't.
 - [x] **4.2 Chamber 2.2** (twist: what an open door lets through). Built (id 6), played cold by the author and cut, 2026-11-23, for the same reason.
-- [x] **4.3 Chamber 2.3** (twist: a box in front of a portal). Built (id 7), played cold by the author and cut, 2026-11-23, for the same reason; its lesson moves to run 3.
+- [x] **4.3 Chamber 2.3** (twist: a box in front of a portal). Built (id 7), played cold by the author and cut, 2026-11-23, for the same reason; its lesson moved to run 3's outline and on to a later run.
 - [x] **4.4 Chamber 2.4** (combine). Kept by the author and recorded from their cold play, 2026-11-23; built with id 8, renumbered to id 5, the id after the last chamber's, so none is skipped (the author's rule), fifth in the play order; the cut drafts' ids were never deployed. Two handbook guidelines came out of the drafts, 111 and 112, and one out of the cut, 113. The next chamber takes id 6.
 - [x] **4.5 Friends play run 2 cold.** Friends played chamber 2.4 (`/chamber/5`) cold, 2026-11-23, and found it ok, by the author's account; their routes weren't recorded (`docs/spoilers/chamber_5.md`, Playtests). With this, run 2 is finished (assumption 6).
-- [ ] **4.6 Detail run 3** in the outline, its combine chamber sketched first, with what run 2's cut chambers were to teach (`docs/campaign.md`, run 3). Drafted 2026-11-23: the proposal is `run_3_detail.md` at the repo root, waiting for the author's review, and its combine sketch is in the idea pool. Once approved, its section moves into `docs/campaign.md` and the file goes.
+- [x] **4.6 Detail run 3** in the outline, its combine chamber sketched first, with what run 2's cut chambers were to teach (`docs/campaign.md`, run 3). Drafted 2026-11-23 from a proposal a fresh reviewer checked against the handbook, and approved by the author the same day: two chambers (a teach, a combine), in `docs/campaign.md` ("Run 3 in detail"), the combine's sketch, checked with a throwaway prototype, in the idea pool. One box for two buttons in turn, and the portal just come out of forced to move, are carried forward to a later run (guideline 113); the walls facing a door move to run 5.
+
+### Phase 5 — Run 3: boxes and buttons
+
+Detailed 2026-11-23 (`docs/campaign.md`, "Run 3 in detail"): a teach and a combine, the combine sketched first in the idea pool. From 3.2 on, a route may need the turn key, which 3.1 teaches. The next chamber takes id 6.
+
+- [ ] **5.1 Chamber 3.1** (teach: turning in place).
+- [ ] **5.2 Chamber 3.2** (combine: a door several buttons link, two boxes).
+- [ ] **5.3 Friends play run 3 cold.**
+- [ ] **5.4 Detail run 4** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 4).
 
 ### Later runs
 

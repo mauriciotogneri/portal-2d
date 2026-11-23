@@ -26,7 +26,7 @@ What every chamber keeps, so the player can trust it (the campaign intro of `doc
 | --- | ---------------------------------------- | -------------------------------------------------------------------------------------- | ------------ | -------------- |
 | 1   | First steps (the tutorial)               | Portals, walls and steel, the exit, the ditch, the box, the button, the door, antlines | 4            | Detailed below |
 | 2   | Portals in depth                         | None                                                                                   | 1            | Detailed below |
-| 3   | Boxes and buttons                        | Turning in place; doors several buttons link                                           | 4–6          | Outline        |
+| 3   | Boxes and buttons                        | Turning in place; doors several buttons link                                           | 2            | Detailed below |
 | 4   | Switches                                 | The switch                                                                             | 3–4          | Outline        |
 | 5   | Lasers, and floors and walls that switch | The laser; ditches and blocked walls a link switches                                   | 4–6          | Outline        |
 | 6   | Fizzlers                                 | The fizzler                                                                            | 4–6          | Outline        |
@@ -37,7 +37,7 @@ What every chamber keeps, so the player can trust it (the campaign intro of `doc
 | 11  | Mirror boxes                             | The mirror box                                                                         | 4–6          | Outline        |
 | 12  | Finale                                   | None                                                                                   | 2–4          | Outline        |
 
-About 45 to 60 chambers in all, a guess that each run's detailing will correct (guideline 42). The heavy runs (9 and 10) sit between lighter ones, so the pace rises and falls (guideline 46), and each run brings something new.
+About 40 to 60 chambers in all, a guess that each run's detailing will correct (guideline 42). The heavy runs (9 and 10) sit between lighter ones, so the pace rises and falls (guideline 46), and each run brings something new.
 
 ### 1. First steps (the tutorial)
 
@@ -45,19 +45,19 @@ The core verbs, one at a time, in small rooms: walking to the exit; shooting a p
 
 ### 2. Portals in depth
 
-The portal with no new element: a door shutting closes no portal, and either portal can be the way in. One chamber, built as 2.4. Three more, a test and two twists, were built and cut on the author's cold play (2026-11-23): each played as a simpler chamber 1.4, its lesson a refusal a route could avoid or a forced move that read as an old one (guideline 113). Their lessons that later chambers need move to run 3. Detailed [below](#run-2-in-detail).
+The portal with no new element: a door shutting closes no portal, and either portal can be the way in. One chamber, built as 2.4. Three more, a test and two twists, were built and cut on the author's cold play (2026-11-23): each played as a simpler chamber 1.4, its lesson a refusal a route could avoid or a forced move that read as an old one (guideline 113). Their lessons that later chambers need moved to run 3's outline, which kept one and carried the rest forward. Detailed [below](#run-2-in-detail).
 
 ### 3. Boxes and buttons
 
-What a box can and can't do: putting it down on any side by turning in place, the move the controls hide (guideline 29); a box bars the tile it rests on, the tile in front of a portal included, so a box left there shuts that way and the portal just come out of has to move like the other (from run 2's cut 2.3: force the move, since the refusal itself can't be, guideline 108); one box for two buttons in turn; a door several buttons link opens only while all of them are held, every antline lit (guideline 62). Before any chamber relies on the walls facing a door refusing portals, one shows a shot missing there (guideline 75; run 2's cut 2.2 couldn't).
+What a box can and can't do: putting it down on any side by turning in place, the move the controls hide (guideline 29); a box bars the tile it rests on; a door several buttons link opens only while all of them are held, every antline lit (guideline 62). A teach and a combine. Carried forward to a later run whose new element can force them without reading as an earlier chamber (guideline 113): one box for two buttons in turn, and the portal just come out of forced to move by a box in front of it (guideline 27; run 2's cut 2.3 forced it and read as chamber 1.4). The walls facing a door move to run 5. Detailed [below](#run-3-in-detail).
 
 ### 4. Switches
 
-The switch: it stays on from its first use, so it can't be undone; a door a switch and a button link; a switch linked to a box sends it home, and the box isn't lost, which shows before any later run relies on it that a box flying home is no loss (guideline 28).
+The switch: it stays on from its first use, so it can't be undone; a door a switch and a button link; a switch linked to a box sends it home, and the box isn't lost, which shows before any later run relies on it that a box flying home is no loss (guideline 28). No run 4 chamber relies on the walls facing a door refusing portals, which run 5 shows (guideline 75).
 
 ### 5. Lasers, and floors and walls that switch
 
-The laser stops the subject but not a shot, and the wall behind its end plate takes no portal; a ditch bridged only while a button is held; steel that takes portals while a button is held; a box lying where a ditch opens or a laser comes on is destroyed and flies home.
+The laser stops the subject but not a shot, and the wall behind its end plate takes no portal, as the walls facing a door never do: before any chamber relies on either, one shows a shot missing there (guideline 75); a ditch bridged only while a button is held; steel that takes portals while a button is held; a box lying where a ditch opens or a laser comes on is destroyed and flies home.
 
 ### 6. Fizzlers
 
@@ -105,3 +105,12 @@ The portal run: no new element. Detailed as four chambers (a test, two twists an
 | #   | Part    | Elements                          | The player already knows | Should teach                                                                                                                                       | Hint (if built) |
 | --- | ------- | --------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
 | 1   | Combine | A box, a button, a door, ditches  | Run 1                    | A door shutting closes no portal; either portal can be the way in (built as 2.4)                                                                   | —               |
+
+## Run 3 in detail
+
+The box run: turning in place, and doors several buttons link. Two chambers, a teach and a combine, the combine sketched first, in the idea pool (guideline 51), not the four to six guessed: each chamber must force something no earlier route did and look like no earlier move (guideline 113), and the outline's other run 3 goals would read as an earlier chamber again or can only be offered, so they wait for later runs (run 3's paragraph above). Approved by the author on 2026-11-23, with the door several buttons link first met in the combine, its antlines showing which button is still to go, rather than in a teach of its own, and 3.1 kept although the author already uses the turn key, since players need a chamber where it is the only way (guideline 29). Turning in place is taught in 3.1, so from 3.2 on a route may need the turn key (guideline 66). Hints stay in run 1 (convention 7), so the turn key gets none: the controls legend names it, and 3.1 makes it the only way through.
+
+| #   | Part    | Elements                                 | The player already knows | Should teach                                                                                                                                                     | Hint (if built) |
+| --- | ------- | ---------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| 1   | Teach   | A box, a button, a door                  | Runs 1 and 2             | Turning in place faces the subject any way without moving, the only way to face a free tile beside it without stepping onto it, and so to put a box down there | —               |
+| 2   | Combine | Two boxes, two buttons, a door both link | Runs 1 and 2, and 3.1    | A door several buttons link opens only while all of them are held, each antline lighting as its own button goes down; a box bars the tile it rests on            | —               |
