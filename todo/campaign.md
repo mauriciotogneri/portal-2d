@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 7, step 7.1: chamber 5.1
+Status: In progress. Now: phase 7, steps 7.1 to 7.3: chambers 5.1 to 5.3 built and in the play order, waiting for the author's cold play
 Last revised: 2026-11-23
 
 ## Goal
@@ -106,9 +106,9 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 4 in detail"): two teaches and a c
 
 Detailed 2026-11-23 (`docs/campaign.md`, "Run 5 in detail"): a teach, a twist and a combine, the combine sketched first in the idea pool. All three are designed before the author plays any (the author's call, 2026-11-23, as for runs 2 to 4), taking ids 11, 12 and 13; the next chamber after them takes id 14. Each sketch names the layout rules its build must keep and the risks to watch in the author's play; the handbook lessons the drafts turned up wait until after that play, since they give the chambers away.
 
-- [ ] **7.1 Chamber 5.1** (teach: steel a button opens, and the laser). Its route may read as an earlier chamber, as cut 2.2 did (guideline 113): kept on the author's call, to be judged on their cold play.
-- [ ] **7.2 Chamber 5.2** (twist: a box sent home from elsewhere, and a portal on steel closing as it shuts).
-- [ ] **7.3 Chamber 5.3** (combine: steel a button opens, one box needed on both sides of it).
+- [ ] **7.1 Chamber 5.1** (teach: steel a button opens, and the laser). Its route may read as an earlier chamber, as cut 2.2 did (guideline 113): kept on the author's call, to be judged on their cold play. Built 2026-11-23 as id 11, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_11.md`).
+- [ ] **7.2 Chamber 5.2** (twist: a box sent home from elsewhere, and a portal on steel closing as it shuts). Built 2026-11-23 as id 12, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_12.md`).
+- [ ] **7.3 Chamber 5.3** (combine: steel a button opens, one box needed on both sides of it). Built 2026-11-23 as id 13, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_13.md`).
 - [ ] **7.4 Friends play run 5 cold.**
 - [ ] **7.5 Detail run 6** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 6).
 
