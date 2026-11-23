@@ -254,7 +254,7 @@ Arrows are the exception: an arrow a link turns may turn under the subject. The 
 ### Antlines
 
 96. `Should` Draw an antline from each button, switch or receiver to what it links, so the player learns how links work: the player shouldn't have to step on a button to learn what it does, and a link found without an antline must be remembered for the rest of the chamber, which is noise unless remembering is the puzzle. Leave one out only where finding the link is meant to be the puzzle, and never for an element several of them link (guideline 62). A line lights while its own button, switch or receiver is active, not when the element opens, so the unlit lines to an element still shut show what is left to do.
-97. `Should` Turn an antline on the floor, or on a wall tile inside a wall, not on a wall tile at a wall's edge. A line crossing a plain wall shows on its top, but a turn there leaves out the dot of each arm that ends at the wall's bevel, and a turn on a lone wall tile keeps only its middle dot, so the turn is hard to follow (`docs/sprites.md`, antlines).
+97. `Should` Turn an antline on the floor, or on a wall tile inside a wall, not on a wall tile at a wall's edge. A line crossing a plain wall, or a blocked wall no link reaches, shows on its top, but a turn there leaves out the dot of each arm that ends at the wall's bevel, and a turn on a lone wall tile keeps only its middle dot, so the turn is hard to follow (`docs/sprites.md`, antlines). An emitter, a receiver and a blocked wall a link reaches hide the line, and the chamber check rejects a line that runs through such a blocked wall rather than ending on it, since it would be hidden there in every state: route it round.
 
 <!-- Added during run 2 -->
 

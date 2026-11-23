@@ -14,38 +14,12 @@
         "y": 2,
         "blocked": false
     },
-    "walls": [
-        {
-            "xFrom": 3,
-            "xTo": 6,
-            "yFrom": 4,
-            "yTo": 4
-        },
-        {
-            "x": 6,
-            "y": 3
-        },
-        {
-            "x": 6,
-            "y": 1
-        },
-        {
-            "xFrom": 4,
-            "xTo": 6,
-            "yFrom": 0,
-            "yTo": 0
-        }
-    ],
     "blockedWalls": [
         {
             "xFrom": 0,
-            "xTo": 2,
+            "xTo": 7,
             "yFrom": 4,
             "yTo": 4
-        },
-        {
-            "x": 7,
-            "y": 4
         },
         {
             "xFrom": 0,
@@ -55,33 +29,21 @@
         },
         {
             "xFrom": 3,
-            "xTo": 5,
+            "xTo": 7,
             "yFrom": 3,
             "yTo": 3
         },
         {
-            "x": 7,
-            "y": 3
-        },
-        {
             "xFrom": 3,
-            "xTo": 5,
+            "xTo": 7,
             "yFrom": 1,
             "yTo": 1
         },
         {
-            "x": 7,
-            "y": 1
-        },
-        {
             "xFrom": 0,
-            "xTo": 3,
+            "xTo": 7,
             "yFrom": 0,
             "yTo": 0
-        },
-        {
-            "x": 7,
-            "y": 0
         }
     ],
     "boxes": [

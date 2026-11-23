@@ -10,7 +10,7 @@ Run 4, chamber 1, teach. Elements: a switch, a door, a ditch; walls, steel and t
 
 ## Layout
 
-7 × 6, an L. The room, 5 × 2, along the top: the switch in its bottom left corner, the subject's start right beside it, facing it. Under the room's right three columns, a ditch across, and past it a two-tile ledge, the door at its end and the exit right behind the door, in the chamber's right wall. Every wall is steel but two: the ledge's floor wall under its left tile, and the room's left wall in the top row. An antline runs from the switch up a tile, right along the room's top row, down across the ditch onto the ledge and right into the door.
+7 × 6, an L. The room, 5 × 2, along the top: the switch in its bottom left corner, the subject's start right beside it, facing it. Under the room's right three columns, a ditch across, and past it a two-tile ledge, the door at its end and the exit right behind the door, in the chamber's right wall. Every wall is steel but two: the ledge's floor wall under its left tile, and the room's left wall in the top row. An antline runs from the switch down through the steel below it, turns right on (1, 1), a steel tile inside the wall, and runs on through the steel onto the ledge and along it into the door.
 
 ```
 y5  ■ ■ ■ ■ ■ ■ ■
@@ -24,7 +24,7 @@ y0  ■ ■ ■ W ■ ■ ■
 
 `■` steel, `W` a plain wall (a face that takes portals): **F** (3, 0), its top face under the ledge's landing (3, 1), and **R** (0, 4), its right face beside (1, 4); `~` an open ditch, `s` the switch (1, 3), linked to the door, `S` the subject's start (2, 3), facing left at the switch, `D` the door (5, 1) (linked, so it starts closed), `E` the exit (6, 1) (open).
 
-The antline: (1, 3), (1, 4), (4, 4), (4, 1), (5, 1). The ditch tile (4, 2) hides one tile of it; it shows again on the ledge, where it turns into the door.
+The antline: (1, 3), (1, 1), (5, 1). Its dots show over the steel it runs through, and between the switch and the door it runs under no element, so no tile of it is hidden.
 
 ## Idea
 
@@ -82,7 +82,7 @@ Guideline 40, the shot through the open door: the door opens for good, so a shot
 
 ## Guidelines broken on purpose
 
-None. Guideline 112: the ditch hides one tile of the antline; the line then shows again on the ledge and turns into the door, so it doesn't seem to end at the ditch, as variant B's did (its last tile hidden right below the door).
+None. Guideline 112: the antline runs through the steel, under no ditch, so no tile of it is hidden and it doesn't seem to end at the ditch, as variant B's did (its last tile hidden right below the door).
 
 ## Near misses and wrong tries
 
@@ -104,6 +104,7 @@ None is a dead end: every reachable state can still be finished.
 - A: the ditch straight across the room's full width, the ledge the whole top row, the door under the exit in the top wall (7 × 6; 618 states, none dead, 9 moves and 2 portals). Not kept: a room split straight across reads as chamber 1.1 turned on its side.
 - B: the L with the room below and the ledge above, F in the ledge's ceiling and R in the room's right wall, the switch's line ending under the ditch right below the door (602 states, none dead, 9 moves and 2 portals). Not kept, after the independent check: its crossing, a ceiling face over a two-tile ledge past a ditch row, a face in the right wall of the room below, the exit at the ledge's right end, was chamber 1.2's last crossing almost tile for tile; and its line seemed to end at the ditch.
 - C, kept: B turned upside down, R moved to the room's left wall, the line brought back onto the ledge.
+- C's first line, as kept and played: (1, 3), (1, 4), (4, 4), (4, 1), (5, 1), up from the switch, right along the room's top row, and down across the ditch, which hid one tile of it, onto the ledge and into the door. Changed 2026-11-23, once steel showed a line's dots as a plain wall does (`docs/sprites.md`, antlines): the line runs down from the switch through the steel, turning on (1, 1) inside the wall, and right through the steel onto the ledge, so no tile of it is hidden. Only the drawing changed, so the recorded solution stands (the chamber's hash leaves antlines out).
 
 ## Checks
 
@@ -111,7 +112,7 @@ None is a dead end: every reachable state can still be finished.
 - The copies with every wall steel and with the switch removed: unsolvable from `--baseline` and `--par`.
 - Every reachable state (602, two completed, one per colour on F) explored through the rules' step: each can still be finished, and none breaks a fact above. With every turn action refused: 398 states, completed in 13 presses.
 - `npm run chamber:check` passes.
-- Played through in the real game, B and then C (headless Chrome with a throwaway profile, the dev server on a port of its own, so nothing touched the author's browser or progress): the switch, the door opening and its line lighting amber, both staying so as the subject left, the crossing and the walk out, completing the chamber with no console error. In C the line shows again on the ledge past the ditch and turns into the door.
+- Played through in the real game, B and then C (headless Chrome with a throwaway profile, the dev server on a port of its own, so nothing touched the author's browser or progress): the switch, the door opening and its line lighting amber, both staying so as the subject left, the crossing and the walk out, completing the chamber with no console error. In C the line, on its first route (Variants tried), showed again on the ledge past the ditch and turned into the door.
 - An independent check (a fresh agent with only the file and the plan's entry, no notes), on variant B: no shortcut, no dead end, no bug-like refusal and no `Must` breached; its own walk found 602 states (398 without the turn key), none unfinishable, 9 moves and 2 portals, and the copies without the switch and without faces unsolvable from `--baseline`. Every route uses the switch and leaves it; the line staying lit is shown, not forced, which is fine for a teach; the combine isn't rehearsed, since nothing ever shuts the subject in. Its judgment calls:
   - The line seemed to end at the ditch, which a ditch a link switches (run 5) could later make misleading: it proposed bringing the line back onto the ledge before the door. Done in C.
   - The crossing repeated chamber 1.2's last one almost tile for tile, though the forced switch keeps it from being a copy under guideline 113. Answered by C's layout. C changes no rule-relevant topology but where R is (the same 602 states, none dead; my walk and the copies were run again, guideline 100), so it had no second independent check.

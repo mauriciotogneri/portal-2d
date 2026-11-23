@@ -10,24 +10,24 @@ Run 4, chamber 3, combine, and the run's last chamber. Elements: a box, two butt
 
 ## Layout
 
-8 × 6. A 3 × 3 room on the left, the subject starting in its middle, facing right, and the button **B** in its bottom left corner with the box resting on it (its start). From the room's bottom right tile a one-tile passage runs right: the button **B2**, then the hub **H**. Above H, the door **D2**, linked to B2, and above it the switch, in a nook of its own; right of H, the door **D1**, linked to B and the switch, and the exit right behind it in the chamber's right wall. Every wall is steel but a plain band carrying D1's two lines: the chamber's bottom row and the wall tiles right below and right above D1. None of the band's faces looks onto floor, so none takes a portal.
+8 × 6. A 3 × 3 room on the left, the subject starting in its middle, facing right, and the button **B** in its bottom left corner with the box resting on it (its start). From the room's bottom right tile a one-tile passage runs right: the button **B2**, then the hub **H**. Above H, the door **D2**, linked to B2, and above it the switch, in a nook of its own; right of H, the door **D1**, linked to B and the switch, and the exit right behind it in the chamber's right wall. Every wall is steel, and D1's two lines show over it: along the chamber's bottom row and through the wall tiles right below and right above D1.
 
 ```
 y5  ■ ■ ■ ■ ■ ■ ■ ■
 y4  ■ . . . ■ s ■ ■
-y3  ■ . S . ■ D w ■
+y3  ■ . S . ■ D ■ ■
 y2  ■ B . . P H d E
-y1  ■ ■ ■ ■ ■ ■ w ■
-y0  ■ w w w w w w ■
+y1  ■ ■ ■ ■ ■ ■ ■ ■
+y0  ■ ■ ■ ■ ■ ■ ■ ■
     0 1 2 3 4 5 6 7
 ```
 
-`■` steel, `w` plain walls carrying an antline, no face of them looking onto floor, `S` the subject's start (2, 3), facing right, `B` B (1, 2), linked to D1, with the box resting on it, `P` B2 (4, 2), linked to D2, `H` the hub (5, 2), floor, `D` D2 (5, 3), `s` the switch (5, 4), linked to D1 only, `d` D1 (6, 2), `E` the exit (7, 2) (open). Both doors are linked, so they start closed.
+`■` steel, `S` the subject's start (2, 3), facing right, `B` B (1, 2), linked to D1, with the box resting on it, `P` B2 (4, 2), linked to D2, `H` the hub (5, 2), floor, `D` D2 (5, 3), `s` the switch (5, 4), linked to D1 only, `d` D1 (6, 2), `E` the exit (7, 2) (open). Both doors are linked, so they start closed.
 
 Antlines, three:
 
-- B to D1: (1, 2), (1, 0), (6, 0), (6, 2): down through the steel under B, hidden for that tile, along the plain bottom row and up into D1 from below; lit at the start, the box holding B.
-- The switch to D1: (5, 4), (6, 4), (6, 2): right through the steel beside the switch, hidden for that tile, then down the plain tile above D1 into it from above.
+- B to D1: (1, 2), (1, 0), (6, 0), (6, 2): down through the steel under B, along the bottom row and up into D1 from below; lit at the start, the box holding B.
+- The switch to D1: (5, 4), (6, 4), (6, 2): right onto the steel beside the switch, turning there, then down the steel tile above D1 into it from above.
 - B2 to D2: (4, 2), (5, 2), (5, 3): across the hub into D2 from below.
 
 ## Idea
@@ -65,9 +65,9 @@ The first plan is chamber 1.3's: carry the box to B2 and put it down from the ro
 | 2 | D2, linked to B2, the only way to the switch | Reaching the switch without the box on B2: the walk that never lets the box rest on B2 (444 states) reaches no completion |
 | 3 | B2 in a one-tile passage, the hub the only tile beyond it | The box on B2 from the room's side, which bars the passage: the walk refusing the turn on the hub reaches no completion, and so does the one refusing every turn |
 | 4 | The switch linked to D1 alone | D1's two lines lighting together: the switch is used only while B is up (refusing it then leaves no completion), so every route sees D1 shut with the switch used |
-| 5 | Every wall steel but the plain band | Faces the idea doesn't need (guideline 56): with every wall plain, portal pairs shorten the walking (11 moves and 4 portals), the fewest-moves route still turning on the hub |
+| 5 | Every wall steel | Faces the idea doesn't need (guideline 56): with every wall plain, portal pairs shorten the walking (11 moves and 4 portals), the fewest-moves route still turning on the hub |
 | 6 | B2 not beside D2 and off its column; B not beside D1; D1 right in front of the exit | Guidelines 59 and 40 |
-| 7 | The plain band below and above D1 | D1's two lines coming into it from below and from above, apart, with one tile hidden each; no extra face (0 portal wall sides) |
+| 7 | D1's lines through the steel below and above it | D1's two lines coming into it from below and from above, apart, their dots showing over the steel; no extra face (0 portal wall sides) |
 
 ## Facts that must never be possible
 
@@ -81,6 +81,8 @@ The first plan is chamber 1.3's: carry the box to B2 and put it down from the ro
 ## Guidelines broken on purpose
 
 None. Guideline 113, by the author's choice: the key step is chamber 3.1's put-down behind, the one move here a player has made before; what every route does that no earlier one did is meet D1's two inputs in both orders and move the box on after the switch.
+
+Guideline 97, since 2026-11-23, when steel began showing a line's dots: the switch's line turns on the steel beside the switch, a wall tile at the wall's edge, so the turn shows its middle dot and its arm's dot down but none toward the switch. Any other way out of the switch's nook turns beside it too, or runs under D2 onto the hub, along B2's line. Seen in the game: the four dots read as a short line from beside the switch into D1.
 
 ## Near misses and wrong tries
 
@@ -99,6 +101,7 @@ None is a dead end.
 
 - The first 4.3 (the idea pool, "Cut drafts"): a dead end by design.
 - The second 4.3, built and checked the same day, never played: the idea pool's show, "the box flies home onto its button", with D1 linked to B and the switch, the switch also linked to the box; 7 × 7, a 3 × 3 room holding B2 and B with the box, D2 up into a corridor with the switch, then D1 and the exit (9 moves and 0 portals; 357 states, none dead; no route without the switch sending the box home). Replaced after its independent check: the switch, used while the box held B2, sent it home onto B in the same step, so D1's two lines always lit together and no route showed D1 shut with the switch used (guideline 108); its room was chamber 4.2's, its route 4.2's first half and 4.1's second (guideline 113); its lines were mostly hidden and met at B, reading as one.
+- The plain band, as kept and played: every wall steel but the bottom row and the wall tiles right below and right above D1, plain only to carry D1's two lines, since steel then hid a line, their faces looking onto no floor; the steel under B and the steel beside the switch hid each line for one tile. Changed 2026-11-23, once steel showed a line's dots as a plain wall does (`docs/sprites.md`, antlines): the band is steel, the routes of the lines unchanged, and both those tiles show their line. The solver gives the same 16 moves and 0 portals, with 0 portal wall sides before and after, so nothing about play changed; the recorded solution, the same presses, is recorded again for the chamber's new hash.
 - Dead-end-free versions of the first 4.3's catch, reasoned, not built: none exists with these elements, since once the subject is shut behind D2 the switch has already put the box on B and opened D1, so any way out of the switch's room is the whole solution. A switch that sends the box home matters only where the subject can't carry it there: with the way out behind D2, a way back from the switch's room also lets a route carry the box by hand; with the way out past the switch, it is the second 4.3; B on a ledge past a ditch, reached only by portal, leaves a portal outside from fetching the box, so the switch's room is never a trap.
 
 ## Checks
@@ -110,11 +113,11 @@ None is a dead end.
 - Played through in the real game (headless Chrome with a throwaway profile, the dev server on a port of its own): the box carried over B2 and put down behind from the hub, D2 opening, the switch lighting its line with D1 still shut and B's line dark, the box fetched back onto B, D1 opening with both lines lit, and the walk out, completing the chamber with no console error.
 - An independent check (a fresh agent with only the file and the plan's entry, no notes) found no shortcut, no dead end and no `Must` breached: its own walk found 989 states, one completed, none dead, 319 without the turn key and none of them completed, 16 moves and 0 portals, every shot a miss; the switch is never used while B is held, so every route sees D1 shut with the switch used; one box on two buttons in turn is forced; the only refusals are put-downs facing walls or shut doors, those on the hub pointing at the turn. Its judgment calls:
   - The catch replays chamber 3.1's: a button in a one-tile gap, the tile past it, a door beside that tile, and the lure is 3.1 and 3.2's box barring its tile; the switch and the box carried back are carried out rather than worked out, so it will likely play as a flow. The author's choice, accepted.
-  - D1's corner is chamber 3.2's tile for tile: the door in front of the exit in the right wall, plain walls above and below it, a line coming in from each side. Kept: it is the same kind of door, two inputs, drawn the same way.
+  - D1's corner is chamber 3.2's tile for tile: the door in front of the exit in the right wall, the walls above and below it alike, a line coming in from each side. Kept: it is the same kind of door, two inputs, drawn the same way.
   - "B held, the switch unused" shows only in the opening picture, not as something a route makes happen. Accepted: the start shows it, B's line lit and D1 shut.
-  - The switch's line turns on the steel beside it, so only two dots show, above D1: it reads weakly. To watch in the author's play.
-  - B's line is hidden under the box and the steel below it, so it seems to start on the bottom wall; it lines up with B and starts lit.
-  - The plain tile above D1, between two doorways, takes no portal; a shot at it from either doorway misses. Chamber 3.2's convention.
+  - The switch's line turned on the steel beside it, which then hid it, so only two dots showed, above D1: it read weakly. To watch in the author's play. Since 2026-11-23 that steel shows the turn's middle dot and the dot of its arm down (none on the arm from the switch, which ends at the wall's bevel), so four dots show (Variants tried).
+  - B's line was hidden under the box and the steel below it, so it seemed to start on the bottom wall; it lines up with B and starts lit. Since 2026-11-23 the steel right under B shows it too (Variants tried).
+  - The tile above D1, between two doorways, then plain, took no portal; a shot at it from either doorway missed. Chamber 3.2's convention then; it is steel now, as every wall is.
 
 ## Playtests
 

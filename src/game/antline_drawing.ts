@@ -1,6 +1,6 @@
 import type {PositionData} from '@/game/chamber_data'
 import {Direction} from '@/game/direction'
-import {wallJoins} from '@/game/element_drawings'
+import {isSwitchable, wallJoins} from '@/game/element_drawings'
 import {PALETTE} from '@/game/palette'
 import {type CompiledAntline, type CompiledChamber, NO_ELEMENT, type PlacedKind} from '@/game/rules/compiled_chamber'
 import type {RulesState} from '@/game/rules/rules_state'
@@ -13,8 +13,9 @@ import type {TilePainter} from '@/game/tile_painter'
 // is active (a button held down, a switch used, a receiver lit), each
 // dot ringed by a darker border. They lie over the floor and under
 // everything else, so the renderer draws them into its backdrop; where a
-// line crosses a plain wall, its dots are drawn again over the wall's top,
-// right after the walls and their shadow, kept clear of the wall's bevels
+// line crosses a plain wall or steel, its dots are drawn again over the
+// wall's top, right after the walls and their shadow, kept clear of the
+// wall's bevels
 
 /**
  * A dot's middle, in tiles from the chamber's bottom-left corner: x to the
@@ -53,9 +54,8 @@ const WALL_EDGE_DOTS = [
   1 / (2 * DOTS_PER_TILE),
 ]
 
-/** The elements on a wall tile that hide a line under them, as they do on the floor: no dots are drawn over them */
+/** The elements on a wall tile that hide a line under them, as they do on the floor: no dots are drawn over them; a blocked wall hides it too, but only when a link reaches it */
 const HIDING_WALL_KINDS: readonly PlacedKind[] = [
-  'blockedWall',
   'emitter',
   'receiver',
 ]
@@ -227,9 +227,29 @@ function wallTileDots(joins: (x: number, y: number) => boolean, tile: PositionDa
 }
 
 /**
- * The middles of an antline's dots over the plain walls it crosses: never
- * on its first tile, the button's, switch's or receiver's, nor its last, the
- * element's, nor on a blocked wall, an emitter or a receiver, which hide it.
+ * Whether a wall tile hides a line crossing it: an emitter or a receiver on
+ * it, or a blocked wall a link reaches, whose steel is painted over the
+ * backdrop while it is blocked and slides away when it isn't, so dots on it
+ * would show only while it takes portals. A blocked wall no link reaches is
+ * drawn in the backdrop with the walls, so the dots show over it.
+ * @param chamber - The chamber
+ * @param tile - The wall tile
+ * @returns True when no dots are drawn over it
+ */
+function hidesLine(chamber: CompiledChamber, tile: PositionData): boolean {
+  const blockedWall = chamber.elementAt('blockedWall', tile.x, tile.y)
+
+  if ((blockedWall !== NO_ELEMENT) && isSwitchable(chamber, blockedWall)) {
+    return true
+  }
+
+  return HIDING_WALL_KINDS.some((kind) => chamber.elementAt(kind, tile.x, tile.y) !== NO_ELEMENT)
+}
+
+/**
+ * The middles of an antline's dots over the walls it crosses, steel
+ * included: never on its first tile, the button's, switch's or receiver's,
+ * nor its last, the element's, nor on a tile that hides it.
  * @param chamber - The chamber
  * @param joins - Whether a tile is part of the mass of walls
  * @param path - Its corner tiles, from the button, switch or receiver to the element
@@ -248,7 +268,7 @@ function wallDotsAlong(chamber: CompiledChamber, joins: (x: number, y: number) =
       continue
     }
 
-    if (HIDING_WALL_KINDS.some((kind) => chamber.elementAt(kind, tile.x, tile.y) !== NO_ELEMENT)) {
+    if (hidesLine(chamber, tile)) {
       continue
     }
 
@@ -330,8 +350,8 @@ export function drawAntlines(painter: TilePainter, state: RulesState): void {
 }
 
 /**
- * Draws a state's antlines again over the plain walls they cross, after the
- * walls and their shadow.
+ * Draws a state's antlines again over the plain walls and steel they cross,
+ * after the walls and their shadow.
  * @param painter - Paints on the canvas
  * @param state - The state drawn
  */

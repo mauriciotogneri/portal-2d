@@ -431,7 +431,7 @@ export function wallJoins(chamber: CompiledChamber): JoinTest {
  * @param index - The blocked wall's index in the chamber's blocked wall list
  * @returns True when a link reaches it
  */
-function isSwitchable(chamber: CompiledChamber, index: number): boolean {
+export function isSwitchable(chamber: CompiledChamber, index: number): boolean {
   return chamber.stateLayout.flagOffset('blockedWall', index) !== NOT_STORED
 }
 

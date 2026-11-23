@@ -125,7 +125,8 @@ function tileKey(x: number, y: number): string {
  * facing the floor, ids unique and links naming something, no blocked flag
  * on an element a link reaches, a link to every box that starts absent,
  * antlines leading
- * from a button, switch or receiver to an element it links, an enclosed
+ * from a button, switch or receiver to an element it links, through no
+ * blocked wall a link reaches, an enclosed
  * edge, and the exit in that edge, away from its corners.
  */
 class ChamberValidator {
@@ -646,13 +647,76 @@ class ChamberValidator {
   }
 
   /**
+   * The blocked walls a button, switch or receiver links, by the id or
+   * through a group, by tile key. Only a one-tile blocked wall can have an id.
+   * @returns Each one's id, by its tile's key
+   */
+  private collectLinkedBlockedWalls(): Map<string, number> {
+    const linkedIds = this.collectLinkedIds()
+    const linkedWalls = new Map<string, number>()
+
+    for (const wall of this.chamber.blockedWalls ?? []) {
+      if (('x' in wall) && (wall.id !== undefined) && linkedIds.has(wall.id)) {
+        linkedWalls.set(tileKey(wall.x, wall.y), wall.id)
+      }
+    }
+
+    return linkedWalls
+  }
+
+  /**
+   * Checks that an antline runs through no blocked wall a link reaches, which
+   * hides it there in every state, its steel painted over the line while it
+   * is blocked and no dots drawn on it while it isn't; it may end on one.
+   * Reports each such tile it crosses.
+   * @param path - The corners, already checked
+   * @param field - Where in the file the antline is listed
+   * @param linkedWalls - The blocked walls a link reaches, their ids by tile key
+   */
+  private checkAntlineCrossings(path: readonly PositionData[], field: string, linkedWalls: ReadonlyMap<string, number>): void {
+    const lastRun = path.length - 2
+
+    for (let run = 0; run <= lastRun; run++) {
+      const from = path[run]
+      const to = path[run + 1]
+
+      if ((from === undefined) || (to === undefined)) {
+        continue
+      }
+
+      const dx = Math.sign(to.x - from.x)
+      const dy = Math.sign(to.y - from.y)
+      let x = from.x
+      let y = from.y
+
+      // Each run starts on the corner the run before ended on, so it begins one tile on
+      while ((x !== to.x) || (y !== to.y)) {
+        x += dx
+        y += dy
+
+        const wallId = linkedWalls.get(tileKey(x, y))
+        const isEnd = (run === lastRun) && (x === to.x) && (y === to.y)
+
+        if ((wallId !== undefined) && (!isEnd)) {
+          this.problems.push(chamberError(field, {
+            x: x,
+            y: y,
+          }, `runs through id ${wallId}, a blocked wall a link reaches, which hides it there`))
+        }
+      }
+    }
+  }
+
+  /**
    * Checks one antline: it leads to an element, not a group; its corners are
    * right; it starts on a button, switch or receiver that links the element,
-   * by its id or through a group, and ends on the element's tile.
+   * by its id or through a group, runs through no blocked wall a link
+   * reaches and ends on the element's tile.
    * @param antline - The antline
    * @param field - Where in the file it is listed
+   * @param linkedWalls - The blocked walls a link reaches, their ids by tile key
    */
-  private checkAntline(antline: AntlineData, field: string): void {
+  private checkAntline(antline: AntlineData, field: string, linkedWalls: ReadonlyMap<string, number>): void {
     const id = antline.link
     const target = this.targets.get(id)
 
@@ -682,6 +746,8 @@ class ChamberValidator {
         y: start.y,
       }, `starts on no button, switch or receiver that links id ${id}`))
     }
+
+    this.checkAntlineCrossings(antline.path, field, linkedWalls)
 
     if ((end.x !== target.tile.x) || (end.y !== target.tile.y)) {
       this.problems.push(chamberError(field, {
@@ -755,7 +821,10 @@ class ChamberValidator {
     this.checkLinkedBlocked()
     this.checkAbsentBoxes()
     this.checkArrows()
-    this.chamber.antlines?.forEach((antline, index) => this.checkAntline(antline, `antlines[${index}]`))
+
+    const linkedWalls = this.collectLinkedBlockedWalls()
+
+    this.chamber.antlines?.forEach((antline, index) => this.checkAntline(antline, `antlines[${index}]`, linkedWalls))
     this.checkEdge()
     this.checkExit()
   }

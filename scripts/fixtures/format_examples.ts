@@ -5,6 +5,7 @@ import brokenArrows from '@scripts/fixtures/broken_arrows.json'
 import brokenDeviceFields from '@scripts/fixtures/broken_device_fields.json'
 import brokenDevices from '@scripts/fixtures/broken_devices.json'
 import absentBoxes from '@scripts/fixtures/absent_boxes.json'
+import antlineThroughBlockedWall from '@scripts/fixtures/antline_through_blocked_wall.json'
 import brokenLinkedBlocked from '@scripts/fixtures/broken_linked_blocked.json'
 import brokenChamberFields from '@scripts/fixtures/broken_chamber_fields.json'
 import brokenChamberLayout from '@scripts/fixtures/broken_chamber_layout.json'
@@ -136,6 +137,15 @@ export const CHAMBER_CASES: readonly ChamberCase[] = [
       'error antlines[5] at (2, 1): starts on no button, switch or receiver that links id 1',
       'error antlines[6] at (1, 1): starts on no button, switch or receiver that links id 2',
       'error antlines[7] at (4, 1): ends away from id 1, which is at (5, 2)',
+    ],
+  },
+  {
+    name: 'antline_through_blocked_wall',
+    // A blocked wall a link reaches hides a line running through it in every state, so an antline may end on one but not cross it: the second line crosses the one a button links directly and the one a switch links through a group, each reported; the steel and the blocked wall with an id nothing links that it also crosses, and the first line, ending on a linked one, are right
+    data: antlineThroughBlockedWall,
+    problems: [
+      'error antlines[1] at (2, 0): runs through id 1, a blocked wall a link reaches, which hides it there',
+      'error antlines[1] at (4, 0): runs through id 2, a blocked wall a link reaches, which hides it there',
     ],
   },
   {
