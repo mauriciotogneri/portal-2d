@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-23, waiting for the author's cold play. File: `src/chambers/chamber_9.json`, ninth in the play order; permanent id 9. Designed together with chambers 4.1 (id 8) and 4.3 (id 10), all three before the author played any (the author's call, 2026-11-23).
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_9.json`, ninth in the play order; permanent id 9. Designed together with chambers 4.1 (id 8) and 4.3 (id 10), all three before the author played any (the author's call, 2026-11-23).
 
 ## Entry
 
@@ -122,4 +122,4 @@ None is a dead end: every reachable state can still be finished.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | — | Waiting |
+| 1 | The author, cold | 2026-11-23 | Played after chamber 4.1. Exactly the intended route: onto the switch, the box brought in, picked up from (3, 2), carried up and left and put down on the button from (2, 3), out through the door (8 moves, 0 portals, both the fewest). The recorded run (restarts before it, if any, aren't in it) met none of the wrong tries. Recorded as `chamber_9.solution.json` (Download solution); kept: "i like those" |

@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-23, waiting for the author's cold play. File: `src/chambers/chamber_8.json`, eighth in the play order; permanent id 8. Designed together with chambers 4.2 (id 9) and 4.3 (id 10), all three before the author played any (the author's call, 2026-11-23, as for runs 2 and 3).
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_8.json`, eighth in the play order; permanent id 8. Designed together with chambers 4.2 (id 9) and 4.3 (id 10), all three before the author played any (the author's call, 2026-11-23, as for runs 2 and 3).
 
 ## Entry
 
@@ -122,4 +122,4 @@ None is a dead end: every reachable state can still be finished.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | — | Waiting |
+| 1 | The author, cold | 2026-11-23 | Played after chamber 3.2. Stepped right and shot F from (3, 3), down across the ditch, then up to (3, 4) and left to (2, 4) and shot R; then down and left onto the switch, used it, and stepped up and left into R, out on the ledge and through the open door (10 moves, 2 portals; the fewest are 8 and 2). Both portals were placed before the switch was used, which the chamber allows (guideline 31); the recorded run (restarts before it, if any, aren't in it) met none of the wrong tries. Recorded as `chamber_8.solution.json` (Download solution); kept: "i like those" |

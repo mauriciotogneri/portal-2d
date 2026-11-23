@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 6, steps 6.1 to 6.3: chambers 4.1 to 4.3 built, waiting for the author's cold play
+Status: In progress. Now: phase 6, step 6.3: chamber 4.3, played cold by the author, who got stuck in it
 Last revised: 2026-11-23
 
 ## Goal
@@ -95,9 +95,9 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 3 in detail"): a teach and a combi
 
 Detailed 2026-11-23 (`docs/campaign.md`, "Run 4 in detail"): two teaches and a combine, the combine sketched first in the idea pool. All three are designed before the author plays any (the author's call, 2026-11-23, as for runs 2 and 3), taking ids 8, 9 and 10; the next chamber after them takes id 11.
 
-- [ ] **6.1 Chamber 4.1** (teach: the switch). Its sketch's prototype has the combine's shape, so its design keeps it from rehearsing 4.3 (guideline 47), or drops the portal crossing. Built 2026-11-23 as id 8, keeping the crossing in a shape that doesn't rehearse 4.3, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_8.md`).
-- [ ] **6.2 Chamber 4.2** (teach: the box that starts absent). Built 2026-11-23 as id 9, checked and independently reviewed; waiting for the author's cold play (`docs/spoilers/chamber_9.md`).
-- [ ] **6.3 Chamber 4.3** (combine: a door a switch and a button link, one box for two buttons in turn). Its sketch can be finished by a route made of runs 2 and 3's moves (guideline 113): close it, re-walked, or name it in its notes for the author's cold play (the author's call, 2026-11-23); its sketch also lists a colour slip that breaks guideline 78, to break on purpose or close. Built 2026-11-23 as id 10, checked and independently reviewed: the route was named in its notes, not closed, and the slip broken on purpose, each with its reason there; waiting for the author's cold play (`docs/spoilers/chamber_10.md`). Until the three are recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on them.
+- [x] **6.1 Chamber 4.1** (teach: the switch). Its sketch's prototype has the combine's shape, so its design keeps it from rehearsing 4.3 (guideline 47), or drops the portal crossing. Built 2026-11-23 as id 8, keeping the crossing in a shape that doesn't rehearse 4.3; kept by the author and recorded from their cold play the same day (`docs/spoilers/chamber_8.md`).
+- [x] **6.2 Chamber 4.2** (teach: the box that starts absent). Built 2026-11-23 as id 9; kept by the author and recorded from their cold play the same day (`docs/spoilers/chamber_9.md`).
+- [ ] **6.3 Chamber 4.3** (combine: a door a switch and a button link, one box for two buttons in turn). Its sketch can be finished by a route made of runs 2 and 3's moves (guideline 113): close it, re-walked, or name it in its notes for the author's cold play (the author's call, 2026-11-23); its sketch also lists a colour slip that breaks guideline 78, to break on purpose or close. Built 2026-11-23 as id 10, checked and independently reviewed: the route was named in its notes, not closed, and the slip broken on purpose, each with its reason there; played cold by the author the same day, who got stuck (`docs/spoilers/chamber_10.md`). Until it is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
 - [ ] **6.4 Friends play run 4 cold.**
 - [ ] **6.5 Detail run 5** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 5), forcing a box sent home from elsewhere before any chamber relies on it (guideline 28).
 
