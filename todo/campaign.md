@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 4, steps 4.1 to 4.4: Chambers 2.1 to 2.4 designed, waiting for the author's cold play
+Status: In progress. Now: phase 4, step 4.4: Chamber 2.4 kept, waiting for its recorded solution
 Last revised: 2026-11-23
 
 ## Goal
@@ -72,14 +72,14 @@ Cut from five chambers to four on 2026-11-22, with the author: walls alone can't
 
 ### Phase 4 — Run 2: portals in depth
 
-Detailed 2026-11-23 (`docs/campaign.md`, "Run 2 in detail"): four chambers, with the combine sketched first in the idea pool. Every put-down and every shot a route needs works without the turn key, which run 3 teaches (guideline 66).
+Detailed 2026-11-23 (`docs/campaign.md`, "Run 2 in detail"): four chambers, with the combine sketched first in the idea pool. Every put-down and every shot a route needs works without the turn key, which run 3 teaches (guideline 66). All four were designed before the author played any (the author's call, 2026-11-23, as for 1.3 and 1.4); on their cold play the same day the author kept only the combine, finding the other three "very similar to chamber 4 but even simpler", so run 2 is one chamber (guideline 113, from this). The cut drafts are in the idea pool ("Cut drafts"), with their verdicts, and the lessons later chambers need moved to run 3's outline.
 
-- [ ] **4.1 Chamber 2.1** (test: where the subject comes out of a portal). Designed 2026-11-23, id 5, address `/chamber/5`; checked (guidelines 100–104, a fresh reviewer); waiting for the author's cold play. Its plan entry no longer lists steel, which it doesn't need.
-- [ ] **4.2 Chamber 2.2** (twist: what an open door lets through). Designed 2026-11-23, id 6, address `/chamber/6`; checked; waiting for the author's cold play. One half of its plan entry isn't met: its notes say which, for the author to decide after playing.
-- [ ] **4.3 Chamber 2.3** (twist: a box in front of a portal). Designed 2026-11-23, id 7, address `/chamber/7`; checked; waiting for the author's cold play.
-- [ ] **4.4 Chamber 2.4** (combine). Designed 2026-11-23, id 8, address `/chamber/8`; checked; waiting for the author's cold play. Exceptionally, 2.1 to 2.4 were all designed before the author played any (the author's call, 2026-11-23, as for 1.3 and 1.4), so a lesson one of them teaches can't yet reach the next; two handbook guidelines came out of the drafts, 111 and 112. Once their solutions are recorded, `docs/solver.md` ("The key") names Chambers 1 to 8.
-- [ ] **4.5 Friends play run 2 cold.** Note each friend's route, or their analytics counts, in each chamber's notes (guideline 105).
-- [ ] **4.6 Detail run 3** in the outline, its combine chamber sketched first.
+- [x] **4.1 Chamber 2.1** (test: where the subject comes out of a portal). Built (id 5), played cold by the author and cut, 2026-11-23: it taught nothing chamber 1.4 hadn't.
+- [x] **4.2 Chamber 2.2** (twist: what an open door lets through). Built (id 6), played cold by the author and cut, 2026-11-23, for the same reason.
+- [x] **4.3 Chamber 2.3** (twist: a box in front of a portal). Built (id 7), played cold by the author and cut, 2026-11-23, for the same reason; its lesson moves to run 3.
+- [ ] **4.4 Chamber 2.4** (combine). Kept by the author after their cold play, 2026-11-23; id 8, fifth in the play order (`/chamber/5`). Waiting for its recorded solution (the author's play, or a new one at `/chamber/5`); then `docs/solver.md` ("The key") names Chambers 1 to 5. Two handbook guidelines came out of the drafts, 111 and 112, and one out of the cut, 113.
+- [ ] **4.5 Friends play run 2 cold.** Note each friend's route, or their analytics counts, in the chamber's notes (guideline 105). Watch whether chamber 2.4 needs a warm-up for the shot through an open door now that 2.2 is gone (`docs/spoilers/chamber_8.md`, Purpose).
+- [ ] **4.6 Detail run 3** in the outline, its combine chamber sketched first, with what run 2's cut chambers were to teach (`docs/campaign.md`, run 3).
 
 ### Later runs
 

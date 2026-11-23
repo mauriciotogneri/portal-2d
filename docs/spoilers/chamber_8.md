@@ -1,12 +1,12 @@
-# Chamber 8 (run 2, chamber 2.4)
+# Chamber 8 (run 2, chamber 2.4, the run's only chamber)
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: draft, designed 2026-11-23, waiting for the author's cold play. File: `src/chambers/chamber_8.json`, eighth in the play order; permanent id 8.
+Status: kept by the author on 2026-11-23 after their cold play; its solution is still to be recorded. File: `src/chambers/chamber_8.json`, fifth in the play order (`/chamber/5`); permanent id 8. It was built as 2.4, the last of four; the other three, 2.1 to 2.3 (ids 5 to 7), were cut on the same play (the idea pool, "Cut drafts"), so it is now run 2's only chamber and comes straight after chamber 1.4.
 
 ## Entry
 
-Run 2, chamber 4, combine, and the run's last chamber. Elements: a box, a button, a door, ditches. The player knows run 1 and 2.1 to 2.3. It should teach that a door shutting closes no portal, and that either portal can be the way in. Hint: none.
+Run 2, its only chamber, a combine, built as 2.4. Elements: a box, a button, a door, ditches. The player knows run 1 (when it was designed, 2.1 to 2.3 too; see Purpose). It should teach that a door shutting closes no portal, and that either portal can be the way in. Hint: none.
 
 ## Layout
 
@@ -37,7 +37,7 @@ Built, the sketch holds as written; the room's shape keeps the pocket from seein
 
 ## Purpose
 
-Combine, and the run's end: the window of 2.2 held by the subject instead of the box, which takes the training wheels off (guideline 49); the pocket left through the colour come out of (1.4); carrying the box through portals (1.4, 2.3); landing in front of a face beyond a ditch (2.1). Every route makes both of the entry's lessons happen: the door shuts as the subject steps off the button with the portal on P, and the way back from the pocket is the colour come out of.
+Combine, and the run's end: a door held open by the subject itself as a window, which takes the training wheels off (guideline 49); the pocket left through the colour come out of (1.4); carrying the box through portals (1.4); landing in front of a face beyond a ditch (1.1 to 1.4). It was designed with 2.2's window, held by the box, and 2.3's carry through portals planted just before it (the sketch's plants); with them cut, only chamber 1.3 plants the door it builds on (standing on the button opens it, the step off shuts it), and a shot through an open door is met here for the first time, so it may be harder cold than it was for the author, who played it after 2.1 to 2.3. The friends' cold play (step 4.5 of `todo/campaign.md`) will show whether it needs a warm-up. Every route makes both of the entry's lessons happen: the door shuts as the subject steps off the button with the portal on P, and the way back from the pocket is the colour come out of.
 
 Gem: one key step, the shot from the button through the door it holds open, with a short, plain route around it.
 
@@ -54,7 +54,7 @@ Either colour can go on either face, and the room's portal on any wall of the ro
 
 ## Lure and where the player should get stuck
 
-Run 1's habit: box to button, with the box out of reach beyond the door and the ditch. The subject starts beside the door's wall, so its natural first steps reach the button from the right, facing away from the door: stepping on opens the door, as in chamber 1.3, and the step off shuts it; from the tile in front of the shut door a shot misses on it, as in 2.2. Every wall of the room takes portals, so every shot from the room opens a portal in the room: nothing past the room is in reach. P is in view through the open door only from the button.
+Run 1's habit: box to button, with the box out of reach beyond the door and the ditch. The subject starts beside the door's wall, so its natural first steps reach the button from the right, facing away from the door: stepping on opens the door, as in chamber 1.3, and the step off shuts it; from the tile in front of the shut door a shot misses on it, since a door never holds a portal. Every wall of the room takes portals, so every shot from the room opens a portal in the room: nothing past the room is in reach. P is in view through the open door only from the button.
 
 Where the player should get stuck: seeing that the subject can stand on the button facing the door, hold it open itself and shoot through it, and trusting that the portal stays when the door shuts (it stays in view across the ditch, guideline 28).
 
@@ -63,7 +63,7 @@ Where the player should get stuck: seeing that the subject can stand on the butt
 | # | Restriction | What it blocks |
 |---|-------------|----------------|
 | 1 | The ditch column | Walking between the far side and the pocket: from the pocket straight to the exit, skipping the box on the button |
-| 2 | The door's wall and the far side's walls steel | A face past the door that the subject, through the open door, could put a portal on and then carry the box past the door by: variant A, with them plain, has 8,944 states that can't be finished with the turn key (the box left on the far side, its portal moved; guideline 111, added from this draft and 2.2's) |
+| 2 | The door's wall and the far side's walls steel | A face past the door that the subject, through the open door, could put a portal on and then carry the box past the door by: variant A, with them plain, has 8,944 states that can't be finished with the turn key (the box left on the far side, its portal moved; guideline 111, added from this draft and a cut one of run 2's) |
 | 3 | The pocket's walls steel but P | A second face in the pocket, or one over the ditch, that one wrong shot would strand the subject by (guideline 78), and any face on the far side in line from the pocket, which would skip the door |
 | 4 | The button on the door's row, two tiles in | The shot through the door, the lesson (guideline 40); not beside the door (guideline 59). A copy with the button moved off the door's row is unsolvable |
 | 5 | The room four tiles wide | The button's run-up from the left, which faces the door from the button and the box onto it without the turn key (guideline 66) |
@@ -120,4 +120,8 @@ None is a dead end: every reachable state can still be finished, and while the d
 
 ## Playtests
 
-None yet.
+| # | Who | Date | What the run shows |
+|---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-23 | Played after the cut drafts 2.1 to 2.3, so with the window and the carry through portals freshly planted. Kept: "this one is ok because it forces the player to shoot a portal through an open door". Its route isn't recorded yet; the solution file will be its record |
+
+Lesson (guideline 107): its three companions, cut on the same play, gave guideline 113: keep only chambers whose every route does something the last combine didn't, and that doesn't look like an old move. This one's forced, new key move is what kept it.

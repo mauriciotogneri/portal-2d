@@ -1,6 +1,6 @@
 # Idea Pool
 
-Chamber ideas with no chamber yet, by element and part (`docs/level_design.md`, guideline 58). They give away key moves, so, like each chamber's notes in this folder, they are for designing, not for a player who will play the chamber cold. Prose sketches, not layouts: none has been built, solved or tested. Each names its part (teach, test, twist, combine, as in guideline 41) and the guidelines to check when building it. When an idea becomes a chamber, move it into that chamber's notes; when a draft is cut, add its idea here, tagged by its elements and part.
+Chamber ideas with no chamber yet, by element and part (`docs/level_design.md`, guideline 58). They give away key moves, so, like each chamber's notes in this folder, they are for designing, not for a player who will play the chamber cold. Prose sketches, not layouts: none has been built, solved or tested, but the cut drafts at the end, which were built, checked and played before they were cut. Each names its part (teach, test, twist, combine, as in guideline 41) and the guidelines to check when building it. When an idea becomes a chamber, move it into that chamber's notes; when a draft is cut, add its idea here, tagged by its elements and part.
 
 What exists already, so the ideas avoid repeating it: the campaign's old chambers, now Playground 2 to 10, taught and tested slide floors (Playground 5 and 6), taught and twisted turnable arrows (Playground 7 and 8) and taught and tested rays through portals (Playground 9 and 10). None of them used a light barrier or a mirror box, and only Playground 2 and 4 used fizzlers.
 
@@ -73,3 +73,43 @@ Run 1's sketch, the box beyond the ditch, became chamber 1.4, and its text moved
 
 36. **Filters** (combine, late). One chamber where the subject, the box, a shot and the ray each reach a different region: an open ditch passes rays and shots but not the subject; a fizzler passes the subject but not the box or a shot; a light barrier passes nothing. The puzzle is ferrying each across its own barrier. _Check:_ guideline 83 (if slides are involved), guideline 92, and the solver's refusal of chambers with receivers.
 37. **The capstone** (finale). It introduces nothing new and combines nearly everything. The last chamber needs synthesis and spectacle: several elements working at once, a visible chain of doors with lit antlines, and a catch no harder than the run before it (guideline 50).
+
+## Cut drafts
+
+Chambers built, checked and played cold by the author, then cut, kept here so their ideas aren't tried again unchanged (guideline 58). Each gives its layout (x grows right, y up, from the bottom row; `W` plain wall, `#` steel, `~` open ditch, `S` the start, `b` box, `o` button, `D` door, `E` exit), its idea, its numbers, the author's verdict and why it was cut. Their files were deleted; their chamber files and notes, as played, are in commit `62a5572`.
+
+- **Run 2's 2.1: the pillar beside the exit** (test; walls, ditches, the exit; id 5, built and cut 2026-11-23). 7 × 5, every wall plain:
+
+  ```
+  y4  W W W W W W W
+  y3  W . . . S . W
+  y2  W ~ ~ ~ ~ ~ W
+  y1  W . ~ . W ~ W
+  y0  W W W E W W W
+  ```
+
+  The landing (3, 1) over the exit has one face in front of it, the pillar's west side, hit only along the bottom row from the stone (1, 1), which the ledge reaches down column 1; the first shot from the start opens a portal on the pillar's top, facing the ditch, and crossing into it is refused. 6 moves and 3 portals; no dead state among 3,980. The author's verdict: "very similar to chamber 4 but even simpler; it doesn't teach anything; chamber 4 did the same and a better job". Why: a portal facing a ditch leads nowhere only as a refused crossing, which a wrong try meets and the route avoids (guideline 108), and what is left is two hops between islands, as in chambers 1.2 and 1.4. Facing away from the wall come out of never mattered, since there is no slide yet.
+- **Run 2's 2.2: the window over a ditch** (twist; a box, a button, a door, a ditch; id 6, built and cut 2026-11-23). 6 × 6, every wall plain, the button linked to the door:
+
+  ```
+  y5  W W W W W W
+  y4  W W W W . E
+  y3  W W W W D W
+  y2  W b . . ~ W
+  y1  W S o . . W
+  y0  W W W W W W
+  ```
+
+  The door stands behind a ditch, so it is never walked through: held open by the box on the button (off the door's column), it lets a shot from (4, 1) through onto the ceiling over the one landing tile (4, 4), beside the exit. 7 moves and 2 portals without the turn key; no dead state among 37,242. The author's verdict: "same as chamber 5" (as chamber 4, teaching nothing). Why: once walking into the ditch has turned the subject up, the shot through the door is simply the shot across a ditch of chamber 1.1, so the door never reads as a window; and the walls facing a door, the entry's other half, can only be shot from inside the doorway, so it was never shown. A variant with two tiles past the door let the box be carried past the door through the window's portal and stranded (guideline 111); the draft its reviewer first saw put the box's start on the antline (guideline 112).
+- **Run 2's 2.3: the button on the landing** (twist; a box, a button, a door, ditches; id 7, built and cut 2026-11-23). 7 × 6, the room's walls plain, the ledge's two faces (6, 4) and (5, 1) plain, the rest round it steel, the button linked to the door:
+
+  ```
+  y5  W W W W # # #
+  y4  W . . . ~ o W
+  y3  W . b . ~ . #
+  y2  W S . . ~ . #
+  y1  W W D W # W #
+  y0  W W E W W W W
+  ```
+
+  The room sees only the ledge's top tile, the button, in front of (6, 4); the box put on it shuts the portal the subject came out of, so the subject leaves by moving that portal onto (5, 1), under the ledge, while sending on the portal left behind, chambers 1.2 and 1.4's habit, is refused with the box in view. 11 moves and 3 portals; no dead state among 54,318; no route finishes without moving the portal off (6, 4). The author's verdict: "again, very similar to chamber 4". Why: carrying the box through a portal onto a button on an island is chamber 1.4's route, and the twist shows only as a refusal the player avoids by moving the right portal first, or by scouting the ledge before fetching the box (guideline 108).
