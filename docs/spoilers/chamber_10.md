@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-23, the third 4.3, waiting for the author's cold play. File: `src/chambers/chamber_10.json`, tenth in the play order; permanent id 10. The first 4.3, built with the same id the same day, was played cold by the author, who got stuck in its dead end and ruled dead ends out (decision 13 of `todo/campaign.md`); it is in the idea pool ("Cut drafts"). A second, milder one replaced it the same day and was itself replaced before the author played it, after its independent check (Variants tried). Neither was deployed, so this chamber keeps the id, the id after the last chamber's (the author's rule, no id skipped).
+Status: the third 4.3, kept by the author on 2026-11-23, their run its recorded solution. File: `src/chambers/chamber_10.json`, tenth in the play order; permanent id 10. The first 4.3, built with the same id the same day, was played cold by the author, who got stuck in its dead end and ruled dead ends out (decision 13 of `todo/campaign.md`); it is in the idea pool ("Cut drafts"). A second, milder one replaced it the same day and was itself replaced before the author played it, after its independent check (Variants tried). Neither was deployed, so this chamber keeps the id, the id after the last chamber's (the author's rule, no id skipped).
 
 ## Entry
 
@@ -120,4 +120,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | — | Waiting |
+| 1 | The author | 2026-11-23 | Played after choosing its catch, so not cold: they knew it would be a run 3 move. Exactly the intended route: the box off B, carried over B2 and put down behind from the hub with a turn, the switch, the box fetched back onto B, out through D1 (16 moves, 0 portals, both the fewest). Recorded as `chamber_10.solution.json` (Download solution); kept: "i like chamber 10" |
+| 2 | Friends, cold | 2026-11-23 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded, so whether it played as a flow, its reviewer's guess, can't be shown (guideline 105) |

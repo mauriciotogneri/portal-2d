@@ -123,3 +123,4 @@ None is a dead end: every reachable state can still be finished.
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
 | 1 | The author, cold | 2026-11-23 | Played after chamber 4.1. Exactly the intended route: onto the switch, the box brought in, picked up from (3, 2), carried up and left and put down on the button from (2, 3), out through the door (8 moves, 0 portals, both the fewest). The recorded run (restarts before it, if any, aren't in it) met none of the wrong tries. Recorded as `chamber_9.solution.json` (Download solution); kept: "i like those" |
+| 2 | Friends, cold | 2026-11-23 | Played it with the rest of run 4, by the author's account. Their routes, and how many friends played, weren't recorded, so what it taught them can't be shown (guideline 105) |

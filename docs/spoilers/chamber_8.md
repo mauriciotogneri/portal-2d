@@ -123,3 +123,4 @@ None is a dead end: every reachable state can still be finished.
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
 | 1 | The author, cold | 2026-11-23 | Played after chamber 3.2. Stepped right and shot F from (3, 3), down across the ditch, then up to (3, 4) and left to (2, 4) and shot R; then down and left onto the switch, used it, and stepped up and left into R, out on the ledge and through the open door (10 moves, 2 portals; the fewest are 8 and 2). Both portals were placed before the switch was used, which the chamber allows (guideline 31); the recorded run (restarts before it, if any, aren't in it) met none of the wrong tries. Recorded as `chamber_8.solution.json` (Download solution); kept: "i like those" |
+| 2 | Friends, cold | 2026-11-23 | Played it with the rest of run 4, by the author's account. Their routes, and how many friends played, weren't recorded, so what it taught them can't be shown (guideline 105) |
