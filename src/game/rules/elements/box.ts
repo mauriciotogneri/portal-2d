@@ -7,8 +7,8 @@ import type {StateDraft} from '@/game/rules/state_draft'
  * Sends a box back to its start tile, when a link unblocks it (a change
  * leaves every button, switch and receiver linking it active, or a linked
  * switch is used again while they all are), unless the subject carries it,
- * reporting it only if the box was away from there. Blocking it does
- * nothing.
+ * reporting it only if the box was away from there; a box still absent is
+ * brought in there, reported as appearing. Blocking it does nothing.
  * @param draft - The step's state
  * @param index - The box's index in the chamber's box list
  */
@@ -17,12 +17,15 @@ function sendBoxBack(draft: StateDraft, index: number): void {
     return
   }
 
+  const absent = draft.isBoxAbsent(index)
   const x = draft.boxX(index)
   const y = draft.boxY(index)
 
   draft.sendBoxToStart(index)
 
-  if ((draft.boxX(index) !== x) || (draft.boxY(index) !== y)) {
+  if (absent) {
+    draft.emit(GameEvent.BOX_APPEARED)
+  } else if ((draft.boxX(index) !== x) || (draft.boxY(index) !== y)) {
     draft.emit(GameEvent.BOX_SENT_BACK)
   }
 }
@@ -43,7 +46,7 @@ export const BOX_DESTROYING_KINDS = [
  * hook. A box at its start stays: the layout checks keep starts on plain
  * floor, slide floor or a button, and a fixture chamber read without them may start one
  * on a blocked element. So each box is destroyed at most once in a step. A
- * carried box is left to the fizzler rule.
+ * carried box is left to the fizzler rule, and an absent one lies nowhere.
  * @param draft - The step's state
  */
 export function destroyBoxesOnBlockedTiles(draft: StateDraft): void {
@@ -51,7 +54,7 @@ export function destroyBoxesOnBlockedTiles(draft: StateDraft): void {
     const x = draft.boxX(index)
     const y = draft.boxY(index)
 
-    if ((draft.carriedBox === index) || ((x === start.x) && (y === start.y))) {
+    if ((draft.carriedBox === index) || draft.isBoxAbsent(index) || ((x === start.x) && (y === start.y))) {
       return
     }
 
@@ -83,6 +86,7 @@ export const BOX_ELEMENT = defineElement<BoxData>()({
     GameEvent.BOX_PUT_DOWN,
     GameEvent.BOX_DESTROYED,
     GameEvent.BOX_SENT_BACK,
+    GameEvent.BOX_APPEARED,
   ],
   hooks: {
     linkUnblocked: sendBoxBack,

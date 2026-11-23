@@ -94,7 +94,7 @@ The rules play no sounds: they report what happens as events, and after each ste
 | 1 | Blue or orange portal opened | That portal's own |
 | 2 | Refused | The error sound, but for a portal shot that missed: the shot sound |
 | 3 | Box picked up, box put down | The box sound, the same for both |
-| 4 | Box destroyed where something blocks, carried box destroyed by a fizzler, box sent back by a link | The box-destroyed sound |
+| 4 | Box destroyed where something blocks, carried box destroyed by a fizzler, box sent back by a link, absent box brought in by a link | The box-destroyed sound |
 | 5 | Fizzled | The fizzle sound (with the box-destroyed sound too for a box carried into the field) |
 | 6 | Crossed | The crossing sound |
 | 7 | Door or exit opened, closed | The door's opening or closing sound, shared by the exit |

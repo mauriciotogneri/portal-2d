@@ -1,6 +1,6 @@
 # Chamber Elements
 
-Reference for the elements a chamber file (`src/chambers/*.json`) can contain, carried over from the original game's help page with the light barrier and the blocked wall added in place of its barrier, and the slide floor, the arrow a link turns, the emitter, the receiver and the mirror box, which the original game didn't have, followed by the chamber file format, the rules and what adding an element touches.
+Reference for the elements a chamber file (`src/chambers/*.json`) can contain, carried over from the original game's help page with the light barrier and the blocked wall added in place of its barrier, and the slide floor, the arrow a link turns, the emitter, the receiver, the mirror box and the box that starts absent, which the original game didn't have, followed by the chamber file format, the rules and what adding an element touches.
 
 | # | Element | Description | Can a link change it? | Do shots pass it? | Can the subject walk onto it? | Quantity |
 |---|---------|-------------|-----------------------|-------------------|-------------------------------|----------|
@@ -9,7 +9,7 @@ Reference for the elements a chamber file (`src/chambers/*.json`) can contain, c
 | 3 | Blocked wall | A wall that refuses portals while blocked | Yes, a one-tile one | No: a portal opens on it only while unblocked | No (only by crossing a portal on it) | 0..∞ |
 | 4 | Light barrier | A field of light, on a floor tile only | Yes | Only when off | Only when off | 0..∞ |
 | 5 | Ditch | A hole in the floor, open or bridged | Yes | Yes | Only when bridged | 0..∞ |
-| 6 | Box | Can be carried, and holds a button down | Yes (sent back to its start) | Yes | No (it is picked up from beside it) | 0..∞ |
+| 6 | Box | Can be carried, and holds a button down; one can start absent, until a link brings it in | Yes (sent back to its start, or brought in there) | Yes | No (it is picked up from beside it) | 0..∞ |
 | 7 | Button | Active while the subject or a box is on it, acting on its links | No | Yes | Yes | 0..∞ |
 | 8 | Switch | Active from its first use until the chamber is loaded again, acting on its links | No | Yes | Yes | 0..∞ |
 | 9 | Door | Closed or open | Yes | Only when open | Only when open | 0..∞ |
@@ -46,7 +46,7 @@ A chamber file is a JSON object in format 2 (`ChamberData` in `src/game/chamber_
 | 10 | `ditches`, `doors`, `fizzlers` | `x`, `y`, and optionally `id` and `blocked`. |
 | 11 | `lasers` | `x`, `y`, `direction` (`H` or `V`: how it is drawn and which walls end its run, which take no portal, and two lasers can share a tile only when they cross), and optionally `id` and `blocked`. |
 | 12 | `lightBarriers` | `x`, `y`, `direction` (`H` or `V`: how it is drawn and which walls end its run, which take no portal), and optionally `id` and `blocked`. |
-| 13 | `boxes` | `x`, `y`, and optionally `id` and `mirror` (`/` or `\`, written `"\\"` in JSON): a box with a `mirror` is a mirror box, its mirror from corner to corner, bottom left to top right for `/` and top left to bottom right for `\`, with y growing upwards (see [rays](#rays)). |
+| 13 | `boxes` | `x`, `y`, and optionally `id`, `mirror` (`/` or `\`, written `"\\"` in JSON) and `absent`: a box with a `mirror` is a mirror box, its mirror from corner to corner, bottom left to top right for `/` and top left to bottom right for `\`, with y growing upwards (see [rays](#rays)); a box with `absent` true starts absent, on no tile, until a link brings it in on its start tile, `x` and `y` (see [a box that starts absent](#a-box-that-starts-absent)), and needs a button, switch or receiver that links it. |
 | 14 | `buttons`, `switches` | `x`, `y` and `links`, all required: the ids of the elements and link groups it acts on (see [links](#links)). |
 | 15 | `arrows` | `x`, `y` and `direction` (`UP`, `DOWN`, `LEFT` or `RIGHT`), all required: the one way the subject can enter the tile; and optionally `id` and `turnedDirection` (`UP`, `DOWN`, `LEFT` or `RIGHT`), always together, a quarter turn from `direction`: the way it points while a link holds it turned (see [links](#links)). An arrow takes no `blocked`: every one starts pointing its `direction`, so one meant to start turned swaps its two ways. |
 | 16 | `groups` | Link groups, each with an `id` and `links`, both required: the ids of the elements it stands for, never another group. |
@@ -148,9 +148,13 @@ A box lying on a tile where a door is closed, a ditch is open, or a laser, a lig
 
 ### One box per tile
 
-A tile holds at most one box. The carried box, which sits on the subject's tile, doesn't count, but a resting box keeps the subject off its tile (see [Move or turn](#move-or-turn)), and no box is put down where another rests (see [Interact](#interact)). A box sent back to its start tile, destroyed by a fizzler or where something blocks, or sent back by a link, sends the box resting there, if any, back to its own start the same way, and so on. Each box moves at most once, so the chain ends. Nothing reports it.
+A tile holds at most one box. The carried box, which sits on the subject's tile, doesn't count, but a resting box keeps the subject off its tile (see [Move or turn](#move-or-turn)), and no box is put down where another rests (see [Interact](#interact)). A box sent back to its start tile, destroyed by a fizzler or where something blocks, or sent back by a link, sends the box resting there, if any, back to its own start the same way, and so on; so does a box a link brings in. Each box moves at most once, so the chain ends. Nothing reports it.
 
-A box sent back to its start tile in any of these ways while the subject stands there lands under the subject. The subject can walk off it but not back on, and picks it up only from beside it, facing it. This is the only way the subject and a resting box share a tile.
+A box sent back to its start tile in any of these ways, or brought in there, while the subject stands there lands under the subject. The subject can walk off it but not back on, and picks it up only from beside it, facing it. This is the only way the subject and a resting box share a tile.
+
+### A box that starts absent
+
+A box with `absent` true starts absent: it lies on no tile and is in no hands, so the subject walks over its start tile, it holds no button down, stops no ray, takes no tile from a box put down, and nothing destroys it (fixtures: `absent_box_blocks_nothing`, `absent_box_presses_no_button`, `absent_box_stops_no_ray`). The first time a link sends it home, as a button going down, a switch used or a receiver lighting does once every button, switch and receiver linking it is active (see [links](#links)), it is brought in on its start tile instead, `boxAppeared`, sending a box resting there on to its own start and landing under the subject standing there (see [one box per tile](#one-box-per-tile)), and from then on it is a box like any other: a later link sends it home, `boxSentBack` (fixtures: `switch_brings_absent_box_in`, `button_brings_absent_box_in`, `receiver_brings_absent_box_in`, `absent_box_appears_onto_box`, `absent_box_appears_under_subject`, `brought_in_box_sent_home_again`). Nothing makes a box absent again, so a chamber's restart is the only way back. The game draws nothing where it will appear: it takes shape there from pieces gathering, as a box that fell into a ditch does (see `docs/sprites.md`, "Fly home"), with the sound of a box sent home. A mirror box can start absent too.
 
 ### Rays
 
@@ -194,11 +198,11 @@ An element a link reaches is unblocked exactly while every button, switch and re
 | 5 | Exit | Opened: `exitOpened` | Closed: `exitClosed` |
 | 6 | Fizzler | Off: `fizzlerSwitchedOff` | On: `fizzlerSwitchedOn` (see [the fizzler rule](#the-fizzler-rule)), and a portal on a wall side facing it closes: `portalFizzled` |
 | 7 | Laser | Off: `laserSwitchedOff` | On: `laserSwitchedOn` |
-| 8 | Box | Back to its start tile (see [one box per tile](#one-box-per-tile)), unless it is carried: `boxSentBack`, when it was away from there | Nothing; the validator warns about a box linked to a button or a receiver |
+| 8 | Box | Back to its start tile (see [one box per tile](#one-box-per-tile)), unless it is carried: `boxSentBack`, when it was away from there; brought in there, if it is absent: `boxAppeared` (see [a box that starts absent](#a-box-that-starts-absent)) | Nothing; the validator warns about a box linked to a button or a receiver |
 | 9 | Arrow | Points its turned way: `arrowTurned`; a subject on it turns with it | Points its own way: `arrowTurned`; a subject on it turns with it |
 | 10 | Emitter | On: `emitterSwitchedOn`, and its ray leaves its firing face (see [rays](#rays)) | Off: `emitterSwitchedOff`, and it sends no ray |
 
-A door or the exit reports its event only when it actually opens or closes, an arrow `arrowTurned` only when it actually turns, a blocked wall `blockedWallSwitched` and a ditch `ditchSwitched` only when it actually switches, a light barrier `lightBarrierSwitchedOff` or `lightBarrierSwitchedOn`, a laser `laserSwitchedOff` or `laserSwitchedOn`, a fizzler `fizzlerSwitchedOff` or `fizzlerSwitchedOn` and an emitter `emitterSwitchedOff` or `emitterSwitchedOn` only when it actually switches off or on, a fizzler reports `portalFizzled` only when it closes a portal, and a box `boxSentBack` only when it was away from its start; the others are silent.
+A door or the exit reports its event only when it actually opens or closes, an arrow `arrowTurned` only when it actually turns, a blocked wall `blockedWallSwitched` and a ditch `ditchSwitched` only when it actually switches, a light barrier `lightBarrierSwitchedOff` or `lightBarrierSwitchedOn`, a laser `laserSwitchedOff` or `laserSwitchedOn`, a fizzler `fizzlerSwitchedOff` or `fizzlerSwitchedOn` and an emitter `emitterSwitchedOff` or `emitterSwitchedOn` only when it actually switches off or on, a fizzler reports `portalFizzled` only when it closes a portal, and a box `boxSentBack` only when it was away from its start, or `boxAppeared` when it was absent; the others are silent.
 
 An arrow turning under the subject turns the subject with it, to face the arrow's new way, so on an arrow the subject always faces the way it points, and its shots fly that way; a carried box stays carried. It can then leave only that way. An arrow turns only as links act: as a button goes down or comes up, or a receiver lights or goes dark, while the step settles (a chamber's start included), or on a switch's use. A slide judges no button or receiver until it ends, so no arrow turns mid-slide, but a slide's end can turn one, under the subject too.
 
@@ -223,6 +227,7 @@ A chamber file is read field by field (`chamber_parser.ts` in `src/game/rules/`)
 - **Fields:** a file that isn't a JSON object, a missing field, an unknown or misspelled one (an `id` on a blocked wall rectangle among them), a value of the wrong kind or out of range (a box's `mirror` other than `/` or `\` among them; see the [chamber format](#chamber-format)), a wall, blocked wall or slide floor rectangle whose from corner is past its to corner, an antline path with fewer than two corners, or a `version` other than 2.
 - **Ids and links:** an id used twice (elements, arrows with a turned way and emitters among them, and groups share the ids), a link naming an id nothing has, a receiver's links included, and a group naming another group.
 - **Linked elements:** a `blocked` field, true or false, on an element a button, switch or receiver links, by its id or through a group, since a linked element starts blocked and those linking it decide when it is unblocked; each such element is reported once.
+- **Absent boxes:** a box that starts absent but that no button, switch or receiver links, by its id or through a group, since only a link brings it in.
 - **Arrows:** an arrow with a turned way but no `id`, or an `id` but no turned way, and a turned way that is the arrow's own way or opposite it (a half turn), so every turn is a quarter turn.
 - **Emitters and receivers:** an emitter whose firing face, or a receiver whose listening face, looks outside the chamber or onto a wall tile, since it fires onto, or listens on, a floor tile inside the chamber.
 - **Antlines:** an antline leading to an id nothing has, or to a group, since an antline leads to one element; a corner outside the chamber, the same as the corner before it, or sharing neither a row nor a column with it (only the first such corner is reported); a first corner on no button, switch or receiver that links the element, by its id or through a group; and a last corner away from the element's tile.
@@ -264,16 +269,16 @@ Every element against every other. Each cell names the rules below that bring th
 
 | # | Element | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
 |---|---------|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | Subject | — | P1 P5 | M1 V1 | M1 V1 | M2 U1 V4 | M2 U1 V4 | M4 B3 V4 | M6 | M5 K3 | M5 K4 V4 | M2 U1 V4 | M5 F1 V4 | M2 X1 V4 | M2 U1 V4 | M3 A2 V4 | SL1 | M1 RY1 V1 | M1 RY1 V1 | M4 B3 RY5 V4 | RY3 RY6 RY7 |
+| 1 | Subject | — | P1 P5 | M1 V1 | M1 V1 | M2 U1 V4 | M2 U1 V4 | M4 B3 B7 V4 | M6 | M5 K3 | M5 K4 V4 | M2 U1 V4 | M5 F1 V4 | M2 X1 V4 | M2 U1 V4 | M3 A2 V4 | SL1 | M1 RY1 V1 | M1 RY1 V1 | M4 B3 B7 RY5 V4 | RY3 RY6 RY7 |
 | 2 | Portal | P1 P5 | P1 P5 | P1 P5 | P2 P5 | P3 P5 P7 | P4 P5 | P4 P5 | P5 P8 | P4 | P4 | P3 P6 | P3 P7 F1 F2 | P3 P6 | P4 P5 P7 | P4 P5 | P4 SL3 SL6 | P1 RY1 | P1 RY1 | P4 P5 RY5 | RY4 RY6 RY7 |
 | 3 | Wall | M1 V1 | P1 P5 | V1 | V1 | P7 V1 | V1 | V1 | B2 | V1 | V1 | P6 V1 | F2 P7 V1 | P6 V1 | P7 V1 | V1 | SL2 V1 | V1 V5 | V1 V5 | V1 | RY4 |
 | 4 | Blocked wall | M1 V1 | P2 P5 | V1 | V1 | P7 V1 | V1 | V1 | B2 | K1 V1 | K1 V1 | P6 V1 | F2 P7 V1 | P6 V1 | P7 V1 | V1 | SL2 V1 | V1 V5 | RY8 V1 V5 | V1 | P2 RY4 |
 | 5 | Light barrier | M2 U1 V4 | P3 P5 P7 | P7 V1 | P7 V1 | V2 | V2 | B1 V4 | B2 U1 | K1 V2 | K1 V2 | V2 | V2 | V2 | V2 | V2 | SL2 | V1 | RY8 V1 | B1 V4 | RY3 RY12 |
 | 6 | Ditch | M2 U1 V4 | P4 P5 | V1 | V1 | V2 | V2 | B1 V4 | B2 U1 | K1 V2 | K1 V2 | V2 | V2 | V2 | V2 | V2 | SL2 V3 | V1 | RY8 V1 | B1 V4 | RY3 RY12 |
-| 7 | Box | M4 B3 V4 | P4 P5 | V1 | V1 | B1 V4 | B1 V4 | B4 V4 | B2 B4 | B5 B6 | B2 B6 K4 V4 | B1 V4 | B1 B3 V4 | B2 V4 | B1 V4 | B3 V4 | SL2 SL7 | V1 | B6 V1 | B4 V4 | RY3 RY6 RY7 |
+| 7 | Box | M4 B3 B7 V4 | P4 P5 | V1 | V1 | B1 V4 | B1 V4 | B4 B7 V4 | B2 B4 | B5 B6 B7 | B2 B6 B7 K4 V4 | B1 V4 | B1 B3 V4 | B2 V4 | B1 V4 | B3 V4 | SL2 SL7 | V1 | B6 B7 V1 | B4 B7 V4 | B7 RY3 RY6 RY7 |
 | 8 | Carried box | M6 | P5 P8 | B2 | B2 | B2 U1 | B2 U1 | B2 B4 | — | B6 | B2 B6 K4 | B2 U1 | F1 B2 | B2 | B2 U1 | B2 | SL7 | B2 | B2 B6 | B2 B4 | RY3 RY5 |
-| 9 | Button | M5 K3 | P4 | V1 | K1 V1 | K1 V2 | K1 V2 | B5 B6 | B6 | K1 K2 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | A1 V2 | SL5 | K1 RY2 V1 | RY8 RY10 V1 | B5 B6 | RY3 |
-| 10 | Switch | M5 K4 V4 | P4 | V1 | K1 V1 | K1 V2 | K1 V2 | B2 B6 K4 V4 | B2 B6 K4 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | A1 V2 | SL2 V3 | K1 RY2 V1 | RY10 V1 | B2 B6 K4 V4 | RY3 |
+| 9 | Button | M5 K3 | P4 | V1 | K1 V1 | K1 V2 | K1 V2 | B5 B6 B7 | B6 | K1 K2 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | A1 V2 | SL5 | K1 RY2 V1 | RY8 RY10 V1 | B5 B6 B7 | RY3 |
+| 10 | Switch | M5 K4 V4 | P4 | V1 | K1 V1 | K1 V2 | K1 V2 | B2 B6 B7 K4 V4 | B2 B6 K4 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | K1 V2 | A1 V2 | SL2 V3 | K1 RY2 V1 | RY10 V1 | B2 B6 B7 K4 V4 | RY3 |
 | 11 | Door | M2 U1 V4 | P3 P6 | P6 V1 | P6 V1 | V2 | V2 | B1 V4 | B2 U1 | K1 V2 | K1 V2 | V2 | V2 | V2 | V2 | V2 | SL2 V3 | V1 | RY8 V1 | B1 V4 | RY3 RY12 |
 | 12 | Fizzler | M5 F1 V4 | P3 P7 F1 F2 | F2 P7 V1 | F2 P7 V1 | V2 | V2 | B1 B3 V4 | F1 B2 | K1 V2 | K1 V2 | V2 | F3 V2 | V2 | V2 | V2 | SL4 | V1 | RY8 V1 | B1 B3 RY5 V4 | F1 F2 RY3 RY4 |
 | 13 | Exit | M2 X1 V4 | P3 P6 | P6 V1 | P6 V1 | V2 | V2 | B2 V4 | B2 | K1 V2 | K1 V2 | V2 | V2 | — | V2 | V2 | SL2 V3 | V1 | RY8 V1 | B2 V4 | RY3 RY12 |
@@ -281,9 +286,9 @@ Every element against every other. Each cell names the rules below that bring th
 | 15 | Arrow | M3 A2 V4 | P4 P5 | V1 | V1 | V2 | V2 | B3 V4 | B2 | A1 V2 | A1 V2 | V2 | V2 | V2 | V2 | V2 | SL2 V3 | V1 | A1 RY8 V1 | B3 V4 | RY3 |
 | 16 | Slide floor | SL1 | P4 SL3 SL6 | SL2 V1 | SL2 V1 | SL2 | SL2 V3 | SL2 SL7 | SL7 | SL5 | SL2 V3 | SL2 V3 | SL4 | SL2 V3 | SL2 | SL2 V3 | SL1 V3 | SL2 V1 | SL2 V1 | SL2 SL7 | RY3 RY7 |
 | 17 | Emitter | M1 RY1 V1 | P1 RY1 | V1 V5 | V1 V5 | V1 | V1 | V1 | B2 | K1 RY2 V1 | K1 RY2 V1 | V1 | V1 | V1 | V1 | V1 | SL2 V1 | V1 V5 | RY9 V1 V5 | V1 | RY2 RY11 |
-| 18 | Receiver | M1 RY1 V1 | P1 RY1 | V1 V5 | RY8 V1 V5 | RY8 V1 | RY8 V1 | B6 V1 | B2 B6 | RY8 RY10 V1 | RY10 V1 | RY8 V1 | RY8 V1 | RY8 V1 | RY8 V1 | A1 RY8 V1 | SL2 V1 | RY9 V1 V5 | RY8 RY10 V1 V5 | B6 V1 | RY8 RY11 |
-| 19 | Mirror box | M4 B3 RY5 V4 | P4 P5 RY5 | V1 | V1 | B1 V4 | B1 V4 | B4 V4 | B2 B4 | B5 B6 | B2 B6 K4 V4 | B1 V4 | B1 B3 RY5 V4 | B2 V4 | B1 V4 | B3 V4 | SL2 SL7 | V1 | B6 V1 | B4 V4 | RY5 RY6 RY7 |
-| 20 | Ray | RY3 RY6 RY7 | RY4 RY6 RY7 | RY4 | P2 RY4 | RY3 RY12 | RY3 RY12 | RY3 RY6 RY7 | RY3 RY5 | RY3 | RY3 | RY3 RY12 | F1 F2 RY3 RY4 | RY3 RY12 | RY3 RY12 | RY3 | RY3 RY7 | RY2 RY11 | RY8 RY11 | RY5 RY6 RY7 | RY6 RY11 |
+| 18 | Receiver | M1 RY1 V1 | P1 RY1 | V1 V5 | RY8 V1 V5 | RY8 V1 | RY8 V1 | B6 B7 V1 | B2 B6 | RY8 RY10 V1 | RY10 V1 | RY8 V1 | RY8 V1 | RY8 V1 | RY8 V1 | A1 RY8 V1 | SL2 V1 | RY9 V1 V5 | RY8 RY10 V1 V5 | B6 B7 V1 | RY8 RY11 |
+| 19 | Mirror box | M4 B3 B7 RY5 V4 | P4 P5 RY5 | V1 | V1 | B1 V4 | B1 V4 | B4 B7 V4 | B2 B4 | B5 B6 B7 | B2 B6 B7 K4 V4 | B1 V4 | B1 B3 RY5 V4 | B2 V4 | B1 V4 | B3 V4 | SL2 SL7 | V1 | B6 B7 V1 | B4 B7 V4 | B7 RY5 RY6 RY7 |
+| 20 | Ray | RY3 RY6 RY7 | RY4 RY6 RY7 | RY4 | P2 RY4 | RY3 RY12 | RY3 RY12 | B7 RY3 RY6 RY7 | RY3 RY5 | RY3 | RY3 | RY3 RY12 | F1 F2 RY3 RY4 | RY3 RY12 | RY3 RY12 | RY3 | RY3 RY7 | RY2 RY11 | RY8 RY11 | B7 RY5 RY6 RY7 | RY6 RY11 |
 
 Moving ([move or turn](#move-or-turn)):
 
@@ -319,6 +324,7 @@ Boxes ([interact](#interact), [a box where something blocks](#a-box-where-someth
 - **B4:** one resting box per tile ([one box per tile](#one-box-per-tile); fixtures: `box_sent_home_sends_box_home`, `no_box_put_down_on_a_box`).
 - **B5:** a box holds a button down ([buttons](#buttons), [interact](#interact); fixtures: `box_picked_up_from_faced_tile`, `box_put_down_in_front`).
 - **B6:** a link sends a box home ([links](#links); fixtures: `button_press_sends_box_back`, `button_release_leaves_box`, `box_linked_button_release_does_nothing`, `switch_sends_box_back_each_use`, `receiver_sends_boxes_back`, `receiver_going_dark_leaves_boxes`, `carried_box_link_does_nothing`, `box_stays_with_one_of_two_links_active`, `box_goes_home_once_both_links_active`).
+- **B7:** a box that starts absent is nowhere until a link brings it in on its start tile ([a box that starts absent](#a-box-that-starts-absent); fixtures: `absent_box_blocks_nothing`, `absent_box_presses_no_button`, `absent_box_stops_no_ray`, `switch_brings_absent_box_in`, `button_brings_absent_box_in`, `receiver_brings_absent_box_in`, `absent_box_appears_onto_box`, `absent_box_appears_under_subject`, `brought_in_box_sent_home_again`).
 
 Buttons, switches and links ([buttons](#buttons), [links](#links), [interact](#interact)):
 

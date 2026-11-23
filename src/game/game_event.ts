@@ -11,6 +11,7 @@ export type GameEvent =
   | 'boxDestroyed'
   | 'carriedBoxDestroyed'
   | 'boxSentBack'
+  | 'boxAppeared'
   | 'fizzled'
   | 'portalFizzled'
   | 'crossed'
@@ -50,6 +51,7 @@ export const GameEvent = {
   BOX_DESTROYED: 'boxDestroyed', // A box lying where a door closed, a ditch opened, or a laser, a light barrier or a fizzler switched on went back to its start
   CARRIED_BOX_DESTROYED: 'carriedBoxDestroyed', // A box the subject carried into an active fizzler went back to its start
   BOX_SENT_BACK: 'boxSentBack', // A link sent a box lying away from its start back there
+  BOX_APPEARED: 'boxAppeared', // A link brought in a box that was absent, on its start tile
   FIZZLED: 'fizzled', // The subject entered an active fizzler, closing both portals
   PORTAL_FIZZLED: 'portalFizzled', // A fizzler turning on closed a portal on a wall side facing it
   CROSSED: 'crossed', // The subject came out of a portal

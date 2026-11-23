@@ -24,6 +24,7 @@ Settled with the author on 2026-11-22, before any chamber was designed.
 | 9   | The outline shows each chamber's part, elements and teaching goal only; its key move, layout and route stay in its notes under `docs/spoilers/` until the author has played it        |
 | 10  | One pass over the handbook now, then a planned revision after run 1                                                                                                                   |
 | 11  | A chamber goes live as soon as the author approves it (no preview link)                                                                                                               |
+| 12  | An exception to decision 3, the author's call on 2026-11-23 while run 4 was detailed: a box can start absent until a button, switch or receiver linked to it first brings it in on its start tile, with nothing marking where, the gathering of a box that fell and the sound of a box sent home (`docs/elements.md`, "A box that starts absent"); run 4 teaches it |
 
 And the assumptions that follow from them:
 

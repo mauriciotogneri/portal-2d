@@ -1,7 +1,7 @@
 import {NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import {RulesState} from '@/game/rules/rules_state'
 import {traceRays} from '@/game/rules/rays'
-import {CLOSED_PORTAL, NO_BOX, PORTAL_SLOTS, StateSlot} from '@/game/rules/state_layout'
+import {ABSENT_BOX, CLOSED_PORTAL, NO_BOX, PORTAL_SLOTS, StateSlot} from '@/game/rules/state_layout'
 import {type ChamberIndex, NO_NUMBER} from '@/solver/chamber_index'
 
 /** The most bits a state key holds: two 32-bit words */
@@ -23,6 +23,7 @@ export type KeyCounts = {
   readonly tiles: number // Tiles that aren't wall
   readonly sides: number // Wall sides a portal can open on
   readonly boxes: number // Boxes
+  readonly absentBoxes: number // Of those, the boxes that start absent, each of whose tiles can also be none
   readonly switches: number // Switches, each with its used flag
   readonly flags: number // Blocked flags the state holds
 }
@@ -31,7 +32,8 @@ export type KeyCounts = {
  * How many bits each field of a chamber's state key takes.
  */
 export type KeyWidths = {
-  readonly tile: number // The subject's tile, and each box's
+  readonly tile: number // The subject's tile, and each box's but those that start absent
+  readonly absentBoxTile: number // The tile of a box that starts absent, or none while it still is
   readonly carriedBox: number // None, or which box the subject carries
   readonly portal: number // Each portal: closed, or the wall side it is on
   readonly total: number // The whole key
@@ -55,9 +57,10 @@ function bitsFor(count: number): number {
  */
 export function measureKey(counts: KeyCounts): KeyWidths {
   const tile = bitsFor(counts.tiles)
+  const absentBoxTile = bitsFor(counts.tiles + 1)
   const carriedBox = bitsFor(counts.boxes + 1)
   const portal = bitsFor(counts.sides + 1)
-  const total = tile + FACING_BITS + carriedBox + (2 * portal) + (counts.boxes * tile) + counts.switches + counts.flags
+  const total = tile + FACING_BITS + carriedBox + (2 * portal) + ((counts.boxes - counts.absentBoxes) * tile) + (counts.absentBoxes * absentBoxTile) + counts.switches + counts.flags
 
   if (total > MAX_KEY_BITS) {
     throw new Error(`The state key needs ${total} bits, at most ${MAX_KEY_BITS}`)
@@ -65,6 +68,7 @@ export function measureKey(counts: KeyCounts): KeyWidths {
 
   return {
     tile: tile,
+    absentBoxTile: absentBoxTile,
     carriedBox: carriedBox,
     portal: portal,
     total: total,
@@ -118,6 +122,7 @@ export class StateKeyCodec {
       tiles: index.tileCount,
       sides: index.sideCount,
       boxes: layout.boxCount,
+      absentBoxes: index.chamber.boxStarts.filter((_, box) => index.chamber.startsAbsent(box)).length,
       switches: layout.switchCount,
       flags: layout.flagCount,
     })
@@ -232,9 +237,13 @@ export class StateKeyCodec {
     }
 
     for (let box = 0; box < layout.boxCount; box++) {
-      const tile = (box === carriedBox) ? 0 : this.numberTile(valueAt(values, layout.boxesOffset + (box * 2)), valueAt(values, layout.boxesOffset + (box * 2) + 1))
+      const x = valueAt(values, layout.boxesOffset + (box * 2))
+      const y = valueAt(values, layout.boxesOffset + (box * 2) + 1)
+      const canBeAbsent = this.index.chamber.startsAbsent(box)
+      // An absent box is written as the tile after the last one
+      const tile = (box === carriedBox) ? 0 : ((canBeAbsent && (x === ABSENT_BOX)) ? this.index.tileCount : this.numberTile(x, y))
 
-      this.write(tile, this.widths.tile)
+      this.write(tile, canBeAbsent ? this.widths.absentBoxTile : this.widths.tile)
     }
 
     for (let switchIndex = 0; switchIndex < layout.switchCount; switchIndex++) {
@@ -299,7 +308,15 @@ export class StateKeyCodec {
     const boxTiles = new Set<number>()
 
     for (let box = 0; box < layout.boxCount; box++) {
-      const tile = (box === carriedBox) ? this.skipTile(subjectTile) : this.read(this.widths.tile)
+      const canBeAbsent = chamber.startsAbsent(box)
+      const width = canBeAbsent ? this.widths.absentBoxTile : this.widths.tile
+      const tile = (box === carriedBox) ? this.skipTile(subjectTile, width) : this.read(width)
+
+      if (canBeAbsent && (tile === this.index.tileCount)) {
+        values[layout.boxesOffset + (box * 2)] = ABSENT_BOX
+        values[layout.boxesOffset + (box * 2) + 1] = ABSENT_BOX
+        continue
+      }
 
       values[layout.boxesOffset + (box * 2)] = this.index.tileX(tile)
       values[layout.boxesOffset + (box * 2) + 1] = this.index.tileY(tile)
@@ -407,10 +424,11 @@ export class StateKeyCodec {
   /**
    * Skips the tile field of the carried box, which is on the subject's tile.
    * @param subjectTile - The subject's tile
+   * @param width - The field's width: wider for a box that starts absent
    * @returns The subject's tile
    */
-  private skipTile(subjectTile: number): number {
-    this.read(this.widths.tile)
+  private skipTile(subjectTile: number, width: number): number {
+    this.read(width)
 
     return subjectTile
   }

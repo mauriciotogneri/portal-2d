@@ -123,7 +123,8 @@ function tileKey(x: number, y: number): string {
  * Checks how the parts of a format 2 chamber fit together: everything inside
  * the chamber, at most one fixed element per tile, emitters and receivers
  * facing the floor, ids unique and links naming something, no blocked flag
- * on an element a link reaches, antlines leading
+ * on an element a link reaches, a link to every box that starts absent,
+ * antlines leading
  * from a button, switch or receiver to an element it links, an enclosed
  * edge, and the exit in that edge, away from its corners.
  */
@@ -516,6 +517,21 @@ class ChamberValidator {
    * reported once, in the order its id was noted.
    */
   private checkLinkedBlocked(): void {
+    const linkedIds = this.collectLinkedIds()
+
+    this.targets.forEach((target, id) => {
+      if (linkedIds.has(id) && target.setsBlocked) {
+        this.problems.push(chamberError(target.field, target.tile, 'sets blocked, but it is linked: a linked element starts blocked, and the buttons, switches and receivers linking it decide when it is unblocked'))
+      }
+    })
+  }
+
+  /**
+   * The ids a button, switch or receiver links, by the id or through a
+   * group.
+   * @returns The ids
+   */
+  private collectLinkedIds(): Set<number> {
     const linkedIds = new Set<number>()
     const triggers = [
       ...(this.chamber.buttons ?? []),
@@ -533,9 +549,22 @@ class ChamberValidator {
       }
     }
 
-    this.targets.forEach((target, id) => {
-      if (linkedIds.has(id) && target.setsBlocked) {
-        this.problems.push(chamberError(target.field, target.tile, 'sets blocked, but it is linked: a linked element starts blocked, and the buttons, switches and receivers linking it decide when it is unblocked'))
+    return linkedIds
+  }
+
+  /**
+   * Checks that a box that starts absent is linked by a button, switch or
+   * receiver, by its id or through a group, since only a link brings it in.
+   */
+  private checkAbsentBoxes(): void {
+    const linkedIds = this.collectLinkedIds()
+
+    this.chamber.boxes?.forEach((box, index) => {
+      if ((box.absent === true) && ((box.id === undefined) || (!linkedIds.has(box.id)))) {
+        this.problems.push(chamberError(`boxes[${index}]`, {
+          x: box.x,
+          y: box.y,
+        }, 'starts absent, but no button, switch or receiver links it, so it never appears'))
       }
     })
   }
@@ -724,6 +753,7 @@ class ChamberValidator {
     this.collectTargets()
     this.checkLinks()
     this.checkLinkedBlocked()
+    this.checkAbsentBoxes()
     this.checkArrows()
     this.chamber.antlines?.forEach((antline, index) => this.checkAntline(antline, `antlines[${index}]`))
     this.checkEdge()

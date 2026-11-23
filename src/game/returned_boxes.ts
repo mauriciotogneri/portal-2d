@@ -13,7 +13,7 @@ import type {SpriteName} from '@/game/sprite_set'
  */
 export type ReturnedBox = {
   readonly index: number // Which box it is, its index in the chamber's box list, so it keeps its look as it goes
-  readonly fell: boolean // Whether it fell into a ditch still open after the step, rather than came apart where it was
+  readonly gathers: boolean // Whether it takes shape from pieces gathering at its start, having fallen into a ditch still open after the step or been brought in absent, rather than came apart where it was and flew home
   readonly fromX: number // Column of its middle where it was last drawn, in tiles
   readonly fromY: number // Row of that middle, in tiles
   readonly fromSize: number // Its side there, as a share of a tile: less in the subject's hands
@@ -24,11 +24,12 @@ export type ReturnedBox = {
   readonly startY: number // Its start tile's row
 }
 
-/** What a step reports when it sends a box home: one destroyed where it lay, one destroyed in the subject's hands by a fizzler, one a link sent back */
+/** What a step reports when it sends a box home: one destroyed where it lay, one destroyed in the subject's hands by a fizzler, one a link sent back, one a link brought in absent */
 const RETURN_EVENTS: readonly GameEvent[] = [
   GameEvent.BOX_DESTROYED,
   GameEvent.CARRIED_BOX_DESTROYED,
   GameEvent.BOX_SENT_BACK,
+  GameEvent.BOX_APPEARED,
 ]
 
 /**
@@ -44,8 +45,9 @@ export function sendsBoxesHome(events: readonly GameEvent[]): boolean {
  * Every box a step sent back to its start tile: each box destroyed where it
  * lay or was put down (findDestroyedBoxes), noting the one that fell into a
  * ditch; the box carried into an active fizzler, from the subject's hands;
- * and each other box that went from elsewhere to its start, which only a
- * link sending it back can do, or another box sent home onto its tile,
+ * each box a link brought in absent, which gathers at its start like one
+ * that fell; and each other box that went from elsewhere to its start,
+ * which only a link sending it back can do, or another box sent home onto its tile,
  * which sends it on to its own. A box carried before the step and put down
  * on its own start wasn't sent home; one put down elsewhere and sent on
  * home in the same step goes from the tile it was put down on, the one the
@@ -79,7 +81,7 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
     if (destroyedBox !== undefined) {
       returned.push({
         ...box,
-        fell: destroyedBox.fell,
+        gathers: destroyedBox.fell,
         fromX: destroyedBox.x,
         fromY: destroyedBox.y,
         fromSize: destroyedBox.size,
@@ -91,12 +93,24 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
 
       returned.push({
         ...box,
-        fell: false,
+        gathers: false,
         fromX: after.subjectX + 0.5 + (ahead.dx * CARRIED_BOX_AHEAD),
         fromY: after.subjectY + 0.5 + (ahead.dy * CARRIED_BOX_AHEAD),
         fromSize: CARRIED_BOX_SIZE,
         fromWay: boxSprite(chamber, index, after.facing).way,
       })
+    } else if (before.isBoxAbsent(index)) {
+      // Brought in: it takes shape where it lands, from nowhere else
+      if (!after.isBoxAbsent(index)) {
+        returned.push({
+          ...box,
+          gathers: true,
+          fromX: start.x + 0.5,
+          fromY: start.y + 0.5,
+          fromSize: 1,
+          fromWay: resting.way,
+        })
+      }
     } else {
       const isHome = (after.carriedBox !== index) && (after.boxX(index) === start.x) && (after.boxY(index) === start.y)
       // A carried box lies on the subject's tile, and is put down on the tile it faces
@@ -109,7 +123,7 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
       if (isHome && wasAway && ((index !== carried) || putDown)) {
         returned.push({
           ...box,
-          fell: false,
+          gathers: false,
           fromX: fromX + 0.5,
           fromY: fromY + 0.5,
           fromSize: 1,

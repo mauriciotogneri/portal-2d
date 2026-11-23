@@ -106,6 +106,7 @@ export class Level {
     [GameEvent.BOX_DESTROYED]: Sound.BOX_DESTROYED,
     [GameEvent.CARRIED_BOX_DESTROYED]: Sound.BOX_DESTROYED,
     [GameEvent.BOX_SENT_BACK]: Sound.BOX_DESTROYED,
+    [GameEvent.BOX_APPEARED]: Sound.BOX_DESTROYED,
     [GameEvent.FIZZLED]: Sound.FIZZLE,
     [GameEvent.PORTAL_FIZZLED]: null,
     [GameEvent.CROSSED]: Sound.CROSS,
@@ -720,7 +721,7 @@ export class Level {
         this.fall.start(before, after, events, time)
       }
 
-      // Each box sent home comes apart where it was and flies there, or, one that fell, gathers there; one picked up
+      // Each box sent home comes apart where it was and flies there, or, one that fell or was brought in, gathers there; one picked up
       // again is done with going home
       this.returns.forgetMoved(after)
 

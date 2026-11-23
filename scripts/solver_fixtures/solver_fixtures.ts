@@ -1,6 +1,7 @@
 import type {ChamberData} from '@/game/chamber_data'
 import type {ReplayExpectation} from '@/game/replay_data'
 import type {Action} from '@/game/rules/action'
+import absentBox from '@scripts/solver_fixtures/absent_box.json'
 import arrowTrap from '@scripts/solver_fixtures/arrow_trap.json'
 import boxOnButton from '@scripts/solver_fixtures/box_on_button.json'
 import boxThroughPortal from '@scripts/solver_fixtures/box_through_portal.json'
@@ -540,6 +541,60 @@ export const SOLVER_FIXTURES: readonly SolverFixture[] = [
         moves: 4,
         portals: 0,
         finalHash: '71be6b3f',
+      },
+    },
+  },
+  // Every wall refuses portals, so the counts are moves alone. The exit at
+  // (6,1) opens only while the button at (5,2) is held, and no tile beside
+  // the button but (5,1) and (4,2) is floor, neither of them the exit, so a
+  // box must hold it as the subject steps out. The only box starts absent,
+  // brought in at (3,2) by the switch at (1,2). So the subject goes from its
+  // start to the switch, then beside the box ((2,2), (4,2) or (3,1)), then
+  // beside the button ((4,2) or (5,1)), then onto the exit, from (5,1): each
+  // leg at least its distance in tiles, 1 + 1 + 2 + 3, or 1 + 1 + 4 + 1, or
+  // 1 + 3 + 0 + 3, 7 moves however the tiles are chosen
+  {
+    name: 'absent_box',
+    covers: 'A box that starts absent: the switch brings it in at its start, and only then can it be carried onto the button that opens the exit.',
+    chamber: absentBox,
+    fewestMoves: {
+      actions: [
+        'up',
+        'interact',
+        'right',
+        'interact',
+        'right',
+        'right',
+        'interact',
+        'down',
+        'right',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 7,
+        portals: 0,
+        finalHash: '282ac3b5',
+      },
+    },
+    fewestPortals: {
+      actions: [
+        'up',
+        'interact',
+        'right',
+        'interact',
+        'right',
+        'right',
+        'interact',
+        'down',
+        'right',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 7,
+        portals: 0,
+        finalHash: '282ac3b5',
       },
     },
   },
