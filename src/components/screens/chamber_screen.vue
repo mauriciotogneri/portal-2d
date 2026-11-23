@@ -3,8 +3,8 @@
  * Chamber screen: plays one chamber on the game canvas, with the timer and the
  * controls legend beside it and the pause, settings, confirmation and
  * completion dialogs on top. The game objects live outside Vue's reactivity; this screen only
- * creates, pauses, reloads and disposes them, and reads the game's clock. In
- * development it also plays the playground chambers, which save and send nothing.
+ * creates, pauses, reloads and disposes them, and reads the game's clock. It
+ * also plays the playground chambers, which save nothing and send no chamber events.
  */
 import {computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, useTemplateRef} from 'vue'
 import {onBeforeRouteLeave, onBeforeRouteUpdate, useRouter} from 'vue-router'
@@ -49,7 +49,7 @@ type StageSize = {
 }
 
 export interface ChamberScreenProps {
-  list: ChamberList // The list the chamber is in: the campaign, or the playground chambers (development only), which keep no progress and send no analytics
+  list: ChamberList // The list the chamber is in: the campaign, or the playground chambers, which keep no progress and send no chamber events
   chamberNumber: number // Which chamber in that list, counted from 1
 }
 

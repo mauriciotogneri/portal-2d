@@ -26,7 +26,8 @@
  * column starts with Playground, highlighted on the first arrival, a section
  * like Play listing the playground chambers, chambers for trying elements and
  * ideas, with the highlighted one's map; they keep no progress, so their rows
- * show no best time and no figure.
+ * show no best time and no figure. Production builds leave the row out, so
+ * their playground chambers are reached only by their addresses.
  */
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useTemplateRef} from 'vue'
 import {useRouter} from 'vue-router'
@@ -196,8 +197,9 @@ const itemColumnId = `${menuId}-items`
 const detailColumnId = `${menuId}-details`
 
 // Back from a chamber, Play (or in development Playground, back from a playground chamber) is
-// open with that chamber highlighted and the keyboard in the second column; on the first arrival
-// only the sections show, with Play highlighted and nothing open, or Playground in development
+// open with that chamber highlighted and the keyboard in the second column; on the first arrival,
+// and in production builds back from a playground chamber, reached only by its address, only the
+// sections show, with Play highlighted and nothing open, or Playground in development
 const remembered = lastChamber()
 const rememberedChamber = remembered?.list === 'campaign' ? CHAMBERS.findIndex((chamber) => chamber.number === remembered.number) : -1
 const rememberedPlayground = remembered?.list === 'playground' ? PLAYGROUND_CHAMBERS.findIndex((entry) => entry.number === remembered.number) : -1
@@ -264,13 +266,13 @@ const highlightedDetail = computed(() => controlsShown.value ? highlightedLayout
 
 /**
  * Finds the section the menu comes back to, open, from the chamber just left.
- * @returns Play, after a chamber of the campaign; Playground, after a playground chamber; or null on the first arrival
+ * @returns Play, after a chamber of the campaign; Playground, after a playground chamber in development; or null on the first arrival, and after a playground chamber in production builds, which have no Playground row
  */
 function findReturningSection(): MenuSection | null {
   if (rememberedChamber !== -1) {
     return 'play'
   }
-  if (rememberedPlayground !== -1) {
+  if (import.meta.env.DEV && rememberedPlayground !== -1) {
     return 'playground'
   }
   return null

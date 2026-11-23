@@ -1,10 +1,10 @@
 /**
- * The playground chambers' layouts, in order: development-only chambers for
- * trying elements and ideas, never checked for a solution. Each one's file is
- * src/dev/playground/playground_N.json, N its place in the list counted from 1.
- * The engine scripts read it under Node too (scripts/chamber_files.ts), so it
- * uses nothing of Vite's; the game reads it only through
- * src/services/playground.ts, which production builds leave empty.
+ * The playground chambers' layouts, in order: chambers outside the campaign
+ * for trying elements and ideas, never checked for a solution. Each one's file
+ * is src/dev/playground/playground_N.json, N its place in the list counted
+ * from 1. The engine scripts read it under Node too (scripts/chamber_files.ts),
+ * so it uses nothing of Vite's; the game reads it only through
+ * src/services/playground.ts.
  */
 import playgroundOneData from '@/dev/playground/playground_1.json'
 import playgroundTwoData from '@/dev/playground/playground_2.json'

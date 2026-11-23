@@ -17,7 +17,7 @@ export interface CompletionDialogProps {
   newBest: boolean // Whether this run set the best time
   hasNextChamber: boolean // Whether a chamber follows this one
   solutionFailed: boolean // Whether the last download was refused, because the run doesn't replay the same way
-  playground: boolean // Development only: whether the chamber is a playground chamber, which keeps no best time and has no recorded solution
+  playground: boolean // Whether the chamber is a playground chamber, which keeps no best time and has no recorded solution
 }
 
 defineProps<CompletionDialogProps>()

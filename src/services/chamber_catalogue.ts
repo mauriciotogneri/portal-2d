@@ -14,7 +14,7 @@ import chamberNineData from '@/chambers/chamber_9.json'
 import chamberTenData from '@/chambers/chamber_10.json'
 import type {ChamberData} from '@/game/chamber_data'
 
-/** Which list a chamber is in: the campaign, under Play, or in development the playground chambers. */
+/** Which list a chamber is in: the campaign, under Play, or the playground chambers, under Playground in development. */
 export type ChamberList = 'campaign' | 'playground'
 
 export type ChamberEntry = {

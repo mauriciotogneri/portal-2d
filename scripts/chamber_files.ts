@@ -35,7 +35,7 @@ export function playgroundFileName(playgroundNumber: number): string {
   return `playground_${playgroundNumber}.json`
 }
 
-/** Every playground chamber, the development-only chambers for trying elements and ideas, by its file name: checked, settled and walked like a chamber file, but with no recorded solution, and the solver leaves them out; the engine scripts fail on a playground file missing here */
+/** Every playground chamber, the chambers outside the campaign for trying elements and ideas, by its file name: checked, settled and walked like a chamber file, but with no recorded solution, and the solver leaves them out; the engine scripts fail on a playground file missing here */
 export const PLAYGROUND_FILES: Readonly<Record<string, ChamberData>> = Object.fromEntries(PLAYGROUND_LAYOUTS.map((layout, index) => [
   playgroundFileName(index + 1),
   layout,

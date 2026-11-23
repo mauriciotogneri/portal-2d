@@ -2,7 +2,6 @@
  * Application routes.
  * History mode — firebase.json rewrites all paths to /index.html.
  */
-import type {RouteLocationNormalized} from 'vue-router'
 import {createRouter, createWebHistory} from 'vue-router'
 import ChamberScreen from '@/components/screens/chamber_screen.vue'
 import HomeScreen from '@/components/screens/home_screen.vue'
@@ -31,21 +30,20 @@ const router = createRouter({
         name: 'home',
       } : true),
     },
-    // Development only: the playground chambers, outside the campaign; production builds fall back to the menu
-    ...(import.meta.env.DEV ? [
-      {
-        path: '/playground/:number(\\d+)',
-        name: 'playground',
-        component: ChamberScreen,
-        props: (route: RouteLocationNormalized) => ({
-          list: 'playground' as const,
-          chamberNumber: Number(route.params.number),
-        }),
-        beforeEnter: (to: RouteLocationNormalized) => (findPlaygroundChamber(Number(to.params.number)) === undefined ? {
-          name: 'home',
-        } : true),
-      },
-    ] : []),
+    // The playground chambers, outside the campaign; in production builds this address is the only
+    // way in, as the home menu lists them in development only
+    {
+      path: '/playground/:number(\\d+)',
+      name: 'playground',
+      component: ChamberScreen,
+      props: (route) => ({
+        list: 'playground' as const,
+        chamberNumber: Number(route.params.number),
+      }),
+      beforeEnter: (to) => (findPlaygroundChamber(Number(to.params.number)) === undefined ? {
+        name: 'home',
+      } : true),
+    },
     {
       path: '/:pathMatch(.*)*',
       redirect: {

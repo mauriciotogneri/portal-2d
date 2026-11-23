@@ -9,7 +9,7 @@ Everything around the chamber itself: the screens, the menus and dialogs, the ke
 | 1 | Loading | Any, first | The first screen of every visit, on a desktop: it downloads the game's files, then waits for Start (see [loading screen](#loading-screen)) |
 | 2 | Home | `/` | The menu, on a test room's wall (see [home menu](#home-menu)); any address the game doesn't know goes here |
 | 3 | Chamber | `/chamber/N` | A chamber of the campaign, N its place in the play order, counted from 1; `/chamber/0` and a number with no chamber go home (see [chamber screen](#chamber-screen)) |
-| 4 | Playground chamber | `/playground/N` | Development builds only: a playground chamber, in the chamber screen; `/playground`, `/playground/0` and a number past the last go home. Production builds leave out the addresses, the home menu's section and the files |
+| 4 | Playground chamber | `/playground/N` | A playground chamber, in the chamber screen; `/playground`, `/playground/0` and a number past the last go home. Production builds leave out the home menu's section, so there the address is the only way in, for sharing test chambers |
 
 Touch-first devices (`pointer: coarse`) get the desktop-only notice instead of the app.
 
@@ -32,7 +32,7 @@ Arriving:
 
 - The first arrival shows only the sections, with Play highlighted and focused but not open; back from a chamber, Play is open with that chamber highlighted and focused.
 - Opening Play highlights the first chamber not yet completed, or the first chamber when all are.
-- In development the first column starts with Playground, a section like Play: Right, Enter, Space or a click opens it and steps into its rows, Playground 1 to 12, on the one highlighted last (Playground 1 at first), with the highlighted one's map in the third column. The first arrival highlights and focuses Playground instead of Play, with nothing open, and back from a playground chamber, Playground is open with that chamber highlighted and focused.
+- In development the first column starts with Playground, a section like Play: Right, Enter, Space or a click opens it and steps into its rows, Playground 1 to 12, on the one highlighted last (Playground 1 at first), with the highlighted one's map in the third column. The first arrival highlights and focuses Playground instead of Play, with nothing open, and back from a playground chamber, Playground is open with that chamber highlighted and focused. Production builds have no Playground row: back from a playground chamber, reached by its address, the menu is as on the first arrival.
 
 The sections:
 
@@ -53,7 +53,7 @@ The chamber on a dark stage, beside a rail holding the chamber sign (its number,
 - **The pause menu:** Continue, Settings (the sound effects and music volumes), Restart chamber and Exit chamber; restarting or leaving asks for confirmation first.
 - **The completion dialog:** the time and the best time (or "New best time"), with Next chamber, Play again and Back to menu (after the last chamber, Back to menu is the main button and there is no Next chamber); in development also Download solution (`AGENTS.md`, "Recorded solutions").
 - **The legend** folds away, or opens, by a click on its heading, which doesn't take the keyboard, or by Tab and Enter, and stays as it was left between visits. Its keys are re-read from the player's layout when it appears.
-- **A playground chamber** (development only) keeps no progress or best time, sends no analytics and offers no Download solution. Its sign shows its number and the list's count ("03/11"; a screen reader hears "Playground 03 of 11"), and its completion dialog offers Next chamber to the next playground chamber, none after the last.
+- **A playground chamber** (opened from the home menu in development, by its address alone in production) keeps no progress or best time, sends none of the chamber events (in production the app-wide ones, such as a volume change or an error, still go) and offers no Download solution. Its sign shows its number and the list's count ("03/11"; a screen reader hears "Playground 03 of 11"), and its completion dialog offers Next chamber to the next playground chamber, none after the last.
 - **The performance view** (development only): the frame loop's numbers, refreshed about once a second (`docs/performance.md`).
 
 ## Dialogs
@@ -137,7 +137,7 @@ The device keeps these in `localStorage`, every key prefixed `portal-2d.`:
 - **The playlist's place,** `portal-2d.music-track`: the position in its list, from 0, of the last track it moved to, so the next visit's list carries on after it once the opener has played. Missing, malformed or past the end of the list, the list starts from its top. Written by every tab, read once per visit.
 - **The progress,** under one versioned key, `portal-2d.progress`: `{version: 4, chambers: {<id>: {completed, bestTime, attempts}}}`, by permanent chamber id. Best times are in hundredths of a second; attempts are counted on each opening, Restart chamber and Play again. Version 4 since the tutorial run's first chamber took id 1 from the old tutorial, so every save from before is ignored. Every save writes the whole record, so each tab takes over the record whenever another tab saves it (the `storage` event). Reset progress stores an empty record.
 
-Malformed values, unknown fields and a record of another version are ignored, and a stored value that no longer reads falls back to its default. The last chamber opened (its list, the campaign or in development the playground chambers, and its number, which the home menu highlights on the way back) is kept in memory only.
+Malformed values, unknown fields and a record of another version are ignored, and a stored value that no longer reads falls back to its default. The last chamber opened (its list, the campaign or the playground chambers, and its number, which the home menu highlights on the way back) is kept in memory only.
 
 ## Analytics
 
