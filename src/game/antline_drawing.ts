@@ -4,6 +4,7 @@ import {isSwitchable, wallJoins} from '@/game/element_drawings'
 import {PALETTE} from '@/game/palette'
 import {type CompiledAntline, type CompiledChamber, NO_ELEMENT, type PlacedKind} from '@/game/rules/compiled_chamber'
 import type {RulesState} from '@/game/rules/rules_state'
+import {WALL_EDGE} from '@/game/surface_tone'
 import type {TilePainter} from '@/game/tile_painter'
 
 // How the antlines are drawn (docs/sprites.md): dotted lines on the floor
@@ -15,7 +16,7 @@ import type {TilePainter} from '@/game/tile_painter'
 // everything else, so the renderer draws them into its backdrop; where a
 // line crosses a plain wall or steel, its dots are drawn again over the
 // wall's top, right after the walls and their shadow, kept clear of the
-// wall's bevels but for a turn's arm that ends at one
+// wall's bevels
 
 /**
  * A dot's middle, in tiles from the chamber's bottom-left corner: x to the
@@ -53,6 +54,9 @@ const WALL_EDGE_DOTS = [
   -1 / (2 * DOTS_PER_TILE),
   1 / (2 * DOTS_PER_TILE),
 ]
+
+/** Where a turn on a wall tile puts the dot of an arm that ends at a bevel, in tiles from its middle: in from a third, so the dot's edge just meets the lit lip inside the bevel and it stays on the wall's flat top */
+const WALL_TURN_EDGE_DOT = 0.5 - WALL_EDGE - (DOT_WIDTH / 2)
 
 /** The elements on a wall tile that hide a line under them, as they do on the floor: no dots are drawn over them; a blocked wall hides it too, but only when a link reaches it */
 const HIDING_WALL_KINDS: readonly PlacedKind[] = [
@@ -170,12 +174,13 @@ function tilesAlong(path: CompiledAntline['path']): PositionData[] {
 }
 
 /**
- * The dots over a wall tile a line crosses: a bevel lies at each end where
- * the tile beyond isn't part of the mass of walls, as the walls are drawn.
- * Running straight across with a wall beyond both ends, it takes the floor's
- * dots; with a bevel at either end, a pair centred on the tile, clear of the
- * bevel. Turning on it, it takes its middle dot and each arm's, a third of a
- * tile out as on the floor, on the bevel for an arm that ends at one.
+ * The dots over a wall tile a line crosses, kept clear of its bevels: a
+ * bevel lies at each end where the tile beyond isn't part of the mass of
+ * walls, as the walls are drawn. Running straight across with a wall beyond
+ * both ends, it takes the floor's dots; with a bevel at either end, a pair
+ * centred on the tile. Turning on it, it takes its middle dot and each arm's,
+ * a third of a tile out as on the floor, or, for an arm that ends at a
+ * bevel, drawn in until it just meets the bevel's lit lip.
  * @param joins - Whether a tile is part of the mass of walls
  * @param tile - The wall tile
  * @param before - The tile the line comes from
@@ -201,22 +206,24 @@ function wallTileDots(joins: (x: number, y: number) => boolean, tile: PositionDa
     }))
   }
 
-  const arm = 1 / DOTS_PER_TILE
+  // An arm that ends at a bevel keeps its dot too, drawn in from the bevel,
+  // so the turn still shows the way the line leaves it, into a button or a
+  // door beside it
+  const armIn = bevelIn ? WALL_TURN_EDGE_DOT : (1 / DOTS_PER_TILE)
+  const armOut = bevelOut ? WALL_TURN_EDGE_DOT : (1 / DOTS_PER_TILE)
 
-  // An arm that ends at a bevel keeps its dot too, on the bevel, so the turn
-  // still shows the way the line leaves it, into a button or a door beside it
   return [
     {
       x: middleX,
       y: middleY,
     },
     {
-      x: middleX + (inX * arm),
-      y: middleY + (inY * arm),
+      x: middleX + (inX * armIn),
+      y: middleY + (inY * armIn),
     },
     {
-      x: middleX + (outX * arm),
-      y: middleY + (outY * arm),
+      x: middleX + (outX * armOut),
+      y: middleY + (outY * armOut),
     },
   ]
 }
