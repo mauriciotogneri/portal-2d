@@ -10,7 +10,7 @@ Run 3, chamber 2, combine, and the run's last chamber. Elements: two boxes, two 
 
 ## Layout
 
-8 × 5. A 2 × 3 room on the left, where the subject starts in the middle of its left column, facing right, a box above it and a box below. From the middle of the room's right column, **R** (2, 2), a one-tile corridor runs right along the chamber's middle row: the near button **N** (3, 2), the far button **F** (4, 2), the tile beyond them **T** (5, 2), the door (6, 2), and the exit right behind it, in the chamber's right wall. Both buttons link the door. Every wall is steel. N's antline runs up from N, along the top wall and down into the door; F's runs down from F, along the bottom wall and up into the door. Their dots show over the steel they run through, the tile right beside each button included.
+8 × 5. A 2 × 3 room on the left, where the subject starts in the middle of its left column, facing right, a box above it and a box below. From the middle of the room's right column, **R** (2, 2), a one-tile corridor runs right along the chamber's middle row: the near button **N** (3, 2), the far button **F** (4, 2), the tile beyond them **T** (5, 2), the door (6, 2), and the exit right behind it, in the chamber's right wall. Both buttons link the door. Every wall is steel. N's antline runs up from N onto the steel above it, right along the corridor's top wall, one row from the corridor, and down into the door; F's runs down from F onto the steel below it, right along the corridor's bottom wall and up into the door. Their dots show over the steel they run along, each turn on the wall's edge included, with its dot toward the button or the door, so each line visibly leaves its button and comes into the door.
 
 ```
 y4  ■ ■ ■ ■ ■ ■ ■ ■
@@ -23,7 +23,7 @@ y0  ■ ■ ■ ■ ■ ■ ■ ■
 
 `■` steel, `S` the subject's start (facing right), `b` a box (box 0 at (1, 3), box 1 at (1, 1)), `R` the room's tile in front of the corridor, `N` and `F` the buttons, both linked to the door, `T` floor, `D` the door (starts closed), `E` the exit (open).
 
-N's antline: (3, 2), (3, 4), (6, 4), (6, 2). F's: (4, 2), (4, 0), (6, 0), (6, 2). Unlit, a line is cyan; lit, amber.
+N's antline: (3, 2), (3, 3), (6, 3), (6, 2). F's: (4, 2), (4, 1), (6, 1), (6, 2). Unlit, a line is cyan; lit, amber.
 
 ## Idea
 
@@ -35,7 +35,7 @@ From the idea pool, where it was sketched before run 3's other chamber (guidelin
 
 Built, the sketch holds as written, with three changes:
 
-- **The antlines.** Two lines into a door in a one-tile corridor can share no tile but along the corridor, where they would run on top of each other, and both would run under T, the parking tile (guideline 112), so neither runs along it: each leaves its button through a wall, N's up and F's down, and comes into the door through the wall on that side. Every wall is steel, which shows a line's dots as a plain wall does, so no portal can open anywhere (0 portal wall sides). Each line reads as its button's: it leaves its button straight up or down through the steel beside it, and it lights as that button goes down. (Built with plain walls under the lines, since steel then hid them: Variants tried.)
+- **The antlines.** Two lines into a door in a one-tile corridor can share no tile but along the corridor, where they would run on top of each other, and both would run under T, the parking tile (guideline 112), so neither runs along it: each leaves its button into the wall beside it, N's up and F's down, runs along that wall, one row from the corridor, and comes into the door from the same wall. Every wall is steel, which shows a line's dots as a plain wall does, so no portal can open anywhere (0 portal wall sides). Each line reads as its button's: it starts on the steel right beside its button, and it lights as that button goes down; each turn, on the wall's edge, shows a dot toward the button or the door, so the line visibly drops into both. (Built with plain walls under the lines, since steel then hid them, and with the lines round the chamber's top and bottom walls: Variants tried.)
 - **The room** is beside the corridor, its middle row in line with it, with N right in front of R: the start sees the whole corridor, and the lure (the first box straight onto N from R) needs no turn key, a step from the start.
 - **The corridor is straight**, and chamber 3.1's neck bends instead (its variant A), so the two don't look alike.
 
@@ -58,7 +58,7 @@ Either box can go first (the state walk reaches two completed states, one per or
 
 ## Lure and where the player should get stuck
 
-The subject starts facing the corridor, the two buttons one and two tiles beyond R, with both antlines in view running round into the one door. The first plan is chamber 1.3's: pick up a box, step to R, put it down on N. N's line lights and the door stays shut, F's line unlit: the door needs both, and the box now bars the corridor (guideline 67). That is the first lure, plain at once (guideline 4), and picking the box up again undoes it.
+The subject starts facing the corridor, the two buttons one and two tiles beyond R, with both antlines in view running along the corridor's walls into the one door. The first plan is chamber 1.3's: pick up a box, step to R, put it down on N. N's line lights and the door stays shut, F's line unlit: the door needs both, and the box now bars the corridor (guideline 67). That is the first lure, plain at once (guideline 4), and picking the box up again undoes it.
 
 The second is chamber 3.1's answer, which this chamber is built to invite: carry a box past a button and put it down on it from beyond. On F, from T: F's line lights, the door stays shut, and the subject is past both buttons with the second box in the room, shut out by the first. On N, from F: the door opens while the subject stands on F, and shuts on the step off, with the second box still in the room. Each fails as plainly, undone by picking the box up again, and each fails for the same reason, the order, which is the catch.
 
@@ -74,8 +74,8 @@ Where the player should get stuck: with one box in hand and the other in the roo
 | 2 | The corridor one tile wide, the buttons in a row along it | A way round a box resting on a button: each box on a button must seal the corridor, the catch |
 | 3 | T, one tile between F and the door | Guideline 59 (F beside the door), and the only tile a box can wait on beyond F: refusing every state with a box resting on T leaves no completion |
 | 4 | Every wall steel | Portals: with every wall plain, 8 moves and 2 portals, and completions with every turn refused (a portal's exit gives the run-ups); with only the room's walls plain, 10 moves and 2 portals, a pair in the room that saves walking (it still needs the turn key and the parking) |
-| 5 | The tiles right beside the buttons steel, the lines' dots showing over them | A face over N and one under F that would take portals: a useless pair right beside the buttons (they're adjacent, so crossing between them passes no box), which would read as one that must be used (guideline 16) |
-| 6 | The antlines round through the walls, not along the corridor | Two lines on top of each other, the lit one hiding the unlit one, and both under T, where the parked box would hide them at the key moment (guideline 112) |
+| 5 | The tiles right beside the buttons steel, each line turning on the one beside its button | A face over N and one under F that would take portals: a useless pair right beside the buttons (they're adjacent, so crossing between them passes no box), which would read as one that must be used (guideline 16) |
+| 6 | The antlines along the corridor's walls, one row from it, not along the corridor itself | Two lines on top of each other, the lit one hiding the unlit one, and both under T, where the parked box would hide them at the key moment (guideline 112) |
 | 7 | The door right in front of the exit | Guideline 40: the door's line runs out through the exit, and no other tile sees through the doorway |
 | 8 | The room 2 × 3, a box either side of the start | Nothing: each box one press from the start, no shuffling (the sketch's guideline 56), and R in front of N gives the first lure its run-up from the start; the room's right column gives room to set a box aside |
 
@@ -90,7 +90,7 @@ Where the player should get stuck: with one box in hand and the other in the roo
 
 ## Guidelines broken on purpose
 
-None. Guideline 97 is kept: each line turns on a wall tile inside a wall, clear of the bevels, and its dots show over every wall tile between its button and the door.
+None. Each line turns on wall tiles at the wall's edge, (3, 3) and (6, 3) for N's, (4, 1) and (6, 1) for F's, which guideline 97 advised against while such a turn left out its dot toward the floor; since 2026-11-23 the turn shows it (`docs/sprites.md`, antlines), and in the game each line drops a dot toward its button and toward the door.
 
 ## Near misses and wrong tries
 
@@ -114,6 +114,7 @@ None is a dead end: every reachable state can still be finished. A box in the co
 - Every wall plain, and only the room's walls plain (copies): restriction 4.
 - Not built: the lines along the corridor, one through T (restriction 6).
 - The antlines' plain walls, as kept and played: every wall steel but the wall tiles the lines ran over, whose faces looked onto no floor, since steel then hid a line; the tile beside each button stayed steel and hid its line there. Changed 2026-11-23, once steel showed a line's dots as a plain wall does (`docs/sprites.md`, antlines): those walls are steel, the routes of the lines unchanged, and the tile beside each button now shows its line. The solver gives the same 12 moves and 0 portals, with 0 portal wall sides before and after, so nothing about play changed; the recorded solution, the same presses, is recorded again for the chamber's new hash.
+- The lines round the chamber's outer walls, as kept and played: N's (3, 2), (3, 4), (6, 4), (6, 2), up through the steel above N, along the chamber's top row and down into the door, and F's (4, 2), (4, 0), (6, 0), (6, 2), the mirror below, each turning on wall tiles inside a wall, clear of the bevels (guideline 97). Changed 2026-11-23, the author's choice: each line runs along the corridor's wall, one row from the corridor, two tiles shorter, its turns at the wall's edge, which first left a gap of about half a tile beside its button and beside the door; the same day a turn beside the floor was drawn in full, its dot toward the floor included, which closed the gaps (Guidelines broken on purpose). The lines still keep off the corridor itself (restriction 6). The chamber's hash leaves its antlines out, so the recorded solution stands, and nothing about play changed.
 
 ## Checks
 
@@ -124,7 +125,7 @@ None is a dead end: every reachable state can still be finished. A box in the co
 - Played through in the real game (headless Chrome with a throwaway profile, the dev server on a port of its own, so nothing touched the author's browser or progress): the first lure (N's line lit, F's unlit, the door shut), then the intended route, with both lines lit and the door open once box 1 was on N and the subject on F, and again once box 0 was on F, completing the chamber with no console error. Each antline's dots showed along the plain walls it then crossed (Variants tried), from just over (or under) its button into the door.
 - An independent check (a fresh agent with only the file and the plan's entry, no notes) found no shortcut, no dead end and no `Must` breached: its own walk found 2,594 states, none unfinishable, every shot refused in every state, no completion with a box never resting on T or with every turn refused, at least two turns on every completing route, and each one-box copy unsolvable. It also found the door several buttons link forced, not only offered: refusing every step that shuts the door, or every step that opens it while the subject stands on a button, leaves no completion, so every route sees the door open with box 1 on N and the subject on F, then shut as the subject steps off F with box 0. Its findings, judgment calls:
   - Guideline 113 passes, but only just: the one move every route needs that chamber 3.1's didn't is the parking; the two put-downs behind are 3.1's move twice. Fine for the last chamber of a two-chamber run. Accepted: the sketch named the same risk, and the author's play will tell.
-  - Readability: each line's link to its button was then hidden under one steel tile, but its turn on the plain wall showed a short tail pointing at its own button, and lit against unlit reads clearly (with box 1 on N and the subject on T carrying box 0, the top line lit and the bottom one unlit). Since 2026-11-23 that steel tile shows the line too (Variants tried).
+  - Readability: each line's link to its button was then hidden under one steel tile, but its turn on the plain wall showed a short tail pointing at its own button, and lit against unlit reads clearly (with box 1 on N and the subject on T carrying box 0, the top line lit and the bottom one unlit). Since 2026-11-23 that steel tile shows the line too, and since the lines were moved along the corridor's walls the same day, each turns there, showing its middle dot and its dot toward its button (Variants tried).
   - The first chamber with plain walls no shot could reach, there only to carry the antlines' dots, since steel then hid them; their only faces onto floor faced the door, which refuses portals (a refusal run 5 is to show first), and only a subject in the open doorway, at the very end, could face them. Nothing misled in practice. Accepted then; since 2026-11-23 they are steel (Variants tried).
   - Noise test: the room's right column off R, (2, 1) and (2, 3), is on no needed route; a copy with them steel is still solvable, with no dead state (1,162 states). Kept: they give room to set a box down, and keep the room a room (restriction 8).
   - Likely first tries: the near button from R, then a box on F from N, then 3.1's move onto F from T; the block is seeing that the far box must wait on T and go down last. Each wrong try fails visibly within a few moves and costs one pickup. It expects a few minutes: a gem with a modest catch, fitting right after 3.1.

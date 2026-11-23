@@ -10,15 +10,15 @@ Each run follows the handbook's four parts (guideline 41): teach, test, twist, c
 
 What every chamber keeps, so the player can trust it (the campaign intro of `docs/level_design.md`). Break one only in a chamber whose notes say why, and make the break plain.
 
-| #   | Convention                                                                                                                 |
-| --- | -------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Every box in a chamber is needed                                                                                           |
-| 2   | Every element matters: each is used, or blocks a shortcut, and nothing is a decoy                                          |
-| 3   | Every link has an antline, from each button, switch or receiver to what it links (guideline 96)                            |
-| 4   | Steel, a blocked wall with no link, never takes a portal; a blocked wall that can open always has an antline leading to it |
-| 5   | What holds the exit shut is in view from the start, with an antline from what opens it                                     |
-| 6   | A chamber is no larger than its puzzle needs (guideline 99)                                                                |
-| 7   | Hints, if they are built, appear only in run 1, and only say what an element is or does (guideline 31)                     |
+| #   | Convention                                                                                                                                                     |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Every box in a chamber is needed                                                                                                                               |
+| 2   | Every element matters: each is used, or blocks a shortcut, and nothing is a decoy                                                                              |
+| 3   | A link should have an antline, from each button, switch or receiver to what it links (guideline 96); a switch that brings in a box that starts absent has none |
+| 4   | Steel, a blocked wall with no link, never takes a portal; a blocked wall that can open always has an antline leading to it                                     |
+| 5   | What holds the exit shut is in view from the start, with an antline from what opens it                                                                         |
+| 6   | A chamber is no larger than its puzzle needs (guideline 99)                                                                                                    |
+| 7   | Hints, if they are built, appear only in run 1, and only say what an element is or does (guideline 31)                                                         |
 
 ## Runs
 

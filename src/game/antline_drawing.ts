@@ -15,7 +15,7 @@ import type {TilePainter} from '@/game/tile_painter'
 // everything else, so the renderer draws them into its backdrop; where a
 // line crosses a plain wall or steel, its dots are drawn again over the
 // wall's top, right after the walls and their shadow, kept clear of the
-// wall's bevels
+// wall's bevels but for a turn's arm that ends at one
 
 /**
  * A dot's middle, in tiles from the chamber's bottom-left corner: x to the
@@ -170,12 +170,12 @@ function tilesAlong(path: CompiledAntline['path']): PositionData[] {
 }
 
 /**
- * The dots over a wall tile a line crosses, kept clear of its bevels: a
- * bevel lies at each end where the tile beyond isn't part of the mass of
- * walls, as the walls are drawn. Running straight across with a wall beyond
- * both ends, it takes the floor's dots; with a bevel at either end, a pair
- * centred on the tile. Turning on it, it takes its middle dot and each arm's,
- * but for an arm that ends on a bevel.
+ * The dots over a wall tile a line crosses: a bevel lies at each end where
+ * the tile beyond isn't part of the mass of walls, as the walls are drawn.
+ * Running straight across with a wall beyond both ends, it takes the floor's
+ * dots; with a bevel at either end, a pair centred on the tile, clear of the
+ * bevel. Turning on it, it takes its middle dot and each arm's, a third of a
+ * tile out as on the floor, on the bevel for an arm that ends at one.
  * @param joins - Whether a tile is part of the mass of walls
  * @param tile - The wall tile
  * @param before - The tile the line comes from
@@ -202,28 +202,23 @@ function wallTileDots(joins: (x: number, y: number) => boolean, tile: PositionDa
   }
 
   const arm = 1 / DOTS_PER_TILE
-  const dots: DotPoint[] = [
+
+  // An arm that ends at a bevel keeps its dot too, on the bevel, so the turn
+  // still shows the way the line leaves it, into a button or a door beside it
+  return [
     {
       x: middleX,
       y: middleY,
     },
-  ]
-
-  if (!bevelIn) {
-    dots.push({
+    {
       x: middleX + (inX * arm),
       y: middleY + (inY * arm),
-    })
-  }
-
-  if (!bevelOut) {
-    dots.push({
+    },
+    {
       x: middleX + (outX * arm),
       y: middleY + (outY * arm),
-    })
-  }
-
-  return dots
+    },
+  ]
 }
 
 /**

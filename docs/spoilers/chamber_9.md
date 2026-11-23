@@ -25,11 +25,11 @@ y0  ■ ■ ■ ■ ■
 
 `■` steel, `S` the subject's start (1, 1), facing right, `s` the switch (3, 1), linked to the box, `a` the box's start (3, 3), where nothing is drawn until the switch brings it in, `o` the button (1, 3), linked to the door, `D` the door (2, 5) (linked, so it starts closed), `E` the exit (2, 6) (open).
 
-The switch's antline runs straight up from the switch, (3, 1), (3, 3), and ends on the bare tile. The button's: (1, 3), (1, 4), (2, 4), (2, 5), into the door from below.
+One antline, the button's: (1, 3), (1, 4), (2, 4), (2, 5), into the door from below. The switch has none to the box, since 2026-11-23: the box appearing on its start tile the moment the switch is used shows the link (guideline 96; Variants tried).
 
 ## Idea
 
-The room holds no box until the switch brings one in where its antline ends, and that box then goes onto the button like any other.
+The room holds no box until the switch brings one in on a bare floor tile, and that box then goes onto the button like any other.
 
 From the idea pool, where it was sketched as a plant of chamber 4.3 (guideline 51):
 
@@ -38,20 +38,20 @@ From the idea pool, where it was sketched as a plant of chamber 4.3 (guideline 5
 Built, the sketch holds, with these changes:
 
 - **Upright.** The door and the exit are at the top and the room is taller than it is wide, so it doesn't look like chamber 1.3's wide room, whose route it shares (the sketch's risk).
-- **The switch's line is one straight column**, two tiles up from the switch to the box's start, so the subject on the switch, turning up, looks along the line at where the box gathers.
+- **No line from the switch**, since 2026-11-23. As built and played, the sketch's line from the switch to the box's start ran as one straight column, two tiles up, so the subject on the switch, turning up, looked along it at where the box gathers; the author removed it, since the box appearing there the moment the switch is used shows players the link (guideline 96; Variants tried).
 - **The box's start is off the switch's neighbours**: a box appearing right in front of the subject standing on the switch invites interact there, which uses the switch again rather than picking the box up (guideline 80's refusal, in another form).
 - **The start is two tiles from the switch, facing it, in the bottom row**, where chamber 4.1's start is beside its switch in its room's lower row, under the room's top row, so the two chambers don't open alike.
 
 ## Purpose
 
-Teaching: the box that starts absent (decision 12 of `todo/campaign.md`), its first contact forced, safe and unambiguous (guideline 24): no box exists until the switch is used, so every route uses it, and the box is then carried like any other. Its plant for chamber 4.3: a switch linked to a box puts it on its start tile, the tile its antline ends on. It may also leave the belief that a switch makes boxes, which walks players into 4.3's trap (guideline 27, used there).
+Teaching: the box that starts absent (decision 12 of `todo/campaign.md`), its first contact forced, safe and unambiguous (guideline 24): no box exists until the switch is used, so every route uses it, and the box is then carried like any other. Its plant for chamber 4.3: a switch linked to a box puts it on its start tile. It may also leave the belief that a switch makes boxes, which walks players into 4.3's trap (guideline 27, used there).
 
 Flow: no hard step.
 
 ## Intended route
 
 1. Walk right twice, onto the switch.
-2. Interact: the box takes shape on (3, 3) from gathering pieces, where the line ends, with the sound of a box sent home; the line lights.
+2. Interact: the box takes shape on (3, 3) from gathering pieces, with the sound of a box sent home.
 3. Step up to (3, 2), facing the box; interact: pick it up.
 4. Step up onto (3, 3) and left to (2, 3), facing the button; interact: the box goes down on it; the door opens and its line lights.
 5. Walk up through the door and out through the exit.
@@ -60,7 +60,7 @@ Solver: 8 moves and 0 portals, both the fewest; the state walk's fewest presses 
 
 ## Lure and where the player should get stuck
 
-A teach chamber has no lure. A button, a door and its line are in view, as in chamber 1.3, but no box anywhere: run 1's habit says find the box. Where the player may stall: looking for it, until they follow the switch's line, which ends on an empty floor tile, and use the switch, which chamber 4.1 taught. Standing on the button without a box opens the door only while the subject is there, as in 1.3.
+A teach chamber has no lure. A button, a door and its line are in view, as in chamber 1.3, but no box anywhere: run 1's habit says find the box. Where the player may stall: looking for it, until they use the switch, which chamber 4.1 taught, and the box appears on an empty floor tile in view. Standing on the button without a box opens the door only while the subject is there, as in 1.3.
 
 ## Restrictions
 
@@ -104,6 +104,7 @@ None is a dead end: every reachable state can still be finished.
 - The sketch's prototype (7 × 4, the switch in the top left corner, the box's start two tiles right of it, the button beside that): not built; its box's start beside the button left a carry of one step.
 - B: the same upright room with the switch in the bottom left corner and the start beside it, facing it, the box's start reached by a line along the second row (585 states, none dead, 7 moves). Not kept: it opened exactly as chamber 4.1 does.
 - C, kept: the start two tiles from the switch.
+- The switch's antline, as kept and played: (3, 1), (3, 3), straight up from the switch to the box's start, the bare tile, lit once the switch was used. Removed 2026-11-23, the author's call: players see that the switch brings the box in there, since the box appears on that tile the moment the switch is used, so a switch that brings in a box that starts absent now gets no line (guideline 96, convention 3). The button's line is unchanged. The chamber's hash leaves its antlines out, so the recorded solution stands, and nothing about play changed.
 
 ## Checks
 
@@ -111,10 +112,10 @@ None is a dead end: every reachable state can still be finished.
 - The copy with the switch and its box removed: unsolvable from `--baseline` and `--par`.
 - Every reachable state (585, one completed) explored through the rules' step: each can still be finished, and none breaks a fact above. With every turn action refused: 426 states, completed in 11 presses.
 - `npm run chamber:check` passes.
-- Played through in the real game (headless Chrome with a throwaway profile, the dev server on a port of its own): the switch, the box gathering on (3, 3) at the end of its lit line, the pickup, the put-down on the button, the door opening and the walk out, completing the chamber with no console error.
+- Played through in the real game (headless Chrome with a throwaway profile, the dev server on a port of its own): the switch, the box gathering on (3, 3) at the end of its lit line (the line since removed: Variants tried), the pickup, the put-down on the button, the door opening and the walk out, completing the chamber with no console error.
 - An independent check (a fresh agent with only the file and the plan's entry, no notes) found no shortcut, no dead end and no `Must` breached: its own walk found 585 states (426 without the turn key), none unfinishable, the box never under the subject, 8 moves and 0 portals, every completion with the box on the button, and the copy without the switch and its box unsolvable from both searches. Both halves of the lesson are forced, and the combine's move isn't rehearsed: no route uses the switch on a box resting on the button, though a curious player can. Its judgment calls:
   - Refusals that could look like bugs: interact on the switch while carrying (wrong try 5), and a put-down facing the switch from (2, 1) or (3, 2). None lies between the box and the button. Accepted.
-  - Where the switch's line seems to end: a line stops a sixth of a tile short of its element's tile and the switch hides its start, so before the box exists it shows as a short stub over (3, 2), pointing at the bare tile, and could be read as ending on (3, 2). Seen in the game, it points at (3, 3), and the box then gathers there in view (guideline 70), which settles it; chamber 4.3's line ends under a box already resting there. Accepted, to watch in the author's play.
+  - Where the switch's line seems to end: a line stops a sixth of a tile short of its element's tile and the switch hides its start, so before the box exists it shows as a short stub over (3, 2), pointing at the bare tile, and could be read as ending on (3, 2). Seen in the game, it points at (3, 3), and the box then gathers there in view (guideline 70), which settles it; chamber 4.3's line ends under a box already resting there. Accepted, to watch in the author's play. Moot since 2026-11-23, when the line was removed (Variants tried).
   - It reads close to chamber 1.3 (guideline 113): after one use of a switch, the route is 1.3's, only the box appearing being new. Acceptable for a teach (guideline 24); the sketch named the same risk.
   - Its opening was close to chamber 4.1's mirrored; since then 4.1 was turned upside down (its notes, variant C), so the two open differently.
 
