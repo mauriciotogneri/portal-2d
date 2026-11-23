@@ -17,6 +17,8 @@ Touch-first devices (`pointer: coarse`) get the desktop-only notice instead of t
 
 The home screen has no game running, so the menu reads the keys itself (`event.key`, so the numpad's arrows follow it even with NumLock off). The first column holds the sections: Play, Settings and About, after Playground in development. Opening a section shows its rows in a second column, and the highlighted row's map, pages or changelog in a third.
 
+Play lists only the chambers the player has reached: from Chamber 1 up to the one after the furthest chamber completed, so a first visit (or one after Reset progress) lists Chamber 1 alone, each completion of the furthest adds the next, and completing the last lists them all. A chamber completed past a gap (one skipped through its address, or a chamber remade under a new id) keeps every chamber before it listed. The list shows no row or hint for the chambers not yet listed (the chamber sign still counts them all, as in "03/10"), and their addresses still open them. The list follows the progress as it changes, another tab's included: when it shortens, a highlight past its end moves to the first chamber not yet completed. Development builds list by the same rule.
+
 Getting around:
 
 - Up and Down move the highlight within the column that has the keyboard, wrapping around; in the first column they change nothing else.
@@ -30,7 +32,7 @@ Getting around:
 
 Arriving:
 
-- The first arrival shows only the sections, with Play highlighted and focused but not open; back from a chamber, Play is open with that chamber highlighted and focused.
+- The first arrival shows only the sections, with Play highlighted and focused but not open; back from a chamber, Play is open with that chamber highlighted and focused, or the first chamber not yet completed when Play doesn't list it (opened by its address).
 - Opening Play highlights the first chamber not yet completed, or the first chamber when all are.
 - In development the first column starts with Playground, a section like Play: Right, Enter, Space or a click opens it and steps into its rows, Playground 1 to 12, on the one highlighted last (Playground 1 at first), with the highlighted one's map in the third column. The first arrival highlights and focuses Playground instead of Play, with nothing open, and back from a playground chamber, Playground is open with that chamber highlighted and focused. Production builds have no Playground row: back from a playground chamber, reached by its address, the menu is as on the first arrival.
 

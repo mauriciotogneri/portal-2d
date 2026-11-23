@@ -5,7 +5,9 @@
  * nothing else. Opening a section with Enter, Right or a click shows its
  * chambers, settings or About rows in the second column, starting level with
  * the section's row, Play's on the first chamber not yet completed (the first
- * chamber when all are); Play's and Playground's rows scroll on their own, so
+ * chamber when all are). Play lists the chambers from the first up to the one
+ * after the furthest completed, so a first visit lists Chamber 1 alone and
+ * each completion adds the next; Play's and Playground's rows scroll on their own, so
  * the logo, the sections and the map stay put. Until any chamber has been opened on this device, Enter
  * or a click on Play starts the tutorial instead, and only Right opens its
  * list. The third column follows the highlight there: Play shows the
@@ -29,7 +31,7 @@
  * show no best time and no figure. Production builds leave the row out, so
  * their playground chambers are reached only by their addresses.
  */
-import {computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useTemplateRef} from 'vue'
+import {computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useTemplateRef, watch} from 'vue'
 import {useRouter} from 'vue-router'
 import ChamberMap from '@/components/chamber_map.vue'
 import ChamberRow from '@/components/chamber_row.vue'
@@ -196,8 +198,20 @@ const menuId = useId()
 const itemColumnId = `${menuId}-items`
 const detailColumnId = `${menuId}-details`
 
+// The chambers Play lists: the first up to the one after the furthest completed, so all of them once
+// the last is; a gap (a chamber skipped through its address, or remade under a new id) never hides
+// one already completed
+const availableChambers = computed(() => {
+  const furthestCompleted = CHAMBERS.reduce((furthest, chamber, index) => (isCompleted(chamber) ? index : furthest), -1)
+  return CHAMBERS.slice(0, furthestCompleted + 2)
+})
+// The chamber Play highlights as it opens: the first one not yet completed, or the first when all
+// are; always among the chambers Play lists
+const nextChamberIndex = computed(() => Math.max(CHAMBERS.findIndex((chamber) => !isCompleted(chamber)), 0))
+
 // Back from a chamber, Play (or in development Playground, back from a playground chamber) is
-// open with that chamber highlighted and the keyboard in the second column; on the first arrival,
+// open with that chamber highlighted, or with the first not yet completed when Play doesn't list
+// it (opened by its address), and the keyboard in the second column; on the first arrival,
 // and in production builds back from a playground chamber, reached only by its address, only the
 // sections show, with Play highlighted and nothing open, or Playground in development
 const remembered = lastChamber()
@@ -208,7 +222,7 @@ const returningSection = findReturningSection()
 const highlightedSection = ref<MenuSection>(returningSection ?? (import.meta.env.DEV ? 'playground' : 'play'))
 const openSection = ref<MenuSection | null>(returningSection)
 const activeColumn = ref<MenuColumn>(returningSection === null ? 'sections' : 'items')
-const highlightedChamber = ref(Math.max(rememberedChamber, 0))
+const highlightedChamber = ref(rememberedChamber !== -1 && rememberedChamber < availableChambers.value.length ? rememberedChamber : nextChamberIndex.value)
 const highlightedPlayground = ref(Math.max(rememberedPlayground, 0)) // The playground chamber highlighted under Playground, which keeps it while closed
 const highlightedSetting = ref(0)
 const highlightedAbout = ref(0)
@@ -244,8 +258,6 @@ const highlightedItem = computed(() => {
 })
 // The chamber whose map the third column shows, under Play or Playground
 const highlightedChamberEntry = computed(() => openSection.value === 'playground' ? PLAYGROUND_CHAMBERS[highlightedPlayground.value] : CHAMBERS[highlightedChamber.value])
-// The chamber Play highlights as it opens: the first one not yet completed, or the first when all are
-const nextChamberIndex = computed(() => Math.max(CHAMBERS.findIndex((chamber) => !isCompleted(chamber)), 0))
 const highlightedAboutEntry = computed(() => ABOUT[highlightedAbout.value])
 
 const controlsShown = computed(() => openSection.value === 'settings' && highlightedSetting.value === CONTROLS_INDEX)
@@ -292,7 +304,7 @@ function layoutInUseIndex(): number {
  */
 function itemCount(): number {
   if (openSection.value === 'play') {
-    return CHAMBERS.length
+    return availableChambers.value.length
   }
   if (openSection.value === 'playground') {
     return PLAYGROUND_CHAMBERS.length
@@ -941,6 +953,21 @@ function handleKeydown(event: KeyboardEvent): void {
   }
 }
 
+// Progress reset in another tab shortens Play's list: a highlight past its end moves to the first
+// chamber not yet completed, taking the keyboard there while Play's rows have it, since the
+// focused row is gone
+watch(() => availableChambers.value.length, (length) => {
+  if (highlightedChamber.value < length) {
+    return
+  }
+  highlightedChamber.value = nextChamberIndex.value
+  if (openSection.value === 'play' && activeColumn.value === 'items') {
+    void nextTick(() => {
+      focusItem(highlightedChamber.value, false)
+    })
+  }
+})
+
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
   playMusic('menu')
@@ -1018,7 +1045,7 @@ onBeforeUnmount(() => {
           <!-- A chamber list scrolls on its own, so the logo, the sections and the map stay put -->
           <ChamberScroller v-if="chamberListOpen" ref="chamberScroller" :active="activeColumn === 'items'">
             <ol v-if="openSection === 'play'" class="home-row-list">
-              <li v-for="(chamber, index) in CHAMBERS" :key="chamber.number">
+              <li v-for="(chamber, index) in availableChambers" :key="chamber.number">
                 <ChamberRow
                   list="campaign"
                   :chamber="chamber"
