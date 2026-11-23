@@ -125,7 +125,7 @@ Only Restart chamber gets the player out (guideline 76).
 
 - **Frozen on an arrow:** the subject stands on an arrow, which lets it move only its own way, and that way is shut: a wall without a portal it can cross, an arrow pointing back, or a door, ditch, laser or light barrier that is blocked, often because stepping onto the arrow released the button holding it open, or an arrow turned under the subject to a way that is shut (guideline 77).
 - **Shut in:** the subject is in a part of the chamber it can't leave: one it entered past an arrow, or by a portal when no portal it can shoot from inside brings it out again, or the portal it came out of closed behind it (guidelines 60, 76, 77 and 78).
-- **A needed box out of reach:** a box the route still needs lies where the subject can't get to it, such as beyond a one-way passage, in a part reached only by portal, or on a start tile it was sent back to that the subject can't reach, or can't leave with the box (guidelines 63, 76 and 78).
+- **A needed box out of reach:** a box the route still needs lies where the subject can't get to it, such as beyond a one-way passage, in a part reached only by portal, past a door it was carried through by a portal, or on a start tile it was sent back to that the subject can't reach, or can't leave with the box (guidelines 63, 76, 78 and 111).
 - **A box barring the way:** a box put down, or sent back, in a one-tile passage, a doorway or on a button the route must cross, with no tile beside it left that the subject can reach and pick it up from (guideline 67).
 - **A box that can't be put down:** in a pocket, the subject carries a box it can't put down, since no tile it can face can take it (standing on a switch, on an arrow whose way faces a tile that can't take a box, or boxed in by walls and boxes), and it can't shoot while carrying one (guideline 79).
 - **Stranded by a slide:** a slide leaves the subject on a tile every way off which slides it back, or in a room whose only way out is a portal, after a fizzler on the slide's way closed the portals (guidelines 83 and 85).
@@ -188,6 +188,10 @@ Arrows are the exception: an arrow a link turns may turn under the subject. The 
 70. `Should` Nothing marks a box's start tile once the box has moved, so the player must remember it. Unless remembering is the puzzle, let the player watch the box fly home before a route depends on where it lands.
 71. `Should` A spare box adds forgiveness and is the commonest way a chamber gets broken: run the solver with and without it.
 
+<!-- Added during run 2 -->
+
+111. `Must` A portal opened past a door while it is held open stays when the door shuts, so a box can be carried past the very door it would have to hold open, and left there: once that portal moves, the box is out of reach behind the shut door, unless the subject can open a portal there again from this side, as from a button on the door's line, standing on it to hold the door itself (chamber 2.4's pocket). The first drafts of chambers 2.2 and 2.4 each had thousands of such dead states, one through the window's own portal, one through a face beside the door's far side. Wherever a portal can open past a door, on the door's line or on a face a shot reaches from beyond it, give each part past the door that the subject can't reach again that way no tile a box can go down on, or no face that takes a portal, and check it with a walk of every state.
+
 ### Portals
 
 72. `Must` Some wall sides never take a portal: those facing a door or the exit, those behind the end plate of a run of lasers or light barriers, those behind a fizzler's connectors, every face of an emitter or a receiver, and, on a wall tile that already holds a portal, every side but the opposite one. Don't plan a route that needs one. Which walls a fizzler's connectors face is decided by what lies beside it (`docs/elements.md`, shooting), so placing a wall, a door, a ditch, a light barrier or another fizzler next to one can turn it, and with it which walls refuse portals: check the connectors in the game after changing a fizzler's surroundings.
@@ -235,6 +239,10 @@ Arrows are the exception: an arrow a link turns may turn under the subject. The 
 
 96. `Should` Draw an antline from each button, switch or receiver to what it links, so the player learns how links work: the player shouldn't have to step on a button to learn what it does, and a link found without an antline must be remembered for the rest of the chamber, which is noise unless remembering is the puzzle. Leave one out only where finding the link is meant to be the puzzle, and never for an element several of them link (guideline 62). A line lights while its own button, switch or receiver is active, not when the element opens, so the unlit lines to an element still shut show what is left to do.
 97. `Should` Turn an antline on the floor, or on a wall tile inside a wall, not on a wall tile at a wall's edge. A line crossing a plain wall shows on its top, but a turn there leaves out the dot of each arm that ends at the wall's bevel, and a turn on a lone wall tile keeps only its middle dot, so the turn is hard to follow (`docs/sprites.md`, antlines).
+
+<!-- Added during run 2 -->
+
+112. `Should` An antline runs under every element, so a box resting on it, or an open ditch along it, hides that stretch: keep box starts off a line, and check in the game where the line seems to end. The first draft of chamber 2.2 ran its line under the box and then under the ditch in front of the door, so it seemed to link the button to the box.
 
 ### The exit
 

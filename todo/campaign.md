@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 4, step 4.1: Chamber 2.1, not started
+Status: In progress. Now: phase 4, steps 4.1 to 4.4: Chambers 2.1 to 2.4 designed, waiting for the author's cold play
 Last revised: 2026-11-23
 
 ## Goal
@@ -74,10 +74,10 @@ Cut from five chambers to four on 2026-11-22, with the author: walls alone can't
 
 Detailed 2026-11-23 (`docs/campaign.md`, "Run 2 in detail"): four chambers, with the combine sketched first in the idea pool. Every put-down and every shot a route needs works without the turn key, which run 3 teaches (guideline 66).
 
-- [ ] **4.1 Chamber 2.1** (test: where the subject comes out of a portal).
-- [ ] **4.2 Chamber 2.2** (twist: what an open door lets through).
-- [ ] **4.3 Chamber 2.3** (twist: a box in front of a portal).
-- [ ] **4.4 Chamber 2.4** (combine).
+- [ ] **4.1 Chamber 2.1** (test: where the subject comes out of a portal). Designed 2026-11-23, id 5, address `/chamber/5`; checked (guidelines 100–104, a fresh reviewer); waiting for the author's cold play. Its plan entry no longer lists steel, which it doesn't need.
+- [ ] **4.2 Chamber 2.2** (twist: what an open door lets through). Designed 2026-11-23, id 6, address `/chamber/6`; checked; waiting for the author's cold play. One half of its plan entry isn't met: its notes say which, for the author to decide after playing.
+- [ ] **4.3 Chamber 2.3** (twist: a box in front of a portal). Designed 2026-11-23, id 7, address `/chamber/7`; checked; waiting for the author's cold play.
+- [ ] **4.4 Chamber 2.4** (combine). Designed 2026-11-23, id 8, address `/chamber/8`; checked; waiting for the author's cold play. Exceptionally, 2.1 to 2.4 were all designed before the author played any (the author's call, 2026-11-23, as for 1.3 and 1.4), so a lesson one of them teaches can't yet reach the next; two handbook guidelines came out of the drafts, 111 and 112. Once their solutions are recorded, `docs/solver.md` ("The key") names Chambers 1 to 8.
 - [ ] **4.5 Friends play run 2 cold.** Note each friend's route, or their analytics counts, in each chamber's notes (guideline 105).
 - [ ] **4.6 Detail run 3** in the outline, its combine chamber sketched first.
 
