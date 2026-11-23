@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-23, waiting for the author's cold play. File: `src/chambers/chamber_6.json`, sixth in the play order; permanent id 6. Designed together with chamber 3.2 (id 7), both before the author played either (the author's call, 2026-11-23, as for 1.3 and 1.4).
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_6.json`, sixth in the play order; permanent id 6. Designed together with chamber 3.2 (id 7), both before the author played either (the author's call, 2026-11-23, as for 1.3 and 1.4).
 
 ## Entry
 
@@ -126,3 +126,5 @@ None is a dead end: every reachable state can still be finished, there is no one
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-23 | Picked the box up, stepped right and back left, then carried it down over the button to P, turned up in place, put it down and walked out (7 moves, 0 portals; the fewest are 5 and 0). The recorded run (restarts before it, if any, aren't in it) met none of the wrong tries: not the lure's put-down from R, nor the refusals at P; the author already used the turn key (chamber 2.4), so it tests the chamber's puzzle, not its teaching (guideline 105). Recorded as `chamber_6.solution.json` (Download solution); kept |
+| 2 | Friends, cold | 2026-11-23 | Played it with chamber 3.2 and found it ok, by the author's account. Their routes, and how many friends played, weren't recorded, so whether each found the turn key without trouble, this chamber's main risk (Checks, the independent check), can't be shown (guideline 105) |

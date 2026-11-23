@@ -40,7 +40,7 @@ The shortcuts the macro search takes, in its three modes (the reference search t
 
 `npm run solver:check` (`scripts/check_solver.ts`), part of `npm run verify`, prints a line for each chamber and each tiny chamber and fails on any of these:
 
-- **The key.** Every state along each chamber's recorded solution (only the campaign's chambers have one: today those of Chambers 1 to 5) and along 100,000 seeded random steps packs into the key and unpacks unchanged. A key that would need more than 64 bits is refused (checked on made-up counts, 2^20 tiles and wall sides, not on a chamber).
+- **The key.** Every state along each chamber's recorded solution (only the campaign's chambers have one: today those of Chambers 1 to 7) and along 100,000 seeded random steps packs into the key and unpacks unchanged. A key that would need more than 64 bits is refused (checked on made-up counts, 2^20 tiles and wall sides, not on a chamber).
 - **The shortcuts against the rules' step.** From every state along the recorded solutions and every state the reference search finds on the tiny chambers, with the ways and canonical facings for each state's blocked flags:
   - each walk the walk graph allows gives the state the solver builds, and no move it leaves out (one into a resting box among them) lands on the plain tile next to the subject;
   - each turn gives the state the solver builds for that facing, or changes nothing where the subject may not move that way (on an arrow, any way but the one it points);

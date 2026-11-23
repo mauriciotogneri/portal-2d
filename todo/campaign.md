@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 5, steps 5.1 and 5.2: chambers 3.1 and 3.2 built, waiting for the author's cold play
+Status: In progress. Now: phase 5, step 5.4: detail run 4
 Last revised: 2026-11-23
 
 ## Goal
@@ -85,9 +85,9 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 2 in detail"): four chambers, with
 
 Detailed 2026-11-23 (`docs/campaign.md`, "Run 3 in detail"): a teach and a combine, the combine sketched first in the idea pool. From 3.2 on, a route may need the turn key, which 3.1 teaches. Both were designed before the author played either (the author's call, 2026-11-23, as for 1.3 and 1.4), taking ids 6 and 7; the next chamber takes id 8.
 
-- [ ] **5.1 Chamber 3.1** (teach: turning in place). Built 2026-11-23 (id 6, `/chamber/6`), checked and in the play order; waiting for the author's cold play.
-- [ ] **5.2 Chamber 3.2** (combine: a door several buttons link, two boxes). Built 2026-11-23 (id 7, `/chamber/7`), checked and in the play order; waiting for the author's cold play, after 3.1's.
-- [ ] **5.3 Friends play run 3 cold.**
+- [x] **5.1 Chamber 3.1** (teach: turning in place). Kept by the author and recorded from their cold play, 2026-11-23; id 6. Their run turned in place at once and met none of the wrong tries; since the author already used the turn key, whether players find it is for step 5.3 to show (`docs/spoilers/chamber_6.md`, Playtests and Checks).
+- [x] **5.2 Chamber 3.2** (combine: a door several buttons link, two boxes). Kept by the author and recorded from their cold play, 2026-11-23; id 7. Their run was the intended route with the boxes' order swapped (`docs/spoilers/chamber_7.md`, Playtests).
+- [x] **5.3 Friends play run 3 cold.** Friends played chambers 3.1 and 3.2 (`/chamber/6` and `/chamber/7`) cold, 2026-11-23, and found them ok, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 3 is finished (assumption 6).
 - [ ] **5.4 Detail run 4** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 4).
 
 ### Later runs

@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-23, waiting for the author's cold play, after chamber 3.1's. File: `src/chambers/chamber_7.json`, seventh in the play order; permanent id 7. Designed together with chamber 3.1 (id 6), both before the author played either (the author's call, 2026-11-23, as for 1.3 and 1.4).
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_7.json`, seventh in the play order; permanent id 7. Designed together with chamber 3.1 (id 6), both before the author played either (the author's call, 2026-11-23, as for 1.3 and 1.4).
 
 ## Entry
 
@@ -133,3 +133,5 @@ None is a dead end: every reachable state can still be finished. A box in the co
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-23 | Played after chamber 3.1. Took box 1 first: picked it up from (2, 1), carried it up through R and over both buttons, and put it down on T from F; fetched box 0 from (2, 3), walked back onto F, turned left and put it on N (the door opened), picked box 1 up from T, stepped onto T, turned and put it on F, and walked out (14 moves, 0 portals; the fewest are 12 and 0). The intended route with the boxes' order swapped; the recorded run (restarts before it, if any, aren't in it) met none of the wrong tries. Recorded as `chamber_7.solution.json` (Download solution); kept |
+| 2 | Friends, cold | 2026-11-23 | Played it after chamber 3.1 and found it ok, by the author's account. Their routes, and how many friends played, weren't recorded, so whether each met the parking as the catch can't be shown (guideline 105) |
