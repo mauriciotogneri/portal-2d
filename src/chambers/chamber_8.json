@@ -1,0 +1,116 @@
+{
+    "version": 2,
+    "size": {
+        "width": 7,
+        "height": 6
+    },
+    "subject": {
+        "x": 2,
+        "y": 3,
+        "direction": "LEFT"
+    },
+    "exit": {
+        "x": 6,
+        "y": 1,
+        "blocked": false
+    },
+    "walls": [
+        {
+            "x": 0,
+            "y": 4
+        },
+        {
+            "x": 3,
+            "y": 0
+        }
+    ],
+    "blockedWalls": [
+        {
+            "xFrom": 0,
+            "xTo": 6,
+            "yFrom": 5,
+            "yTo": 5
+        },
+        {
+            "xFrom": 6,
+            "xTo": 6,
+            "yFrom": 2,
+            "yTo": 4
+        },
+        {
+            "xFrom": 0,
+            "xTo": 0,
+            "yFrom": 0,
+            "yTo": 3
+        },
+        {
+            "xFrom": 1,
+            "xTo": 2,
+            "yFrom": 0,
+            "yTo": 2
+        },
+        {
+            "xFrom": 4,
+            "xTo": 6,
+            "yFrom": 0,
+            "yTo": 0
+        }
+    ],
+    "ditches": [
+        {
+            "x": 3,
+            "y": 2
+        },
+        {
+            "x": 4,
+            "y": 2
+        },
+        {
+            "x": 5,
+            "y": 2
+        }
+    ],
+    "switches": [
+        {
+            "x": 1,
+            "y": 3,
+            "links": [
+                1
+            ]
+        }
+    ],
+    "doors": [
+        {
+            "x": 5,
+            "y": 1,
+            "id": 1
+        }
+    ],
+    "antlines": [
+        {
+            "link": 1,
+            "path": [
+                {
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "x": 1,
+                    "y": 4
+                },
+                {
+                    "x": 4,
+                    "y": 4
+                },
+                {
+                    "x": 4,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 1
+                }
+            ]
+        }
+    ]
+}

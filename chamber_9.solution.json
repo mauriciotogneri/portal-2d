@@ -1,0 +1,22 @@
+{
+    "chamberHash": "fcd85dbb",
+    "actions": [
+        "right",
+        "right",
+        "interact",
+        "up",
+        "interact",
+        "up",
+        "left",
+        "interact",
+        "up",
+        "up",
+        "up"
+    ],
+    "expected": {
+        "completed": true,
+        "moves": 8,
+        "portals": 0,
+        "finalHash": "271204f8"
+    }
+}
