@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 5, step 5.4: detail run 4
+Status: In progress. Now: phase 6, step 6.1: chamber 4.1
 Last revised: 2026-11-23
 
 ## Goal
@@ -9,7 +9,7 @@ Build the campaign's chambers, one run at a time, each designed with the handboo
 
 ## Decisions
 
-Settled with the author on 2026-11-22, before any chamber was designed.
+Settled with the author on 2026-11-22, before any chamber was designed, but decision 12, added on 2026-11-23.
 
 | #   | Decision                                                                                                                                                                              |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -89,7 +89,17 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 3 in detail"): a teach and a combi
 - [x] **5.1 Chamber 3.1** (teach: turning in place). Kept by the author and recorded from their cold play, 2026-11-23; id 6. Their run turned in place at once and met none of the wrong tries; since the author already used the turn key, whether players find it is for step 5.3 to show (`docs/spoilers/chamber_6.md`, Playtests and Checks).
 - [x] **5.2 Chamber 3.2** (combine: a door several buttons link, two boxes). Kept by the author and recorded from their cold play, 2026-11-23; id 7. Their run was the intended route with the boxes' order swapped (`docs/spoilers/chamber_7.md`, Playtests).
 - [x] **5.3 Friends play run 3 cold.** Friends played chambers 3.1 and 3.2 (`/chamber/6` and `/chamber/7`) cold, 2026-11-23, and found them ok, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 3 is finished (assumption 6).
-- [ ] **5.4 Detail run 4** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 4).
+- [x] **5.4 Detail run 4** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 4). Drafted 2026-11-23 from a proposal two fresh reviewers checked against the handbook, and approved by the author the same day: three chambers (two teaches and a combine), in `docs/campaign.md` ("Run 4 in detail"), the combine's sketch and both teaches', each checked with a throwaway prototype, in the idea pool. While it was detailed the author added the box that starts absent to the rules (decision 12), built, pinned by fixtures and placed in Playground 1 the same day, and 4.2 became its teach in place of a show chamber. Carried forward: a box sent home from elsewhere (to run 5 at the latest), a used switch acting again, and the portal just come out of forced to move by a box in front of it.
+
+### Phase 6 — Run 4: switches
+
+Detailed 2026-11-23 (`docs/campaign.md`, "Run 4 in detail"): two teaches and a combine, the combine sketched first in the idea pool. All three are designed before the author plays any (the author's call, 2026-11-23, as for runs 2 and 3), taking ids 8, 9 and 10; the next chamber after them takes id 11.
+
+- [ ] **6.1 Chamber 4.1** (teach: the switch). Its sketch's prototype has the combine's shape, so its design keeps it from rehearsing 4.3 (guideline 47), or drops the portal crossing.
+- [ ] **6.2 Chamber 4.2** (teach: the box that starts absent).
+- [ ] **6.3 Chamber 4.3** (combine: a door a switch and a button link, one box for two buttons in turn). Its sketch can be finished by a route made of runs 2 and 3's moves (guideline 113): close it, re-walked, or name it in its notes for the author's cold play (the author's call, 2026-11-23); its sketch also lists a colour slip that breaks guideline 78, to break on purpose or close.
+- [ ] **6.4 Friends play run 4 cold.**
+- [ ] **6.5 Detail run 5** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 5), forcing a box sent home from elsewhere before any chamber relies on it (guideline 28).
 
 ### Later runs
 
