@@ -95,3 +95,4 @@ None is a dead end: there is no box, link, arrow or anything one-way, and portal
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
 | 1 | The author, cold | 2026-11-22 | The intended route with no wasted press: up to the middle row, right to the ditch, orange across, back left, blue on the near wall, through, then to the exit (8 moves, 2 portals). No shot missed, so they never shot steel: the case the lure section says can't be forced. Recorded as `chamber_1.solution.json`; kept |
+| 2 | A friend, cold | 2026-11-23 | Played it through with the rest of run 1 and was fine with it: nothing confused them, by the author's account. Their route wasn't recorded |

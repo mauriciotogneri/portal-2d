@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 3, step 3.6: friends play run 1 cold; step 3.8, drafted ahead of 3.6 and 3.7, waiting for the author's review
+Status: In progress. Now: phase 3, step 3.7: revise the handbook with what run 1 taught; step 3.8, drafted ahead of 3.6 and 3.7, waiting for the author's review
 Last revised: 2026-11-23
 
 ## Goal
@@ -66,7 +66,7 @@ Cut from five chambers to four on 2026-11-22, with the author: walls alone can't
 - [x] **3.3 Chamber 1.3** (teach: button and door). Kept by the author and recorded from their cold play, 2026-11-23; id 3. Exceptionally, 1.3 and 1.4 were both designed before the author played either (the author's call, 2026-11-23).
 - [x] **3.4 Chamber 1.4** (combine). Kept by the author and recorded from their cold play, 2026-11-23; id 4. Their run put the box down before shooting, so it never met the portal keys refused while a box is carried: watch for that in step 3.6 (`docs/spoilers/chamber_4.md`, Playtests).
 - [x] **3.5 Retire today's tutorial.** Done with 3.1, 2026-11-22: today's tutorial is Playground 12, chamber 1.1 took its id 1, and the stored progress was reset (version 4). First-visit Play starts id 1, now chamber 1.1, so it needed no change; checked with empty progress.
-- [ ] **3.6 Friends play run 1 cold.** Note what confused them in each chamber's notes.
+- [x] **3.6 Friends play run 1 cold.** A friend played run 1 cold, 2026-11-23, and was fine with every chamber: nothing confused them, by the author's account, and their routes weren't recorded. Noted in each chamber's notes. With this, run 1 is finished (assumption 6).
 - [ ] **3.7 Revise the handbook** with what run 1 taught (decision 10).
 - [ ] **3.8 Detail run 2** in the outline, its combine chamber sketched first. Drafted 2026-11-23, ahead of 3.6 and 3.7 at the author's request: the proposal is `run_2_detail.md` at the repo root, waiting for the author's review, and its combine sketch is in the idea pool. Once approved, its section moves into `docs/campaign.md` and the file goes.
 
