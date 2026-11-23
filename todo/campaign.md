@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 3, step 3.7: revise the handbook with what run 1 taught; step 3.8, drafted ahead and its questions settled, to be rechecked after 3.7
+Status: In progress. Now: phase 3, step 3.8: recheck the run 2 draft against the revised handbook, then move it into the outline
 Last revised: 2026-11-23
 
 ## Goal
@@ -39,7 +39,7 @@ And the assumptions that follow from them:
 ## Workflow for each chamber
 
 1. Design it from its entry in the outline and the handbook, trying several variants privately; write its notes (guideline 52).
-2. Check it: guidelines 100–104 (loading it and the solver, the key move check, the forbidden facts, the near misses); the chamber check itself refuses a chamber file the play order doesn't list, so it runs in step 3.
+2. Check it: guidelines 100–104 (loading it and the solver, the key move check, the forbidden facts, the near misses), then a fresh reviewer (guideline 110); the chamber check itself refuses a chamber file the play order doesn't list, so it runs in step 3.
 3. Add it to the campaign list, at its place in the play order, run `npm run chamber:check`, and hand the author its address only. Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
 4. The author plays it cold in `npm run dev`, then reads its notes and decides: keep, tweak or redo.
 5. On keep: the author's play becomes its recorded solution (Download solution); the chamber goes live at the next deploy.
@@ -67,7 +67,7 @@ Cut from five chambers to four on 2026-11-22, with the author: walls alone can't
 - [x] **3.4 Chamber 1.4** (combine). Kept by the author and recorded from their cold play, 2026-11-23; id 4. Their run put the box down before shooting, so it never met the portal keys refused while a box is carried: watch for that in step 3.6 (`docs/spoilers/chamber_4.md`, Playtests).
 - [x] **3.5 Retire today's tutorial.** Done with 3.1, 2026-11-22: today's tutorial is Playground 12, chamber 1.1 took its id 1, and the stored progress was reset (version 4). First-visit Play starts id 1, now chamber 1.1, so it needed no change; checked with empty progress.
 - [x] **3.6 Friends play run 1 cold.** A friend played run 1 cold, 2026-11-23, and was fine with every chamber: nothing confused them, by the author's account, and their routes weren't recorded. Noted in each chamber's notes. With this, run 1 is finished (assumption 6).
-- [ ] **3.7 Revise the handbook** with what run 1 taught (decision 10).
+- [x] **3.7 Revise the handbook** with what run 1 taught (decision 10). Done 2026-11-23 from a proposal the author approved: 20 changes, among them three new guidelines, 108 to 110 (teach only what every route forces; force which portal moves; a fresh reviewer checks each draft), with today's numbers kept for good and the handbook 3% longer.
 - [ ] **3.8 Detail run 2** in the outline, its combine chamber sketched first. Drafted 2026-11-23, ahead of 3.6 and 3.7 at the author's request: the proposal is `run_2_detail.md` at the repo root, waiting for the author's review, and its combine sketch is in the idea pool. Once approved, its section moves into `docs/campaign.md` and the file goes.
 
 ### Later runs
