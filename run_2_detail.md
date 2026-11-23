@@ -1,6 +1,6 @@
 # Run 2 detail (proposal)
 
-A proposal for "Run 2 in detail" in `docs/campaign.md` (step 3.8 of `todo/campaign.md`), drafted 2026-11-23, ahead of steps 3.6 (friends play run 1) and 3.7 (the handbook revision), and before the author has played chambers 1.3 and 1.4. Once approved, its section moves into `docs/campaign.md` and this file goes. Like the outline, it names each chamber's part, elements and teaching goal, never its key move, layout or route. The combine was sketched first (guideline 51); its sketch, with what the earlier chambers must plant, is in the idea pool (`docs/spoilers/ideas.md`, "Sketched for a run"), to read only after playing it.
+A proposal for "Run 2 in detail" in `docs/campaign.md` (step 3.8 of `todo/campaign.md`), drafted 2026-11-23, ahead of steps 3.6 (friends play run 1) and 3.7 (the handbook revision), and before the author had played chambers 1.3 and 1.4; its open questions were settled on 2026-11-23 (Decisions). Once approved, its section moves into `docs/campaign.md` and this file goes. Like the outline, it names each chamber's part, elements and teaching goal, never its key move, layout or route. The combine was sketched first (guideline 51); its sketch, with what the earlier chambers must plant, is in the idea pool (`docs/spoilers/ideas.md`, "Sketched for a run"), to read only after playing it.
 
 ## The proposed section
 
@@ -45,7 +45,7 @@ Each of the outline's consequences, and where it is taught:
 | #   | Consequence                                                                                       | Chamber    | Note                                                                     |
 | --- | ------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------ |
 | 1   | A shot moves only its own colour's portal, so either end can be moved, the one just come out of too | 2.3        | 2.1 only offers it, as walls alone can                                    |
-| 2   | Either portal can be the way in (chamber 1.2's playtest)                                           | 2.4        | 1.4 may meet it first; its notes say, after you play it                   |
+| 2   | Either portal can be the way in (chamber 1.2's playtest)                                           | 2.4        | 1.4 already forces it in every route (decision 2)                         |
 | 3   | The subject comes out of a portal facing away from its wall                                        | 2.1        | With where it comes out, and when it can't                                |
 | 4   | The walls that never take a portal, such as those facing a door                                    | 2.2        | Shown where nothing is at stake; no run 2 chamber relies on it (guideline 75) |
 | 5   | What an open door lets through                                                                     | 2.2 and 2.4 | Shots in 2.2; that a door shutting closes no portal in 2.4               |
@@ -55,7 +55,7 @@ The order: 2.1 brings back portals alone after 1.4's box; 2.2 is the run's easy 
 
 Left out or merged:
 
-- A fifth chamber, a twist from the idea pool that teaches the combine's key move on its own: left out, so the combine keeps an aha of its own instead of repeating one (guideline 47). Open question 1.
+- A fifth chamber, a twist from the idea pool that teaches the combine's key move on its own: left out, so the combine keeps an aha of its own instead of repeating one (guideline 47). Decision 1.
 - A wall tile holding a portal refuses the other colour on its two neighbouring sides too (guideline 72): it looks like a bug, so no run 2 chamber lets it matter (guideline 9).
 - Two portals facing one tile turn the subject in place: a one-off before the turn key arrives (guideline 6).
 - Coming out of a portal facing a tile, to put the box down there without the turn key: a convenience in routes, never a key move, since a player who reads the controls legend just turns (guideline 38).
@@ -63,20 +63,17 @@ Left out or merged:
 - A box taking away the tile it rests on as a place to shoot from: it rarely bites, since the subject can shoot every face it can walk into from the tile in front of it; run 3's "a box bars the tile it rests on" covers it.
 - Shots leaving through an open door or exit in the chamber's edge: met in run 1.
 
-## Open questions
+## Decisions
 
-| #   | Question                                                                                                                                                                     | Recommendation                                                                                                                                                 |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Four chambers or five? A fifth, a twist teaching the combine's key move on its own, would make the combine gentler, but would rehearse its answer and leave it no aha of its own (guideline 47) | Four. If you'd rather have five, the fifth goes between 2.2 and 2.3; the sketch says what that changes                                                         |
-| 2   | Chamber 1.2's lesson, either portal as the way in, may already be met in 1.4: its notes say whether, to read after your play                                                 | If 1.4 meets it and you keep it, leave run 2 as is; if a redo of 1.4 loses it, make 2.3 force it too, still four chambers                                      |
-| 3   | The walls facing a door are shown in 2.2, but no run 2 chamber relies on them                                                                                                | Keep it so (guideline 75): runs 5 and 6 bring the same rule for end plates and connectors, where a chamber can make it matter                                  |
-| 4   | The combine's entry names the one fact it rests on, as 1.4's did                                                                                                              | Keep it, as run 1's model does; the alternative is "Nothing new: run 2 together"                                                                               |
-| 5   | Steps 3.6 and 3.7 come after this draft: friends' play of run 1 and the handbook revision may change what run 2 can assume                                                     | Recheck this proposal against the revised handbook, and against what friends found hard, before it moves into `docs/campaign.md`                              |
+Settled with the author on 2026-11-23, after their play of chambers 1.3 and 1.4 (both kept as designed) and a friend's cold play of run 1 (nothing confused them).
 
-What depends on your play of 1.3 and 1.4:
-
-- 2.2 and 2.4 lean on 1.3's button and door, and 2.3 and 2.4 on 1.4's box carried through portals: a redo of either changes what those chambers can assume, and may move a lesson between them.
-- Anything run 2 teaches that you already met in 1.3 or 1.4 lets that chamber be shorter; the wrong tries in their notes list what each can show early.
+| #   | Question                                                                                                  | Decision                                                                                                                                  |
+| --- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Four chambers or five, a fifth being a twist that teaches the combine's key move on its own                 | Four: the combine keeps an aha of its own (guideline 47)                                                                                  |
+| 2   | Is chamber 1.2's lesson, either portal as the way in, already met in 1.4?                                   | Yes: 1.4's single-face ledge forces both colours to serve as the way in in every route, and 1.4 was kept, so run 2 stays as it is         |
+| 3   | The walls facing a door are shown in 2.2, but no run 2 chamber relies on them                               | Keep it so: shown only; runs 5 and 6 make the same rule matter for end plates and connectors (guideline 75)                              |
+| 4   | The combine's entry names the one fact it rests on, as 1.4's did                                            | Keep it named, as run 1's table does                                                                                                      |
+| 5   | When the proposal moves into `docs/campaign.md`                                                            | After step 3.7: revise the handbook first, recheck this proposal against it, then move the section into `docs/campaign.md` and delete this file |
 
 ## Handbook lessons
 

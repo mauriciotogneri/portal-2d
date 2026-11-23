@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 3, step 3.7: revise the handbook with what run 1 taught; step 3.8, drafted ahead of 3.6 and 3.7, waiting for the author's review
+Status: In progress. Now: phase 3, step 3.7: revise the handbook with what run 1 taught; step 3.8, drafted ahead and its questions settled, to be rechecked after 3.7
 Last revised: 2026-11-23
 
 ## Goal
