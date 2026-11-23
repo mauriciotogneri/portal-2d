@@ -36,7 +36,8 @@ function turnFizzlerOn(draft: StateDraft, index: number): void {
 
 /**
  * The fizzler rule, in every pass while the subject stands in the field:
- * if it is on, both portals close and a carried box is destroyed, reporting
+ * if it is on, both portals close and a carried box is destroyed (back to
+ * its start, or absent if a link reaches it), reporting
  * carriedBoxDestroyed. Reports fizzled at most once per step, and only when
  * the subject wasn't standing in a field that was on when the step began,
  * so nothing remembers having been inside one.

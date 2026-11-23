@@ -214,8 +214,9 @@ export abstract class StateReader {
   }
 
   /**
-   * Whether a box is absent: it started so, and no link has brought it in
-   * yet. It is then on no tile and in no hands.
+   * Whether a box is absent: it started so, or was destroyed while a link
+   * reaches it, and no link has brought it in since. It is then on no tile
+   * and in no hands.
    * @param index - The box's index in the chamber's box list
    * @returns True while it is absent
    */

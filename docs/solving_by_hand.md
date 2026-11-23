@@ -229,7 +229,7 @@ Group the floor tiles into regions the subject can walk between with the scenery
 
 - **Conditional:** a linked door, ditch, laser or light barrier, open only while every link to it is held, or a linked arrow, turned only while every link to it is held. Note what holds it.
 - **One way:** an arrow, which lets the subject in its way only and never back. Several arrows in a row make a one-way corridor. A linked arrow's way, and so the edge, turns with its link.
-- **A fizzler that is on:** walkable both ways, but crossing it closes both portals and destroys a carried box. Treat it as a reset of everything the subject carries.
+- **A fizzler that is on:** walkable both ways, but crossing it closes both portals and destroys a carried box. Treat it as a reset of everything the subject carries; a box a link reaches comes back only through that link.
 - **Slide floor:** an edge from each tile and way to wherever the slide stops, which may be far away or through a portal.
 
 Name each region in plain words (the start room, the door pocket) and keep a list: its tiles, what is in it (boxes, buttons, switches), and its edges. A small pocket sealed off by lasers, as in Playground 2's top half, is a region of its own: lasers stop walking but not shots.
@@ -313,7 +313,7 @@ To show that a chamber can't be solved without an element, or that a shortcut do
 1. **Walking:** every tile on the boundary, with its arrows (one way), conditional edges and fizzlers.
 2. **Portal hops, both ways:** every row and column that crosses the boundary, with where its shot stops, and whether the face there takes a portal. Remember shots pass lasers, ditches, boxes and anything switched off, and that a fizzler or light barrier can be off at the moment of the shot.
 3. **Portals placed earlier:** a portal shot while a sightline was open, which survives until something closes it.
-4. **Boxes:** carried across, sent back to a start on the other side (destroyed, or by a switch linked to it), or holding a button on either side.
+4. **Boxes:** carried across, sent back to a start on the other side (destroyed, unless a link reaches it, which leaves it gone until that link brings it in, or by a switch linked to it), or holding a button on either side.
 5. **The subject holding a button while it shoots.**
 6. **Rays:** through portals and mirror boxes, lighting a receiver on the other side.
 7. **Links acting at a distance:** a button on one side switching an element on the other.

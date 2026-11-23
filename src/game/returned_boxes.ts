@@ -8,12 +8,13 @@ import {NO_BOX} from '@/game/rules/state_layout'
 import type {SpriteName} from '@/game/sprite_set'
 
 /**
- * A box a step sent back to its start tile: where it was last drawn, and
- * where it goes.
+ * A box a step sent back to its start tile, or destroyed and left absent:
+ * where it was last drawn, and where it goes.
  */
 export type ReturnedBox = {
   readonly index: number // Which box it is, its index in the chamber's box list, so it keeps its look as it goes
   readonly gathers: boolean // Whether it takes shape from pieces gathering at its start, having fallen into a ditch still open after the step or been brought in absent, rather than came apart where it was and flew home
+  readonly vanishes: boolean // Whether it breaks up where it was and is gone, absent until a link brings it in, a box a link reaches having been destroyed, rather than goes to its start
   readonly fromX: number // Column of its middle where it was last drawn, in tiles
   readonly fromY: number // Row of that middle, in tiles
   readonly fromSize: number // Its side there, as a share of a tile: less in the subject's hands
@@ -24,7 +25,7 @@ export type ReturnedBox = {
   readonly startY: number // Its start tile's row
 }
 
-/** What a step reports when it sends a box home: one destroyed where it lay, one destroyed in the subject's hands by a fizzler, one a link sent back, one a link brought in absent */
+/** What a step reports when it sends a box home, or destroys one a link reaches: one destroyed where it lay, one destroyed in the subject's hands by a fizzler, one a link sent back, one a link brought in absent */
 const RETURN_EVENTS: readonly GameEvent[] = [
   GameEvent.BOX_DESTROYED,
   GameEvent.CARRIED_BOX_DESTROYED,
@@ -33,7 +34,7 @@ const RETURN_EVENTS: readonly GameEvent[] = [
 ]
 
 /**
- * Whether a step reported sending any box home.
+ * Whether a step reported sending any box home, or destroying one.
  * @param events - What happened in the step
  * @returns True when it did
  */
@@ -51,7 +52,10 @@ export function sendsBoxesHome(events: readonly GameEvent[]): boolean {
  * which sends it on to its own. A box carried before the step and put down
  * on its own start wasn't sent home; one put down elsewhere and sent on
  * home in the same step goes from the tile it was put down on, the one the
- * subject faced as the step began.
+ * subject faced as the step began. A box a link reaches goes nowhere when
+ * destroyed: it breaks up where it was and is gone, the one picked up from
+ * inside an active fizzler from where it lay, and one that fell into a
+ * ditch is left to its fall.
  * @param before - The state before the step, or before this part of it
  * @param after - The state after the step, or after this part of it
  * @param events - What happened in the step, or in this part of it
@@ -79,9 +83,15 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
     const destroyedBox = destroyed.find((candidate) => candidate.index === index)
 
     if (destroyedBox !== undefined) {
+      // Gone into a ditch, it only falls
+      if (destroyedBox.vanished && destroyedBox.fell) {
+        return
+      }
+
       returned.push({
         ...box,
         gathers: destroyedBox.fell,
+        vanishes: destroyedBox.vanished,
         fromX: destroyedBox.x,
         fromY: destroyedBox.y,
         fromSize: destroyedBox.size,
@@ -94,6 +104,7 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
       returned.push({
         ...box,
         gathers: false,
+        vanishes: after.isBoxAbsent(index),
         fromX: after.subjectX + 0.5 + (ahead.dx * CARRIED_BOX_AHEAD),
         fromY: after.subjectY + 0.5 + (ahead.dy * CARRIED_BOX_AHEAD),
         fromSize: CARRIED_BOX_SIZE,
@@ -105,12 +116,24 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
         returned.push({
           ...box,
           gathers: true,
+          vanishes: false,
           fromX: start.x + 0.5,
           fromY: start.y + 0.5,
           fromSize: 1,
           fromWay: resting.way,
         })
       }
+    } else if (after.isBoxAbsent(index)) {
+      // Picked up from inside an active fizzler and destroyed at once: it breaks up where it lay
+      returned.push({
+        ...box,
+        gathers: false,
+        vanishes: true,
+        fromX: before.boxX(index) + 0.5,
+        fromY: before.boxY(index) + 0.5,
+        fromSize: 1,
+        fromWay: resting.way,
+      })
     } else {
       const isHome = (after.carriedBox !== index) && (after.boxX(index) === start.x) && (after.boxY(index) === start.y)
       // A carried box lies on the subject's tile, and is put down on the tile it faces
@@ -124,6 +147,7 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
         returned.push({
           ...box,
           gathers: false,
+          vanishes: false,
           fromX: fromX + 0.5,
           fromY: fromY + 0.5,
           fromSize: 1,

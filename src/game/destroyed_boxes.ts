@@ -20,12 +20,14 @@ export type DestroyedBox = {
   readonly way: Direction // The way its sprite was turned to face
   readonly tile: PositionData // The tile it was destroyed on
   readonly fell: boolean // Whether it fell into a ditch still open after the step, rather than broke up
+  readonly vanished: boolean // Whether it is absent after the step, until a link brings it in, a box a link reaches, rather than back at its start
 }
 
 /**
  * The boxes a step destroyed because an element was blocked where they lay
- * (boxDestroyed): each box that went back to its start from a tile holding
- * a door, a ditch, a laser, a light barrier or a fizzler, where it lay or
+ * (boxDestroyed): each box that went back to its start, or, one a link
+ * reaches, became absent, from a tile holding a door, a ditch, a laser, a
+ * light barrier or a fizzler, where it lay or
  * was put down in the step, on the tile the subject faced as the step
  * began. A box carried into a fizzler that is on is the fizzler rule's, not
  * one of these. One on a ditch falls in only while the ditch
@@ -55,9 +57,10 @@ export function findDestroyedBoxes(before: RulesState, after: RulesState, events
     const x = putDown ? before.subjectX + ahead.dx : before.boxX(index)
     const y = putDown ? before.subjectY + ahead.dy : before.boxY(index)
     const sentBack = (after.carriedBox !== index) && (after.boxX(index) === start.x) && (after.boxY(index) === start.y) && ((x !== start.x) || (y !== start.y))
+    const vanished = after.isBoxAbsent(index) && !before.isBoxAbsent(index)
     const kind = BOX_DESTROYING_KINDS.find((candidate) => chamber.elementAt(candidate, x, y) !== NO_ELEMENT)
 
-    if ((carried && !putDown) || (!sentBack) || (kind === undefined)) {
+    if ((carried && !putDown) || (!sentBack && !vanished) || (kind === undefined)) {
       return
     }
 
@@ -75,6 +78,7 @@ export function findDestroyedBoxes(before: RulesState, after: RulesState, events
         y: y,
       },
       fell: (kind === 'ditch') && after.isBlockedAt('ditch', x, y),
+      vanished: vanished,
     })
   })
 

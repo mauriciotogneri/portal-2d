@@ -48,8 +48,8 @@ export const GameEvent = {
   REFUSED: 'refused', // A shot missed or was tried while carrying a box, a portal crossing was refused, a switch was used while carrying one, or a box was put down facing a tile that can't take it
   BOX_PICKED_UP: 'boxPickedUp', // The subject picked up a box
   BOX_PUT_DOWN: 'boxPutDown', // The subject put down the box it carried
-  BOX_DESTROYED: 'boxDestroyed', // A box lying where a door closed, a ditch opened, or a laser, a light barrier or a fizzler switched on went back to its start
-  CARRIED_BOX_DESTROYED: 'carriedBoxDestroyed', // A box the subject carried into an active fizzler went back to its start
+  BOX_DESTROYED: 'boxDestroyed', // A box lying where a door closed, a ditch opened, or a laser, a light barrier or a fizzler switched on was destroyed: it went back to its start, or, linked, is absent until a link brings it in
+  CARRIED_BOX_DESTROYED: 'carriedBoxDestroyed', // A box the subject carried into an active fizzler was destroyed: it went back to its start, or, linked, is absent until a link brings it in
   BOX_SENT_BACK: 'boxSentBack', // A link sent a box lying away from its start back there
   BOX_APPEARED: 'boxAppeared', // A link brought in a box that was absent, on its start tile
   FIZZLED: 'fizzled', // The subject entered an active fizzler, closing both portals

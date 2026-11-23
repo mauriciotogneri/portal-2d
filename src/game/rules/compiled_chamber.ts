@@ -717,6 +717,30 @@ export class CompiledChamber {
   }
 
   /**
+   * Whether a button, switch or receiver links a box, directly or through a
+   * group: destroyed, such a box is absent until a link sends it home, where
+   * any other goes straight back to its start.
+   * @param index - The box's index in the chamber's box list
+   * @returns True for a linked box; false for one no link reaches, or a box the chamber doesn't have
+   */
+  isBoxLinked(index: number): boolean {
+    return this.activatorsOf({
+      kind: 'box',
+      index: index,
+    }).length > 0
+  }
+
+  /**
+   * Whether a box can ever be absent: it starts absent, or a link reaches
+   * it, so being destroyed leaves it absent.
+   * @param index - The box's index in the chamber's box list
+   * @returns True for such a box; false for any other, or a box the chamber doesn't have
+   */
+  canBeAbsent(index: number): boolean {
+    return this.startsAbsent(index) || this.isBoxLinked(index)
+  }
+
+  /**
    * What an element's links reach, groups expanded, in order, each element
    * once.
    * @param kind - The element type, a button, a switch or a receiver for any link

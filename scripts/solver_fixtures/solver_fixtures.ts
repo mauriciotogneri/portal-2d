@@ -7,6 +7,7 @@ import boxOnButton from '@scripts/solver_fixtures/box_on_button.json'
 import boxThroughPortal from '@scripts/solver_fixtures/box_through_portal.json'
 import buttonArrow from '@scripts/solver_fixtures/button_arrow.json'
 import fizzlerBox from '@scripts/solver_fixtures/fizzler_box.json'
+import fizzlerLinkedBox from '@scripts/solver_fixtures/fizzler_linked_box.json'
 import freeHands from '@scripts/solver_fixtures/free_hands.json'
 import portalWalk from '@scripts/solver_fixtures/portal_walk.json'
 import switchArrow from '@scripts/solver_fixtures/switch_arrow.json'
@@ -595,6 +596,57 @@ export const SOLVER_FIXTURES: readonly SolverFixture[] = [
         moves: 7,
         portals: 0,
         finalHash: '282ac3b5',
+      },
+    },
+  },
+  // Every wall refuses portals, so the counts are moves alone. The exit at
+  // (6,1) is 5 tiles from the subject's start at (1,1), so no route takes
+  // fewer than 5 moves. The subject crosses the field at (2,1), which is
+  // harmless with free hands, picks up the box at (3,2) from below and puts
+  // it on the button at (5,2) from below, which opens the exit: 5 moves, all
+  // to the right. The searches also meet the box carried back into the
+  // field, which leaves it absent, since the switch at (1,2) links it, until
+  // that switch brings it in at (3,2) again
+  {
+    name: 'fizzler_linked_box',
+    covers: 'A box a switch links, which a fizzler destroys for as long as the switch hasn\'t brought it back: the route carries it the short way, but the searches meet it absent.',
+    chamber: fizzlerLinkedBox,
+    fewestMoves: {
+      actions: [
+        'right',
+        'right',
+        'up',
+        'interact',
+        'right',
+        'right',
+        'turnUp',
+        'interact',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 5,
+        portals: 0,
+        finalHash: 'd7fe84a4',
+      },
+    },
+    fewestPortals: {
+      actions: [
+        'right',
+        'right',
+        'up',
+        'interact',
+        'right',
+        'right',
+        'turnUp',
+        'interact',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 5,
+        portals: 0,
+        finalHash: 'd7fe84a4',
       },
     },
   },

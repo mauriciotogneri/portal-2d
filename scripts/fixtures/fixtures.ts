@@ -32,6 +32,8 @@ import fizzlerShot from '@scripts/fixtures/fizzler_shot.json'
 import fizzlersInARow from '@scripts/fixtures/fizzlers_in_a_row.json'
 import lightBarrier from '@scripts/fixtures/light_barrier.json'
 import linkedBlockedField from '@scripts/fixtures/linked_blocked_field.json'
+import linkedBoxFizzler from '@scripts/fixtures/linked_box_fizzler.json'
+import linkedBoxOnSwitchedElement from '@scripts/fixtures/linked_box_on_switched_element.json'
 import noPortalBehindEndPlate from '@scripts/fixtures/no_portal_behind_end_plate.json'
 import noPortalBesideDoor from '@scripts/fixtures/no_portal_beside_door.json'
 import openEdge from '@scripts/fixtures/open_edge.json'
@@ -2130,6 +2132,116 @@ export const FIXTURES: readonly Fixture[] = [
       moves: 0,
       portals: 0,
       finalHash: '6621f10d',
+    },
+  },
+  {
+    name: 'linked_box_breaks_up_in_closing_door',
+    behaviour: 'A box a switch links, put down in an open doorway, is absent once the door closes on it, instead of going back to its start: here the button holding the door open is released by the subject picking up the other box from it.',
+    chamber: linkedBoxOnSwitchedElement,
+    actions: [
+      'interact',
+      'turnRight',
+      'interact',
+      'left',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: '58b8d726',
+    },
+  },
+  {
+    name: 'linked_box_falls_into_opening_ditch',
+    behaviour: 'A box a switch links, put down on a bridged ditch, is absent once the ditch opens under it, instead of going back to its start.',
+    chamber: linkedBoxOnSwitchedElement,
+    actions: [
+      'interact',
+      'right',
+      'interact',
+      'left',
+      'left',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 3,
+      portals: 0,
+      finalHash: '58b8d726',
+    },
+  },
+  {
+    name: 'linked_box_carried_into_fizzler_stays_absent',
+    behaviour: 'A box a switch links, carried into a fizzler that is on, is absent, and sends on no box: the other box, put down on its start tile, stays there.',
+    chamber: linkedBoxFizzler,
+    actions: [
+      'interact',
+      'turnUp',
+      'interact',
+      'turnRight',
+      'interact',
+      'turnLeft',
+      'interact',
+      'turnUp',
+      'interact',
+      'up',
+      'left',
+      'left',
+    ],
+    expected: {
+      completed: false,
+      moves: 3,
+      portals: 0,
+      finalHash: 'f45438eb',
+    },
+  },
+  {
+    name: 'fizzled_linked_box_brought_back',
+    behaviour: 'Using the switch linked to a box a fizzler destroyed brings the box in on its start tile, sending the other box resting there on to its own start.',
+    chamber: linkedBoxFizzler,
+    actions: [
+      'interact',
+      'turnUp',
+      'interact',
+      'turnRight',
+      'interact',
+      'turnLeft',
+      'interact',
+      'turnUp',
+      'interact',
+      'up',
+      'left',
+      'left',
+      'right',
+      'right',
+      'right',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 6,
+      portals: 0,
+      finalHash: '69475646',
+    },
+  },
+  {
+    name: 'linked_box_reached_from_fizzler_destroyed',
+    behaviour: 'A box a switch links, picked up from inside a fizzler that is on, is absent at once, where a box no link reaches lands back where it lay.',
+    chamber: linkedBoxFizzler,
+    actions: [
+      'up',
+      'left',
+      'left',
+      'down',
+      'turnRight',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 4,
+      portals: 0,
+      finalHash: '85832bcf',
     },
   },
   {

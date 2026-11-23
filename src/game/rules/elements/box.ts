@@ -40,8 +40,9 @@ export const BOX_DESTROYING_KINDS = [
 ] as const
 
 /**
- * Destroys each box lying where an element is blocked, in list order: it
- * goes back to its start tile, reporting boxDestroyed. Run by the core step
+ * Destroys each box lying where an element is blocked, in list order,
+ * reporting boxDestroyed: a box a link reaches is absent until a link sends
+ * it home, and any other goes back to its start tile. Run by the core step
  * in every pass, after the buttons, since boxes move and so have no pass
  * hook. A box at its start stays: the layout checks keep starts on plain
  * floor, slide floor or a button, and a fixture chamber read without them may start one
@@ -59,13 +60,13 @@ export function destroyBoxesOnBlockedTiles(draft: StateDraft): void {
     }
 
     if (BOX_DESTROYING_KINDS.some((kind) => draft.isBlockedAt(kind, x, y))) {
-      draft.sendBoxToStart(index)
+      draft.destroyBox(index)
       draft.emit(GameEvent.BOX_DESTROYED)
     }
   })
 }
 
-/** A box the subject can carry, mainly to hold buttons down, listed at its start tile; resting, it keeps the subject off its tile (checked by the core step, since boxes move) but lets shots through; a link sends it back there whenever it unblocks it, and so does a door closing, a ditch opening or a laser, a light barrier or a fizzler switching on where it lies */
+/** A box the subject can carry, mainly to hold buttons down, listed at its start tile; resting, it keeps the subject off its tile (checked by the core step, since boxes move) but lets shots through; a link sends it back there whenever it unblocks it, bringing it in while it is absent; a door closing, a ditch opening or a laser, a light barrier or a fizzler switching on where it lies destroys it, sending it back there too, unless a link reaches it, which leaves it absent */
 export const BOX_ELEMENT = defineElement<BoxData>()({
   kind: 'box',
   fileKey: 'boxes',

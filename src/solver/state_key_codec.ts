@@ -23,7 +23,7 @@ export type KeyCounts = {
   readonly tiles: number // Tiles that aren't wall
   readonly sides: number // Wall sides a portal can open on
   readonly boxes: number // Boxes
-  readonly absentBoxes: number // Of those, the boxes that start absent, each of whose tiles can also be none
+  readonly absentBoxes: number // Of those, the boxes that can be absent (those that start absent and those a link reaches, which being destroyed leaves absent), each of whose tiles can also be none
   readonly switches: number // Switches, each with its used flag
   readonly flags: number // Blocked flags the state holds
 }
@@ -32,8 +32,8 @@ export type KeyCounts = {
  * How many bits each field of a chamber's state key takes.
  */
 export type KeyWidths = {
-  readonly tile: number // The subject's tile, and each box's but those that start absent
-  readonly absentBoxTile: number // The tile of a box that starts absent, or none while it still is
+  readonly tile: number // The subject's tile, and each box's but those that can be absent
+  readonly absentBoxTile: number // The tile of a box that can be absent, or none while it is
   readonly carriedBox: number // None, or which box the subject carries
   readonly portal: number // Each portal: closed, or the wall side it is on
   readonly total: number // The whole key
@@ -122,7 +122,7 @@ export class StateKeyCodec {
       tiles: index.tileCount,
       sides: index.sideCount,
       boxes: layout.boxCount,
-      absentBoxes: index.chamber.boxStarts.filter((_, box) => index.chamber.startsAbsent(box)).length,
+      absentBoxes: index.chamber.boxStarts.filter((_, box) => index.chamber.canBeAbsent(box)).length,
       switches: layout.switchCount,
       flags: layout.flagCount,
     })
@@ -239,7 +239,7 @@ export class StateKeyCodec {
     for (let box = 0; box < layout.boxCount; box++) {
       const x = valueAt(values, layout.boxesOffset + (box * 2))
       const y = valueAt(values, layout.boxesOffset + (box * 2) + 1)
-      const canBeAbsent = this.index.chamber.startsAbsent(box)
+      const canBeAbsent = this.index.chamber.canBeAbsent(box)
       // An absent box is written as the tile after the last one
       const tile = (box === carriedBox) ? 0 : ((canBeAbsent && (x === ABSENT_BOX)) ? this.index.tileCount : this.numberTile(x, y))
 
@@ -308,7 +308,7 @@ export class StateKeyCodec {
     const boxTiles = new Set<number>()
 
     for (let box = 0; box < layout.boxCount; box++) {
-      const canBeAbsent = chamber.startsAbsent(box)
+      const canBeAbsent = chamber.canBeAbsent(box)
       const width = canBeAbsent ? this.widths.absentBoxTile : this.widths.tile
       const tile = (box === carriedBox) ? this.skipTile(subjectTile, width) : this.read(width)
 
@@ -424,7 +424,7 @@ export class StateKeyCodec {
   /**
    * Skips the tile field of the carried box, which is on the subject's tile.
    * @param subjectTile - The subject's tile
-   * @param width - The field's width: wider for a box that starts absent
+   * @param width - The field's width: wider for a box that can be absent
    * @returns The subject's tile
    */
   private skipTile(subjectTile: number, width: number): number {

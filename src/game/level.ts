@@ -155,7 +155,7 @@ export class Level {
   private readonly changes = new ElementTransitions() // The arrows, the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers changing over a few frames after a step switched them, if any
   private readonly ripple = new MissRipple() // Where the latest missed portal shot stopped, rippling over a few frames, if anywhere
   private readonly fall = new BoxFall() // The boxes the latest step dropped into ditches, falling over a few frames, if any
-  private readonly returns = new BoxReturns() // The boxes the latest steps sent home, coming apart and flying home, or gathering there, over a few frames, if any
+  private readonly returns = new BoxReturns() // The boxes the latest steps sent home, coming apart and flying home, or gathering there, or destroyed for good, breaking up, over a few frames, if any
   private readonly openings = new PortalOpenings() // The portals shots opened lately, opening over a few frames, if any
   private readonly particles = new PortalParticles() // The particles rising from the open portals, and fading where a portal closed lately
   private readonly flashes = new FizzlerFlashes() // Where the subject was caught in a fizzler's field lately, flashing over a few frames, if anywhere
@@ -686,7 +686,8 @@ export class Level {
    * of a slide: each arrow, blocked wall, ditch, door, exit, fizzler, laser and
    * light barrier switched starts changing, the portals a fizzle took break
    * up and the field the subject is caught in flashes, each box sent home comes apart and flies there, or falls into a
-   * ditch and gathers there, a portal opened opens and starts giving off
+   * ditch and gathers there, each box a link reaches that is destroyed breaks up where it was, or falls, and is gone, a
+   * portal opened opens and starts giving off
    * particles, those of a portal closed or moved fade, and a refused portal
    * shot ripples, and a fizzler's field or a light barrier's band that stopped it splashes or reacts, all only when motion is allowed; then the sounds play, and
    * the completion is told when the chamber is completed, unless it waits
@@ -722,7 +723,7 @@ export class Level {
       }
 
       // Each box sent home comes apart where it was and flies there, or, one that fell or was brought in, gathers there; one picked up
-      // again is done with going home
+      // again is done with going home; one a link reaches that is destroyed breaks up where it was, unless it fell
       this.returns.forgetMoved(after)
 
       if (sendsBoxesHome(events)) {
