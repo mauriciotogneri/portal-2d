@@ -1,9 +1,10 @@
 <script setup lang="ts">
 /**
  * One game key in the custom controls dialog: a row with what the key does
- * and, at its right edge, the key it is bound to (an arrow key as a small
- * triangle). Picking the row waits for a new key; the row then shows an empty
- * key asking for one, or says which key it refused.
+ * and, at its right edge, the key or mouse button it is bound to (an arrow
+ * key as a small triangle, a mouse button as a small mouse). Picking the row
+ * waits for a new key; the row then shows an empty key asking for one, or
+ * says which key it refused.
  */
 import {computed} from 'vue'
 import KeyCap from '@/components/key_cap.vue'
@@ -15,8 +16,8 @@ type ControlPortal = 'blue' | 'orange'
 
 export interface ControlRowProps {
   label: string // What the key does, such as "Blue portal"
-  boundKey: BoundKey // The key it is bound to
-  portal?: ControlPortal | null // The portal the key shoots, if any
+  boundKey: BoundKey // The key or mouse button it is bound to
+  portal?: ControlPortal | null // The portal the key shoots, if any; only a portal's row takes a mouse button
   waiting?: boolean // Whether the row is waiting for a new key
   refusedKey?: string | null // The key last refused while waiting, by name, or null
 }
@@ -32,12 +33,15 @@ const keyLabel = computed(() => getKeyLabel(props.boundKey))
 // Whether the bound key is an arrow, whose cap is drawn as square as a letter key's
 const isArrow = computed(() => getKeyArrow(props.boundKey) !== null)
 
-// The row reads as its action and key; while it waits, as what it waits for
+// The row reads as its action and key; while it waits, as what it waits for, a portal's row also a mouse button
 const accessibleName = computed(() => {
   if (!props.waiting) {
     return `${props.label}, ${keyLabel.value.name}`
   }
-  return props.refusedKey === null ? `${props.label}, press a key` : `${props.label}, can't use ${props.refusedKey}, press another key`
+  if (props.refusedKey !== null) {
+    return `${props.label}, can't use ${props.refusedKey}, press another key`
+  }
+  return props.portal === null ? `${props.label}, press a key` : `${props.label}, press a key or click with a mouse button`
 })
 </script>
 
@@ -66,13 +70,14 @@ const accessibleName = computed(() => {
         },
       ]"
       :bound-key="boundKey"
+      :portal="portal"
       aria-hidden="true"
     />
   </button>
 </template>
 
 <style scoped>
-/* The bound key at the row's right edge, raised off the wall */
+/* The bound key or mouse button at the row's right edge, raised off the wall */
 .control-row-key {
   flex: none;
 }

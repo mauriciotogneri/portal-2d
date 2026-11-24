@@ -1,6 +1,6 @@
 import type {FrameInput, FrameKey} from '@/game/frame_input'
 import {GameKey} from '@/game/game_key'
-import {ARROW_KEY_BINDINGS, type BoundKey, DEFAULT_EXTRA_TURN_KEY, getBoundKey, type KeyBindings} from '@/game/key_bindings'
+import {ARROW_KEY_BINDINGS, type BoundKey, DEFAULT_EXTRA_TURN_KEY, getBoundKey, getMouseBoundKey, type KeyBindings} from '@/game/key_bindings'
 
 /**
  * A press waiting for the level, with whether the turn key was held as it
@@ -12,11 +12,14 @@ type KeyPress = {
 }
 
 /**
- * Keyboard state for the game, fed by keydown and keyup on the window. Keys
- * are read by physical position (KeyboardEvent.code) through the player's
- * bindings, so they stay in place on every layout. Every other key is
- * ignored. Presses wait in arrival order until the level takes them, one at a
- * time; the turn key is only ever read as held.
+ * Keyboard state for the game, fed by keydown and keyup on the window, and by
+ * mousedown for the mouse buttons a portal can be bound to. Keys are read by
+ * physical position (KeyboardEvent.code) through the player's bindings, so
+ * they stay in place on every layout; a bound mouse button, left or right,
+ * counts as a key pressed wherever in the window it is clicked, and the
+ * pointer's movement plays no part. Every other key and button is ignored.
+ * Presses wait in arrival order until the level takes them, one at a time;
+ * the turn key is only ever read as held.
  */
 export class Input {
   /**
@@ -48,14 +51,16 @@ export class Input {
     '\'',
   ])
 
-  enabled = true // When false, keydown is ignored entirely; keyup is still tracked
+  private static readonly RIGHT_MOUSE_BUTTON = 2 // MouseEvent.button of the right button, which opens the context menu
+
+  enabled = true // When false, keydown and mousedown are ignored entirely and the context menu opens; keyup is still tracked
   private readonly gameKeys: ReadonlyMap<BoundKey, GameKey> // The game key each bound key stands for
   private readonly holding = new Set<BoundKey>() // Bound keys held down, so either of two turn keys can be let go while the other stays held
   private readonly pressed = new Set<GameKey>() // Game keys pressed since the last clear(), auto-repeat included
   private readonly presses: KeyPress[] = [] // Presses not yet taken, oldest first
 
   /**
-   * Starts listening to the keyboard on the window.
+   * Starts listening to the keyboard and the mouse buttons on the window.
    * @param bindings - The key bound to each game key, which is only read
    */
   constructor(bindings: KeyBindings) {
@@ -74,6 +79,8 @@ export class Input {
 
     window.addEventListener('keyup', this.onKeyup, false)
     window.addEventListener('keydown', this.onKeydown, false)
+    window.addEventListener('mousedown', this.onMousedown, false)
+    window.addEventListener('contextmenu', this.onContextmenu, false)
     window.addEventListener('blur', this.onBlur, false)
   }
 
@@ -129,11 +136,13 @@ export class Input {
   }
 
   /**
-   * Stops listening to the keyboard.
+   * Stops listening to the keyboard and the mouse buttons.
    */
   dispose(): void {
     window.removeEventListener('keyup', this.onKeyup, false)
     window.removeEventListener('keydown', this.onKeydown, false)
+    window.removeEventListener('mousedown', this.onMousedown, false)
+    window.removeEventListener('contextmenu', this.onContextmenu, false)
     window.removeEventListener('blur', this.onBlur, false)
   }
 
@@ -191,6 +200,46 @@ export class Input {
 
     if (this.enabled) {
       this.preventDefault(event)
+    }
+  }
+
+  /**
+   * Records a bound mouse button going down anywhere in the window, unless
+   * disabled, as a key pressed: its press waits for the level, once however
+   * long it is held, with whether the turn key was held. Its browser default
+   * (selecting the text under it, moving the keyboard focus) is suppressed. A
+   * click with Alt or Meta held is left to the browser and doesn't play.
+   * @param event - The mousedown event
+   */
+  readonly onMousedown = (event: MouseEvent): void => {
+    if (!this.enabled || event.altKey || event.metaKey) {
+      return
+    }
+
+    const gameKey = this.getGameKey(getMouseBoundKey(event.button))
+
+    // Only a portal can be bound to a mouse button, never the turn key
+    if ((gameKey === null) || (gameKey === GameKey.TURN)) {
+      return
+    }
+
+    this.pressed.add(gameKey)
+    this.presses.push({
+      key: gameKey,
+      turnHeld: this.isTurnHeld,
+    })
+
+    event.preventDefault()
+  }
+
+  /**
+   * Keeps the browser's context menu closed while enabled and the right mouse
+   * button is bound, since it plays, unless Alt or Meta is held.
+   * @param event - The contextmenu event
+   */
+  readonly onContextmenu = (event: MouseEvent): void => {
+    if (this.enabled && !event.altKey && !event.metaKey && (this.getGameKey(getMouseBoundKey(Input.RIGHT_MOUSE_BUTTON)) !== null)) {
+      event.preventDefault()
     }
   }
 

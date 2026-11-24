@@ -3,9 +3,10 @@
  * The controls legend shown beside the chamber: moving, turning in place,
  * both portals and interacting, each on the key the player has bound to it,
  * and Escape for the pause dialog, each with what it does. The keys show what
- * the player's keyboard prints on them, and arrow keys a small triangle
- * pointing their way. Its heading folds the list away and opens it again,
- * which is remembered between visits.
+ * the player's keyboard prints on them, arrow keys a small triangle pointing
+ * their way, and a portal's mouse button a small mouse with that button
+ * filled in. Its heading folds the list away and opens it again, which is
+ * remembered between visits.
  */
 import {computed, onMounted} from 'vue'
 import KeyCap from '@/components/key_cap.vue'
@@ -122,6 +123,7 @@ onMounted(refreshKeyLabels)
                   'keycap-wide': keys.blue.wide,
                 }"
                 :bound-key="keys.blue.key"
+                portal="blue"
                 :aria-label="keys.blue.name"
               />
             </dt>
@@ -137,6 +139,7 @@ onMounted(refreshKeyLabels)
                   'keycap-wide': keys.orange.wide,
                 }"
                 :bound-key="keys.orange.key"
+                portal="orange"
                 :aria-label="keys.orange.name"
               />
             </dt>
@@ -329,8 +332,13 @@ onMounted(refreshKeyLabels)
   line-height: 1.3;
 }
 
-/* The legend's keys are a little lower than the shared key cap */
+/* The legend's keys are a little lower than the shared key cap, and a mouse button with them */
 .legend-row .keycap {
+  height: 2rem;
+}
+
+.legend-row .mouse-glyph {
+  width: 1.5rem;
   height: 2rem;
 }
 

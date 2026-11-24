@@ -167,9 +167,9 @@ export class Level {
   private frameTime = 0 // The latest frame's time, in milliseconds on the frame clock; redraws outside a frame use it, so a step being drawn never goes back
   private readonly reducedMotion: MediaQueryList // Whether the player asks for reduced motion, read each time something could be drawn over time
   private ambientDrawn = false // Whether the latest frame was drawn for what moves with time alone, so the frame after it ends draws it still
-  private readonly input: Input // The keyboard, listening from construction until dispose()
+  private readonly input: Input // The keyboard and the mouse buttons, listening from construction until dispose()
   private initialized = false // Whether the frame loop has started
-  private isPaused = false // Whether the loop skips updates and the input ignores keydown
+  private isPaused = false // Whether the loop skips updates and the input ignores keydown and mousedown
   private disposed = false // Whether dispose() has run
   private frameId: number | null = null // The pending animation frame request
   private startTime = 0 // When the previous frame ran, in milliseconds since the epoch
@@ -253,8 +253,8 @@ export class Level {
   }
 
   /**
-   * Pauses or resumes. While paused the state does not update and keydown is
-   * ignored, but a step being drawn still runs to its end.
+   * Pauses or resumes. While paused the state does not update and keydown and
+   * mousedown are ignored, but a step being drawn still runs to its end.
    * Resuming forgets every key, pressed and held, first.
    */
   set paused(value: boolean) {
@@ -366,7 +366,7 @@ export class Level {
   }
 
   /**
-   * Stops the frame loop and the keyboard listeners for good.
+   * Stops the frame loop and the keyboard and mouse listeners for good.
    */
   dispose(): void {
     this.disposed = true
@@ -470,7 +470,7 @@ export class Level {
    * completed, forgets every waiting press instead. Then forgets which keys
    * went down during the frame, for the clock.
    * @param delta - Seconds since the previous frame
-   * @param input - The keyboard
+   * @param input - The keyboard and the mouse buttons
    * @param time - The frame's time, in milliseconds on the frame clock
    * @returns Whether the state changed
    */
