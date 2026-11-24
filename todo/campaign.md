@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 10, step 10.3: detail run 9 (the solutions of ids 13 to 17 still to record)
+Status: In progress. Now: phase 11, step 11.6: detail run 10 (the solutions of ids 13 to 21 still to record)
 Last revised: 2026-11-24
 
 ## Goal
@@ -137,7 +137,18 @@ Detailed 2026-11-24 (`docs/campaign.md`, "Run 8 in detail"): one combine, the li
 
 - [ ] **10.1 Chamber 8.1** (combine: a light barrier and an arrow one button switches, set against a laser). Built 2026-11-24 as id 17, seventeenth in the play order, from its sketch, its light barrier and laser swapped on its fresh reviewer's finding (`docs/spoilers/chamber_17.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, who liked it, their solution still to be recorded.
 - [x] **10.2 Friends play run 8 cold.** Friends played chamber 8.1 (`/chamber/17`) cold, 2026-11-24, and liked it, by the author's account; their routes weren't recorded (its notes, Playtests). Run 8 is finished once its solution is recorded (assumption 6).
-- [ ] **10.3 Detail run 9** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 9).
+- [x] **10.3 Detail run 9** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 9). Drafted 2026-11-24 from a proposal two fresh reviewers checked, one against the handbook and one on the prototypes alone, and approved by the author the same day: four chambers (two teaches, a test and a combine), in `docs/campaign.md` ("Run 9 in detail"), all four sketched in the idea pool, each checked with a throwaway prototype. The reviewers' findings replaced the first combine (a broken state, and a route that was the natural walk) and redrew 9.2's room (guideline 113); both drafts are in the idea pool ("Sketched for a run"). Two lessons from the dropped combine gave nothing away and went into the handbook at once: guidelines 23 and 84 extended. Carried forward: a fizzler on a slide's way and a box flying home from far off, to run 10; a button slid over, unpressed, to a later chamber; and again the portal just come out of, forced to move by a box in front of it, a used switch acting again, and on an arrow the subject facing only its way.
+
+### Phase 11 — Run 9: slide floors
+
+Detailed 2026-11-24 (`docs/campaign.md`, "Run 9 in detail"): two teaches, a test and a combine, all four sketched in the idea pool, the combine first. All four are built before the author plays any (the author's call, 2026-11-24, as for runs 2 to 8), taking ids 18 to 21; the next chamber takes id 22. Each sketch names the risks to watch in the author's cold play; the handbook lessons its drafts turned up that gave a chamber away waited until after that play, and went in then, approved by the author on 2026-11-24: guidelines 108 and 113 extended.
+
+- [ ] **11.1 Chamber 9.1** (teach: the slide, stopped on plain floor and before a wall). Built 2026-11-24 as id 18, eighteenth in the play order, from its sketch (`docs/spoilers/chamber_18.md`); checked, and independently reviewed with the run's proposal; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
+- [ ] **11.2 Chamber 9.2** (teach: a box as a stopper the player places). Built 2026-11-24 as id 19, nineteenth in the play order, from its sketch, one corner tile made slide floor (`docs/spoilers/chamber_19.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
+- [ ] **11.3 Chamber 9.3** (test: coming out of a portal onto slide floor). Built 2026-11-24 as id 20, twentieth in the play order, from its sketch (`docs/spoilers/chamber_20.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded. Its fresh reviewer found its lesson, the slide out of a portal, met on every route but not tested, so it is carried forward in the outline; the handbook lesson waits until after the author's play.
+- [ ] **11.4 Chamber 9.4** (combine: a laser a button switches, over slide floor). Built 2026-11-24 as id 21, twenty-first in the play order, from its sketch, mirrored so its start isn't 9.3's, then its start moved on its fresh reviewer's finding, as it was chamber 16's (`docs/spoilers/chamber_21.md`); checked and independently reviewed; the run's last chamber; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
+- [x] **11.5 Friends play run 9 cold.** Friends played chambers 9.1 to 9.4 (`/chamber/18` to `/chamber/21`) cold, 2026-11-24, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). Run 9 is finished once their solutions are recorded (assumption 6).
+- [ ] **11.6 Detail run 10** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 10), with the fizzler on a slide's way and the box flying home from far off carried from run 9.
 
 ### Later runs
 

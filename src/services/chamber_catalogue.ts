@@ -19,6 +19,10 @@ import chamberFourteenData from '@/chambers/chamber_14.json'
 import chamberFifteenData from '@/chambers/chamber_15.json'
 import chamberSixteenData from '@/chambers/chamber_16.json'
 import chamberSeventeenData from '@/chambers/chamber_17.json'
+import chamberEighteenData from '@/chambers/chamber_18.json'
+import chamberNineteenData from '@/chambers/chamber_19.json'
+import chamberTwentyData from '@/chambers/chamber_20.json'
+import chamberTwentyOneData from '@/chambers/chamber_21.json'
 import type {ChamberData} from '@/game/chamber_data'
 
 /** Which list a chamber is in: the campaign, under Play, or the playground chambers, under Playground in development. */
@@ -107,6 +111,22 @@ const CHAMBER_LISTINGS: ChamberListing[] = [
   {
     id: 17,
     data: chamberSeventeenData,
+  },
+  {
+    id: 18,
+    data: chamberEighteenData,
+  },
+  {
+    id: 19,
+    data: chamberNineteenData,
+  },
+  {
+    id: 20,
+    data: chamberTwentyData,
+  },
+  {
+    id: 21,
+    data: chamberTwentyOneData,
   },
 ]
 

@@ -69,6 +69,34 @@ Run 8's combine, sketched first and approved with the run on 2026-11-24 as its o
 
   `S` the start (5, 1), facing left along the row; `o` B (4, 1), linked to `L` (2, 1); `Z` (3, 1), on; `E` (1, 0), open; `F` (0, 1) and `N` (6, 1), the faces. Standing on B, shoot F over the laser and through L; step off (L switches on, the portal stays); shoot N; cross; down into the exit. 4 moves and 2 portals; all 66 states can be finished, and all 51 with the turn key refused; with L always on, unsolvable. Why dropped: both reviewers found it chamber 2.4's route with the door a light barrier (as a door it solves the same) and, with L as floor, chamber 1.1 with a laser (idea 2, refused for run 5); the laser had no job on any route; L stopping shots was met only by a first shot from the start, a wrong try, and L stopping the subject never (guideline 108). Its handbook reviewer: before slides and rays nothing is left for a light barrier teach to force, since a closed door and a fizzler that is on stop shots too.
 
+Run 9's four sketches, drafted 2026-11-24 from a proposal two fresh reviewers checked, one against the handbook and one on the prototypes alone, and approved with the run the same day, the combine first (guideline 51), became chambers 9.1 to 9.4, and their texts moved to `chamber_18.md` to `chamber_21.md`; the two drafts their findings replaced are below. Coordinates as above; `=` slide floor, `.` plain floor, `Z` a laser running V (up and down, across its row) on slide floor, `<` and `v` fixed arrows; prototypes, never built. Every figure is from the rules' step: the fewest moves and portals from `npm run solve -- --baseline`, and a walk of every reachable state.
+
+- **Dropped: run 9's first combine, the slide off the button** (combine; slide floor, a laser a button switches, a box, two buttons, arrows, the exit; sketched 2026-11-24 and dropped before approval, never built). 8 × 6, every wall steel:
+
+  ```
+  y5  # # # # # # # #
+  y4  # # o = Z = . E
+  y3  # # . # # # o #
+  y2  # S b # # # v #
+  y1  # . . < < < . #
+  y0  # # # # # # # #
+      0 1 2 3 4 5 6 7
+  ```
+
+  `o` B (2, 4), the lane's only way in, linked to `Z` (4, 4); `o` B2 (6, 3), linked to the exit `E` (7, 4); a one-way road from B2 back to the start. Idea: buttons are judged only once a slide ends, so the subject standing on B, carrying the box, slides off it past Z, which B holds off until the slide stops on (6, 4); then the box goes on B2. 5 moves; 428 states, none dead. Why dropped: a box put down past Z, on (5, 4), let the slide off B stop on Z's tile, which switched on under the subject (12 of 428 states, guideline 84, which now names it); its key move was the natural walk, the same 5 moves with Z and B taken out (both reviewers); Z lighting only as the slide stopped looked like outrunning it (guideline 23, which now names it); and its frame, lure and road were run 7's dropped ride, Playground 8's move, with a laser for the arrow (its handbook reviewer).
+- **Redrawn: run 9's first 9.2, the ring** (teach; slide floor, a box, the exit; redrawn 2026-11-24 before approval, never built). 7 × 5, every wall steel:
+
+  ```
+  y4  # # # E # # #
+  y3  # . = = = = #
+  y2  # . # # # . #
+  y1  # S b . . . #
+  y0  # # # # # # #
+      0 1 2 3 4 5 6
+  ```
+
+  The box put down in the top lane beside T (3, 3), then a lap round the bottom and a slide in from the other end, stopping on T under the exit. 12 moves; 471 states, none dead. Why redrawn: a ring of floor round steel, the start in a bottom corner beside the box, the box set on the top row and the lap round to come at the top middle from the far side and out of the top wall, chamber 7.2's ring and route mirrored (its handbook reviewer, guideline 113); seven of its twelve moves were the lap (guideline 37).
+
 ## Portals (basics)
 
 1. **Gated islands** (teach or test). Three or four floor islands in a row, separated by lasers or open ditches, each with exactly one wall face that takes portals and sees the next island. The only way forward is a crossing per island, in order; a wrong shot is fixed by re-shooting. _Teaches:_ aiming from the right tile, and that either portal can be the entrance. _Check:_ guideline 78 (each island has a face it can shoot from to come back), guideline 72 (no island's face is the wall at the end of a laser run).
