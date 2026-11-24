@@ -15,6 +15,7 @@ import type {PictogramKind} from '@/components/element_pictogram.vue'
 import type {ChamberData} from '@/game/chamber_data'
 import {CHAMBERS} from '@/services/chamber_catalogue'
 import type {ChamberList} from '@/services/chamber_catalogue'
+import {ELEMENT_NAMES} from '@/services/element_names'
 import {PLAYGROUND_CHAMBERS} from '@/services/playground'
 
 /** A field of a chamber file that lists elements. */
@@ -26,7 +27,6 @@ type ElementListField = {
 type SignElement = {
   kind: PictogramKind // Its pictogram
   field: ElementListField // The chamber file's field that lists it
-  name: string // What the player calls it, in sentence case
 }
 
 export interface ChamberSignProps {
@@ -40,72 +40,58 @@ const SIGN_ELEMENTS: readonly SignElement[] = [
   {
     kind: 'box',
     field: 'boxes',
-    name: 'Box',
   },
   {
     kind: 'button',
     field: 'buttons',
-    name: 'Button',
   },
   {
     kind: 'switch',
     field: 'switches',
-    name: 'Switch',
   },
   {
     kind: 'door',
     field: 'doors',
-    name: 'Door',
   },
   {
     kind: 'arrow',
     field: 'arrows',
-    name: 'Arrow',
   },
   {
     kind: 'slideFloor',
     field: 'slideFloors',
-    name: 'Slide floor',
   },
   {
     kind: 'ditch',
     field: 'ditches',
-    name: 'Ditch',
   },
   {
     kind: 'blockedWall',
     field: 'blockedWalls',
-    name: 'Blocked wall',
   },
   {
     kind: 'laser',
     field: 'lasers',
-    name: 'Laser',
   },
   {
     kind: 'fizzler',
     field: 'fizzlers',
-    name: 'Fizzler',
   },
   {
     kind: 'lightBarrier',
     field: 'lightBarriers',
-    name: 'Light barrier',
   },
   {
     kind: 'emitter',
     field: 'emitters',
-    name: 'Emitter',
   },
   {
     kind: 'receiver',
     field: 'receivers',
-    name: 'Receiver',
   },
   {
     kind: 'mirrorBox',
     field: 'boxes',
-    name: 'Mirror box',
   },
 ]
 
@@ -116,7 +102,7 @@ const lastNumber = computed(() => formatSignNumber(props.list === 'playground' ?
 const heading = computed(() => `${props.list === 'playground' ? 'Playground' : 'Chamber'} ${signNumber.value} of ${lastNumber.value}`) // What a screen reader reads for the number and the place in the list
 const elements = computed(() => SIGN_ELEMENTS.map((element) => ({
   kind: element.kind,
-  name: element.name,
+  name: ELEMENT_NAMES[element.kind],
   present: (element.kind === 'mirrorBox') ? (props.layout?.boxes ?? []).some((box) => box.mirror !== undefined) : ((props.layout?.[element.field]?.length ?? 0) > 0),
 })))
 

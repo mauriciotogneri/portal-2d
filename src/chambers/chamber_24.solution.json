@@ -1,0 +1,27 @@
+{
+    "chamberHash": "aaefc907",
+    "actions": [
+        "turnRight",
+        "turnRight",
+        "turnRight",
+        "turnDown",
+        "interact",
+        "turnDown",
+        "turnRight",
+        "turnRight",
+        "turnUp",
+        "interact",
+        "turnDown",
+        "turnDown",
+        "turnUp",
+        "turnUp",
+        "turnUp",
+        "turnUp"
+    ],
+    "expected": {
+        "completed": true,
+        "moves": 8,
+        "portals": 0,
+        "finalHash": "4cb59cf0"
+    }
+}

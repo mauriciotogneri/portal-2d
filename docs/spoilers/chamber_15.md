@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: kept by the author on 2026-11-24, after their cold play; their run's solution is not recorded yet. File: `src/chambers/chamber_15.json`, fifteenth in the play order; permanent id 15. Designed together with chamber 7.2 (id 16), both before the author plays either (approved with the plan, 2026-11-24, as for runs 2 to 6); a third, 7.3, was built with them and cut before the author played it (the idea pool, "Sketched for a run"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: kept by the author on 2026-11-24, after their cold play; their cold run its recorded solution. File: `src/chambers/chamber_15.json`, fifteenth in the play order; permanent id 15. Designed together with chamber 7.2 (id 16), both before the author plays either (approved with the plan, 2026-11-24, as for runs 2 to 6); a third, 7.3, was built with them and cut before the author played it (the idea pool, "Sketched for a run").
 
 ## Entry
 
@@ -133,5 +133,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run is the intended route with two detours: the box picked up and carried left and down the road to its foot, then on left onto B itself (the exit opening while the subject stood there), where an interact facing the wall is refused, and back to (2, 1), from where the box goes down on B; blue onto Q from (3, 1), a turn up in place and orange up the road onto W, the key move; into Q and out of W onto (3, 4), facing down, so a down press walked the subject straight back onto the road; left and up on the arrow did nothing (Near misses 1), so it walked to the foot and crossed again, then left, out (16 moves and 2 portals; the fewest are 10, the six over being the step onto B and back and the second trip down the road). Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_15.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

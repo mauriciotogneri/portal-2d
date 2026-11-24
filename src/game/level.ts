@@ -314,6 +314,20 @@ export class Level {
   }
 
   /**
+   * The width of the chamber being played, in tiles; 0 before the first load.
+   */
+  get chamberWidth(): number {
+    return this.chamber?.width ?? 0
+  }
+
+  /**
+   * The height of the chamber being played, in tiles; 0 before the first load.
+   */
+  get chamberHeight(): number {
+    return this.chamber?.height ?? 0
+  }
+
+  /**
    * The run since the last load as a replay, for saving a solution. Replays
    * the logged presses on the chamber's start first and checks that they
    * reproduce the live run: the state after every press, the moves and the

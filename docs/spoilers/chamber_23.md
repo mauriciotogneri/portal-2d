@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their solution is not recorded yet. File: `src/chambers/chamber_23.json`, twenty-third in the play order; permanent id 23. Run 10's second chamber (`docs/campaign.md`, "Run 10 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_23.json`, twenty-third in the play order; permanent id 23. Run 10's second chamber (`docs/campaign.md`, "Run 10 in detail").
 
 ## Entry
 
@@ -104,5 +104,5 @@ None before this one; its sketch was approved as drawn.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run is the intended route with the walls in the other order: down into row 1 and a portal on X, then up into row 3 and one on Y, the ray coming out of it ending on the subject; down into row 2, where the receiver lit and the exit opened, then left into the exit (6 moves and 2 portals, both the fewest). The receiver lit only as the subject stepped out of the ray, so the subject's cut alone, which their 10.1 run made carrying the box, is made here, as planned. Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_23.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, with no trouble, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

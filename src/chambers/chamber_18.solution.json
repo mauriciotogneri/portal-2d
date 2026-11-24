@@ -1,0 +1,20 @@
+{
+    "chamberHash": "2a53cc57",
+    "actions": [
+        "turnRight",
+        "turnDown",
+        "turnDown",
+        "turnRight",
+        "turnRight",
+        "turnUp",
+        "turnUp",
+        "turnRight",
+        "turnRight"
+    ],
+    "expected": {
+        "completed": true,
+        "moves": 5,
+        "portals": 0,
+        "finalHash": "6521633c"
+    }
+}

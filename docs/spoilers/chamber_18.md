@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their solution is not recorded yet. File: `src/chambers/chamber_18.json`, eighteenth in the play order; permanent id 18. Run 9's first chamber (`docs/campaign.md`, "Run 9 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_18.json`, eighteenth in the play order; permanent id 18. Run 9's first chamber (`docs/campaign.md`, "Run 9 in detail").
 
 ## Entry
 
@@ -119,5 +119,5 @@ None is a dead end: every stop has a slide that leads somewhere new (guidelines 
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run is the intended route's bottom-row way, after the likely first press: right, the slide stopped on (4, 2) before the pillar; down onto (4, 1), stopped at once before the bottom wall; right, the slide along the bottom row to (6, 1), before the right wall; up onto the stone, which stops it; right into the exit (5 moves and no portal; the fewest are 4, the one over being the first slide to the pillar). Every kind of stop shows in it: before the pillar, before a wall, and on the stone. Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_18.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

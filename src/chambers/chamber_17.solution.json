@@ -1,0 +1,39 @@
+{
+    "chamberHash": "6cd5fd74",
+    "actions": [
+        "turnLeft",
+        "turnDown",
+        "interact",
+        "turnDown",
+        "turnRight",
+        "interact",
+        "turnUp",
+        "turnUp",
+        "blue",
+        "turnLeft",
+        "orange",
+        "turnRight",
+        "turnRight",
+        "turnDown",
+        "interact",
+        "turnLeft",
+        "interact",
+        "interact",
+        "turnLeft",
+        "turnDown",
+        "interact",
+        "turnUp",
+        "turnUp",
+        "turnUp",
+        "turnUp",
+        "turnDown",
+        "turnDown",
+        "turnDown"
+    ],
+    "expected": {
+        "completed": true,
+        "moves": 10,
+        "portals": 2,
+        "finalHash": "b0767a76"
+    }
+}

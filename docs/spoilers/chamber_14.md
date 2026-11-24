@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: kept by the author on 2026-11-24, after their cold play; their run's solution is not recorded yet. File: `src/chambers/chamber_14.json`, fourteenth in the play order; permanent id 14. Designed together with chamber 6.1 (id 13), both before the author plays either (the author's call, 2026-11-24, as for runs 2 to 5). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: kept by the author on 2026-11-24, after their cold play; their cold run its recorded solution. File: `src/chambers/chamber_14.json`, fourteenth in the play order; permanent id 14. Designed together with chamber 6.1 (id 13), both before the author plays either (the author's call, 2026-11-24, as for runs 2 to 5).
 
 ## Entry
 
@@ -143,5 +143,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept: they liked it. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept: they liked it. Their recorded run is the intended route but for the last put-down: through the field to (4, 2) and blue onto Y; up to (4, 3), a turn left in place and orange onto X, the key move; down, right onto B and into Y, out of X onto (1, 3); the box picked up from (2, 2) and carried up, left and into X, out of Y onto B, facing left. Then, instead of stepping left to (4, 2), down to (5, 1) (the exit shutting on the step off B), a turn up in place and the box put down on B from below (the exit opens); left to (4, 1), up to (4, 2) and into the field, both portals closing, and out (20 moves and 2 portals; the intended route takes 18, the two over being the walk round from below B, and the fewest are 14, by fetching the box first). The lures don't show in it; earlier tries, if any, leave no trace in a recording. Recorded as `chamber_14.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

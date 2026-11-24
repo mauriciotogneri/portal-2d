@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their solution is not recorded yet. File: `src/chambers/chamber_19.json`, nineteenth in the play order; permanent id 19. Run 9's second chamber (`docs/campaign.md`, "Run 9 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_19.json`, nineteenth in the play order; permanent id 19. Run 9's second chamber (`docs/campaign.md`, "Run 9 in detail").
 
 ## Entry
 
@@ -125,5 +125,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run isn't the intended route: it takes a third way these notes don't list, the box on the stone. Left onto the stone; left, the slide stopped on (2, 2) before the box; the box picked up from (1, 2) and carried on the slide back onto the stone; down onto (4, 1), then, turning up in place, the box put down on the stone; left, the slide along the bottom row to (1, 1), past T; up onto (1, 2); right, the slide along the top row stopped on (3, 2) before the box; down, the slide through T into the exit (8 moves and no portal; the fewest are 6, the intended route, the two over being the way round by (1, 1) and (1, 2) to come at (3, 2) from the left). The box still makes the stop, so the teach holds; the bottom row's slide past T is part of this way, not a wrong try. Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_19.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

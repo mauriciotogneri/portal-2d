@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their solution is not recorded yet. Its entry's lesson, the slide out of a portal, is met on every route but not tested (Checks, its fresh reviewer): watch whether the author's play ever expects to stop where it comes out. File: `src/chambers/chamber_20.json`, twentieth in the play order; permanent id 20. Run 9's third chamber (`docs/campaign.md`, "Run 9 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. Its entry's lesson, the slide out of a portal, is met on every route but not tested (Checks, its fresh reviewer): watch whether the author's play ever expects to stop where it comes out. File: `src/chambers/chamber_20.json`, twentieth in the play order; permanent id 20. Run 9's third chamber (`docs/campaign.md`, "Run 9 in detail").
 
 ## Entry
 
@@ -143,5 +143,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run isn't the intended route: the box comes in out of (1, 5) first. From the start, blue onto (1, 5) and orange onto (1, 0); the box picked up, carried through onto (1, 4) and put down on (2, 4), the one tile it can go on from there; orange onto WB over it; the box picked up again and orange pressed three times with it in hand, each refused (no shot while carrying), the box left on (2, 4). Orange back onto (1, 0), and the pair crossed three times, back to the room, into the lane and back again; right to (3, 1), blue onto (3, 5), orange onto (3, 0), through onto the landing (3, 4) without the box; the box picked up from (2, 4) and put down on (4, 4); orange onto WB; out of WB sliding left onto T, stopped by the box, and up into the exit (9 moves and 7 portals; the intended route takes 7 and 3, and the fewest are 4 moves, with 4 portals, and 3 portals, in 5 moves; the four portals over are the crossing at column 1, the first shot onto WB and the shot back onto (1, 0)). Once stopped on T, they pressed left once more, which did nothing: the press a player expecting to stop where they came out, on (6, 4), would make next (Status), or a reflex; a recording can't tell which. The lure, the box carried along the lane, doesn't show in it. Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_20.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

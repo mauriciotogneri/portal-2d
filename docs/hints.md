@@ -1,24 +1,45 @@
 # Hints
 
-Short notes shown during the first chambers, so a new player understands what an element does: for example, that walking into a fizzler that is on closes both portals and destroys a box the subject carries. Nothing of this is built yet. This file records the design chosen on 2026-11-21, how it was chosen, what is still open, and what was learned about the code on the way, so the work can start from here.
+Short notes shown during the first chambers, so a new player understands what an element does: for example, that steel never takes a portal. The design was chosen on 2026-11-21 and settled on 2026-11-24, and it is being built in three stages, each with its plan at the repository's root: `stage-1-hint-display.md` (the spotlight and its card), `stage-2-hint-triggers.md` (what sets a hint off, the seen hints stored, analytics, the hint list and its check, and Chamber 3's box hint) and `stage-3-run-1-hints.md` (the other run 1 hints). This file records the decisions, the chosen design, how it was chosen, what is still open, and what was learned about the code on the way.
 
 These are tutorial hints. They are not the solver's hints (a nudge, a highlight, the next move, on a key of their own), one of the player features dropped when the solver's prototype stopped (`docs/solver.md`); the solver itself is still in the code.
 
 ## The decision
 
+Rows 1 to 5 were decided on 2026-11-21 and 2026-11-22, the rest on 2026-11-24 with the stage plans.
+
 | # | Question | Decided |
 |---|----------|---------|
-| 1 | Does a hint stop the game? | Yes. The game pauses (the clock too) until the player presses Enter, then carries on |
-| 2 | How is it shown? | As a spotlight: the whole screen darkens except the element's own tile, and a card beside it holds the text and a Continue button |
-| 3 | What does the spotlight light? | Only the tile of the element the hint is about, not the tiles round it (round 1 lit a 3 × 3 block; the author asked for one tile) |
+| 1 | Does a hint stop the game? | Yes. The game pauses, the clock too, until the player closes the hint, then carries on from where it stopped: a stopping hint is sure to be read before the next step, and the clock doesn't count reading time |
+| 2 | How is it shown? | As a spotlight: the whole screen, rail included, darkens except the element's own tile, and a card beside it holds the element's pictogram and name, the text and a Continue button ([The chosen design](#the-chosen-design)) |
+| 3 | What does the spotlight light? | Only the tile of the element the hint is about, not the tiles round it (round 1 lit a 3 × 3 block; the author asked for one tile). Lighting several tiles at once (a run of fizzlers or lasers) isn't needed in run 1 |
 | 4 | Where was it chosen? | On an Artifact page that draws the real chamber screen with the game's own renderer: https://claude.ai/artifact/C5MwvnphSuw5qpWG9ZBttP (see [The artifact](#the-artifact)) |
 | 5 | How much text? | As little as will do: the shorter and clearer, the better (the author's rule, 2026-11-22) |
+| 6 | What may a hint say? | Only what an element is or does, never how to solve; the lit tile is always that element's tile (`docs/level_design.md` guideline 31 and `docs/campaign.md` convention 7, which the author kept) |
+| 7 | Which chambers have hints? | Only run 1, Chambers 1 to 4: `docs/campaign.md` names steel and ditch hints for Chamber 1 and button and box hints for Chamber 3, none for Chambers 2 and 4. None in playground chambers, which keep no progress |
+| 8 | What sets a hint off? | One of two triggers, the author's two cases, a player arriving somewhere and a player stuck for a while. A tile hint shows when the subject stands on its trigger tile after a step; a timer hint shows once the chamber clock reaches its seconds. Slides and portal crossings may carry the subject past a trigger tile without stopping on it, so trigger tiles are chosen with that in mind (the author accepted it rather than tracking every tile a step passes) |
+| 9 | Which time does a timer hint count? | The chamber clock: it starts at the first move, portal shot or interact, stops while the game is paused or a hint shows, and starts again from 0 on a restart |
+| 10 | Can something cancel a hint? | Yes: any hint may name one game event the rules already report (such as `boxPickedUp`, `crossed` or `buttonPressed`), and once that event has happened in the current attempt the hint doesn't show, and is dropped if it was waiting to. A timer hint must name one, since a hint about something the player has already done is noise |
+| 11 | Which tiles does a hint name? | The tile it lights, always its element's, and for a tile hint its trigger tile, which may differ: the trigger is where the player arrives, the light is on the element |
+| 12 | Shown once, or every time? | Once per player, ever, so a returning player is never interrupted again. A hint counts as seen when the player closes it, and is stored in the chamber's progress record; leaving the chamber while it shows leaves it unseen. A restart (Restart chamber, Play again) resets the clock and the events seen in the attempt, but never brings back a seen hint. Reset progress forgets every seen hint |
+| 13 | Several at once? | One at a time, as the card covers one tile at a time: hints set off by the same step show in list order, one after the other |
+| 14 | Can the player read a hint again? | No. Nothing to build: closing by Enter alone makes losing one unread unlikely, and Reset progress brings them all back |
+| 15 | Which keys close it? | Only Enter, or a click on Continue, and every key and click is ignored for the hint's first half second: a hint shows only once ever, so closing it by accident loses it for good. Space never presses Continue, since it is the default interact key, and a held (repeating) Enter presses nothing |
+| 16 | What do Escape and browser Back do? | Escape does nothing while a hint shows, as on the chamber-complete dialog, so the hint can't be lost to it: the player presses Enter, then Escape, to reach the pause menu. Browser Back opens the exit confirmation in the hint's place, as from the other dialogs |
+| 17 | Where does the card go? | Beside the lit tile, on the side with the most room on the stage (the dark area holding the chamber), whole on the stage, never over the lit tile, the leader straight: on the left or the right when either has room, otherwise above or below. The page always put it on the left, but a chamber whose element sits near the left edge needs another side |
+| 18 | Sound and reduced motion? | Pressing Continue plays the menu accept sound, as the dialogs do. With `prefers-reduced-motion` the hint appears and goes at once, with no pressed delay |
+| 19 | Screen readers? | The card is a `role="dialog"` with `aria-modal`, labelled by its title, as the other dialogs are |
+| 20 | Analytics? | One `hint_shown` event when a hint appears, with the chamber events' shared parameters (`chamber_id`, `chamber_number`, `attempt`) and `hint_id`, which shows where players stall; none when it closes. Event and parameter names, and hint ids, are permanent once production sends them |
+| 21 | Where are hints listed? | In a hint list of their own, keyed by each chamber's permanent id, outside the chamber files, so the chamber files and their recorded solutions stay untouched. Each hint has a permanent id, unique within its chamber and never reused, as it is stored and sent. `npm run chamber:check` checks the list and fails when a lit tile no longer holds its element or a trigger tile is outside its chamber, so a chamber edit that moves an element is caught |
+| 22 | When does no hint show? | In playground chambers, and once the step that completes the chamber has been taken, as a hint over the walk-out would be pointless |
+| 23 | Who decides each hint's content? | The author, per hint: its trigger, trigger tile or seconds, cancelling event, lit tile and text ([Open questions](#open-questions)) |
+| 24 | How is it built? | In three stages, each checked on its own: the display first, then the triggers with one real hint, Chamber 3's box hint, then the other run 1 hints as data. Every hint after the display is a data entry, not new code |
 
 The request that started it: hints during the first chambers, of two kinds to compare, intrusive (the game stops, the player reads, dismisses it, and the game continues) and non-intrusive (shown without interrupting the game), each tried in different places on the screen. Round 1 showed seven styles (A to G, [below](#what-was-considered)); round 2 kept only B, the spotlight, with its light cut down to the element's own tile. That round 2 design, called B2 on the page, is the one chosen.
 
 ## The chosen design
 
-Everything below is as the round 2 page draws it, at 1:1 screen pixels on the chamber screen (`src/components/screens/chamber_screen.vue`: the 23rem rail on the left, the dark stage on the right holding the canvas). Sizes are given in the game's own units (rem = 16 px) and colours by the game's tokens (`src/assets/styles.css`).
+Everything below is as the round 2 page draws it, at 1:1 screen pixels on the chamber screen (`src/components/screens/chamber_screen.vue`: the 23rem rail on the left, the dark stage on the right holding the canvas), but for the card's place, which decision 17 settled, and the shadows' colour. Sizes are given in the game's own units (rem = 16 px) and colours by the game's tokens (`src/assets/styles.css`).
 
 ### What the player sees
 
@@ -26,24 +47,24 @@ Everything below is as the round 2 page draws it, at 1:1 screen pixels on the ch
 |---|------|------|
 | 1 | Darkening | The whole screen, rail included, under `--color-ink` at 66 % opacity, except the lit tile. The page made it as a box exactly over the tile with a box shadow spread 4000 px wide in that colour, clipped by the screen |
 | 2 | Lit tile | The element's own tile, exactly: the chamber as drawn, untouched and not brightened |
-| 3 | Brackets | Four white corner marks round the lit tile, each 30 % of the tile's side long, 0.1875rem (3 px) thick, set just outside the tile (their box is the tile grown by 3 px each side) so the tile shows whole, with a soft dark shadow (`drop-shadow(0 0 0.15rem)`, black at 70 %) so they read on light floor |
-| 4 | Card | A white plate (`--color-white`), 22rem wide, padded 1.25rem 1.375rem 1.375rem, framed in 0.125rem `--color-ink-muted` (the chamber sign's frame) with a 0.375rem `--color-blue` top band (the dialogs' band for interaction), a large soft shadow (`0 1rem 2.5rem`, black at 40 %), its parts 0.875rem apart |
-| 5 | Card head | The element's pictogram from the chamber sign (`src/components/element_pictogram.vue`), 2.5rem square, framed in 0.125rem `--color-ink` with 0.1875rem padding, then the element's name as the title in Oxanium 700 at 1.625rem (line height 1.05), 0.875rem apart |
+| 3 | Brackets | Four white corner marks round the lit tile, each 30 % of their box's side long, 0.1875rem (3 px) thick, set just outside the tile (their box is the tile grown by 3 px each side) so the tile shows whole, with a soft dark shadow (`drop-shadow(0 0 0.15rem)`, ink at 70 %) so they read on light floor |
+| 4 | Card | A white plate (`--color-white`), 22rem wide, padded 1.25rem 1.375rem 1.375rem, framed in 0.125rem `--color-ink-muted` (the chamber sign's frame) with a 0.375rem `--color-blue` top band (the dialogs' band for interaction), a large soft shadow (`0 1rem 2.5rem`, ink at 40 %), its parts 0.875rem apart |
+| 5 | Card head | The element's pictogram from the chamber sign (`src/components/element_pictogram.vue`), 2.5rem square, framed in 0.125rem `--color-ink` with 0.1875rem padding, then the element's name as the sign gives it, as the title, in Oxanium 700 at 1.625rem (line height 1.05), 0.875rem apart |
 | 6 | Card text | Chakra Petch at 1rem, `--color-ink-muted` |
-| 7 | Continue | The game's `.button .button-interaction` (blue), the card's full width, label on the left, "Enter" on the right in white at 80 %, 0.875rem, weight 500 (as the pause dialog's Continue shows "Esc"), drawn focused (the ink ring `.button:focus-visible` draws). It turns `--color-blue-deep` while Enter is down |
-| 8 | Card place | To the left of the lit tile: its right edge 48 px from the tile's left edge, centred on the tile's middle height |
-| 9 | Leader | A 2 px white line from the card's right edge, at the tile's middle height, to 6 px short of the left brackets, ending in a white dot of 3.5 px radius |
+| 7 | Continue | The game's `.button .button-interaction` (blue), the card's full width, label on the left, "Enter" on the right in white at 80 %, 0.875rem, weight 500 (as the pause dialog's Continue shows "Esc"), drawn focused (the ink ring `.button:focus-visible` draws). It turns `--color-blue-deep` while pressed |
+| 8 | Card place | 48 px from the lit tile, on the side with the most room (decision 17). On the left or the right, its middle level with the tile's middle, moved up or down only as far as keeps it whole on the stage; above or below, centred on the tile, moved sideways likewise. The page always put it on the left |
+| 9 | Leader | A 2 px white line from the card's edge facing the tile, through the tile's middle, to 6 px short of the brackets, ending in a white dot of 3.5 px radius |
 
 ### How it moves
 
 | # | When | What |
 |---|------|------|
-| 1 | The hint is set off | The game pauses at once (nothing moves; the clock stops). The darkening fades in over 0.2 s. The card, the brackets and the leader fade in over 0.18 s, the card sliding in from 10 px to the left, eased out (cubic) |
+| 1 | The hint is set off | The game pauses at once (nothing moves; the clock stops). The darkening fades in over 0.2 s. The card, the brackets and the leader fade in over 0.18 s, the card sliding in from 10 px further from the tile, eased out (`--ease-out`) |
 | 2 | While it shows | Nothing moves. The player reads for as long as they like |
-| 3 | Enter goes down | Continue shows pressed (deep blue) for about 0.2 s |
+| 3 | Enter goes down, or Continue is clicked | Continue shows pressed (deep blue) for about 0.2 s |
 | 4 | Then | Everything fades out over 0.16 s and the game carries on from where it stopped |
 
-With `prefers-reduced-motion` the game should show and remove it at once, like every other motion in the game (not tried on the page).
+With `prefers-reduced-motion` it appears and goes at once, with no pressed delay, like every other motion in the game (decision 18).
 
 ### Screen sizes
 
@@ -57,16 +78,16 @@ The chamber screen sizes tiles from the stage, so the lit tile is as large as th
 
 At 1280 × 720 the lit tile is small but still clear with its brackets. The card is the same size at every window, so it covers a larger share of a smaller stage.
 
-## The fizzler hint
+## The page's example: the fizzler
 
-The example every option showed, the author's own: "fizzlers destroy portals and boxes if you cross one that is on". Its title is "Fizzler", with the fizzler's pictogram. The page had two texts, switchable:
+The example every option showed, the author's own: "fizzlers destroy portals and boxes if you cross one that is on". No run 1 chamber holds a fizzler, so hints being run 1's alone (decision 7), this hint won't be built; it stays as the page's example and a sample of the wording. Its title is "Fizzler", with the fizzler's pictogram. The page had two texts, switchable:
 
 | # | Text | Wording |
 |---|------|---------|
 | 1 | Short (shown first) | Walking into a fizzler that is on closes both your portals and destroys a box you carry. |
 | 2 | Long | Walking into a fizzler that is on closes both your portals. A box you carry through it is destroyed and goes back to where it started. A fizzler that is off lets everything through. |
 
-Both follow the fizzler rule in `docs/elements.md` ("The fizzler rule"): entering a fizzler that is on (walking, coming out of a portal, or the field turning on under the subject) closes both portals and sends a carried box back to its start. Which one to use, and the wording of other elements' hints, aren't decided.
+Both follow the fizzler rule in `docs/elements.md` ("The fizzler rule"): entering a fizzler that is on (walking, coming out of a portal, or the field turning on under the subject) closes both portals and sends a carried box back to its start. Decision 5 favours the short one.
 
 ## What was considered
 
@@ -86,36 +107,27 @@ Why G was recommended then: nothing in a chamber moves until a key is pressed, s
 
 ## Open questions
 
-None of these was decided. Each needs an answer before building.
+Each is the author's to answer, when the stage that needs it gets there.
 
 | # | Question | What is known |
 |---|----------|---------------|
-| 1 | When does a hint appear? | The page set it off when the subject came into the fizzler's part of the chamber (out of the portal, four tiles from the field). Other choices: when the chamber opens, when the subject first comes within some tiles of the element, or the first time the element would matter (before the step that would fizzle). The game reads one press per frame and never moves on its own, so a hint can be set off between two steps |
-| 2 | Which hints, in which chambers? | Only the fizzler was mocked. The campaign holds Chambers 1 to 24 so far, the tutorial run, run 2's one chamber, run 3's two, run 4's three, run 5's two, run 6's two, run 7's two, run 8's one, run 9's four and run 10's three, with walls, blocked walls, ditches and the exit, from Chamber 3 on boxes, buttons, doors and antlines, from Chamber 8 on switches, from Chamber 9 on a box that starts absent, from Chamber 11 on lasers and blocked walls a button opens, from Chamber 13 on fizzlers, from Chamber 15 on arrows, from Chamber 16 on arrows a button turns, from Chamber 17 on light barriers, from Chamber 18 on slide floors, from Chamber 21 on lasers a button switches, from Chamber 22 on emitters and receivers, and from Chamber 24 on fizzlers a receiver switches; no campaign chamber yet holds any other element (the old tutorial, which also brought arrows, and the chambers that brought fizzlers, lasers, slide floors, turnable arrows, emitters and receivers left the campaign and are now playground chambers; lasers came back with run 5, fizzlers with run 6, arrows, turnable ones too, with run 7, slide floors with run 9, and emitters and receivers with run 10). Chamber 3 is the first where the interact key matters, picking a box up and putting it down on the tile faced, so its row in `docs/campaign.md` names a box hint beside the button's |
-| 3 | Shown once, or every time? | Once per player (stored), once per visit, or on every attempt. If stored: under a `portal-2d.` key, wrapped in `try`/`catch`, and cleared by Reset progress or not |
-| 4 | After Restart chamber? | Whether the hint shows again after a restart or Play again |
-| 5 | Can the player read a hint again? | For example from the pause menu or the rail; nothing decided |
-| 6 | Where does the card go when the left has no room? | The page always put it to the left (Playground 2's fizzler is near the right edge). A rule is needed: the side with the most room on the stage, the card whole on the stage, never over the lit tile, the leader straight |
-| 7 | Which keys close it? | Enter on the page. Space too? A held key must not close it as it appears (most likely the interact key, Space by default, or a key bound to Enter), as `dialog_frame.vue` already ignores a repeating Enter or Space. A click? |
-| 8 | Escape and pause | What Escape does while a hint shows: close it, or open the pause menu over it |
-| 9 | Several elements at once | One hint at a time, in what order, and whether the spotlight can light several tiles (a run of fizzlers or lasers spans several) |
-| 10 | Screen readers | The card as a `role="dialog"` with `aria-modal`, labelled by its title, as the other dialogs are |
-| 11 | Analytics | Whether to send an event when a hint shows or closes (event names are permanent) |
-| 12 | Which text, short or long | See [The fizzler hint](#the-fizzler-hint); decision 5 favours the short one |
+| 1 | Each hint's content | For each of Chamber 1's steel and ditch hints and Chamber 3's button and box hints: tile or timer hint, its trigger tile or seconds, its cancelling event, its lit tile and its text. Recommended: timer hints, as hints are a backup for players who don't know how to progress, cancelled by the event that shows the element was understood (the box's by `boxPickedUp`, which also keeps the light off a box that has moved from its start tile; the button's by `buttonPressed`); a tile hint only where every player should read it first. A text or a lit tile must never point at the route (decision 6) |
+| 2 | Naming the interact key | A box hint may need to say which key picks a box up, and players can rebind it. Name no key, as the controls legend shows it, which needs nothing built; or fill the player's own key into the text from their bindings. Recommended: name no key |
+| 3 | Steel's title | The card's title is the element's name on the chamber sign, "Blocked wall", while the campaign calls it steel, so a player may not connect the two. Keep "Blocked wall", which needs nothing built; or show "Steel" through an optional title on a hint. Recommended: "Blocked wall", so the card and the sign agree |
+| 4 | The card on a small screen | At 1280 × 720 the 22rem card covers a large share of the stage. If it covers too much, its size goes back to the author (the page can show a smaller one) before real hints are added |
 
 ## Notes for building
 
 What was learned about the code while making the page. These are findings, not decisions.
 
-- **Where it goes.** The chamber screen (`chamber_screen.vue`) owns the dialogs over the chamber, as one `ChamberDialog` state (`'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed'`), pausing the game with `level.paused` and resuming it on close. A hint would be one more state there, and its Escape case in `handleKeydown` must be decided (open question 8). Pausing stops the clock (it counts only unpaused frames), and resuming forgets every press still waiting and every key held, so a key held through the hint doesn't carry on.
+- **Where it goes.** The chamber screen (`chamber_screen.vue`) owns the dialogs over the chamber, as one `ChamberDialog` state (`'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed'`), pausing the game with `level.paused` and resuming it on close. A hint is one more state there, whose Escape case in `handleKeydown` does nothing (decision 16). Pausing stops the clock (it counts only unpaused frames), and resuming forgets every press still waiting and every key held, so a key held through the hint doesn't carry on.
 - **The game decides nothing about Vue.** `src/game/` never imports Vue, components or services. Whatever sets a hint off must reach the screen the way completion does (`level.onCompleted`): a callback from `Level`, or the screen reading the state after each step. The rules (`src/game/rules/`) must not change for hints: the recorded solutions and fixtures pin them.
 - **Finding the tile on the page.** The canvas is exactly the chamber (`tileSize × width` by `tileSize × height` device pixels, in `TilePainter.setSize`), centred in the stage, its page size its drawn size divided by the pixel ratio. So a tile's page size is the canvas's `getBoundingClientRect().width` divided by the chamber's width in tiles, and tile (x, y), y counting from the bottom as the game does, lies at `left + x × size`, `top + (height − 1 − y) × size`. The tile size itself is `Math.trunc(min(stage width / max(chamber width, 16), stage height / max(chamber height, 16)))` in device pixels, the stage less its 2rem padding each side; a resize or a pixel ratio change moves it, so the spotlight must follow (`fitToStage`).
 - **The darkening over the rail.** The dialogs' backdrop is `position: fixed; inset: 0`, over the rail too. The spotlight darkens the same area, cut out at one tile.
 - **Reuse.** `dialog_frame.vue` has the keyboard behaviour a hint needs (first action focused, Tab kept inside, a repeating Enter or Space ignored, the accept sound on pressing) but also the centred panel and backdrop, so the card needs that behaviour without that layout. The pictograms are in `element_pictogram.vue`, one per kind (`PictogramKind`). The Continue button is the pause dialog's (`pause_dialog.vue`, with its `.action-hint`).
 - **A pitfall the page hit.** The sign frames its pictograms with `padding: 7%`, which works in its grid cells. Put in a flex row, a percentage padding is taken from the row's width, not the frame's, and the pictogram shrinks to nothing: give the hint's frame a fixed padding (0.1875rem).
-- **Colours.** The page used black for the card's and the brackets' shadows; built in the game, every colour must be an `rgba()` token from `styles.css` (no new colours), and `border-radius` in rem.
-- **Sounds.** Not tried on the page. The dialogs play `Sound.MENU_ACCEPT` on pressing an action.
-- **Docs to update when it is built.** `AGENTS.md` (the chamber screen, keyboard ownership, the layout), `docs/interface.md` (the chamber screen, the keys, the dialogs), `docs/game_summary.md` (the screens), `docs/level_design.md` if hints change how a chamber should introduce an element, and this file.
+- **Colours.** The page used black for the card's and the brackets' shadows; every shadow in the game is built from `--color-ink-rgb`, so the built hint uses ink. Every colour is an `rgba()` token from `styles.css` (no new colours), and `border-radius` is in rem.
+- **Docs to update when it reaches players.** `AGENTS.md` (the chamber screen, keyboard ownership, the layout), `docs/interface.md` (the chamber screen, the keys, the dialogs), `docs/game_summary.md` (the screens), `docs/level_design.md` if hints change how a chamber should introduce an element, and this file.
 
 ## The artifact
 

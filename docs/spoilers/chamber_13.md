@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: kept by the author on 2026-11-24, after their cold play; their run's solution is not recorded yet. File: `src/chambers/chamber_13.json`, thirteenth in the play order; permanent id 13. Designed together with chamber 6.2 (id 14), both before the author plays either (the author's call, 2026-11-24, as for runs 2 to 5). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: kept by the author on 2026-11-24, after their cold play; their cold run its recorded solution. File: `src/chambers/chamber_13.json`, thirteenth in the play order; permanent id 13. Designed together with chamber 6.2 (id 14), both before the author plays either (the author's call, 2026-11-24, as for runs 2 to 5).
 
 ## Entry
 
@@ -126,5 +126,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept: they liked it. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept: they liked it. Their recorded run is the intended route: down and right to (2, 1), the box lifted off B (the exit shutting), then right onto B (the exit opening) and into the field, the box flying home onto B and the exit staying open; right to (5, 1), where one more right press only meets the wall at (6, 1) (Restriction 4), then up and out (7 moves and 0 portals, both the fewest). The lure doesn't show in it; earlier tries, if any, leave no trace in a recording. Recorded as `chamber_13.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

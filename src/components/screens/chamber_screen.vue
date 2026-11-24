@@ -2,7 +2,7 @@
 /**
  * Chamber screen: plays one chamber on the game canvas, with the timer and the
  * controls legend beside it and the pause, settings, confirmation and
- * completion dialogs on top. The game objects live outside Vue's reactivity; this screen only
+ * completion dialogs and the tutorial hints on top. The game objects live outside Vue's reactivity; this screen only
  * creates, pauses, reloads and disposes them, and reads the game's clock. It
  * also plays the playground chambers, which save nothing and send no chamber events.
  */
@@ -14,6 +14,9 @@ import ChamberLegend from '@/components/chamber_legend.vue'
 import ChamberSign from '@/components/chamber_sign.vue'
 import CompletionDialog from '@/components/completion_dialog.vue'
 import ConfirmDialog from '@/components/confirm_dialog.vue'
+import type {PictogramKind} from '@/components/element_pictogram.vue'
+import HintSpotlight from '@/components/hint_spotlight.vue'
+import type {PageRect} from '@/components/hint_spotlight.vue'
 import PauseDialog from '@/components/pause_dialog.vue'
 import type {PerformanceViewHandle} from '@/components/performance_view.vue'
 import {FrameStats} from '@/game/frame_stats'
@@ -24,6 +27,7 @@ import {trackChamberAbandon, trackChamberComplete, trackChamberQuit, trackChambe
 import type {RunProgress} from '@/services/analytics'
 import {findChamber} from '@/services/chamber_catalogue'
 import type {ChamberList} from '@/services/chamber_catalogue'
+import {ELEMENT_NAMES} from '@/services/element_names'
 import {keyBindings} from '@/services/key_bindings'
 import {formatTime} from '@/services/format_time'
 import {rememberChamber} from '@/services/last_chamber'
@@ -32,8 +36,22 @@ import {findPlaygroundChamber} from '@/services/playground'
 import {bestTime, isCompleted, markChamberCompleted, recordTime, startAttempt} from '@/services/progress'
 import {startChamberMusic} from '@/services/settings'
 
-/** Which dialog is open over the chamber. */
-type ChamberDialog = 'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed'
+/** Which dialog is open over the chamber; a hint counts as one. */
+type ChamberDialog = 'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed' | 'hint'
+
+/** A tutorial hint: the element it explains, the tile it lights and what it says. */
+type Hint = {
+  kind: PictogramKind // The element the hint is about
+  x: number // The lit tile's column, counted from the chamber's left edge
+  y: number // The lit tile's row, counted from the chamber's bottom row
+  text: string // What the hint says
+}
+
+/** Where the shown hint's tile and the stage are on the page. */
+type HintPlace = {
+  tile: PageRect // The lit tile
+  stage: PageRect // The stage, which the hint's card stays inside
+}
 
 /** How a finished run went, for the completion dialog. */
 type CompletedRun = {
@@ -71,6 +89,8 @@ const timeReadout = useTemplateRef<HTMLElement>('timeReadout')
 const timerStarted = ref(false) // Whether the clock has started; changes only on the first key and on reset
 const completedRun = ref<CompletedRun | null>(null) // The run the completion dialog reports
 const solutionFailed = ref(false) // Whether the last solution download was refused, because the run doesn't replay the same way
+const shownHint = ref<Hint | null>(null) // The hint over the chamber while the dialog is 'hint'
+const hintPlace = ref<HintPlace | null>(null) // Where that hint is on the page, measured again whenever the chamber is refitted
 const frameStats = import.meta.env.DEV ? new FrameStats() : null // Development only: measures the level's frame loop for the performance view at the foot of the rail
 // Development only: loaded on demand, so production builds leave it out
 const PerformanceView = import.meta.env.DEV ? defineAsyncComponent(() => import('@/components/performance_view.vue')) : null
@@ -113,8 +133,48 @@ function setCanvasPageSize(canvasElement: HTMLCanvasElement, pixelRatio: number)
 }
 
 /**
+ * Copies a place on the page into a plain object, which Vue can make
+ * reactive (a DOMRect's getters fail when read through a reactive proxy).
+ * @param rect - The place, as the browser measures it
+ * @returns The same place
+ */
+function pageRect(rect: DOMRect): PageRect {
+  return {
+    left: rect.left,
+    top: rect.top,
+    width: rect.width,
+    height: rect.height,
+  }
+}
+
+/**
+ * Measures where the shown hint's tile and the stage are on the page, from
+ * the canvas, which is exactly the chamber. Called once the canvas has its size.
+ */
+function placeHint(): void {
+  const hint = shownHint.value
+  const stageElement = stage.value
+  const canvasElement = canvas.value
+  if (dialog.value !== 'hint' || hint === null || level === null || stageElement === null || canvasElement === null || level.chamberWidth === 0) {
+    return
+  }
+  const canvasRect = canvasElement.getBoundingClientRect()
+  const tileSize = canvasRect.width / level.chamberWidth
+  hintPlace.value = {
+    tile: {
+      left: canvasRect.left + hint.x * tileSize,
+      // Rows count up from the bottom, the page down from the top
+      top: canvasRect.top + (level.chamberHeight - 1 - hint.y) * tileSize,
+      width: tileSize,
+      height: tileSize,
+    },
+    stage: pageRect(stageElement.getBoundingClientRect()),
+  }
+}
+
+/**
  * Fits the chamber to the stage at the screen's current pixel density, so it
- * stays sharp, and redraws it.
+ * stays sharp, and redraws it; a hint showing follows its tile.
  */
 function fitToStage(): void {
   const stageElement = stage.value
@@ -126,6 +186,7 @@ function fitToStage(): void {
   const size = availableSize(stageElement)
   level.resize(size.width * pixelRatio, size.height * pixelRatio)
   setCanvasPageSize(canvasElement, pixelRatio)
+  placeHint()
 }
 
 /**
@@ -189,6 +250,27 @@ function openPause(): void {
 function resume(): void {
   dialog.value = 'none'
   setPaused(false)
+}
+
+/**
+ * Pauses the game, the clock with it, and shows a hint over the chamber
+ * until the player closes it.
+ * @param hint - The hint
+ */
+function openHint(hint: Hint): void {
+  setPaused(true)
+  shownHint.value = hint
+  dialog.value = 'hint'
+  placeHint()
+}
+
+/**
+ * Closes the hint once the player has pressed Continue, and resumes the game.
+ */
+function closeHint(): void {
+  shownHint.value = null
+  hintPlace.value = null
+  resume()
 }
 
 /**
@@ -390,7 +472,8 @@ function handlePageHide(): void {
 
 /**
  * Escape opens the pause dialog, closes it again, and steps back out of the
- * settings or a confirmation, each with a click.
+ * settings or a confirmation, each with a click. It does nothing on the
+ * completion dialog, nor over a hint, which only Continue closes.
  * @param event - Keyboard event
  */
 function handleKeydown(event: KeyboardEvent): void {
@@ -416,6 +499,7 @@ function handleKeydown(event: KeyboardEvent): void {
       Sound.MENU_MOVE.play()
       break
     case 'completed':
+    case 'hint':
       break
   }
 }
@@ -483,9 +567,31 @@ onMounted(() => {
   window.addEventListener('pagehide', handlePageHide)
   // Every chamber opened moves the music on to its next track
   startChamberMusic()
+
+  // Development only, defined here so production builds leave it out: shows a
+  // hint from the browser console, such as showHint('box', 3, 2, 'Some text')
+  if (import.meta.env.DEV) {
+    window.showHint = (kind, x, y, text) => {
+      const width = level?.chamberWidth ?? 0
+      const height = level?.chamberHeight ?? 0
+      if (dialog.value !== 'none' || !Object.hasOwn(ELEMENT_NAMES, kind) || !Number.isInteger(x) || !Number.isInteger(y) || x < 0 || y < 0 || x >= width || y >= height) {
+        console.warn(`showHint(kind, x, y, text) needs no dialog open, a kind among ${Object.keys(ELEMENT_NAMES).join(', ')}, and a tile inside the ${width} × ${height} chamber, y counted from the bottom row`)
+        return
+      }
+      openHint({
+        kind: kind,
+        x: x,
+        y: y,
+        text: text,
+      })
+    }
+  }
 })
 
 onBeforeUnmount(() => {
+  if (import.meta.env.DEV) {
+    delete window.showHint
+  }
   window.removeEventListener('keydown', handleKeydown)
   window.removeEventListener('pagehide', handlePageHide)
   densityQuery?.removeEventListener('change', handlePixelRatioChange)
@@ -576,6 +682,15 @@ onBeforeUnmount(() => {
       @menu="leaveChamber"
       @replay="playAgain"
       @download-solution="downloadSolution"
+    />
+    <HintSpotlight
+      v-else-if="dialog === 'hint' && shownHint !== null && hintPlace !== null"
+      :kind="shownHint.kind"
+      :title="ELEMENT_NAMES[shownHint.kind]"
+      :text="shownHint.text"
+      :tile="hintPlace.tile"
+      :stage="hintPlace.stage"
+      @continue="closeHint"
     />
   </main>
 </template>

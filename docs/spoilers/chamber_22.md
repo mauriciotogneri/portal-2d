@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, its start walled into a nook on its fresh reviewer's finding; checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their solution is not recorded yet. File: `src/chambers/chamber_22.json`, twenty-second in the play order; permanent id 22. Run 10's first chamber (`docs/campaign.md`, "Run 10 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: built 2026-11-24 from its sketch, its start walled into a nook on its fresh reviewer's finding; checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_22.json`, twenty-second in the play order; permanent id 22. Run 10's first chamber (`docs/campaign.md`, "Run 10 in detail").
 
 ## Entry
 
@@ -112,5 +112,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run is the intended route: the box lifted, up onto (2, 2) carrying it, the exit shutting, and up onto (2, 3), the exit opening again; the box put down on (1, 3), off the ray, then up into the exit (3 moves and no portal, the fewest). The crossing was made carrying the box, the risk its sketch names, so the subject's cut alone is left to 10.2, as planned. Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_22.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, with no trouble, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

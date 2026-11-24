@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their solution is not recorded yet. File: `src/chambers/chamber_24.json`, twenty-fourth in the play order; permanent id 24. Run 10's combine and last chamber (`docs/campaign.md`, "Run 10 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: built 2026-11-24 from its sketch, checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_24.json`, twenty-fourth in the play order; permanent id 24. Run 10's combine and last chamber (`docs/campaign.md`, "Run 10 in detail").
 
 ## Entry
 
@@ -121,5 +121,5 @@ None is a dead end: the lane slides both ways, so the subject can always go back
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run is the intended route but for lifting the box from above B, from (3, 3), not from (2, 2): along the top row, the box lifted, down onto B carrying it, the slide to the landing, the box put down in F, then down into the nook, where F switched on and the box broke up and flew home onto B, and up through F into the exit (8 moves and no portal, the fewest). The lure doesn't show in it; earlier tries, if any, leave no trace in a recording. Recorded as `chamber_24.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, with no trouble, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

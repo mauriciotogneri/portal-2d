@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: kept by the author on 2026-11-24, after their cold play; their run's solution is not recorded yet. File: `src/chambers/chamber_17.json`, seventeenth in the play order; permanent id 17. Run 8's one chamber (`docs/campaign.md`, "Run 8 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: kept by the author on 2026-11-24, after their cold play; their cold run its recorded solution. File: `src/chambers/chamber_17.json`, seventeenth in the play order; permanent id 17. Run 8's one chamber (`docs/campaign.md`, "Run 8 in detail").
 
 ## Entry
 
@@ -152,5 +152,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept: they liked it. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept: they liked it. Their recorded run is the intended route but for where it shoots and lifts from: the box picked up from (4, 2), carried down to (4, 1) and put down on B; both shots from (4, 2), G first, then F over L's tile and the laser, so it never steps onto L's tile; the box lifted from (5, 2), L switching back on and A turning back up, put down on (4, 2) and picked up again at once, then carried left to (4, 2) and put down on its start (4, 1); up through A into the pocket and into G, out of F onto t, down twice and out (10 moves and 2 portals; the intended route takes 12, the fewest are 8, the two over being the step down to (4, 1) to put the box on B and back up). The lure doesn't show in it, nor anything barring the subject: it shoots before it lifts and never presses into L while it is on, the laser, or A while it is turned, the order its reviewers feared would leave the conflict unfelt (guideline 108); earlier tries, if any, leave no trace in a recording. Recorded as `chamber_17.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

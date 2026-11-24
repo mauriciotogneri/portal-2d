@@ -25,12 +25,3 @@ const emit = defineEmits<{
     </template>
   </DialogFrame>
 </template>
-
-<style scoped>
-.action-hint {
-  margin-left: auto;
-  color: rgba(var(--color-white-rgb), 0.8);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-</style>

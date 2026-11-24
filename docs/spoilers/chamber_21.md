@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, mirrored, its start moved on its fresh reviewer's finding; checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their solution is not recorded yet. File: `src/chambers/chamber_21.json`, twenty-first in the play order; permanent id 21. Run 9's combine and last chamber (`docs/campaign.md`, "Run 9 in detail"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: built 2026-11-24 from its sketch, mirrored, its start moved on its fresh reviewer's finding; checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_21.json`, twenty-first in the play order; permanent id 21. Run 9's combine and last chamber (`docs/campaign.md`, "Run 9 in detail").
 
 ## Entry
 
@@ -141,5 +141,5 @@ None is a dead end: the subject is never beyond Z while it is on, since only lif
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run is the intended route but for the box, left behind before the last slide instead of carried along: the box onto B (Z off); up and left, the slide to the switch, used; right, the slide back past T to (6, 3); down, four turns in place at (6, 2), on to (5, 1) and the box lifted off B (Z on); carried up to (6, 2), put down on (6, 3) and picked up again at once, then put down on (6, 1); up to (6, 3) without it, left, the slide stopped on T before Z, and up into the exit (15 moves and no portal, the fewest). The lure shows only as the route's own slide back under the open exit, with no second slide before the lift. The last slide was made without the box, so Z alone stopped it, not a box fetched as a stopper (Checks, its fresh reviewer); whether they lifted the box knowing Z would come on, a recording can't tell. Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_21.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

@@ -293,6 +293,14 @@ a {
   outline-offset: -0.125rem;
 }
 
+/* The key that presses a blue button, named at its far end, such as the pause dialog's Esc */
+.action-hint {
+  margin-left: auto;
+  color: rgba(var(--color-white-rgb), 0.8);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
 /* ============================================
    Keycaps
    ============================================ */

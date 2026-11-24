@@ -1,0 +1,25 @@
+{
+    "chamberHash": "4de323cf",
+    "actions": [
+        "turnDown",
+        "turnDown",
+        "turnLeft",
+        "blue",
+        "turnUp",
+        "turnUp",
+        "turnUp",
+        "turnLeft",
+        "orange",
+        "turnDown",
+        "turnDown",
+        "turnLeft",
+        "turnLeft",
+        "turnLeft"
+    ],
+    "expected": {
+        "completed": true,
+        "moves": 6,
+        "portals": 2,
+        "finalHash": "0cbe0d69"
+    }
+}
