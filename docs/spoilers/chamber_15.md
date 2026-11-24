@@ -134,3 +134,4 @@ None is a dead end.
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
 | 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

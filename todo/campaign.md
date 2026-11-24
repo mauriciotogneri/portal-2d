@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 9, step 9.1: chamber 7.1 (phase 8's two solutions still to record)
+Status: In progress. Now: phase 10, step 10.3: detail run 9 (the solutions of ids 13 to 17 still to record)
 Last revised: 2026-11-24
 
 ## Goal
@@ -128,8 +128,16 @@ Detailed 2026-11-24 (`docs/campaign.md`, "Run 7 in detail"): two teaches and a t
 - [ ] **9.1 Chamber 7.1** (teach: the arrow, a one-way road, and a portal back past it). Built 2026-11-24 as id 15, fifteenth in the play order, from its sketch, mirrored left to right on its fresh reviewer's finding (`docs/spoilers/chamber_15.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
 - [ ] **9.2 Chamber 7.2** (teach: the arrow a button turns, which turns back when released, even under the subject). Built 2026-11-24 as id 16, sixteenth in the play order, from its sketch, its antline routed round on its fresh reviewer's finding (`docs/spoilers/chamber_16.md`); checked and independently reviewed; the run's last chamber; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
 - [x] **9.3 Chamber 7.3** (twist: on an arrow the subject faces only its way). Built 2026-11-24 as id 17 from its sketch, checked, and cut the same day before the author played it, on its fresh reviewer's findings: it read as 7.2 reversed, in the same room shape, and the facing rule its entry named was never felt (the idea pool, "Sketched for a run"). The facing rule is carried forward in the outline. Its lessons, and the run's others, went into the handbook after the author's play of 7.1 and 7.2, approved by the author on 2026-11-24: guidelines 3, 97, 108 and 113 extended.
-- [ ] **9.4 Friends play run 7 cold.**
-- [ ] **9.5 Detail run 8** in the outline, its combine chamber sketched first and serving arrows too (`docs/campaign.md`, run 8).
+- [x] **9.4 Friends play run 7 cold.** Friends played chambers 7.1 and 7.2 (`/chamber/15` and `/chamber/16`) cold, 2026-11-24, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). Run 7 is finished once both solutions are recorded (assumption 6).
+- [x] **9.5 Detail run 8** in the outline, its combine chamber sketched first and serving arrows too (`docs/campaign.md`, run 8). Drafted 2026-11-24 from a proposal two fresh reviewers checked, one against the handbook and one on the prototypes alone, and approved by the author the same day: one chamber, a combine, in `docs/campaign.md` ("Run 8 in detail"), sketched in the idea pool and checked with a throwaway prototype. The teach sketched with it was dropped on both reviewers' findings: before slides and rays a light barrier does nothing a door doesn't, so its route was chamber 2.4's (the idea pool, "Sketched for a run"). Carried forward: a light barrier switching on over a box, to run 10; and again a box flying home from far off, the portal just come out of, forced to move by a box in front of it, a used switch acting again, and on an arrow the subject facing only its way.
+
+### Phase 10 — Run 8: light barriers
+
+Detailed 2026-11-24 (`docs/campaign.md`, "Run 8 in detail"): one combine, the light barrier's first contact and run 7's missing combine, sketched in the idea pool. It takes id 17; the next chamber takes id 18. Both reviewers rated its catch thin, so it is kept as a light flow, its keeping judged on the author's cold play: if it reads as earlier chambers, run 8 has none and the light barrier is first met in run 9. One handbook lesson from its drafts gave nothing away and went in at once, approved by the author on 2026-11-24: guideline 42 extended (count an element's consequences against what the elements already taught do). Another waited until after that play, since it gave the chamber away, and went in then, approved by the author the same day: guideline 108 extended (a new barrier where the first walk meets it).
+
+- [ ] **10.1 Chamber 8.1** (combine: a light barrier and an arrow one button switches, set against a laser). Built 2026-11-24 as id 17, seventeenth in the play order, from its sketch, its light barrier and laser swapped on its fresh reviewer's finding (`docs/spoilers/chamber_17.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, who liked it, their solution still to be recorded.
+- [x] **10.2 Friends play run 8 cold.** Friends played chamber 8.1 (`/chamber/17`) cold, 2026-11-24, and liked it, by the author's account; their routes weren't recorded (its notes, Playtests). Run 8 is finished once its solution is recorded (assumption 6).
+- [ ] **10.3 Detail run 9** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 9).
 
 ### Later runs
 
