@@ -51,11 +51,6 @@ const CONTROLS: ControlEntry[] = [
     portal: null,
   },
   {
-    gameKey: GameKey.TURN,
-    label: 'Turn in place',
-    portal: null,
-  },
-  {
     gameKey: GameKey.BLUE,
     label: 'Blue portal',
     portal: 'blue',

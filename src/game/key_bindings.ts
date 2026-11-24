@@ -17,7 +17,7 @@ export type MouseButton = 'left' | 'right'
  */
 export type KeyBindings = Readonly<Record<GameKey, BoundKey>>
 
-/** The Default layout, stored as Arrow keys: arrows, A, D, Space and either Shift */
+/** The Default layout, stored as Arrow keys: arrows, A, D and Space */
 export const ARROW_KEY_BINDINGS: KeyBindings = {
   [GameKey.UP]: 'ArrowUp',
   [GameKey.DOWN]: 'ArrowDown',
@@ -26,15 +26,7 @@ export const ARROW_KEY_BINDINGS: KeyBindings = {
   [GameKey.BLUE]: 'KeyA',
   [GameKey.ORANGE]: 'KeyD',
   [GameKey.INTERACT]: 'Space',
-  [GameKey.TURN]: 'Shift',
 }
-
-/**
- * A second turn key the Default layout takes on trial, either Ctrl, shown
- * nowhere in the game (not in the legend, Settings or the custom controls
- * dialog)
- */
-export const DEFAULT_EXTRA_TURN_KEY: BoundKey = 'Control'
 
 /** The shared name of each left and right modifier key */
 const FOLDED_KEYS: Readonly<Record<string, BoundKey>> = {

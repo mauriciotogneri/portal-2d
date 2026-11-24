@@ -255,7 +255,7 @@ export class Level {
   /**
    * Pauses or resumes. While paused the state does not update and keydown and
    * mousedown are ignored, but a step being drawn still runs to its end.
-   * Resuming forgets every key, pressed and held, first.
+   * Resuming forgets every key, pressed and waiting, first.
    */
   set paused(value: boolean) {
     this.isPaused = value
@@ -516,7 +516,7 @@ export class Level {
    * completed.
    * @param chamber - The chamber being played
    * @param state - The state before the step
-   * @param press - The press, one key and whether the turn key was held
+   * @param press - The press, one key
    * @param time - The frame's time, in milliseconds on the frame clock
    * @returns Whether the state changed
    */

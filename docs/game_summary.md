@@ -11,13 +11,13 @@ A desktop puzzle game, a fan take on Valve's Portal. The player guides a test su
 ## Turn by turn
 
 - Nothing moves on its own. The game advances one action at a time, and only when the player acts.
-- The actions: move (up, down, left or right), turn without moving (a move key pressed while holding the turn key, Shift by default; if the subject already faces that way, it moves), shoot a blue portal, shoot an orange portal, and interact (use a switch, pick up a box or put it down).
+- The actions: move or turn (up, down, left or right: a move key turns the subject that way, and moves it if it already faces that way), shoot a blue portal, shoot an orange portal, and interact (use a switch, pick up a box or put it down).
 - Each action and everything it causes (a button pressed, a door opening, a fizzler firing) happens at once, before the next action.
 
 ## The subject
 
 - Stands on one tile and always faces one of the four directions. The way it faces matters, because portals are shot that way.
-- Moving in a direction first turns it that way, then steps onto the next tile if it can enter it, and keeps going while that tile is a slide floor (see [Slide floors](#slide-floors)). Walking into something it can't enter only turns it.
+- A move key turns it that way when it faces another way; when it already faces that way, it steps onto the next tile if it can enter it, and keeps going while that tile is a slide floor (see [Slide floors](#slide-floors)). Walking into something it can't enter leaves it where it is.
 - Can carry one box at a time. It picks up the box on the tile it faces, if it could step onto that tile but for the box (not through an arrow pointing another way or something that blocks walking), and never while it stands on a switch, where interact uses the switch instead; picked up while the subject stands in a fizzler that is on, the box breaks up at once and goes back to its start. It puts a box down only on the tile it faces, if it could step onto that tile and no box, exit, switch or fizzler that is on is there; otherwise the error sound plays. The box goes everywhere with it, through portals too. While carrying it, it can't shoot portals: trying plays the error sound.
 
 ## Portals

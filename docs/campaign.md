@@ -6,6 +6,8 @@ The plan for the campaign's chambers: the conventions every chamber keeps, every
 
 Each run follows the handbook's four parts (guideline 41): teach, test, twist, combine. The rules each run teaches are named here; how a twist chamber turns them is not.
 
+Since 2026-11-24 a move key turns the subject to face its way first and there is no turn key (guideline 66). Runs 1 to 10 were detailed and built while turning in place took the turn key, so their sections below speak of it as a move the controls hide; whether run 3's teach of it, Chamber 3.1, keeps its place is still open.
+
 ## Conventions
 
 What every chamber keeps, so the player can trust it (the campaign intro of `docs/level_design.md`). Break one only in a chamber whose notes say why, and make the break plain.

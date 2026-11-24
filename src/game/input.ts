@@ -1,14 +1,12 @@
-import type {FrameInput, FrameKey} from '@/game/frame_input'
+import type {FrameInput} from '@/game/frame_input'
 import {GameKey} from '@/game/game_key'
-import {ARROW_KEY_BINDINGS, type BoundKey, DEFAULT_EXTRA_TURN_KEY, getBoundKey, getMouseBoundKey, type KeyBindings} from '@/game/key_bindings'
+import {type BoundKey, getBoundKey, getMouseBoundKey, type KeyBindings} from '@/game/key_bindings'
 
 /**
- * A press waiting for the level, with whether the turn key was held as it
- * went down.
+ * A press waiting for the level.
  */
 type KeyPress = {
-  readonly key: FrameKey // The game key pressed
-  readonly turnHeld: boolean // Whether the turn key was held down at that moment
+  readonly key: GameKey // The game key pressed
 }
 
 /**
@@ -18,8 +16,7 @@ type KeyPress = {
  * they stay in place on every layout; a bound mouse button, left or right,
  * counts as a key pressed wherever in the window it is clicked, and the
  * pointer's movement plays no part. Every other key and button is ignored.
- * Presses wait in arrival order until the level takes them, one at a time;
- * the turn key is only ever read as held.
+ * Presses wait in arrival order until the level takes them, one at a time.
  */
 export class Input {
   /**
@@ -53,9 +50,8 @@ export class Input {
 
   private static readonly RIGHT_MOUSE_BUTTON = 2 // MouseEvent.button of the right button, which opens the context menu
 
-  enabled = true // When false, keydown and mousedown are ignored entirely and the context menu opens; keyup is still tracked
+  enabled = true // When false, keydown and mousedown are ignored entirely and the context menu opens
   private readonly gameKeys: ReadonlyMap<BoundKey, GameKey> // The game key each bound key stands for
-  private readonly holding = new Set<BoundKey>() // Bound keys held down, so either of two turn keys can be let go while the other stays held
   private readonly pressed = new Set<GameKey>() // Game keys pressed since the last clear(), auto-repeat included
   private readonly presses: KeyPress[] = [] // Presses not yet taken, oldest first
 
@@ -64,45 +60,35 @@ export class Input {
    * @param bindings - The key bound to each game key, which is only read
    */
   constructor(bindings: KeyBindings) {
-    const gameKeys = new Map<BoundKey, GameKey>(Object.values(GameKey).map((gameKey) => [
+    this.gameKeys = new Map<BoundKey, GameKey>(Object.values(GameKey).map((gameKey) => [
       bindings[gameKey],
       gameKey,
     ]))
-    const usesDefaultKeys = Object.values(GameKey).every((gameKey) => bindings[gameKey] === ARROW_KEY_BINDINGS[gameKey])
-
-    // On trial, the Default keys also turn with Ctrl, which the game shows nowhere
-    if (usesDefaultKeys) {
-      gameKeys.set(DEFAULT_EXTRA_TURN_KEY, GameKey.TURN)
-    }
-
-    this.gameKeys = gameKeys
 
     window.addEventListener('keyup', this.onKeyup, false)
     window.addEventListener('keydown', this.onKeydown, false)
     window.addEventListener('mousedown', this.onMousedown, false)
     window.addEventListener('contextmenu', this.onContextmenu, false)
-    window.addEventListener('blur', this.onBlur, false)
   }
 
   /**
    * Forgets which keys went down since the last call, keeping the presses
-   * still waiting and the keys held down.
+   * still waiting.
    */
   clear(): void {
     this.pressed.clear()
   }
 
   /**
-   * Forgets every key: pressed, waiting and held.
+   * Forgets every key: pressed and waiting.
    */
   reset(): void {
     this.pressed.clear()
     this.presses.length = 0
-    this.holding.clear()
   }
 
   /**
-   * Forgets every press still waiting, keeping the keys held down.
+   * Forgets every press still waiting.
    */
   forgetPresses(): void {
     this.presses.length = 0
@@ -110,8 +96,8 @@ export class Input {
 
   /**
    * Takes the oldest waiting press.
-   * @returns What the rules read for it (its key, and whether the turn key
-   * was held as it went down), or null when no press is waiting
+   * @returns What the rules read for it, its key, or null when no press is
+   * waiting
    */
   takePress(): FrameInput | null {
     const press = this.presses.shift()
@@ -122,7 +108,6 @@ export class Input {
 
     return {
       keys: [press.key],
-      turnHeld: press.turnHeld,
     }
   }
 
@@ -143,14 +128,12 @@ export class Input {
     window.removeEventListener('keydown', this.onKeydown, false)
     window.removeEventListener('mousedown', this.onMousedown, false)
     window.removeEventListener('contextmenu', this.onContextmenu, false)
-    window.removeEventListener('blur', this.onBlur, false)
   }
 
   /**
    * Records a key going down, unless disabled. A press waits for the level,
-   * except the turn key, which is only recorded as held, a held key's repeat
-   * while its earlier press is still waiting, and a press with Alt or Meta
-   * held, which is only recorded as held.
+   * except a held key's repeat while its earlier press is still waiting, and
+   * a press with Alt or Meta held, which is ignored.
    * @param event - The keydown event
    */
   readonly onKeydown = (event: KeyboardEvent): void => {
@@ -165,8 +148,6 @@ export class Input {
       return
     }
 
-    this.holding.add(key)
-
     // With Alt or Meta held the key is a browser shortcut (Alt+Left goes
     // back), so it is left to the browser and doesn't play
     if (event.altKey || event.metaKey) {
@@ -175,10 +156,9 @@ export class Input {
 
     this.pressed.add(gameKey)
 
-    if ((gameKey !== GameKey.TURN) && !(event.repeat && this.presses.some((press) => press.key === gameKey))) {
+    if (!(event.repeat && this.presses.some((press) => press.key === gameKey))) {
       this.presses.push({
         key: gameKey,
-        turnHeld: this.isTurnHeld,
       })
     }
 
@@ -186,19 +166,11 @@ export class Input {
   }
 
   /**
-   * Records a key going up, even while disabled.
+   * Suppresses a bound key's browser default as it goes up, unless disabled.
    * @param event - The keyup event
    */
   readonly onKeyup = (event: KeyboardEvent): void => {
-    const key = getBoundKey(event.code)
-
-    if ((key === null) || (this.getGameKey(key) === null)) {
-      return
-    }
-
-    this.holding.delete(key)
-
-    if (this.enabled) {
+    if (this.enabled && (this.getGameKey(getBoundKey(event.code)) !== null)) {
       this.preventDefault(event)
     }
   }
@@ -206,7 +178,7 @@ export class Input {
   /**
    * Records a bound mouse button going down anywhere in the window, unless
    * disabled, as a key pressed: its press waits for the level, once however
-   * long it is held, with whether the turn key was held. Its browser default
+   * long it is held. Its browser default
    * (selecting the text under it, moving the keyboard focus) is suppressed. A
    * click with Alt or Meta held is left to the browser and doesn't play.
    * @param event - The mousedown event
@@ -218,15 +190,13 @@ export class Input {
 
     const gameKey = this.getGameKey(getMouseBoundKey(event.button))
 
-    // Only a portal can be bound to a mouse button, never the turn key
-    if ((gameKey === null) || (gameKey === GameKey.TURN)) {
+    if (gameKey === null) {
       return
     }
 
     this.pressed.add(gameKey)
     this.presses.push({
       key: gameKey,
-      turnHeld: this.isTurnHeld,
     })
 
     event.preventDefault()
@@ -241,22 +211,6 @@ export class Input {
     if (this.enabled && !event.altKey && !event.metaKey && (this.getGameKey(getMouseBoundKey(Input.RIGHT_MOUSE_BUTTON)) !== null)) {
       event.preventDefault()
     }
-  }
-
-  /**
-   * Forgets the keys held down when the window loses focus, since their
-   * keyup goes elsewhere: a turn key left held would turn every later move.
-   */
-  readonly onBlur = (): void => {
-    this.holding.clear()
-  }
-
-  /**
-   * Whether a key bound to the turn game key is held down.
-   * @returns True when the turn key is held
-   */
-  private get isTurnHeld(): boolean {
-    return [...this.holding].some((key) => this.gameKeys.get(key) === GameKey.TURN)
   }
 
   /**

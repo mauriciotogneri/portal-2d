@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * The controls legend shown beside the chamber: moving, turning in place,
- * both portals and interacting, each on the key the player has bound to it,
+ * The controls legend shown beside the chamber: turning and moving, both
+ * portals and interacting, each on the key the player has bound to it,
  * and Escape for the pause dialog, each with what it does. The keys show what
  * the player's keyboard prints on them, arrow keys a small triangle pointing
  * their way, and a portal's mouse button a small mouse with that button
@@ -43,7 +43,6 @@ const keys = computed(() => ({
   [GameKey.DOWN]: legendKey(GameKey.DOWN),
   [GameKey.LEFT]: legendKey(GameKey.LEFT),
   [GameKey.RIGHT]: legendKey(GameKey.RIGHT),
-  [GameKey.TURN]: legendKey(GameKey.TURN),
   [GameKey.BLUE]: legendKey(GameKey.BLUE),
   [GameKey.ORANGE]: legendKey(GameKey.ORANGE),
   [GameKey.INTERACT]: legendKey(GameKey.INTERACT),
@@ -98,22 +97,7 @@ onMounted(refreshKeyLabels)
             </dt>
             <dd class="legend-action">
               <span class="action-name">Move</span>
-              <span class="action-detail">Navigate the chamber</span>
-            </dd>
-          </div>
-          <div class="legend-row">
-            <dt>
-              <KeyCap
-                :class="{
-                  'keycap-wide': keys.turn.wide,
-                }"
-                :bound-key="keys.turn.key"
-                :aria-label="keys.turn.name"
-              />
-            </dt>
-            <dd class="legend-action">
-              <span class="action-name">Turn in place</span>
-              <span class="action-detail">Hold it, then a move key, to face that way</span>
+              <span class="action-detail">Face that way, press again to step</span>
             </dd>
           </div>
           <div class="legend-row">
