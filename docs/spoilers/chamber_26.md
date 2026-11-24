@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch, turned a half turn on its fresh reviewer's finding, with the author's approval, so its frame isn't chamber 22's; checked and independently reviewed; waiting for the author's cold play. File: `src/chambers/chamber_26.json`, twenty-sixth in the play order; permanent id 26. Run 11's combine and last chamber (`docs/campaign.md`, "Run 11 in detail").
+Status: built 2026-11-24 from its sketch, turned a half turn on its fresh reviewer's finding, with the author's approval, so its frame isn't chamber 22's; checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_26.json`, twenty-sixth in the play order; permanent id 26. Run 11's combine and last chamber (`docs/campaign.md`, "Run 11 in detail").
 
 ## Entry
 
@@ -120,7 +120,7 @@ None is a dead end.
 - `npm run solve -- --baseline`: 9 moves and 2 portals, both searches; two portal wall sides; key 19 bits. The macro search refuses it, as it does every chamber with a receiver.
 - Every reachable state (7,198) explored through the rules' step with the game's presses (each move key a turn, or a move when the subject already faces that way): none dead, none with the subject standing in something blocked, none with a box under the subject.
 - Copies: with the box made plain, unsolvable; with X steel, unsolvable; with Y steel, unsolvable; with D never opening, unsolvable; with no door, 6 presses, the box never moved; with the box kept off B, unsolvable; with the subject kept off B, 6,030 states, none dead, 21 presses.
-- `npm run chamber:check`, `npm run smoke:engine`, `npm run random:walk`, `npm run lint` and `npm run build` pass. `npm run replay:check` and `npm run solver:check` fail only on the solution not yet recorded.
+- `npm run chamber:check`, `npm run smoke:engine`, `npm run random:walk`, `npm run lint` and `npm run build` pass. `npm run replay:check` and `npm run solver:check` pass with the recorded solution.
 - Played in `npm run dev` with the Chrome tool, muted, 2026-11-24, at about 44 px tiles, as first built and again turned: the box's `\` reads clearly, the turned ray ending on the closed door shows from the first frame, and the two plain walls stand out from the steel; standing on B opened D and lit B's antline while the ray ended on the subject; the route above completed it, the light coming out of Y through the open door into the receiver. Turned, B's rerouted line visibly leaves the button downward, crosses under the ray and enters D. No console error in the first play.
 - An independent check (a fresh agent with only the files of chambers 25 and 26 as first built and their plan entries, not these notes) found no shortcut, no dead end and nothing that looks broken; with the box never resting on B, every state is dead, and both portals are forced by the layout. Its findings:
   - B's antline ran along row 2 under the ray at the start, so it seemed to rise out of the ray at (3, 2) rather than leave the button. Answered: rerouted to leave the button away from the ray and cross it at right angles; checked in the game.
@@ -131,4 +131,7 @@ None is a dead end.
 
 ## Playtests
 
-None yet.
+| # | Who | Date | What the run shows |
+|---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-24 | Kept, and liked. Their recorded run goes up the right side into the emitter's row at (5, 3), cutting the ray, then left over B (D opening while they stood on it, the light cut at them) to (3, 3) and lifts the box from the corner; after a short detour down to (3, 1) and back, it puts the box on B from (3, 3) (D opens, the light turns up column 4 into X); then shoots Y first, from (2, 3), and X from (4, 2), below B, through the box; then left across the lit column 2 (the exit shutting and opening again) and down into the exit (17 moves and 2 portals; the fewest is 9 and 2). The key move, the box on B, is the intended one. The lure shows only as a step across B on the way to the box, not as a stop there; whether the detour was a try, the recording can't show. Recorded as `chamber_26.solution.json` (Download solution) |
+| 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

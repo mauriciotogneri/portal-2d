@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-24 from its sketch; checked; waiting for the author's cold play. File: `src/chambers/chamber_25.json`, twenty-fifth in the play order; permanent id 25. Run 11's first chamber (`docs/campaign.md`, "Run 11 in detail").
+Status: built 2026-11-24 from its sketch; checked and independently reviewed; kept by the author after their cold play, 2026-11-24; their cold run its recorded solution. File: `src/chambers/chamber_25.json`, twenty-fifth in the play order; permanent id 25. Run 11's first chamber (`docs/campaign.md`, "Run 11 in detail").
 
 ## Entry
 
@@ -104,10 +104,13 @@ None is a dead end.
 - `npm run solve -- --baseline`: 6 moves and no portal, both searches; no portal wall side; key 12 bits. The macro search refuses it, as it does every chamber with a receiver.
 - Every reachable state (577) explored through the rules' step with the game's presses (each move key a turn, or a move when the subject already faces that way): none dead, none with the subject standing in something blocked, none with a box under the subject.
 - Copies: with no box, unsolvable; with the box made plain, unsolvable; with the box kept off (2, 3), unsolvable.
-- `npm run chamber:check`, `npm run smoke:engine`, `npm run random:walk`, `npm run lint` and `npm run build` pass. `npm run replay:check` and `npm run solver:check` fail only on the solution not yet recorded.
+- `npm run chamber:check`, `npm run smoke:engine`, `npm run random:walk`, `npm run lint` and `npm run build` pass. `npm run replay:check` and `npm run solver:check` pass with the recorded solution.
 - Played in `npm run dev` with the Chrome tool, muted, 2026-11-24, at about 44 px tiles: the box's `/` reads clearly at the start, and the ray visibly ends one tile below the receiver; the route above completed it, the receiver, its antline and the exit lighting as the box went down on (2, 3); no console error.
 - An independent check (a fresh agent with only the files of chambers 25 and 26 and their plan entries, not these notes) found no shortcut, no dead end and nothing that looks broken: with the box never resting on (2, 3), all 532 states are dead; the near miss at the start is the clue, and every player sees it; chamber 10.1's habit, lifting the box out of the ray, fails plainly, the ray running up column 2 into steel; the slant reads physically, the receiver's face is right, the antline runs over steel only. Its one note: the chamber can be stumbled into, lifting the box from (2, 1), stepping up and putting it down ahead, and no later chamber tests aiming, since in 11.2 the button picks the mirror's tile. Answered: a teach may be stumbled through (guideline 24); the test that would have checked it was cut on purpose (the idea pool, "Sketched for a run").
 
 ## Playtests
 
-None yet.
+| # | Who | Date | What the run shows |
+|---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-24 | Kept, and liked. Their recorded run lifts the box from its right, from (3, 2), not from below, steps up to (3, 3) and puts it down on (2, 3) facing left: the ray turns into row 3 and ends on the subject until it steps down; then left along row 2 across the lit column 2 (the exit shutting and opening again), up to (1, 3) and into the exit (8 moves and no portal; the fewest is 6). The key move is the intended one; earlier tries, if any, leave no trace in a recording. Recorded as `chamber_25.solution.json` (Download solution) |
+| 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

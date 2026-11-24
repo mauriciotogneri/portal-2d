@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 13, steps 13.1 and 13.2: Chambers 11.1 and 11.2 (ids 25 and 26) built, waiting for the author's cold play
+Status: In progress. Now: phase 13, step 13.4: detail run 12, the finale
 Last revised: 2026-11-24
 
 ## Goal
@@ -162,11 +162,11 @@ Detailed 2026-11-24 (`docs/campaign.md`, "Run 10 in detail"): two teaches and a 
 
 ### Phase 13 — Run 11: mirror boxes
 
-Detailed 2026-11-24 (`docs/campaign.md`, "Run 11 in detail"): a teach and a combine, both sketched in the idea pool, the combine first. They take ids 25 and 26; the next chamber takes id 27. Each sketch names the risks to watch in the author's cold play; the handbook lessons its drafts turned up give a chamber away, so they wait until after that play. The macro search refuses chambers with receivers, so each is checked with `--baseline`, a walk of every reachable state and by hand (guideline 101).
+Detailed 2026-11-24 (`docs/campaign.md`, "Run 11 in detail"): a teach and a combine, both sketched in the idea pool, the combine first. They take ids 25 and 26; the next chamber takes id 27. Each sketch names the risks to watch in the author's cold play; the handbook lessons its drafts and checks turned up gave a chamber away, so they waited until after that play, and went in then, approved by the author on 2026-11-24: guidelines 3, 112, 113 and 120 extended. The macro search refuses chambers with receivers, so each is checked with `--baseline`, a walk of every reachable state and by hand (guideline 101).
 
-- [ ] **13.1 Chamber 11.1** (teach: a resting mirror box turns a ray a quarter turn, so where it rests decides where the ray goes). Built 2026-11-24 as id 25, twenty-fifth in the play order, from its sketch (`docs/spoilers/chamber_25.md`); checked and independently reviewed; waiting for the author's cold play, both of run 11's chambers built before the author plays either (the author's call, 2026-11-24, as for runs 2 to 10).
-- [ ] **13.2 Chamber 11.2** (combine: a closed door stops a ray; a mirror box resting on a button holds it down and turns a ray at once). Built 2026-11-24 as id 26, twenty-sixth in the play order, from its sketch, turned a half turn on its fresh reviewer's finding, with the author's approval, so its frame isn't chamber 22's (`docs/spoilers/chamber_26.md`); checked and independently reviewed; the run's last chamber; waiting for the author's cold play.
-- [ ] **13.3 Friends play run 11 cold.**
+- [x] **13.1 Chamber 11.1** (teach: a resting mirror box turns a ray a quarter turn, so where it rests decides where the ray goes). Built 2026-11-24 as id 25, twenty-fifth in the play order, from its sketch (`docs/spoilers/chamber_25.md`); checked and independently reviewed; both of run 11's chambers built before the author played either (the author's call, 2026-11-24, as for runs 2 to 10); kept by the author after their cold play, 2026-11-24, and recorded from it.
+- [x] **13.2 Chamber 11.2** (combine: a closed door stops a ray; a mirror box resting on a button holds it down and turns a ray at once). Built 2026-11-24 as id 26, twenty-sixth in the play order, from its sketch, turned a half turn on its fresh reviewer's finding, with the author's approval, so its frame isn't chamber 22's (`docs/spoilers/chamber_26.md`); checked and independently reviewed; the run's last chamber; kept by the author after their cold play, 2026-11-24, and recorded from it.
+- [x] **13.3 Friends play run 11 cold.** Friends played chambers 11.1 and 11.2 (`/chamber/25` and `/chamber/26`) cold, 2026-11-24, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 11 is finished (assumption 6).
 - [ ] **13.4 Detail run 12**, the finale, in the outline (`docs/campaign.md`, run 12), with what runs 10 and 11 carried there.
 
 ### Later runs
