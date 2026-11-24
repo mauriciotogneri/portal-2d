@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: kept by the author on 2026-11-24, after their cold play; their run's solution is not recorded yet. File: `src/chambers/chamber_16.json`, sixteenth in the play order; permanent id 16. Designed together with chamber 7.1 (id 15), both before the author plays either (approved with the plan, 2026-11-24, as for runs 2 to 6); a third, 7.3, was built with them and cut before the author played it, as reading as this chamber reversed (the idea pool, "Sketched for a run"). Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+Status: kept by the author on 2026-11-24, after their cold play; their cold run its recorded solution. File: `src/chambers/chamber_16.json`, sixteenth in the play order; permanent id 16. Designed together with chamber 7.1 (id 15), both before the author plays either (approved with the plan, 2026-11-24, as for runs 2 to 6); a third, 7.3, was built with them and cut before the author played it, as reading as this chamber reversed (the idea pool, "Sketched for a run").
 
 ## Entry
 
@@ -115,5 +115,5 @@ None is a dead end.
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
-| 1 | The author, cold | 2026-11-24 | Kept. Their route isn't known until their solution is recorded (guideline 106) |
+| 1 | The author, cold | 2026-11-24 | Kept. Their recorded run is the intended route with two presses more: the box put down on (1, 2) from (1, 1) and picked up again at once, then carried up and put on B; and at (3, 3), facing A turned left, an interact that did nothing, before the step onto it. On A they lifted the box at once, with no move key pressed first, so the frozen look its independent check warned of (Checks) doesn't show, and the first up press walked on, A having turned the subject up with it (11 moves and no portal, the fewest). Earlier tries, if any, leave no trace in a recording. Recorded as `chamber_16.solution.json` (Download solution) |
 | 2 | Friends, cold | 2026-11-24 | Played it and liked it, by the author's account. Their routes, and how many friends played, weren't recorded (guideline 105) |

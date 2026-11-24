@@ -1,7 +1,7 @@
 # Hint triggers
 
 Tick a box when the step is implemented and verified.
-Stage 2 of 3, after stage-1-hint-display.md, before stage-3-run-1-hints.md.
+Stage 2 of 3, after stage 1 (the display, built; `docs/hints.md`), before stage-3-run-1-hints.md.
 
 ## Goal and scope
 
