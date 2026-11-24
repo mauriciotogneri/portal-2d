@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 12, step 12.5: detail run 11
+Status: In progress. Now: phase 13, steps 13.1 and 13.2: Chambers 11.1 and 11.2 (ids 25 and 26) built, waiting for the author's cold play
 Last revised: 2026-11-24
 
 ## Goal
@@ -158,7 +158,16 @@ Detailed 2026-11-24 (`docs/campaign.md`, "Run 10 in detail"): two teaches and a 
 - [x] **12.2 Chamber 10.2** (teach: a ray through portals). Built 2026-11-24 as id 23, twenty-third in the play order, from its sketch, its antline rerouted on its fresh reviewer's finding (`docs/spoilers/chamber_23.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, and recorded from it.
 - [x] **12.3 Chamber 10.3** (combine: a fizzler a link switches breaks up a box lying in it, which flies home from however far). Built 2026-11-24 as id 24, twenty-fourth in the play order, from its sketch (`docs/spoilers/chamber_24.md`); checked and independently reviewed; the run's last chamber; kept by the author after their cold play, 2026-11-24, and recorded from it.
 - [x] **12.4 Friends play run 10 cold.** Friends played chambers 10.1 to 10.3 (`/chamber/22` to `/chamber/24`) cold, 2026-11-24, and liked them, with no trouble, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 10 is finished (assumption 6).
-- [ ] **12.5 Detail run 11** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 11), with what run 10 carried there.
+- [x] **12.5 Detail run 11** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 11), with what run 10 carried there. Drafted 2026-11-24 from a proposal two fresh reviewers checked, one against the handbook and one on the prototypes alone, and approved by the author the same day: two chambers (a teach and a combine), not the four to six guessed, in `docs/campaign.md` ("Run 11 in detail"), both sketched in the idea pool, each checked with a throwaway prototype. The reviewers' findings redrew the combine and cut a test, of which way a mirror box turns a ray from each side, whose forced moves looked like chamber 10.2's and 11.1's (guideline 113); its sketch is in the idea pool. On the author's pick the combine keeps its door, so a closed door stopping a ray, carried from run 10, shows on every play of it. Carried forward to the finale: which way a mirror box turns a ray from each side, a light barrier that is on stopping a ray, and run 10's switched fizzler closing a portal facing it and sparing the other portal as it sends a box home; and again the portal just come out of, forced to move by a box in front of it, a used switch acting again, on an arrow the subject facing only its way, and a button slid over unpressed and acting where the subject comes out onto slide floor. No handbook lesson went in yet: those the drafts turned up give a chamber away, so they wait until after the author's play.
+
+### Phase 13 — Run 11: mirror boxes
+
+Detailed 2026-11-24 (`docs/campaign.md`, "Run 11 in detail"): a teach and a combine, both sketched in the idea pool, the combine first. They take ids 25 and 26; the next chamber takes id 27. Each sketch names the risks to watch in the author's cold play; the handbook lessons its drafts turned up give a chamber away, so they wait until after that play. The macro search refuses chambers with receivers, so each is checked with `--baseline`, a walk of every reachable state and by hand (guideline 101).
+
+- [ ] **13.1 Chamber 11.1** (teach: a resting mirror box turns a ray a quarter turn, so where it rests decides where the ray goes). Built 2026-11-24 as id 25, twenty-fifth in the play order, from its sketch (`docs/spoilers/chamber_25.md`); checked and independently reviewed; waiting for the author's cold play, both of run 11's chambers built before the author plays either (the author's call, 2026-11-24, as for runs 2 to 10).
+- [ ] **13.2 Chamber 11.2** (combine: a closed door stops a ray; a mirror box resting on a button holds it down and turns a ray at once). Built 2026-11-24 as id 26, twenty-sixth in the play order, from its sketch, turned a half turn on its fresh reviewer's finding, with the author's approval, so its frame isn't chamber 22's (`docs/spoilers/chamber_26.md`); checked and independently reviewed; the run's last chamber; waiting for the author's cold play.
+- [ ] **13.3 Friends play run 11 cold.**
+- [ ] **13.4 Detail run 12**, the finale, in the outline (`docs/campaign.md`, run 12), with what runs 10 and 11 carried there.
 
 ### Later runs
 
