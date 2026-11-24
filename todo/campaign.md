@@ -1,6 +1,6 @@
 # Campaign
 
-Status: In progress. Now: phase 8, step 8.1: chamber 6.1
+Status: In progress. Now: phase 9, step 9.1: chamber 7.1 (phase 8's two solutions still to record)
 Last revised: 2026-11-24
 
 ## Goal
@@ -119,7 +119,17 @@ Detailed 2026-11-24 (`docs/campaign.md`, "Run 6 in detail"): a teach and a test,
 - [ ] **8.1 Chamber 6.1** (teach: the fizzler, and a box sent home from elsewhere, as no loss). Built 2026-11-24 as id 13, thirteenth in the play order, from its sketch, with two tiles no route needs taken out on its reviewer's finding (`docs/spoilers/chamber_13.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded. A flight home from far off, which it shows only over one tile, is carried forward in the outline.
 - [ ] **8.2 Chamber 6.2** (test: shots and portals at the fizzler). Built 2026-11-24 as id 14, fourteenth in the play order, from its sketch (`docs/spoilers/chamber_14.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
 - [x] **8.3 Friends play run 6 cold.** Friends played chambers 6.1 and 6.2 (`/chamber/13` and `/chamber/14`) cold, 2026-11-24, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). Run 6 is finished once both solutions are recorded (assumption 6).
-- [ ] **8.4 Detail run 7** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 7).
+- [x] **8.4 Detail run 7** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 7). Drafted 2026-11-24 from a proposal two fresh reviewers checked, one against the handbook and one on the prototypes alone, and approved by the author the same day: three chambers (two teaches and a twist), in `docs/campaign.md` ("Run 7 in detail"), all three sketched in the idea pool, each checked with a throwaway prototype; the reviewers' findings replaced the first drafts of 7.1 and 7.3. No combine: the one sketched first, and a second, each read as an earlier chamber and were dropped before any chamber was built (the idea pool, "Sketched for a run"), so run 8's combine serves arrows too (guideline 42). Carried forward again: a box flying home from far off, the portal just come out of forced to move by a box in front of it, and a used switch acting again.
+
+### Phase 9 — Run 7: arrows
+
+Detailed 2026-11-24 (`docs/campaign.md`, "Run 7 in detail"): two teaches and a twist, all three sketched in the idea pool. All three were designed before the author played any (approved with the plan, 2026-11-24, as for runs 2 to 6), taking ids 15, 16 and 17. On the built chambers' fresh check the author cut the twist, built as 17, before playing it, so run 7 is two chambers and the next chamber takes id 17, the id after the last chamber's (the author's rule); and had 7.1 mirrored, its frame having been chamber 5.1's. Each sketch names the risks to watch in the author's cold play; the handbook lessons its drafts turned up waited until after that play, since they gave the chambers away, and went in then, approved by the author on 2026-11-24: guidelines 3, 97, 108 and 113 extended.
+
+- [ ] **9.1 Chamber 7.1** (teach: the arrow, a one-way road, and a portal back past it). Built 2026-11-24 as id 15, fifteenth in the play order, from its sketch, mirrored left to right on its fresh reviewer's finding (`docs/spoilers/chamber_15.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
+- [ ] **9.2 Chamber 7.2** (teach: the arrow a button turns, which turns back when released, even under the subject). Built 2026-11-24 as id 16, sixteenth in the play order, from its sketch, its antline routed round on its fresh reviewer's finding (`docs/spoilers/chamber_16.md`); checked and independently reviewed; the run's last chamber; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
+- [x] **9.3 Chamber 7.3** (twist: on an arrow the subject faces only its way). Built 2026-11-24 as id 17 from its sketch, checked, and cut the same day before the author played it, on its fresh reviewer's findings: it read as 7.2 reversed, in the same room shape, and the facing rule its entry named was never felt (the idea pool, "Sketched for a run"). The facing rule is carried forward in the outline. Its lessons, and the run's others, went into the handbook after the author's play of 7.1 and 7.2, approved by the author on 2026-11-24: guidelines 3, 97, 108 and 113 extended.
+- [ ] **9.4 Friends play run 7 cold.**
+- [ ] **9.5 Detail run 8** in the outline, its combine chamber sketched first and serving arrows too (`docs/campaign.md`, run 8).
 
 ### Later runs
 

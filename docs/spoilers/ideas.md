@@ -26,7 +26,35 @@ Run 6's combine, sketched first and dropped before approval, is below; its two o
       0 1 2 3 4 5 6
   ```
 
-  `O` B1, `s` the switch, `D` D2, linked to B2, `A` and `B` plain walls, `Q` B2 in a two-tile pocket with `T`, `F` a fizzler joining the pocket to the room. The switch, behind D2, needed the box on B2, carried there by a pair on A and B; with the box on B2, in front of B, that pair is shut, the pocket sees no face of the room and has nowhere else for the box, so the box got back to B1 only by being carried into the field. 23 moves and 2 portals; 3,479 states, none dead; every route sent the box home through the field. Why dropped: its handbook reviewer found it chamber 4.3's link layout (the box on the exit's button, B2 opening a door to a switch, the box B1, B2, B1, put down on B2 from beyond with a turn), with the field made floor a 22-move walk with no portals, 4.3 itself, and the third use of the show above; both reviewers found its key move the natural walk out of the pocket, so the send-home would arrive as a thing that happens, cut 5.2's verdict (guideline 113). No layout with run 1 to 6's elements and one box was found that forces a send-home without such a round trip and switch: a box that leaves its start for a job and comes back needs the job's effect to last, which here only a switch gives, or the way it left to close behind it, which a pair the start's side can make again doesn't. Two boxes or run 7's arrows may.
+  `O` B1, `s` the switch, `D` D2, linked to B2, `A` and `B` plain walls, `Q` B2 in a two-tile pocket with `T`, `F` a fizzler joining the pocket to the room. The switch, behind D2, needed the box on B2, carried there by a pair on A and B; with the box on B2, in front of B, that pair is shut, the pocket sees no face of the room and has nowhere else for the box, so the box got back to B1 only by being carried into the field. 23 moves and 2 portals; 3,479 states, none dead; every route sent the box home through the field. Why dropped: its handbook reviewer found it chamber 4.3's link layout (the box on the exit's button, B2 opening a door to a switch, the box B1, B2, B1, put down on B2 from beyond with a turn), with the field made floor a 22-move walk with no portals, 4.3 itself, and the third use of the show above; both reviewers found its key move the natural walk out of the pocket, so the send-home would arrive as a thing that happens, cut 5.2's verdict (guideline 113). No layout with run 1 to 6's elements and one box was found that forces a send-home without such a round trip and switch: a box that leaves its start for a job and comes back needs the job's effect to last, which here only a switch gives, or the way it left to close behind it, which a pair the start's side can make again doesn't. Two boxes or run 7's arrows may: run 7 tried arrows and set the idea aside (below).
+
+Run 7's combine, sketched first, and a second combine idea, both dropped before approval, are below; its three chambers' sketches, drafted 2026-11-24 (the first and third replaced on its reviewers' findings) and approved with the run the same day, became chambers 7.1 and 7.2, whose texts moved to `chamber_15.md` and `chamber_16.md`, and a 7.3, built and cut before the author played it, below. Coordinates as above; `o` a button, `b` the box, `S` the start, `E` the exit, `< > ^ v` fixed arrows, `A` the arrow a link turns; the combines are prototypes, never built.
+
+- **Dropped: run 7's combine, the ride** (combine; sketched 2026-11-24, before the run's other chambers, guideline 51, and dropped before approval, never built). 8 × 5, every wall steel:
+
+  ```
+  y4  # # # # # # # #
+  y3  # . . . o # # #
+  y2  E S b # A . o #
+  y1  # . < < < . # #
+  y0  # # # # # # # #
+      0 1 2 3 4 5 6 7
+  ```
+
+  `o` B (4, 3), linked to `A` (4, 2), pointing right, turned down while B is held, with steel at (3, 2), so A is entered only from B (guideline 91); `o` B2 (6, 2), linked to `E` (0, 2), the exit; `<` a road back from the right part along the bottom. The box was needed on B2, past A; the box on B seals A, B being the one tile it is entered from, so the subject holds B itself, carrying the box, and steps down onto A, which turns back under it and sends it right. 15 presses and 0 portals; 439 states, none dead. Why dropped: it is Playground 8's move (the old campaign's chamber 7, which the author played) turned on its side, its lure and its loop included (its handbook reviewer); the natural walk carried the box along the top row over B and down onto A, never meeting the lure (its blind reviewer); and it was a twist, not a combine. A variant with one box for two buttons, the box on the button of a door past A and the subject holding B, had the same move.
+- **Set aside: arrows with a fizzler, a box sent home from far off** (combine idea, 2026-11-24, not prototyped). The box rests on the exit's button, which is also the button ahead of 7.2's arrow: lifting it from the arrow turns the arrow under the subject, which leaves with the box by a way it can't come back by, and a field there sends the box home onto the button, opening the exit. It would force the flight from far off carried from run 6, but plays as 7.2 followed by chamber 6.1 (guideline 113).
+- **Cut: run 7's 7.3, the box put down from the arrow** (twist; an arrow a button turns, a box, the exit; built as id 17 and cut 2026-11-24, before the author played it, on its fresh reviewer's findings; its file and notes, as built, were deleted unplayed, and id 17 goes to the next chamber). 6 × 5, every wall steel:
+
+  ```
+  y4  # # # # # #
+  y3  # b . o # #
+  y2  # S # A . E
+  y1  # . . . # #
+  y0  # # # # # #
+      0 1 2 3 4 5
+  ```
+
+  `S` the start (1, 2), facing up at `b`, the box (1, 3); `o` B (3, 3), linked to `A` (3, 2), pointing up at B, turned right while B is held; `E` (5, 2), open; (2, 2) steel, so A is entered only moving up, from (3, 1), and the tile past it only from A turned right. Idea: on an arrow the subject faces only its way, so a box carried onto A goes down only on B, ahead, which turns A under the subject and sends it right to the exit; the lure, 7.2's order, the box on B from the side, seals A. 6 moves and 0 portals; 236 states, none dead, 100 with the turn key refused; the walk refusing every put-down from A's tile reaches no completion. From its handbook reviewer's alternative, which ended in a pair over a ditch, dropped as a step after the key move with nothing new. Why cut: its fresh reviewer found it 7.2 turned a quarter turn, the same ring round one steel tile, the arrow in a side's middle, its button on the corner ahead, the exit two tiles past, and its key move 7.2's reversed, the box put down from the arrow where 7.2 lifts it (guideline 113, as both proposal reviewers had warned); and its entry's lesson never felt, since the put-down ahead, the only one the arrow allows, is the one the player wants anyway, so what every route forces is being on the arrow as its button goes down, 7.2's turn under the subject on press instead of release (guideline 108). The outline's "on it the subject faces only that way" goes on to a later run, which must force the way round it: a put-down or a shot the player plans to the side, refused.
 
 ## Portals (basics)
 

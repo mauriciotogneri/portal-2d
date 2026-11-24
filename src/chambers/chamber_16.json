@@ -1,0 +1,100 @@
+{
+    "version": 2,
+    "size": {
+        "width": 5,
+        "height": 6
+    },
+    "subject": {
+        "x": 3,
+        "y": 1,
+        "direction": "LEFT"
+    },
+    "exit": {
+        "x": 2,
+        "y": 5,
+        "blocked": false
+    },
+    "blockedWalls": [
+        {
+            "xFrom": 0,
+            "xTo": 1,
+            "yFrom": 4,
+            "yTo": 5
+        },
+        {
+            "xFrom": 3,
+            "xTo": 4,
+            "yFrom": 4,
+            "yTo": 5
+        },
+        {
+            "xFrom": 0,
+            "xTo": 0,
+            "yFrom": 1,
+            "yTo": 3
+        },
+        {
+            "xFrom": 4,
+            "xTo": 4,
+            "yFrom": 1,
+            "yTo": 3
+        },
+        {
+            "x": 2,
+            "y": 2
+        },
+        {
+            "xFrom": 0,
+            "xTo": 4,
+            "yFrom": 0,
+            "yTo": 0
+        }
+    ],
+    "boxes": [
+        {
+            "x": 2,
+            "y": 1
+        }
+    ],
+    "buttons": [
+        {
+            "x": 1,
+            "y": 3,
+            "links": [
+                1
+            ]
+        }
+    ],
+    "arrows": [
+        {
+            "x": 2,
+            "y": 3,
+            "direction": "UP",
+            "id": 1,
+            "turnedDirection": "LEFT"
+        }
+    ],
+    "antlines": [
+        {
+            "link": 1,
+            "path": [
+                {
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "x": 1,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 3
+                }
+            ]
+        }
+    ]
+}
