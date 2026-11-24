@@ -1,7 +1,7 @@
 # Campaign
 
-Status: In progress. Now: phase 7, step 7.5: detail run 6
-Last revised: 2026-11-23
+Status: In progress. Now: phase 8, step 8.1: chamber 6.1
+Last revised: 2026-11-24
 
 ## Goal
 
@@ -110,7 +110,16 @@ Detailed 2026-11-23 (`docs/campaign.md`, "Run 5 in detail"): a teach, a twist an
 - [x] **7.2 Chamber 5.2** (twist: a box sent home from elsewhere, and a portal on steel closing as it shuts). Built (id 12), played cold by the author and cut, 2026-11-23: "basically the same as chamber 11"; in the idea pool ("Cut drafts"). A box sent home from elsewhere, which it forced, is carried to run 6; the portal on steel closing shows on the likeliest wrong tries of 5.1 and 5.3.
 - [x] **7.3 Chamber 5.3** (combine: steel a button opens, one box needed on both sides of it). Built 2026-11-23 as id 13, renumbered to id 12 when 5.2 was cut, twelfth in the play order; kept by the author and recorded from their cold play the same day (`docs/spoilers/chamber_12.md`).
 - [x] **7.4 Friends play run 5 cold.** Friends played chambers 5.1 and 5.3 (now `/chamber/11` and `/chamber/12`) cold, 2026-11-23, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 5 is finished (assumption 6).
-- [ ] **7.5 Detail run 6** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 6), forcing a box sent home from elsewhere, as no loss, before any chamber relies on it (carried from runs 4 and 5, guideline 28).
+- [x] **7.5 Detail run 6** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 6), forcing a box sent home from elsewhere, as no loss, before any chamber relies on it (carried from runs 4 and 5, guideline 28). Drafted 2026-11-23 from a proposal three fresh reviewers checked, and approved by the author 2026-11-24: two chambers (a teach and a test), in `docs/campaign.md` ("Run 6 in detail"), both sketched in the idea pool, each checked with a throwaway prototype. The combine sketched first was dropped before any chamber was built: with run 1 to 6's elements, forcing a box sent home took a round trip that only a switch could set up, and it played as chamber 4.3 with a fizzler (guideline 113), so the teach forces the send-home instead; its sketch is in the idea pool. Carried forward: the fizzler a link switches to run 10; and, still, the portal just come out of forced to move by a box in front of it, and a used switch acting again.
+
+### Phase 8 — Run 6: fizzlers
+
+Detailed 2026-11-24 (`docs/campaign.md`, "Run 6 in detail"): a teach and a test, both sketched in the idea pool. Both are designed before the author plays either (the author's call, 2026-11-24, as for runs 2 to 5), taking ids 13 and 14; the next chamber after them takes id 15. Each breaks one `Must` on purpose, named with its reason in its notes, which the author accepted with the plan. The handbook lessons its drafts turned up waited until after the author's play, since they gave the chambers away, and went in then, approved by the author on 2026-11-24: guidelines 26, 70, 73, 113 and 116 extended, and guideline 119.
+
+- [ ] **8.1 Chamber 6.1** (teach: the fizzler, and a box sent home from elsewhere, as no loss). Built 2026-11-24 as id 13, thirteenth in the play order, from its sketch, with two tiles no route needs taken out on its reviewer's finding (`docs/spoilers/chamber_13.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded. A flight home from far off, which it shows only over one tile, is carried forward in the outline.
+- [ ] **8.2 Chamber 6.2** (test: shots and portals at the fizzler). Built 2026-11-24 as id 14, fourteenth in the play order, from its sketch (`docs/spoilers/chamber_14.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-24, their solution still to be recorded.
+- [x] **8.3 Friends play run 6 cold.** Friends played chambers 6.1 and 6.2 (`/chamber/13` and `/chamber/14`) cold, 2026-11-24, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). Run 6 is finished once both solutions are recorded (assumption 6).
+- [ ] **8.4 Detail run 7** in the outline, its combine chamber sketched first (`docs/campaign.md`, run 7).
 
 ### Later runs
 

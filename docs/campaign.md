@@ -29,11 +29,11 @@ What every chamber keeps, so the player can trust it (the campaign intro of `doc
 | 3   | Boxes and buttons                        | Turning in place; doors several buttons link                                           | 2            | Detailed below |
 | 4   | Switches                                 | The switch; the box that starts absent until a link brings it in                       | 3            | Detailed below |
 | 5   | Lasers, and walls that switch            | The laser; blocked walls a link switches                                               | 2            | Detailed below |
-| 6   | Fizzlers                                 | The fizzler                                                                            | 4–6          | Outline        |
+| 6   | Fizzlers                                 | The fizzler                                                                            | 2            | Detailed below |
 | 7   | Arrows                                   | The arrow, and the arrow a link turns                                                  | 4–6          | Outline        |
 | 8   | Light barriers                           | The light barrier                                                                      | 3–4          | Outline        |
 | 9   | Slide floors                             | The slide floor; the laser a link switches                                             | 6–8          | Outline        |
-| 10  | Rays                                     | The emitter and the receiver; the ditch a link switches                                | 5–7          | Outline        |
+| 10  | Rays                                     | The emitter and the receiver; the ditch and the fizzler a link switches                | 5–7          | Outline        |
 | 11  | Mirror boxes                             | The mirror box                                                                         | 4–6          | Outline        |
 | 12  | Finale                                   | None                                                                                   | 2–4          | Outline        |
 
@@ -61,7 +61,7 @@ The laser stops the subject but not a shot, as an open ditch does; steel takes p
 
 ### 6. Fizzlers
 
-Walking into a fizzler that is on closes both portals and breaks up a carried box, which flies home; shots don't pass one, and the portal keys do nothing inside one; a fizzler switching on closes a portal facing it; the walls behind its connectors take no portal. A box sent home from elsewhere, carried from runs 4 and 5, is forced, as no loss, before any chamber relies on it (guideline 28).
+Walking into a fizzler that is on closes both portals and breaks up a carried box, which flies home; shots don't pass one. A teach and a test. A box sent home from elsewhere, carried from runs 4 and 5, is forced, as no loss (guideline 28). Refusals no route can be made to meet (guideline 108): the portal keys doing nothing inside one, the walls behind its connectors taking no portal, and a box picked up from inside one breaking up. Carried forward: a fizzler a link switches, which closes a portal facing it and breaks up a box lying in it as it switches on, to run 10, where a receiver's ray can switch one: in run 6 the first would read as run 5's steel shutting on its portal and the second would repeat the send-home 6.1 forces (guideline 113); a box flying home from far off, which run 6 shows only from close by, before any route relies on a far start (guideline 70); and, still, the portal just come out of, forced to move by a box in front of it (from run 3), and a used switch acting again (from run 4). Detailed [below](#run-6-in-detail).
 
 ### 7. Arrows
 
@@ -77,7 +77,7 @@ A slide stops only where something stops it: a wall, a box, plain floor, a close
 
 ### 10. Rays
 
-An emitter's ray lights a receiver, which holds its links open while lit; the subject and a resting box cut a ray, and a ray goes through portals as the subject does; a closed door and a light barrier that is on stop it; a ray must stay off what its own receiver holds (guideline 92). A ditch a link switches comes here: a box lying on it falls as the ray is cut and the ditch opens, which one box can show (carried from run 5). The solver's macro search refuses chambers with receivers, so these are checked by hand.
+An emitter's ray lights a receiver, which holds its links open while lit; the subject and a resting box cut a ray, and a ray goes through portals as the subject does; a closed door and a light barrier that is on stop it; a ray must stay off what its own receiver holds (guideline 92). A ditch a link switches comes here: a box lying on it falls as the ray is cut and the ditch opens, which one box can show (carried from run 5). So does a fizzler a link switches: as it switches on it closes a portal facing it and breaks up a box lying in it, which sends the box home without the subject walking into a field, so its portals last (carried from run 6). The solver's macro search refuses chambers with receivers, so these are checked by hand.
 
 ### 11. Mirror boxes
 
@@ -133,3 +133,12 @@ The steel run: blocked walls a button opens, and the laser. Detailed as three ch
 | --- | ------- | ---------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
 | 1   | Teach   | Steel a button opens, a box, a button, a laser                         | Runs 1 to 4              | Steel a button links takes portals while the button is held, its antline leading to it, and a box can hold it for the subject; a laser stops the subject but not a shot; a shot passes a resting box | —               |
 | 2   | Combine | Steel a button opens, a box, two buttons, a laser, the exit           | Runs 1 to 4, and 5.1     | The box that holds steel open can be needed past it, though lifting it shuts the steel and the portal on it, where a portal past a door outlasts the door (built as 5.3)                              | —               |
+
+## Run 6 in detail
+
+The fizzler run. Two chambers, a teach and a test, not the four to six guessed. The combine was sketched first, in the idea pool (guideline 51), and dropped before any chamber was built: with run 1 to 6's elements, forcing a box sent home took a round trip that only a switch could set up, and it played as chamber 4.3 with a fizzler, as its reviewers found (guideline 113). So the teach forces the send-home, the test forces the fizzler's shots and portals, and the rest are refusals or wait for run 10 (run 6's paragraph above). Each chamber breaks one `Must` on purpose, a refusal reachable only where nothing is at stake, named with its reason in its notes. Turning in place is known from run 3, so a route may need the turn key (guideline 66). Hints stay in run 1 (convention 7). Drafted from a proposal three fresh reviewers checked, one against the handbook, one on the prototypes alone and one on the redrawn drafts; approved by the author on 2026-11-24, with the switched fizzler carried to run 10, both breaks accepted, and both chambers designed before the author plays either. Both were built and played cold by the author the same day, who kept both, and friends played them and liked them.
+
+| #   | Part  | Elements                                      | The player already knows | Should teach                                                                                                                                                            | Hint (if built) |
+| --- | ----- | --------------------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| 1   | Teach | A fizzler, a box, a button, the exit          | Runs 1 to 5              | The subject walks through a fizzler that is on; a box carried into one breaks up and goes back to its start, so a box sent home from elsewhere is not lost (carried from runs 4 and 5) | —               |
+| 2   | Test  | A fizzler, a box, a button, the exit, ditches | Runs 1 to 5, and 6.1     | Shots stop at a fizzler that is on, and walking into one closes both portals                                                                                             | —               |
