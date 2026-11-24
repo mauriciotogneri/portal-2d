@@ -257,6 +257,7 @@ export class CompiledChamber {
   private readonly walls: Uint8Array // 1 on each cell holding a wall, blocked walls, emitters and receivers included
   private readonly portalWalls: Uint8Array // 1 on each cell holding a wall that can take portals: a wall, or a blocked wall a link reaches or that starts unblocked
   private readonly mirrors: readonly (Mirror | null)[] // Each box's mirror, or null for a plain box, in list order
+  private readonly absentBoxes: readonly boolean[] // Whether each box starts absent, until a link brings it in, in list order
   private readonly tileIndexes = new Map<PlacedKind, TileIndex>() // Where each type's elements are
   private readonly entries = new Map<PlacedKind, readonly PlacedEntry[]>() // Each type's entries, in list order
   private readonly directions = new Map<PlacedKind, readonly (Direction | null)[]>() // Which way each element points, by type, then index
@@ -273,6 +274,7 @@ export class CompiledChamber {
     this.height = data.size.height
     this.boxStarts = data.boxes ?? []
     this.mirrors = (data.boxes ?? []).map((box) => readMirror(box.mirror))
+    this.absentBoxes = (data.boxes ?? []).map((box) => box.absent === true)
     this.subjectStart = {
       x: data.subject.x,
       y: data.subject.y,
@@ -702,6 +704,40 @@ export class CompiledChamber {
    */
   mirrorOf(index: number): Mirror | null {
     return this.mirrors[index] ?? null
+  }
+
+  /**
+   * Whether a box starts absent: not on the floor, nor anywhere else, until
+   * a link first sends it home, which brings it in on its start tile.
+   * @param index - The box's index in the chamber's box list
+   * @returns True for a box that starts absent; false for one that doesn't, or a box the chamber doesn't have
+   */
+  startsAbsent(index: number): boolean {
+    return this.absentBoxes[index] ?? false
+  }
+
+  /**
+   * Whether a button, switch or receiver links a box, directly or through a
+   * group: destroyed, such a box is absent until a link sends it home, where
+   * any other goes straight back to its start.
+   * @param index - The box's index in the chamber's box list
+   * @returns True for a linked box; false for one no link reaches, or a box the chamber doesn't have
+   */
+  isBoxLinked(index: number): boolean {
+    return this.activatorsOf({
+      kind: 'box',
+      index: index,
+    }).length > 0
+  }
+
+  /**
+   * Whether a box can ever be absent: it starts absent, or a link reaches
+   * it, so being destroyed leaves it absent.
+   * @param index - The box's index in the chamber's box list
+   * @returns True for such a box; false for any other, or a box the chamber doesn't have
+   */
+  canBeAbsent(index: number): boolean {
+    return this.startsAbsent(index) || this.isBoxLinked(index)
   }
 
   /**

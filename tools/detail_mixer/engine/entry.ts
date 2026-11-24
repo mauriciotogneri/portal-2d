@@ -372,7 +372,7 @@ class Effects {
   readonly changes = new ElementTransitions() // Elements switching
   readonly ripple = new MissRipple() // A missed shot
   readonly fall = new BoxFall() // Boxes falling into pits
-  readonly returns = new BoxReturns() // Boxes sent home, flying there, or gathering there after a fall
+  readonly returns = new BoxReturns() // Boxes sent home, flying there, or gathering there after a fall, or, linked, breaking up for good
   readonly openings = new PortalOpenings() // Portals opening
   readonly turn = new SubjectTurn() // The subject turning
 

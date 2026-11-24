@@ -9,13 +9,15 @@ Everything around the chamber itself: the screens, the menus and dialogs, the ke
 | 1 | Loading | Any, first | The first screen of every visit, on a desktop: it downloads the game's files, then waits for Start (see [loading screen](#loading-screen)) |
 | 2 | Home | `/` | The menu, on a test room's wall (see [home menu](#home-menu)); any address the game doesn't know goes here |
 | 3 | Chamber | `/chamber/N` | A chamber of the campaign, N its place in the play order, counted from 1; `/chamber/0` and a number with no chamber go home (see [chamber screen](#chamber-screen)) |
-| 4 | Playground chamber | `/playground/N` | Development builds only: a playground chamber, in the chamber screen; `/playground`, `/playground/0` and a number past the last go home. Production builds leave out the addresses, the home menu's section and the files |
+| 4 | Playground chamber | `/playground/N` | A playground chamber, in the chamber screen; `/playground`, `/playground/0` and a number past the last go home. Production builds leave out the home menu's section, so there the address is the only way in, for sharing test chambers |
 
 Touch-first devices (`pointer: coarse`) get the desktop-only notice instead of the app.
 
 ## Home menu
 
 The home screen has no game running, so the menu reads the keys itself (`event.key`, so the numpad's arrows follow it even with NumLock off). The first column holds the sections: Play, Settings and About, after Playground in development. Opening a section shows its rows in a second column, and the highlighted row's map, pages or changelog in a third.
+
+Play lists only the chambers the player has reached: from Chamber 1 up to the one after the furthest chamber completed, so a first visit (or one after Reset progress) lists Chamber 1 alone, each completion of the furthest adds the next, and completing the last lists them all. A chamber completed past a gap (one skipped through its address, or a chamber remade under a new id) keeps every chamber before it listed. The list shows no row or hint for the chambers not yet listed (the chamber sign still counts them all, as in "03/10"), and their addresses still open them. The list follows the progress as it changes, another tab's included: when it shortens, a highlight past its end moves to the first chamber not yet completed. Development builds list by the same rule.
 
 Getting around:
 
@@ -30,9 +32,9 @@ Getting around:
 
 Arriving:
 
-- The first arrival shows only the sections, with Play highlighted and focused but not open; back from a chamber, Play is open with that chamber highlighted and focused.
+- The first arrival shows only the sections, with Play highlighted and focused but not open; back from a chamber, Play is open with that chamber highlighted and focused, or the first chamber not yet completed when Play doesn't list it (opened by its address).
 - Opening Play highlights the first chamber not yet completed, or the first chamber when all are.
-- In development the first column starts with Playground, a section like Play: Right, Enter, Space or a click opens it and steps into its rows, Playground 1 to 12, on the one highlighted last (Playground 1 at first), with the highlighted one's map in the third column. The first arrival highlights and focuses Playground instead of Play, with nothing open, and back from a playground chamber, Playground is open with that chamber highlighted and focused.
+- In development the first column starts with Playground, a section like Play: Right, Enter, Space or a click opens it and steps into its rows, Playground 1 to 12, on the one highlighted last (Playground 1 at first), with the highlighted one's map in the third column. The first arrival highlights and focuses Playground instead of Play, with nothing open, and back from a playground chamber, Playground is open with that chamber highlighted and focused. Production builds have no Playground row: back from a playground chamber, reached by its address, the menu is as on the first arrival.
 
 The sections:
 
@@ -53,7 +55,7 @@ The chamber on a dark stage, beside a rail holding the chamber sign (its number,
 - **The pause menu:** Continue, Settings (the sound effects and music volumes), Restart chamber and Exit chamber; restarting or leaving asks for confirmation first.
 - **The completion dialog:** the time and the best time (or "New best time"), with Next chamber, Play again and Back to menu (after the last chamber, Back to menu is the main button and there is no Next chamber); in development also Download solution (`AGENTS.md`, "Recorded solutions").
 - **The legend** folds away, or opens, by a click on its heading, which doesn't take the keyboard, or by Tab and Enter, and stays as it was left between visits. Its keys are re-read from the player's layout when it appears.
-- **A playground chamber** (development only) keeps no progress or best time, sends no analytics and offers no Download solution. Its sign shows its number and the list's count ("03/11"; a screen reader hears "Playground 03 of 11"), and its completion dialog offers Next chamber to the next playground chamber, none after the last.
+- **A playground chamber** (opened from the home menu in development, by its address alone in production) keeps no progress or best time, sends none of the chamber events (in production the app-wide ones, such as a volume change or an error, still go) and offers no Download solution. Its sign shows its number and the list's count ("03/11"; a screen reader hears "Playground 03 of 11"), and its completion dialog offers Next chamber to the next playground chamber, none after the last.
 - **The performance view** (development only): the frame loop's numbers, refreshed about once a second (`docs/performance.md`).
 
 ## Dialogs
@@ -70,14 +72,15 @@ The custom controls dialog (`custom_controls_dialog.vue`) opens from Custom unde
 
 - Enter, Space or a click on a key's row waits for its next key. While it waits, every keydown is taken before the dialog and the screen see it (so Ctrl and Shift can be bound), and a held key's repeats are ignored.
 - The key pressed is bound, and a game key that held it takes the old one. Binding edits Custom.
-- Escape cancels silently. A key that can't be bound shows "Can't use" and the key's name, and keeps waiting.
-- A click anywhere, the waiting row included, cancels, and the release of a taken key and the click on the waiting row are kept from pressing the row again.
+- Escape cancels silently. A key that can't be bound shows "Can't use" and the key's name, and keeps waiting; so does a key held by a game key other than the portals while the waiting row is a portal on a mouse button, since the swap would hand that game key the button.
+- While a portal's row waits, a left or right click on that row binds that mouse button (the browser's context menu never opens over a portal's row). Any other click anywhere, the waiting row included, cancels, and the release of a taken key and the click on the waiting row are kept from pressing the row again.
 - Screen-reader status lines announce the layout put in use, and the dialog's wait, refusals and binds.
 
 ## Keys
 
-- The game's `Input` owns the keys bound to its game keys (`src/game/key_bindings.ts`), read by physical position (`KeyboardEvent.code`), so they stay in place on every layout. The mouse plays no part in the game.
+- The game's `Input` owns the keys bound to its game keys (`src/game/key_bindings.ts`), read by physical position (`KeyboardEvent.code`), so they stay in place on every layout.
 - The player picks a layout of controls under Settings: Default (the arrows, A and D (portals), Space (interact) and Shift, held to turn in place) or Custom (their own, set in its dialog, starting from Default the first time it is picked).
+- Under Custom, each portal can be bound to the left or the right mouse button instead of a key; no other game key can. A bound button's press anywhere in the window, while playing, is that portal's press, one per click however long it is held, queued with the keys' presses in arrival order, and `Input` then suppresses its default (selecting text, moving the focus), so a click on the legend's heading also shoots. A click with Alt or Meta held is left to the browser and doesn't play. While playing with the right button bound, the browser's context menu doesn't open, unless Alt or Meta is held. The pointer's movement plays no part. The legend and the custom controls dialog show a bound button as a small mouse with that button filled in the portal's colour.
 - On trial, Default (bindings holding exactly its keys) also turns with Ctrl held, as a second turn key the game shows nowhere (not in the legend, Settings or the custom controls dialog); either turn key can be let go while the other stays held.
 - One key per game key, never shared; a left/right modifier pair counts as one key. Escape, Tab, Alt, Meta and the F-keys can't be bound. Held keys repeat with the key's auto-repeat.
 - While playing, `Input` calls `preventDefault`, on keydown and keyup, only for bound keys with a browser default (the arrows, Space, Page Up/Down, Home, End, Enter, Numpad Enter, the keys where a US keyboard has / and ', and any key that types Firefox's quick-find / or ' on the player's layout), and for every bound key with Ctrl held (Ctrl+A would select the page, Ctrl+D bookmark it), never with Alt or Meta held. A key pressed with Alt or Meta held is left to the browser and doesn't play (it only counts as held).
@@ -94,7 +97,7 @@ The rules play no sounds: they report what happens as events, and after each ste
 | 1 | Blue or orange portal opened | That portal's own |
 | 2 | Refused | The error sound, but for a portal shot that missed: the shot sound |
 | 3 | Box picked up, box put down | The box sound, the same for both |
-| 4 | Box destroyed where something blocks, carried box destroyed by a fizzler, box sent back by a link | The box-destroyed sound |
+| 4 | Box destroyed where something blocks, carried box destroyed by a fizzler, box sent back by a link, absent box brought in by a link | The box-destroyed sound |
 | 5 | Fizzled | The fizzle sound (with the box-destroyed sound too for a box carried into the field) |
 | 6 | Crossed | The crossing sound |
 | 7 | Door or exit opened, closed | The door's opening or closing sound, shared by the exit |
@@ -111,7 +114,7 @@ The rules play no sounds: they report what happens as events, and after each ste
 - A load settles the chamber's start and plays the sounds of its events. During a slide each tile's sounds wait until the subject gets there (`docs/sprites.md`, "Steps").
 - Three sounds belong to the interface, and the game never plays them; the screens do:
   - **Move:** every move of the home menu's highlight (keys, Tab or pointer) and of a dialog's focus between its buttons (the keyboard's arrows or Tab); stepping into or back out of a home menu section or About's or Controls' third column with Right and Left; Escape or Backspace stepping back; Escape closing a dialog or stepping back from a confirmation or the settings to the pause menu (not Escape cancelling a custom controls row's wait); Escape opening or closing the pause menu; and each step of a volume (Left, Right or the pointer; after the change, so it is heard at the new sound effects volume, and not at all once sound effects are down to Off).
-  - **Accept:** pressing something with Enter, Space or a click: the loading screen's Start button, a dialog button (a custom controls row starting to wait for a key among them, never a volume row, which presses nothing), a home menu section or an About or Controls row (opening it or stepping into its third column, as Right does), a layout under Controls (with Custom, also opening its dialog), Reset progress (opening its confirmation) and the chamber screen's Controls heading (folding or opening the legend); and a key bound in the custom controls dialog. Opening Feedback or a page, which leave the game, plays neither.
+  - **Accept:** pressing something with Enter, Space or a click: the loading screen's Start button, a dialog button (a custom controls row starting to wait for a key among them, never a volume row, which presses nothing), a home menu section or an About or Controls row (opening it or stepping into its third column, as Right does), a layout under Controls (with Custom, also opening its dialog), Reset progress (opening its confirmation) and the chamber screen's Controls heading (folding or opening the legend); and a key or mouse button bound in the custom controls dialog. Opening Feedback or a page, which leave the game, plays neither.
   - **Start:** a chamber started from the home menu.
 - Every sound plays at the sound effects volume: the settings set one master volume that every effect's volume is multiplied by, 0 playing nothing. The effects' files are evened to one loudness (`npm run audio:normalize`) and play 10 dB above the music.
 
@@ -131,13 +134,14 @@ The device keeps these in `localStorage`, every key prefixed `portal-2d.`:
 - **The legend,** `portal-2d.legend-open`: whether the chamber screen's controls legend is open, kept the same way.
 - **The controls,** `portal-2d.key-bindings`: `{layout, custom}`, the layout in use, `arrow-keys` (shown as Default) or `custom`, and the Custom keys, a plain object, game key → key (its `KeyboardEvent.code`, `Control` or `Shift` for either side), or null until Custom is first picked.
   - Default's keys are never stored, so a change to them always takes effect.
-  - Custom keys are read game key by game key: a stored key that can't be bound (the mouse buttons once bound, `MouseLeft` and `MouseRight`, included) or is already taken falls back to that game key's Default key, and if that is then taken every game key goes back to Default.
+  - A portal may hold a mouse button, `MouseLeft` or `MouseRight`, names no key's code takes.
+  - Custom keys are read game key by game key: a stored key that can't be bound (a mouse button on any game key but a portal included) or is already taken falls back to that game key's Default key, and if that is then taken every game key goes back to Default.
   - A layout that isn't one (the retired `wasd-mouse` included), or Custom with no keys, falls back to Default; renaming a game key or a key name sends a stored binding of it back to Default.
   - Unlike the progress, it is not synced between tabs, so a tab keeps the controls it loaded until it reloads.
 - **The playlist's place,** `portal-2d.music-track`: the position in its list, from 0, of the last track it moved to, so the next visit's list carries on after it once the opener has played. Missing, malformed or past the end of the list, the list starts from its top. Written by every tab, read once per visit.
 - **The progress,** under one versioned key, `portal-2d.progress`: `{version: 4, chambers: {<id>: {completed, bestTime, attempts}}}`, by permanent chamber id. Best times are in hundredths of a second; attempts are counted on each opening, Restart chamber and Play again. Version 4 since the tutorial run's first chamber took id 1 from the old tutorial, so every save from before is ignored. Every save writes the whole record, so each tab takes over the record whenever another tab saves it (the `storage` event). Reset progress stores an empty record.
 
-Malformed values, unknown fields and a record of another version are ignored, and a stored value that no longer reads falls back to its default. The last chamber opened (its list, the campaign or in development the playground chambers, and its number, which the home menu highlights on the way back) is kept in memory only.
+Malformed values, unknown fields and a record of another version are ignored, and a stored value that no longer reads falls back to its default. The last chamber opened (its list, the campaign or the playground chambers, and its number, which the home menu highlights on the way back) is kept in memory only.
 
 ## Analytics
 
@@ -200,5 +204,5 @@ Test-facility signage: cool light panels on a seamed wall, thin rules, chamber n
 **The chamber screen** puts the game on a dark graphite stage, lit a little in its middle, behind the chamber, and darkest at its edges, the canvas borderless so the open exit fades into it, beside a light rail, which never shows a scrollbar (a window too short for it scrolls it with the wheel). The rail holds:
 
 - **The chamber sign:** a white plate in a thin, square-cornered border of muted grey. The two-digit number, in Oxanium's light weight, has its place in the list against it on its baseline ("/01", the last chamber's number in its list after the slash) and, at the end of that line, the timer, its digits on the same baseline under a stopwatch and a small caption, dimmed until the clock starts. Then a rule, and a framed pictogram for each of the fourteen kinds of element a chamber can hold (the exit and walls, in every chamber, have none; the mirror box, listed among the boxes, counts as a kind of its own), in two rows of seven, dark when the chamber has one and faint when it hasn't (the mirror box's dark when any box has a mirror, the one special case, the box's for any box).
-- **The controls legend,** under a heading with an arrow at the end of its rule: the player's bound keys as their layout prints them, in keycaps (only Space drawn wide; the arrow keys as small triangles), then a divider, blue or orange for the portal keys, before what each key does; last, Esc for Pause.
+- **The controls legend,** under a heading with an arrow at the end of its rule: the player's bound keys as their layout prints them, in keycaps (only Space drawn wide; the arrow keys as small triangles; a portal's mouse button as a small white mouse as tall as the keycaps, with that button filled in the portal's colour), then a divider, blue or orange for the portal keys, before what each key does; last, Esc for Pause.
 - **The performance view,** in development only, pinned over the rail's foot, so it never makes the rail taller: the frame loop's numbers in two small lines, refreshed about once a second (frames per second, each drawing and the heap used, where Chromium tells it, then the average time between frames, each rules step, kept from the latest second with a step, and the heap limit), in a monospace face on the chamber's dark backdrop, set apart from the signage.

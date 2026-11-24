@@ -94,6 +94,7 @@ const BOX_FIELDS = [
   'y',
   'id',
   'mirror',
+  'absent',
 ]
 
 /** The mirrors a box can hold, from corner to corner: bottom left to top right, or top left to bottom right */
@@ -453,14 +454,16 @@ class ChamberParser {
     const y = this.readInteger(entry.y, fieldPath(field, 'y'), null)
     const id = this.readOptionalId(entry.id, fieldPath(field, 'id'))
     const mirror = (entry.mirror === undefined) ? undefined : this.readChoice(entry.mirror, fieldPath(field, 'mirror'), MIRRORS)
+    const absent = this.readOptionalBoolean(entry.absent, fieldPath(field, 'absent'))
 
-    // The mirror goes in even when absent, as undefined, which a chamber's
-    // hash leaves out, so a plain box hashes as before
-    return ((x === null) || (y === null) || (id === null) || (mirror === null)) ? null : {
+    // The mirror and the absent flag go in even when left out, as undefined,
+    // which a chamber's hash leaves out, so a plain box hashes as before
+    return ((x === null) || (y === null) || (id === null) || (mirror === null) || (absent === null)) ? null : {
       x: x,
       y: y,
       id: id,
       mirror: mirror,
+      absent: absent,
     }
   }
 

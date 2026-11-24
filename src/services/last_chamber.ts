@@ -1,7 +1,7 @@
 /**
  * The chamber opened most recently during this visit, a campaign chamber or
- * in development a playground chamber, so the home screen can pick it out
- * again on the way back. Kept in memory only: a reload forgets it.
+ * a playground chamber, so the home screen can pick it out again on the way
+ * back. Kept in memory only: a reload forgets it.
  */
 import type {ChamberList} from '@/services/chamber_catalogue'
 

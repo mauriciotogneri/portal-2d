@@ -106,6 +106,7 @@ export class Level {
     [GameEvent.BOX_DESTROYED]: Sound.BOX_DESTROYED,
     [GameEvent.CARRIED_BOX_DESTROYED]: Sound.BOX_DESTROYED,
     [GameEvent.BOX_SENT_BACK]: Sound.BOX_DESTROYED,
+    [GameEvent.BOX_APPEARED]: Sound.BOX_DESTROYED,
     [GameEvent.FIZZLED]: Sound.FIZZLE,
     [GameEvent.PORTAL_FIZZLED]: null,
     [GameEvent.CROSSED]: Sound.CROSS,
@@ -154,7 +155,7 @@ export class Level {
   private readonly changes = new ElementTransitions() // The arrows, the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers changing over a few frames after a step switched them, if any
   private readonly ripple = new MissRipple() // Where the latest missed portal shot stopped, rippling over a few frames, if anywhere
   private readonly fall = new BoxFall() // The boxes the latest step dropped into ditches, falling over a few frames, if any
-  private readonly returns = new BoxReturns() // The boxes the latest steps sent home, coming apart and flying home, or gathering there, over a few frames, if any
+  private readonly returns = new BoxReturns() // The boxes the latest steps sent home, coming apart and flying home, or gathering there, or destroyed for good, breaking up, over a few frames, if any
   private readonly openings = new PortalOpenings() // The portals shots opened lately, opening over a few frames, if any
   private readonly particles = new PortalParticles() // The particles rising from the open portals, and fading where a portal closed lately
   private readonly flashes = new FizzlerFlashes() // Where the subject was caught in a fizzler's field lately, flashing over a few frames, if anywhere
@@ -166,9 +167,9 @@ export class Level {
   private frameTime = 0 // The latest frame's time, in milliseconds on the frame clock; redraws outside a frame use it, so a step being drawn never goes back
   private readonly reducedMotion: MediaQueryList // Whether the player asks for reduced motion, read each time something could be drawn over time
   private ambientDrawn = false // Whether the latest frame was drawn for what moves with time alone, so the frame after it ends draws it still
-  private readonly input: Input // The keyboard, listening from construction until dispose()
+  private readonly input: Input // The keyboard and the mouse buttons, listening from construction until dispose()
   private initialized = false // Whether the frame loop has started
-  private isPaused = false // Whether the loop skips updates and the input ignores keydown
+  private isPaused = false // Whether the loop skips updates and the input ignores keydown and mousedown
   private disposed = false // Whether dispose() has run
   private frameId: number | null = null // The pending animation frame request
   private startTime = 0 // When the previous frame ran, in milliseconds since the epoch
@@ -252,8 +253,8 @@ export class Level {
   }
 
   /**
-   * Pauses or resumes. While paused the state does not update and keydown is
-   * ignored, but a step being drawn still runs to its end.
+   * Pauses or resumes. While paused the state does not update and keydown and
+   * mousedown are ignored, but a step being drawn still runs to its end.
    * Resuming forgets every key, pressed and held, first.
    */
   set paused(value: boolean) {
@@ -365,7 +366,7 @@ export class Level {
   }
 
   /**
-   * Stops the frame loop and the keyboard listeners for good.
+   * Stops the frame loop and the keyboard and mouse listeners for good.
    */
   dispose(): void {
     this.disposed = true
@@ -469,7 +470,7 @@ export class Level {
    * completed, forgets every waiting press instead. Then forgets which keys
    * went down during the frame, for the clock.
    * @param delta - Seconds since the previous frame
-   * @param input - The keyboard
+   * @param input - The keyboard and the mouse buttons
    * @param time - The frame's time, in milliseconds on the frame clock
    * @returns Whether the state changed
    */
@@ -685,7 +686,8 @@ export class Level {
    * of a slide: each arrow, blocked wall, ditch, door, exit, fizzler, laser and
    * light barrier switched starts changing, the portals a fizzle took break
    * up and the field the subject is caught in flashes, each box sent home comes apart and flies there, or falls into a
-   * ditch and gathers there, a portal opened opens and starts giving off
+   * ditch and gathers there, each box a link reaches that is destroyed breaks up where it was, or falls, and is gone, a
+   * portal opened opens and starts giving off
    * particles, those of a portal closed or moved fade, and a refused portal
    * shot ripples, and a fizzler's field or a light barrier's band that stopped it splashes or reacts, all only when motion is allowed; then the sounds play, and
    * the completion is told when the chamber is completed, unless it waits
@@ -720,8 +722,8 @@ export class Level {
         this.fall.start(before, after, events, time)
       }
 
-      // Each box sent home comes apart where it was and flies there, or, one that fell, gathers there; one picked up
-      // again is done with going home
+      // Each box sent home comes apart where it was and flies there, or, one that fell or was brought in, gathers there; one picked up
+      // again is done with going home; one a link reaches that is destroyed breaks up where it was, unless it fell
       this.returns.forgetMoved(after)
 
       if (sendsBoxesHome(events)) {

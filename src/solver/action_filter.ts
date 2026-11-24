@@ -303,7 +303,7 @@ export class ActionFilter {
     }
 
     for (let box = 0; box < index.chamber.boxStarts.length; box++) {
-      if (box !== state.carriedBox) {
+      if ((box !== state.carriedBox) && (!state.isBoxAbsent(box))) {
         for (const direction of DIRECTIONS) {
           this.markTile(this.standingSerials, state.boxX(box) + DELTAS[direction].dx, state.boxY(box) + DELTAS[direction].dy)
         }

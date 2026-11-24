@@ -431,7 +431,7 @@ export function wallJoins(chamber: CompiledChamber): JoinTest {
  * @param index - The blocked wall's index in the chamber's blocked wall list
  * @returns True when a link reaches it
  */
-function isSwitchable(chamber: CompiledChamber, index: number): boolean {
+export function isSwitchable(chamber: CompiledChamber, index: number): boolean {
   return chamber.stateLayout.flagOffset('blockedWall', index) !== NOT_STORED
 }
 
@@ -751,8 +751,9 @@ export function boxSprite(chamber: CompiledChamber, index: number, held: Directi
 
 /**
  * Draws the boxes that lie in the chamber, on a button as on the floor, a
- * mirror box with its mirror. A carried box is drawn with the subject, and
- * a box on its way home by its return (BoxReturns).
+ * mirror box with its mirror. A carried box is drawn with the subject, a
+ * box on its way home by its return (BoxReturns), and an absent box not at
+ * all.
  * @param painter - Paints on the canvas
  * @param state - The state drawn
  * @param _ - Unused: boxes don't change part way
@@ -760,7 +761,7 @@ export function boxSprite(chamber: CompiledChamber, index: number, held: Directi
  */
 function drawBoxes(painter: TilePainter, state: RulesState, _: BlockedShares | null = null, returning: ReturningBoxes | null = null): void {
   for (let i = 0; i < state.chamber.stateLayout.boxCount; i++) {
-    if ((i === state.carriedBox) || (returning?.(i) === true)) {
+    if ((i === state.carriedBox) || state.isBoxAbsent(i) || (returning?.(i) === true)) {
       continue
     }
 

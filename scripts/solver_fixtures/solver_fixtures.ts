@@ -1,11 +1,13 @@
 import type {ChamberData} from '@/game/chamber_data'
 import type {ReplayExpectation} from '@/game/replay_data'
 import type {Action} from '@/game/rules/action'
+import absentBox from '@scripts/solver_fixtures/absent_box.json'
 import arrowTrap from '@scripts/solver_fixtures/arrow_trap.json'
 import boxOnButton from '@scripts/solver_fixtures/box_on_button.json'
 import boxThroughPortal from '@scripts/solver_fixtures/box_through_portal.json'
 import buttonArrow from '@scripts/solver_fixtures/button_arrow.json'
 import fizzlerBox from '@scripts/solver_fixtures/fizzler_box.json'
+import fizzlerLinkedBox from '@scripts/solver_fixtures/fizzler_linked_box.json'
 import freeHands from '@scripts/solver_fixtures/free_hands.json'
 import portalWalk from '@scripts/solver_fixtures/portal_walk.json'
 import switchArrow from '@scripts/solver_fixtures/switch_arrow.json'
@@ -540,6 +542,111 @@ export const SOLVER_FIXTURES: readonly SolverFixture[] = [
         moves: 4,
         portals: 0,
         finalHash: '71be6b3f',
+      },
+    },
+  },
+  // Every wall refuses portals, so the counts are moves alone. The exit at
+  // (6,1) opens only while the button at (5,2) is held, and no tile beside
+  // the button but (5,1) and (4,2) is floor, neither of them the exit, so a
+  // box must hold it as the subject steps out. The only box starts absent,
+  // brought in at (3,2) by the switch at (1,2). So the subject goes from its
+  // start to the switch, then beside the box ((2,2), (4,2) or (3,1)), then
+  // beside the button ((4,2) or (5,1)), then onto the exit, from (5,1): each
+  // leg at least its distance in tiles, 1 + 1 + 2 + 3, or 1 + 1 + 4 + 1, or
+  // 1 + 3 + 0 + 3, 7 moves however the tiles are chosen
+  {
+    name: 'absent_box',
+    covers: 'A box that starts absent: the switch brings it in at its start, and only then can it be carried onto the button that opens the exit.',
+    chamber: absentBox,
+    fewestMoves: {
+      actions: [
+        'up',
+        'interact',
+        'right',
+        'interact',
+        'right',
+        'right',
+        'interact',
+        'down',
+        'right',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 7,
+        portals: 0,
+        finalHash: '282ac3b5',
+      },
+    },
+    fewestPortals: {
+      actions: [
+        'up',
+        'interact',
+        'right',
+        'interact',
+        'right',
+        'right',
+        'interact',
+        'down',
+        'right',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 7,
+        portals: 0,
+        finalHash: '282ac3b5',
+      },
+    },
+  },
+  // Every wall refuses portals, so the counts are moves alone. The exit at
+  // (6,1) is 5 tiles from the subject's start at (1,1), so no route takes
+  // fewer than 5 moves. The subject crosses the field at (2,1), which is
+  // harmless with free hands, picks up the box at (3,2) from below and puts
+  // it on the button at (5,2) from below, which opens the exit: 5 moves, all
+  // to the right. The searches also meet the box carried back into the
+  // field, which leaves it absent, since the switch at (1,2) links it, until
+  // that switch brings it in at (3,2) again
+  {
+    name: 'fizzler_linked_box',
+    covers: 'A box a switch links, which a fizzler destroys for as long as the switch hasn\'t brought it back: the route carries it the short way, but the searches meet it absent.',
+    chamber: fizzlerLinkedBox,
+    fewestMoves: {
+      actions: [
+        'right',
+        'right',
+        'up',
+        'interact',
+        'right',
+        'right',
+        'turnUp',
+        'interact',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 5,
+        portals: 0,
+        finalHash: 'd7fe84a4',
+      },
+    },
+    fewestPortals: {
+      actions: [
+        'right',
+        'right',
+        'up',
+        'interact',
+        'right',
+        'right',
+        'turnUp',
+        'interact',
+        'right',
+      ],
+      expected: {
+        completed: true,
+        moves: 5,
+        portals: 0,
+        finalHash: 'd7fe84a4',
       },
     },
   },

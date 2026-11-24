@@ -322,8 +322,8 @@ export class WalkGraph {
 
   /**
    * The regions' cache key for a state: its blocked flags, then each box's
-   * tile, in the chamber's box list, but the carried box's, which rests
-   * nowhere.
+   * tile, in the chamber's box list, or that it is carried or absent, since
+   * either rests nowhere.
    * @param state - The state
    * @param flags - Its blocked flags, as one number
    * @returns The key
@@ -332,7 +332,7 @@ export class WalkGraph {
     let key = String(flags)
 
     for (let box = 0; box < this.index.chamber.boxStarts.length; box++) {
-      key += (box === state.carriedBox) ? ':carried' : `:${this.index.tileNumber(state.boxX(box), state.boxY(box))}`
+      key += (box === state.carriedBox) ? ':carried' : (state.isBoxAbsent(box) ? ':absent' : `:${this.index.tileNumber(state.boxX(box), state.boxY(box))}`)
     }
 
     return key

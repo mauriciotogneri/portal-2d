@@ -2,7 +2,7 @@ import type {Direction} from '@/game/direction'
 import {type Activator, type CompiledChamber, NO_ELEMENT} from '@/game/rules/compiled_chamber'
 import type {BlockableKind, OneWayKind} from '@/game/rules/element_registry'
 import type {PortalColor} from '@/game/rules/portal_color'
-import {CLOSED_PORTAL, DIRECTIONS, NO_BOX, NOT_STORED, PORTAL_SLOTS, StateSlot} from '@/game/rules/state_layout'
+import {ABSENT_BOX, CLOSED_PORTAL, DIRECTIONS, NO_BOX, NOT_STORED, PORTAL_SLOTS, StateSlot} from '@/game/rules/state_layout'
 
 /**
  * Reads a state of the rules: the values of one chamber's state, laid out
@@ -211,6 +211,17 @@ export abstract class StateReader {
    */
   boxY(index: number): number {
     return this.read(this.boxOffset(index) + 1)
+  }
+
+  /**
+   * Whether a box is absent: it started so, or was destroyed while a link
+   * reaches it, and no link has brought it in since. It is then on no tile
+   * and in no hands.
+   * @param index - The box's index in the chamber's box list
+   * @returns True while it is absent
+   */
+  isBoxAbsent(index: number): boolean {
+    return this.boxX(index) === ABSENT_BOX
   }
 
   /**

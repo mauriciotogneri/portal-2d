@@ -21,7 +21,7 @@ type Burst = {
 }
 
 /** How long the pieces take to drift apart and fade, in milliseconds: long enough to read, gone well before the next few presses */
-const FIZZLE_MILLISECONDS = 600
+export const FIZZLE_MILLISECONDS = 600
 
 /** Pieces across a sprite's tile */
 const PIECES_ACROSS = 9
@@ -47,15 +47,16 @@ const ROUNDED_BY = 0.25
 /**
  * Places one piece of a burst part way through: it waits in place until its
  * own start, then drifts a short way out from the sprite's middle, slowing as
- * it goes, rounding off into a dot, shrinking and fading.
- * @param burst - The burst
+ * it goes, rounding off into a dot, shrinking and fading. A box a link
+ * reaches breaks up the same way where it is destroyed (BoxReturns).
+ * @param burst - The burst, or what breaks up the same way: its seed and side
  * @param progress - How far the whole burst has gone, from 0 to 1
  * @param offsetX - How far right of the sprite's middle the piece lies, in tiles
  * @param offsetY - How far below it, in tiles
  * @param index - The piece's number
  * @returns Where it is drawn, or null once it has faded
  */
-function placePiece(burst: Burst, progress: number, offsetX: number, offsetY: number, index: number): PiecePlacement | null {
+export function placePiece(burst: Pick<Burst, 'seed' | 'size'>, progress: number, offsetX: number, offsetY: number, index: number): PiecePlacement | null {
   const start = LATEST_START * pieceNumber(burst.seed, index, 0)
   const own = Math.min(Math.max((progress - start) / (1 - start), 0), 1)
 
@@ -84,7 +85,8 @@ function placePiece(burst: Burst, progress: number, offsetX: number, offsetY: nu
  * portal it closed, and each portal a fizzler closed by switching on, come
  * apart in pieces of their own sprites, which round off into dots as they
  * drift a short way out, shrink and fade. A box a fizzle or anything else
- * destroys comes apart and flies home instead (BoxReturns). Purely visual:
+ * destroys comes apart and flies home instead, or, one a link reaches,
+ * breaks up the same way where it was (BoxReturns). Purely visual:
  * the rules have already settled the step, and nothing waits for the
  * pieces.
  */

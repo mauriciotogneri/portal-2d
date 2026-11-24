@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: drafted, waiting for the author's cold play. File: `src/chambers/chamber_3.json`, third in the play order; permanent id 3. It has no recorded solution yet, so `npm run replay:check` and `npm run solver:check` fail on it.
+Status: kept by the author on 2026-11-23, their cold run its recorded solution. File: `src/chambers/chamber_3.json`, third in the play order; permanent id 3.
 
 ## Entry
 
@@ -125,3 +125,5 @@ None is a dead end: every reachable state can still be finished, there is no one
 
 | # | Who | Date | What the run shows |
 |---|-----|------|--------------------|
+| 1 | The author, cold | 2026-11-23 | The intended route with no wasted press: right onto the button and on to the shut door (the lure, which every route from the start takes), down into the box, pick it up, left, the box onto the button from the right, then right three times out through the exit (7 moves, 0 portals, both the fewest). No wrong try in the recorded run. Recorded as `chamber_3.solution.json`; kept |
+| 2 | A friend, cold | 2026-11-23 | Played it through with the rest of run 1 and was fine with it: nothing confused them, by the author's account. Their route wasn't recorded |

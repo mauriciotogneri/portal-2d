@@ -4,6 +4,8 @@ import brokenAntlines from '@scripts/fixtures/broken_antlines.json'
 import brokenArrows from '@scripts/fixtures/broken_arrows.json'
 import brokenDeviceFields from '@scripts/fixtures/broken_device_fields.json'
 import brokenDevices from '@scripts/fixtures/broken_devices.json'
+import absentBoxes from '@scripts/fixtures/absent_boxes.json'
+import antlineThroughBlockedWall from '@scripts/fixtures/antline_through_blocked_wall.json'
 import brokenLinkedBlocked from '@scripts/fixtures/broken_linked_blocked.json'
 import brokenChamberFields from '@scripts/fixtures/broken_chamber_fields.json'
 import brokenChamberLayout from '@scripts/fixtures/broken_chamber_layout.json'
@@ -138,6 +140,15 @@ export const CHAMBER_CASES: readonly ChamberCase[] = [
     ],
   },
   {
+    name: 'antline_through_blocked_wall',
+    // A blocked wall a link reaches hides a line running through it in every state, so an antline may end on one but not cross it: the second line crosses the one a button links directly and the one a switch links through a group, each reported; the steel and the blocked wall with an id nothing links that it also crosses, and the first line, ending on a linked one, are right
+    data: antlineThroughBlockedWall,
+    problems: [
+      'error antlines[1] at (2, 0): runs through id 1, a blocked wall a link reaches, which hides it there',
+      'error antlines[1] at (4, 0): runs through id 2, a blocked wall a link reaches, which hides it there',
+    ],
+  },
+  {
     name: 'slide_floor_rectangle',
     // Slide floors are listed as walls are, so a rectangle's corners are read the same way
     data: slideFloorRectangle,
@@ -192,6 +203,30 @@ export const CHAMBER_CASES: readonly ChamberCase[] = [
       'error doors[0] at (4, 1): sets blocked, but it is linked: a linked element starts blocked, and the buttons, switches and receivers linking it decide when it is unblocked',
       'error emitters[0] at (0, 3): sets blocked, but it is linked: a linked element starts blocked, and the buttons, switches and receivers linking it decide when it is unblocked',
     ],
+  },
+  {
+    name: 'absent_boxes',
+    // A box that starts absent appears only when a link brings it in, so one no button, switch or receiver links is an error: one with no id, and one whose id nothing links; the one a switch links directly and the one it links through a group load
+    data: absentBoxes,
+    problems: [
+      'error boxes[0] at (2, 1): starts absent, but no button, switch or receiver links it, so it never appears',
+      'error boxes[1] at (3, 1): starts absent, but no button, switch or receiver links it, so it never appears',
+    ],
+  },
+  {
+    name: 'absent_box_value',
+    // Whether a box starts absent is true or false
+    data: {
+      ...absentBoxes,
+      boxes: [
+        {
+          x: 2,
+          y: 1,
+          absent: 'yes',
+        },
+      ],
+    },
+    problems: ['error boxes[0].absent: is not true or false'],
   },
   {
     name: 'broken_device_fields',

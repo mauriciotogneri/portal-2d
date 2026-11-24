@@ -1,0 +1,154 @@
+{
+    "version": 2,
+    "size": {
+        "width": 7,
+        "height": 6
+    },
+    "subject": {
+        "x": 5,
+        "y": 2,
+        "direction": "LEFT"
+    },
+    "exit": {
+        "x": 1,
+        "y": 0,
+        "blocked": false
+    },
+    "walls": [
+        {
+            "x": 4,
+            "y": 5
+        },
+        {
+            "x": 0,
+            "y": 2
+        }
+    ],
+    "blockedWalls": [
+        {
+            "xFrom": 0,
+            "xTo": 3,
+            "yFrom": 3,
+            "yTo": 5
+        },
+        {
+            "xFrom": 5,
+            "xTo": 6,
+            "yFrom": 5,
+            "yTo": 5
+        },
+        {
+            "xFrom": 6,
+            "xTo": 6,
+            "yFrom": 1,
+            "yTo": 4
+        },
+        {
+            "xFrom": 0,
+            "xTo": 0,
+            "yFrom": 0,
+            "yTo": 1
+        },
+        {
+            "xFrom": 2,
+            "xTo": 3,
+            "yFrom": 1,
+            "yTo": 1
+        },
+        {
+            "xFrom": 2,
+            "xTo": 6,
+            "yFrom": 0,
+            "yTo": 0
+        }
+    ],
+    "lasers": [
+        {
+            "x": 2,
+            "y": 2,
+            "direction": "V"
+        }
+    ],
+    "lightBarriers": [
+        {
+            "x": 3,
+            "y": 2,
+            "direction": "V",
+            "id": 1
+        }
+    ],
+    "boxes": [
+        {
+            "x": 4,
+            "y": 1
+        }
+    ],
+    "buttons": [
+        {
+            "x": 5,
+            "y": 1,
+            "links": [
+                1,
+                2
+            ]
+        }
+    ],
+    "arrows": [
+        {
+            "x": 4,
+            "y": 3,
+            "direction": "UP",
+            "id": 2,
+            "turnedDirection": "LEFT"
+        },
+        {
+            "x": 5,
+            "y": 3,
+            "direction": "DOWN"
+        }
+    ],
+    "antlines": [
+        {
+            "link": 1,
+            "path": [
+                {
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 0
+                },
+                {
+                    "x": 3,
+                    "y": 2
+                }
+            ]
+        },
+        {
+            "link": 2,
+            "path": [
+                {
+                    "x": 5,
+                    "y": 1
+                },
+                {
+                    "x": 5,
+                    "y": 2
+                },
+                {
+                    "x": 4,
+                    "y": 2
+                },
+                {
+                    "x": 4,
+                    "y": 3
+                }
+            ]
+        }
+    ]
+}

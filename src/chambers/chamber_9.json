@@ -1,0 +1,105 @@
+{
+    "version": 2,
+    "size": {
+        "width": 5,
+        "height": 7
+    },
+    "subject": {
+        "x": 1,
+        "y": 1,
+        "direction": "RIGHT"
+    },
+    "exit": {
+        "x": 2,
+        "y": 6,
+        "blocked": false
+    },
+    "blockedWalls": [
+        {
+            "xFrom": 0,
+            "xTo": 1,
+            "yFrom": 5,
+            "yTo": 6
+        },
+        {
+            "xFrom": 3,
+            "xTo": 4,
+            "yFrom": 5,
+            "yTo": 6
+        },
+        {
+            "xFrom": 0,
+            "xTo": 0,
+            "yFrom": 0,
+            "yTo": 4
+        },
+        {
+            "xFrom": 4,
+            "xTo": 4,
+            "yFrom": 0,
+            "yTo": 4
+        },
+        {
+            "xFrom": 1,
+            "xTo": 3,
+            "yFrom": 0,
+            "yTo": 0
+        }
+    ],
+    "boxes": [
+        {
+            "x": 3,
+            "y": 3,
+            "id": 2,
+            "absent": true
+        }
+    ],
+    "buttons": [
+        {
+            "x": 1,
+            "y": 3,
+            "links": [
+                1
+            ]
+        }
+    ],
+    "switches": [
+        {
+            "x": 3,
+            "y": 1,
+            "links": [
+                2
+            ]
+        }
+    ],
+    "doors": [
+        {
+            "x": 2,
+            "y": 5,
+            "id": 1
+        }
+    ],
+    "antlines": [
+        {
+            "link": 1,
+            "path": [
+                {
+                    "x": 1,
+                    "y": 3
+                },
+                {
+                    "x": 1,
+                    "y": 4
+                },
+                {
+                    "x": 2,
+                    "y": 4
+                },
+                {
+                    "x": 2,
+                    "y": 5
+                }
+            ]
+        }
+    ]
+}

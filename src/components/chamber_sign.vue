@@ -30,7 +30,7 @@ type SignElement = {
 }
 
 export interface ChamberSignProps {
-  list: ChamberList // The list the chamber is in: the campaign, or in development the playground chambers
+  list: ChamberList // The list the chamber is in: the campaign or the playground chambers
   chamberNumber: number // Which chamber in that list, counted from 1
   layout: ChamberData | undefined // The chamber's file, read for the elements it holds
 }

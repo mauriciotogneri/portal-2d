@@ -25,7 +25,8 @@ type FallingBox = DestroyedBox & {
  * drawn falling over a short time: each hangs a moment, then drops ever
  * faster, shrinking towards the middle of the pit and fading into its
  * depth, without a shadow and inside its tile. Purely visual: the rules
- * have already sent each box back to its start, where it is drawn at once.
+ * have already sent each box back to its start, where it is drawn at once,
+ * or, one a link reaches, left it absent until a link brings it in.
  */
 export class BoxFall {
   private falls: readonly FallingBox[] = [] // The boxes falling, empty when none is

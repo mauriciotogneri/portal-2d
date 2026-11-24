@@ -5,7 +5,7 @@ import {type BlockableKind, findElementDefinition} from '@/game/rules/element_re
 import {PORTAL_COLORS, type PortalColor} from '@/game/rules/portal_color'
 import {type RayTrace, traceRays} from '@/game/rules/rays'
 import {RulesState} from '@/game/rules/rules_state'
-import {CLOSED_PORTAL, DIRECTION_INDEX, NO_BOX, NOT_STORED, PORTAL_SLOTS, StateSlot} from '@/game/rules/state_layout'
+import {ABSENT_BOX, CLOSED_PORTAL, DIRECTION_INDEX, NO_BOX, NOT_STORED, PORTAL_SLOTS, StateSlot} from '@/game/rules/state_layout'
 import {StateReader} from '@/game/rules/state_reader'
 
 /**
@@ -123,15 +123,29 @@ export class StateDraft extends StateReader {
   }
 
   /**
-   * Destroys the carried box, if any: it goes back to its start tile and is
-   * no longer carried.
+   * Destroys the carried box, if any: it is no longer carried and is
+   * destroyed (see destroyBox).
    */
   destroyCarriedBox(): void {
     const box = this.carriedBox
 
     if (box !== NO_BOX) {
       this.dropBox()
-      this.sendBoxToStart(box)
+      this.destroyBox(box)
+    }
+  }
+
+  /**
+   * Destroys a box: one a button, switch or receiver links is absent until
+   * a link sends it home again, sending no box on; any other goes back to
+   * its start tile (see sendBoxToStart).
+   * @param index - The box's index in the chamber's box list
+   */
+  destroyBox(index: number): void {
+    if (this.chamber.isBoxLinked(index)) {
+      this.moveBox(index, ABSENT_BOX, ABSENT_BOX)
+    } else {
+      this.sendBoxToStart(index)
     }
   }
 

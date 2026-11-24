@@ -6,9 +6,29 @@ import chamberOneData from '@/chambers/chamber_1.json'
 import chamberTwoData from '@/chambers/chamber_2.json'
 import chamberThreeData from '@/chambers/chamber_3.json'
 import chamberFourData from '@/chambers/chamber_4.json'
+import chamberFiveData from '@/chambers/chamber_5.json'
+import chamberSixData from '@/chambers/chamber_6.json'
+import chamberSevenData from '@/chambers/chamber_7.json'
+import chamberEightData from '@/chambers/chamber_8.json'
+import chamberNineData from '@/chambers/chamber_9.json'
+import chamberTenData from '@/chambers/chamber_10.json'
+import chamberElevenData from '@/chambers/chamber_11.json'
+import chamberTwelveData from '@/chambers/chamber_12.json'
+import chamberThirteenData from '@/chambers/chamber_13.json'
+import chamberFourteenData from '@/chambers/chamber_14.json'
+import chamberFifteenData from '@/chambers/chamber_15.json'
+import chamberSixteenData from '@/chambers/chamber_16.json'
+import chamberSeventeenData from '@/chambers/chamber_17.json'
+import chamberEighteenData from '@/chambers/chamber_18.json'
+import chamberNineteenData from '@/chambers/chamber_19.json'
+import chamberTwentyData from '@/chambers/chamber_20.json'
+import chamberTwentyOneData from '@/chambers/chamber_21.json'
+import chamberTwentyTwoData from '@/chambers/chamber_22.json'
+import chamberTwentyThreeData from '@/chambers/chamber_23.json'
+import chamberTwentyFourData from '@/chambers/chamber_24.json'
 import type {ChamberData} from '@/game/chamber_data'
 
-/** Which list a chamber is in: the campaign, under Play, or in development the playground chambers. */
+/** Which list a chamber is in: the campaign, under Play, or the playground chambers, under Playground in development. */
 export type ChamberList = 'campaign' | 'playground'
 
 export type ChamberEntry = {
@@ -42,6 +62,86 @@ const CHAMBER_LISTINGS: ChamberListing[] = [
   {
     id: 4,
     data: chamberFourData,
+  },
+  {
+    id: 5,
+    data: chamberFiveData,
+  },
+  {
+    id: 6,
+    data: chamberSixData,
+  },
+  {
+    id: 7,
+    data: chamberSevenData,
+  },
+  {
+    id: 8,
+    data: chamberEightData,
+  },
+  {
+    id: 9,
+    data: chamberNineData,
+  },
+  {
+    id: 10,
+    data: chamberTenData,
+  },
+  {
+    id: 11,
+    data: chamberElevenData,
+  },
+  {
+    id: 12,
+    data: chamberTwelveData,
+  },
+  {
+    id: 13,
+    data: chamberThirteenData,
+  },
+  {
+    id: 14,
+    data: chamberFourteenData,
+  },
+  {
+    id: 15,
+    data: chamberFifteenData,
+  },
+  {
+    id: 16,
+    data: chamberSixteenData,
+  },
+  {
+    id: 17,
+    data: chamberSeventeenData,
+  },
+  {
+    id: 18,
+    data: chamberEighteenData,
+  },
+  {
+    id: 19,
+    data: chamberNineteenData,
+  },
+  {
+    id: 20,
+    data: chamberTwentyData,
+  },
+  {
+    id: 21,
+    data: chamberTwentyOneData,
+  },
+  {
+    id: 22,
+    data: chamberTwentyTwoData,
+  },
+  {
+    id: 23,
+    data: chamberTwentyThreeData,
+  },
+  {
+    id: 24,
+    data: chamberTwentyFourData,
   },
 ]
 

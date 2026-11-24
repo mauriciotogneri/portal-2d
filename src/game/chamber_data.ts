@@ -62,10 +62,13 @@ export type BlockableData = PositionData & {
 /**
  * A box the subject can carry; a link to it puts it back where it started.
  * With a mirror, it turns an emitter's ray a quarter turn while it rests.
+ * One not there at the start appears on its start tile the first time a
+ * link sends it home.
  */
 export type BoxData = PositionData & {
   readonly id?: number // Target for button, switch and receiver links; absent means it cannot be linked
   readonly mirror?: string // '/' or '\\': the mirror it holds from corner to corner, fixed wherever it goes; absent for a plain box
+  readonly absent?: boolean // True for a box not there at the start, which a link brings in; left out, or false, for one that is
 }
 
 /**

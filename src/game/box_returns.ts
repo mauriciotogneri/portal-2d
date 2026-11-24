@@ -1,5 +1,6 @@
 import {Direction} from '@/game/direction'
 import {type ElementLook, lookOf} from '@/game/element_detail'
+import {FIZZLE_MILLISECONDS, placePiece} from '@/game/fizzle_particles'
 import type {GameEvent} from '@/game/game_event'
 import {pieceNumber} from '@/game/piece_number'
 import {findReturnedBoxes, type ReturnedBox} from '@/game/returned_boxes'
@@ -7,7 +8,7 @@ import type {RulesState} from '@/game/rules/rules_state'
 import type {PiecePlacement, TilePainter} from '@/game/tile_painter'
 
 /**
- * A box on its way home, and when it set off.
+ * A box on its way home, or breaking up for good, and when it set off.
  */
 type BoxReturn = ReturnedBox & {
   readonly look: ElementLook | null // Its look of its own (element_detail), which its pieces show, or null for the sprite as it is
@@ -27,7 +28,7 @@ type QuarterTurn = {
 /** How long a box takes from coming apart where it was to landing whole at its start, in milliseconds */
 const FLY_MILLISECONDS = 800
 
-/** How long a box that fell into a ditch takes to gather from its pieces at its start, while it falls, in milliseconds */
+/** How long a box that fell into a ditch, or one brought in absent, takes to gather from its pieces at its start, in milliseconds */
 const GATHER_MILLISECONDS = 480
 
 /** Pieces across a box's tile, as the break-up cuts a sprite */
@@ -113,13 +114,18 @@ function clamp(value: number, low = 0, high = 1): number {
 }
 
 /**
- * How long a box's return is drawn: its flight home, or, for one that fell,
- * its gathering at its start.
+ * How long a box's return is drawn: its flight home, or, for one that fell
+ * or was brought in absent, its gathering at its start, or, for one that
+ * breaks up for good, its break-up, as long as a portal's.
  * @param box - The box on its way home
  * @returns The time, in milliseconds
  */
 function lengthOf(box: BoxReturn): number {
-  return box.fell ? GATHER_MILLISECONDS : FLY_MILLISECONDS
+  if (box.vanishes) {
+    return FIZZLE_MILLISECONDS
+  }
+
+  return box.gathers ? GATHER_MILLISECONDS : FLY_MILLISECONDS
 }
 
 /**
@@ -131,6 +137,18 @@ function lengthOf(box: BoxReturn): number {
  */
 function restsAtStart(state: RulesState, box: BoxReturn): boolean {
   return (state.carriedBox !== box.index) && (state.boxX(box.index) === box.startX) && (state.boxY(box.index) === box.startY)
+}
+
+/**
+ * Whether a box's return is still drawn in a state: one going home while it
+ * rests at its start, one breaking up for good while it is still absent,
+ * not yet brought in by a link.
+ * @param state - The state drawn
+ * @param box - The box on its way home
+ * @returns True while it is drawn
+ */
+function isShownIn(state: RulesState, box: BoxReturn): boolean {
+  return box.vanishes ? state.isBoxAbsent(box.index) : restsAtStart(state, box)
 }
 
 /**
@@ -221,9 +239,12 @@ function gatheringPiece(box: BoxReturn, progress: number, offsetX: number, offse
  * destroyed where it lay, in the subject's hands, or sent home by a link
  * comes apart where it was and its pieces fly home, over everything, and
  * join there, its shadow forming as they land; a box that fell into a ditch
- * gathers from pieces at its start while it falls. Purely visual: the rules
+ * gathers from pieces at its start while it falls, and one a link brought
+ * in absent gathers there the same way. A box a link reaches, destroyed but
+ * for a fall, breaks up where it was as a portal does (FizzleParticles),
+ * over everything, and is gone. Purely visual: the rules
  * have already put each box at its start, where it is left out of the box
- * drawing until its return ends.
+ * drawing until its return ends, or left it absent.
  */
 export class BoxReturns {
   private returns: readonly BoxReturn[] = [] // The boxes on their way home, empty when none is
@@ -256,12 +277,13 @@ export class BoxReturns {
   /**
    * Forgets the return of each box no longer resting at its start after a
    * step, picked up again, so it isn't drawn coming home again should it be
-   * put back there before its return would have ended.
+   * put back there before its return would have ended, and of each box
+   * breaking up for good that a link has brought in again.
    * @param state - The state after the step, or after this part of it
    */
   forgetMoved(state: RulesState): void {
-    if (this.returns.some((box) => !restsAtStart(state, box))) {
-      this.returns = this.returns.filter((box) => restsAtStart(state, box))
+    if (this.returns.some((box) => !isShownIn(state, box))) {
+      this.returns = this.returns.filter((box) => isShownIn(state, box))
     }
   }
 
@@ -301,8 +323,8 @@ export class BoxReturns {
   /**
    * Draws each box taking shape at its start as it is at a time, with the
    * boxes resting, in both their passes, shadows then sprites: its shadow
-   * forming as its pieces land, and, for a box that fell, its pieces
-   * gathering there.
+   * forming as its pieces land, and, for a box that fell or was brought in
+   * absent, its pieces gathering there.
    * @param painter - Paints on the canvas
    * @param state - The state drawn
    * @param time - The frame's time, in milliseconds on the frame clock
@@ -315,7 +337,7 @@ export class BoxReturns {
         continue
       }
 
-      if (box.fell) {
+      if (box.gathers) {
         painter.drawSpriteShadow(box.sprite, box.startX, box.startY, box.way, progress ** 2)
         painter.drawSpritePieces(box.sprite, box.startX + 0.5, box.startY + 0.5, 1, box.way, PIECES_ACROSS, (offsetX, offsetY, index) => gatheringPiece(box, progress, offsetX, offsetY, index), box.look)
       } else {
@@ -325,8 +347,8 @@ export class BoxReturns {
   }
 
   /**
-   * Draws the pieces of each box flying home as they are at a time, over
-   * everything.
+   * Draws the pieces of each box flying home, or breaking up for good, as
+   * they are at a time, over everything.
    * @param painter - Paints on the canvas
    * @param state - The state drawn
    * @param time - The frame's time, in milliseconds on the frame clock
@@ -335,7 +357,17 @@ export class BoxReturns {
     for (const box of this.returns) {
       const progress = Math.max(time - box.startTime, 0) / lengthOf(box)
 
-      if (box.fell || (progress >= 1) || !restsAtStart(state, box)) {
+      if (box.gathers || (progress >= 1) || !isShownIn(state, box)) {
+        continue
+      }
+
+      if (box.vanishes) {
+        const burst = {
+          seed: box.seed,
+          size: box.fromSize,
+        }
+
+        painter.drawSpritePieces(box.sprite, box.fromX, box.fromY, box.fromSize, box.fromWay, PIECES_ACROSS, (offsetX, offsetY, index) => placePiece(burst, progress, offsetX, offsetY, index), box.look)
         continue
       }
 

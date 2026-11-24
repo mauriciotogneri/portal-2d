@@ -1,6 +1,13 @@
 import type {ChamberData} from '@/game/chamber_data'
 import type {ReplayExpectation} from '@/game/replay_data'
 import type {Action} from '@/game/rules/action'
+import absentBoxButton from '@scripts/fixtures/absent_box_button.json'
+import absentBoxInRay from '@scripts/fixtures/absent_box_in_ray.json'
+import absentBoxInTheWay from '@scripts/fixtures/absent_box_in_the_way.json'
+import absentBoxLinkedButton from '@scripts/fixtures/absent_box_linked_button.json'
+import absentBoxOntoBox from '@scripts/fixtures/absent_box_onto_box.json'
+import absentBoxReceiver from '@scripts/fixtures/absent_box_receiver.json'
+import absentBoxUnderSubject from '@scripts/fixtures/absent_box_under_subject.json'
 import arrowBox from '@scripts/fixtures/arrow_box.json'
 import arrowButton from '@scripts/fixtures/arrow_button.json'
 import arrowPortal from '@scripts/fixtures/arrow_portal.json'
@@ -25,6 +32,8 @@ import fizzlerShot from '@scripts/fixtures/fizzler_shot.json'
 import fizzlersInARow from '@scripts/fixtures/fizzlers_in_a_row.json'
 import lightBarrier from '@scripts/fixtures/light_barrier.json'
 import linkedBlockedField from '@scripts/fixtures/linked_blocked_field.json'
+import linkedBoxFizzler from '@scripts/fixtures/linked_box_fizzler.json'
+import linkedBoxOnSwitchedElement from '@scripts/fixtures/linked_box_on_switched_element.json'
 import noPortalBehindEndPlate from '@scripts/fixtures/no_portal_behind_end_plate.json'
 import noPortalBesideDoor from '@scripts/fixtures/no_portal_beside_door.json'
 import openEdge from '@scripts/fixtures/open_edge.json'
@@ -74,8 +83,9 @@ import wallTiles from '@scripts/fixtures/wall_tiles.json'
 // how the rules play a change from the original rules (docs/elements.md,
 // "Changes from the original rules") or an element the original game didn't
 // have (the light barrier, the blocked wall that a link switches, the slide
-// floor, the arrow that a link turns, and the emitter, its ray, the receiver
-// and the mirror box), or a rule of the interaction table (docs/elements.md,
+// floor, the arrow that a link turns, the emitter, its ray, the receiver
+// and the mirror box, and the box that starts absent until a link brings it
+// in), or a rule of the interaction table (docs/elements.md,
 // "Interactions") that no other fixture plays, so that every rule there names
 // the fixtures that play it. The replay check runs them. The chambers are read
 // without the layout checks, so the one open at the edge still plays
@@ -1958,6 +1968,280 @@ export const FIXTURES: readonly Fixture[] = [
       moves: 9,
       portals: 0,
       finalHash: '30ad1854',
+    },
+  },
+  {
+    name: 'absent_box_blocks_nothing',
+    behaviour: 'A box that starts absent lies nowhere until a link brings it in, so the subject walks over its start tile.',
+    chamber: absentBoxInTheWay,
+    actions: [
+      'right',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: true,
+      moves: 3,
+      portals: 0,
+      finalHash: '88856c51',
+    },
+  },
+  {
+    name: 'absent_box_presses_no_button',
+    behaviour: 'A box that starts absent on a button doesn\'t hold it down, so the exit the button links stays closed.',
+    chamber: absentBoxButton,
+    actions: [
+      'right',
+      'right',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: false,
+      moves: 3,
+      portals: 0,
+      finalHash: '8dbf4899',
+    },
+  },
+  {
+    name: 'switch_brings_absent_box_in',
+    behaviour: 'Using a switch linked to a box that starts absent brings the box in on its start tile, where it holds the button down and the exit opens.',
+    chamber: absentBoxButton,
+    actions: [
+      'left',
+      'interact',
+      'right',
+      'right',
+      'right',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: true,
+      moves: 6,
+      portals: 0,
+      finalHash: '8a81c903',
+    },
+  },
+  {
+    name: 'brought_in_box_sent_home_again',
+    behaviour: 'A box a switch brought in is a box like any other: carried off its button, put down and sent home by the switch again, it lands back on the button.',
+    chamber: absentBoxButton,
+    actions: [
+      'left',
+      'interact',
+      'right',
+      'right',
+      'up',
+      'interact',
+      'left',
+      'turnUp',
+      'interact',
+      'left',
+      'interact',
+      'right',
+      'right',
+      'right',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: true,
+      moves: 10,
+      portals: 0,
+      finalHash: '8a81c903',
+    },
+  },
+  {
+    name: 'absent_box_stops_no_ray',
+    behaviour: 'A box that starts absent in a ray doesn\'t stop it, so the receiver it reaches is lit from the start and the exit it links is open.',
+    chamber: absentBoxInRay,
+    actions: [
+      'right',
+      'right',
+      'right',
+    ],
+    expected: {
+      completed: true,
+      moves: 3,
+      portals: 0,
+      finalHash: 'd81a2868',
+    },
+  },
+  {
+    name: 'absent_box_appears_under_subject',
+    behaviour: 'A box brought in while the subject stands on its start tile lands under the subject, which walks off and picks it up from beside it.',
+    chamber: absentBoxUnderSubject,
+    actions: [
+      'left',
+      'up',
+      'interact',
+      'turnLeft',
+      'interact',
+      'right',
+      'left',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 2,
+      portals: 0,
+      finalHash: '626b30f3',
+    },
+  },
+  {
+    name: 'absent_box_appears_onto_box',
+    behaviour: 'A box brought in onto a tile where another box rests sends that box back to its own start.',
+    chamber: absentBoxOntoBox,
+    actions: [
+      'interact',
+      'turnRight',
+      'interact',
+      'up',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: '886183d4',
+    },
+  },
+  {
+    name: 'button_brings_absent_box_in',
+    behaviour: 'Pressing a button linked to a box that starts absent brings it in; releasing the button leaves it there.',
+    chamber: absentBoxLinkedButton,
+    actions: [
+      'right',
+      'left',
+    ],
+    expected: {
+      completed: false,
+      moves: 2,
+      portals: 0,
+      finalHash: '503b932c',
+    },
+  },
+  {
+    name: 'receiver_brings_absent_box_in',
+    behaviour: 'A receiver lighting brings in a box it links that starts absent: picking up the box that cut the ray brings it in.',
+    chamber: absentBoxReceiver,
+    actions: ['interact'],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 0,
+      finalHash: '6621f10d',
+    },
+  },
+  {
+    name: 'linked_box_breaks_up_in_closing_door',
+    behaviour: 'A box a switch links, put down in an open doorway, is absent once the door closes on it, instead of going back to its start: here the button holding the door open is released by the subject picking up the other box from it.',
+    chamber: linkedBoxOnSwitchedElement,
+    actions: [
+      'interact',
+      'turnRight',
+      'interact',
+      'left',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 1,
+      portals: 0,
+      finalHash: '58b8d726',
+    },
+  },
+  {
+    name: 'linked_box_falls_into_opening_ditch',
+    behaviour: 'A box a switch links, put down on a bridged ditch, is absent once the ditch opens under it, instead of going back to its start.',
+    chamber: linkedBoxOnSwitchedElement,
+    actions: [
+      'interact',
+      'right',
+      'interact',
+      'left',
+      'left',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 3,
+      portals: 0,
+      finalHash: '58b8d726',
+    },
+  },
+  {
+    name: 'linked_box_carried_into_fizzler_stays_absent',
+    behaviour: 'A box a switch links, carried into a fizzler that is on, is absent, and sends on no box: the other box, put down on its start tile, stays there.',
+    chamber: linkedBoxFizzler,
+    actions: [
+      'interact',
+      'turnUp',
+      'interact',
+      'turnRight',
+      'interact',
+      'turnLeft',
+      'interact',
+      'turnUp',
+      'interact',
+      'up',
+      'left',
+      'left',
+    ],
+    expected: {
+      completed: false,
+      moves: 3,
+      portals: 0,
+      finalHash: 'f45438eb',
+    },
+  },
+  {
+    name: 'fizzled_linked_box_brought_back',
+    behaviour: 'Using the switch linked to a box a fizzler destroyed brings the box in on its start tile, sending the other box resting there on to its own start.',
+    chamber: linkedBoxFizzler,
+    actions: [
+      'interact',
+      'turnUp',
+      'interact',
+      'turnRight',
+      'interact',
+      'turnLeft',
+      'interact',
+      'turnUp',
+      'interact',
+      'up',
+      'left',
+      'left',
+      'right',
+      'right',
+      'right',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 6,
+      portals: 0,
+      finalHash: '69475646',
+    },
+  },
+  {
+    name: 'linked_box_reached_from_fizzler_destroyed',
+    behaviour: 'A box a switch links, picked up from inside a fizzler that is on, is absent at once, where a box no link reaches lands back where it lay.',
+    chamber: linkedBoxFizzler,
+    actions: [
+      'up',
+      'left',
+      'left',
+      'down',
+      'turnRight',
+      'interact',
+    ],
+    expected: {
+      completed: false,
+      moves: 4,
+      portals: 0,
+      finalHash: '85832bcf',
     },
   },
   {

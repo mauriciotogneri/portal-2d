@@ -1,0 +1,105 @@
+{
+    "version": 2,
+    "size": {
+        "width": 8,
+        "height": 6
+    },
+    "subject": {
+        "x": 1,
+        "y": 1,
+        "direction": "RIGHT"
+    },
+    "exit": {
+        "x": 5,
+        "y": 5,
+        "blocked": false
+    },
+    "walls": [
+        {
+            "x": 1,
+            "y": 5
+        },
+        {
+            "x": 3,
+            "y": 5
+        },
+        {
+            "x": 7,
+            "y": 4
+        },
+        {
+            "xFrom": 1,
+            "xTo": 6,
+            "yFrom": 0,
+            "yTo": 0
+        }
+    ],
+    "blockedWalls": [
+        {
+            "xFrom": 0,
+            "xTo": 0,
+            "yFrom": 0,
+            "yTo": 5
+        },
+        {
+            "x": 2,
+            "y": 5
+        },
+        {
+            "x": 4,
+            "y": 5
+        },
+        {
+            "xFrom": 6,
+            "xTo": 7,
+            "yFrom": 5,
+            "yTo": 5
+        },
+        {
+            "xFrom": 7,
+            "xTo": 7,
+            "yFrom": 0,
+            "yTo": 3
+        }
+    ],
+    "slideFloors": [
+        {
+            "xFrom": 1,
+            "xTo": 6,
+            "yFrom": 4,
+            "yTo": 4
+        }
+    ],
+    "ditches": [
+        {
+            "x": 1,
+            "y": 3
+        },
+        {
+            "x": 2,
+            "y": 3
+        },
+        {
+            "x": 3,
+            "y": 3
+        },
+        {
+            "x": 4,
+            "y": 3
+        },
+        {
+            "x": 5,
+            "y": 3
+        },
+        {
+            "x": 6,
+            "y": 3
+        }
+    ],
+    "boxes": [
+        {
+            "x": 2,
+            "y": 1
+        }
+    ]
+}

@@ -6,7 +6,7 @@
  */
 import {computed, shallowRef} from 'vue'
 import {GameKey} from '@/game/game_key'
-import {ARROW_KEY_BINDINGS, type BoundKey, isBindableKey, type KeyBindings} from '@/game/key_bindings'
+import {ARROW_KEY_BINDINGS, type BoundKey, canBindKey, type KeyBindings} from '@/game/key_bindings'
 import {trackControlsChange} from '@/services/analytics'
 
 /** A set of controls the player can pick: Arrow keys is the one shown as Default. */
@@ -65,9 +65,10 @@ function isControlLayout(value: unknown): value is ControlLayout {
 
 /**
  * Reads stored Custom keys, keeping what is well formed. Game keys are checked
- * in order: a stored key is kept when it can be bound and no earlier game key
- * holds it; otherwise the game key gets its Default key. When that key is
- * then already taken, every game key goes back to Default.
+ * in order: a stored key is kept when the game key can be bound to it (a
+ * mouse button only to a portal) and no earlier game key holds it; otherwise
+ * the game key gets its Default key. When that key is then already taken,
+ * every game key goes back to Default.
  * @param value - The parsed stored value
  * @returns Bindings with one key per game key, none shared
  */
@@ -82,7 +83,7 @@ function readBindings(value: unknown): KeyBindings {
   const usedKeys = new Set<BoundKey>()
   for (const gameKey of GAME_KEYS) {
     const key = value[gameKey]
-    if (typeof key === 'string' && isBindableKey(key) && !usedKeys.has(key)) {
+    if (typeof key === 'string' && canBindKey(gameKey, key) && !usedKeys.has(key)) {
       bindings[gameKey] = key
       kept.add(gameKey)
       usedKeys.add(key)
@@ -195,13 +196,33 @@ export function chooseControlLayout(layout: ControlLayout): void {
 }
 
 /**
+ * Whether a key can be bound to a game key, as bindKey would: the game key
+ * can be bound to it (a mouse button only to a portal), and a game key that
+ * holds it can take the game key's previous key in the swap, so a move, say,
+ * never takes a portal's mouse button.
+ * @param gameKey - The game key to rebind
+ * @param key - The key to bind it to, which must be one the game binds
+ * @returns True when bindKey would bind it
+ */
+export function canRebindKey(gameKey: GameKey, key: BoundKey): boolean {
+  const current = controls.value
+  const custom = current.custom ?? bindingsOf(current)
+  const holder = GAME_KEYS.find((otherKey) => otherKey !== gameKey && custom[otherKey] === key)
+  return canBindKey(gameKey, key) && (holder === undefined || canBindKey(holder, custom[gameKey]))
+}
+
+/**
  * Binds a key to a game key in the Custom keys, and puts
  * Custom in use. A key already bound to another game key is swapped: that
- * game key takes this one's previous key.
+ * game key takes this one's previous key. Does nothing when canRebindKey
+ * refuses the key.
  * @param gameKey - The game key to rebind
- * @param key - The key to bind it to, which must be bindable
+ * @param key - The key to bind it to, which must be one the game binds
  */
 export function bindKey(gameKey: GameKey, key: BoundKey): void {
+  if (!canRebindKey(gameKey, key)) {
+    return
+  }
   const current = controls.value
   const custom = current.custom ?? bindingsOf(current)
   const previousKey = custom[gameKey]

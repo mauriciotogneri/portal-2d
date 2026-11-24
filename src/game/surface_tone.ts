@@ -72,7 +72,7 @@ const PASSED_STEPS: readonly SampleStep[] = [
 ]
 
 /** A wall's sloped edge with the lit lip inside it, as a share of a tile: the 48 px bevel of the 256 px sprite and a little more */
-const WALL_EDGE = 0.2
+export const WALL_EDGE = 0.2
 
 /** How much of its tint the darkest ordinary floor tile takes */
 const TILE_SHADE = 0.065

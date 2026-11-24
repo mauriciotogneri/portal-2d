@@ -27,6 +27,9 @@ export const NO_BOX = -1
 /** What a state stores as a closed portal's tile and side */
 export const CLOSED_PORTAL = -1
 
+/** What a state stores as the column and row of a box that is absent, until a link brings it in: a tile outside the chamber's corner, which no move, shot or ray ever looks at, so no lookup finds the box there */
+export const ABSENT_BOX = -1
+
 /** The flag offset of an element whose blocked flag never changes, because no link reaches it */
 export const NOT_STORED = -1
 
@@ -142,9 +145,9 @@ export class StateLayout {
 
   /**
    * Writes the state the chamber file describes: the subject where it starts,
-   * empty-handed, both portals closed, every box on its start tile, every
-   * button up, every receiver dark, every switch unused and every element a
-   * link reaches blocked.
+   * empty-handed, both portals closed, every box on its start tile but those
+   * that start absent, every button up, every receiver dark, every switch
+   * unused and every element a link reaches blocked.
    * @param data - The chamber
    * @returns The values
    */
@@ -160,8 +163,8 @@ export class StateLayout {
     const boxes = data.boxes ?? []
 
     boxes.forEach((box, index) => {
-      values[this.boxesOffset + (index * 2)] = box.x
-      values[this.boxesOffset + (index * 2) + 1] = box.y
+      values[this.boxesOffset + (index * 2)] = (box.absent === true) ? ABSENT_BOX : box.x
+      values[this.boxesOffset + (index * 2) + 1] = (box.absent === true) ? ABSENT_BOX : box.y
     })
 
     this.flagOffsets.forEach((offsets, kind) => {
