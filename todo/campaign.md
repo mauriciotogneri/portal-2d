@@ -1,7 +1,7 @@
 # Campaign
 
-Status: In progress. Now: phase 13, step 13.4: detail run 12, the finale
-Last revised: 2026-11-24
+Status: In progress. Now: phase 14, step 14.1: build chamber 12.1
+Last revised: 2026-11-25
 
 ## Goal
 
@@ -167,8 +167,16 @@ Detailed 2026-11-24 (`docs/campaign.md`, "Run 11 in detail"): a teach and a comb
 - [x] **13.1 Chamber 11.1** (teach: a resting mirror box turns a ray a quarter turn, so where it rests decides where the ray goes). Built 2026-11-24 as id 25, twenty-fifth in the play order, from its sketch (`docs/spoilers/chamber_25.md`); checked and independently reviewed; both of run 11's chambers built before the author played either (the author's call, 2026-11-24, as for runs 2 to 10); kept by the author after their cold play, 2026-11-24, and recorded from it.
 - [x] **13.2 Chamber 11.2** (combine: a closed door stops a ray; a mirror box resting on a button holds it down and turns a ray at once). Built 2026-11-24 as id 26, twenty-sixth in the play order, from its sketch, turned a half turn on its fresh reviewer's finding, with the author's approval, so its frame isn't chamber 22's (`docs/spoilers/chamber_26.md`); checked and independently reviewed; the run's last chamber; kept by the author after their cold play, 2026-11-24, and recorded from it.
 - [x] **13.3 Friends play run 11 cold.** Friends played chambers 11.1 and 11.2 (`/chamber/25` and `/chamber/26`) cold, 2026-11-24, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 11 is finished (assumption 6).
-- [ ] **13.4 Detail run 12**, the finale, in the outline (`docs/campaign.md`, run 12), with what runs 10 and 11 carried there.
+- [x] **13.4 Detail run 12**, the finale, in the outline (`docs/campaign.md`, run 12), with what runs 10 and 11 carried there. Drafted 2026-11-25 from a proposal two fresh reviewers checked, one against the handbook and one on the prototypes alone, and approved by the author the same day: two chambers (a twist and a combine, the campaign's last chamber), within the two to four guessed, in `docs/campaign.md` ("Run 12 in detail"), both sketched in the idea pool, each checked with a throwaway prototype. The handbook reviewer's finding replaced the last chamber's first draft, which played as chamber 11.2's handover with a relay, with its own alternative, checked and turned a quarter turn; the draft is in the idea pool ("Sketched for a run"). The finale is rays only, the author's call: of what earlier runs carried to it, the side a mirror box turns from is met in the twist and decided in the last chamber, and the rest are dropped, never forced in the campaign, each a loss no route needs or a copy of an earlier chamber (`docs/campaign.md`, run 12). One lesson gave nothing away and went into the handbook at once, approved with the plan: guideline 119 extended (a fizzler on a slide's way is a loss no route needs). The others give a chamber away, so they wait until after the author's play.
+
+### Phase 14 — Run 12: the finale
+
+Detailed 2026-11-25 (`docs/campaign.md`, "Run 12 in detail"): a twist and a combine, the campaign's last chamber, both sketched in the idea pool. Both are built before the author plays either (approved with the plan, 2026-11-25, as for runs 2 to 11), taking ids 27 and 28. Each sketch names the risks to watch in the author's cold play; the handbook lessons its drafts turned up that give a chamber away wait until after that play. The macro search refuses chambers with receivers, so each is checked with `--baseline`, a walk of every reachable state and by hand (guideline 101).
+
+- [ ] **14.1 Chamber 12.1** (twist: the light that opens the exit must miss the tile in front of it; which way a mirror box turns a ray depends on the side it comes from). Build as id 27, twenty-seventh in the play order, from its sketch.
+- [ ] **14.2 Chamber 12.2** (combine, the campaign's last chamber: a receiver switching on an emitter; one mirror box turning two rays at once, each its own way). Build as id 28, twenty-eighth in the play order, from its sketch.
+- [ ] **14.3 Friends play run 12 cold.** With this, run 12, the outline's last run, is finished (assumption 6).
 
 ### Later runs
 
-Each run repeats phase 3: its chambers in play order, friends' cold play, the lessons into the handbook, then the next run detailed. Runs 10 and 11 hold receivers, which the solver's macro search refuses, so expect their shortcuts to be checked by hand (`docs/solving_by_hand.md`), which takes longer.
+None: run 12 is the outline's last run, so once it is finished (assumption 6) the outline's runs are built (Goal). Runs 10 to 12 hold receivers, which the solver's macro search refuses, so their shortcuts are checked by hand (`docs/solving_by_hand.md`) and with a walk of every reachable state.
