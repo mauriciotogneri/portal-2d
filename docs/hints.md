@@ -1,8 +1,8 @@
 # Hints
 
-Short notes shown during the first chambers, so a new player understands what an element does: for example, that steel never takes a portal. The design was chosen on 2026-11-21 and settled on 2026-11-24, and it is being built in three stages: the spotlight and its card (stage 1, built), then, each with its plan at the repository's root, `stage-2-hint-triggers.md` (what sets a hint off, the seen hints stored, analytics, the hint list and its check, and Chamber 3's box hint) and `stage-3-run-1-hints.md` (the other run 1 hints). This file records the decisions, the chosen design, how it was chosen, what is still open, and what was learned about the code on the way.
+Short notes shown during the first chambers, so a new player understands what an element does: for example, that steel never takes a portal. The design was chosen on 2026-11-21 and settled on 2026-11-24, and it is built in three stages: the spotlight and its card (stage 1), then what sets a hint off, the seen hints stored, analytics, the hint list and its check, and Chamber 3's box hint (stage 2), both built, and the other run 1 hints (stage 3), still to come, planned in `stage-3-run-1-hints.md` at the repository's root. This file records the decisions, the chosen design, how to add a hint, how it was chosen, what is still open, and what was learned about the code on the way.
 
-Stage 1 is built: `src/components/hint_spotlight.vue` draws the spotlight and its card, and the chamber screen shows it as its `'hint'` dialog, pausing the game until Continue. Nothing shows one to a player yet; in development, `showHint(kind, x, y, text)` in the browser console shows one over any tile of the open chamber (y counted from the bottom row), and production builds leave that function out.
+Hints reach players. The hint list (`src/services/hint_catalogue.ts`) says which hints each campaign chamber has, and the chamber screen sets them off by their triggers (decisions 8 to 13), shows each through `src/components/hint_spotlight.vue` as its `'hint'` dialog, pausing the game until Continue, sends `hint_shown` as it appears and stores it as seen in the chamber's progress record once it is closed. One hint is live: Chamber 3's box hint (decision 25). In development, `showHint(kind, x, y, text)` in the browser console still shows a hint over any tile of the open chamber (y counted from the bottom row), which is stored nowhere and sends nothing; production builds leave that function out.
 
 These are tutorial hints. They are not the solver's hints (a nudge, a highlight, the next move, on a key of their own), one of the player features dropped when the solver's prototype stopped (`docs/solver.md`); the solver itself is still in the code.
 
@@ -82,6 +82,26 @@ The chamber screen sizes tiles from the stage, so the lit tile is as large as th
 
 At 1280 × 720 the lit tile is small but still clear with its brackets. The card is the same size at every window, so it covers a larger share of a smaller stage.
 
+## How to add a hint
+
+A hint is a data entry: no code changes.
+
+1. Settle its content with the author (decision 23), within decisions 5, 6 and 26: what the element is or does, never how to solve, as short as will do, naming no key.
+2. Add it to `CHAMBER_HINTS` in `src/services/hint_catalogue.ts`, under the campaign chamber's permanent id (not its number; a playground chamber can't have one, decision 22). A chamber's hints show in list order when one step sets off several (decision 13).
+3. Run `npm run chamber:check`. Its `hint list` line fails when an id in the list belongs to no chamber of the play order, a hint id is used twice in a chamber, a lit tile doesn't hold its element, a trigger tile is outside the chamber, or a timer hint waits 0 seconds or less or names no cancelling event.
+4. Try it in `npm run dev`. A hint closed once never shows again in that browser, so use Reset progress (home menu, Settings) first, or a browser with no stored progress. Each showing logs `[analytics] hint_shown` to the console, with `chamber_id`, `chamber_number`, `attempt` and `hint_id`.
+
+| # | Field | What it holds |
+|---|-------|---------------|
+| 1 | `id` | Permanent, unique within its chamber and never reused, as it is stored once seen and sent as `hint_id` (decision 21); named after the element, such as `box` |
+| 2 | `element` | The kind of element it explains, any kind in the element registry but wall and exit; the card shows its pictogram and its name on the chamber sign (steel is `blockedWall`, "Blocked wall") |
+| 3 | `tile` | The lit tile, `{x, y}`, y counted from the bottom row: the element's own, and for a box its start tile |
+| 4 | `trigger` | A trigger tile, `{x, y}`, for a tile hint, or `{seconds}` of the chamber clock for a timer hint (decisions 8, 9 and 11) |
+| 5 | `cancelledBy` | A game event (`src/game/game_event.ts`) that, once it has happened in the attempt, keeps the hint from showing; required for a timer hint (decision 10) |
+| 6 | `text` | What the card says, in sentence case |
+
+Chamber 3's box hint, under id 3, is the example to copy (decision 25).
+
 ## The page's example: the fizzler
 
 The example every option showed, the author's own: "fizzlers destroy portals and boxes if you cross one that is on". No run 1 chamber holds a fizzler, so hints being run 1's alone (decision 7), this hint won't be built; it stays as the page's example and a sample of the wording. Its title is "Fizzler", with the fizzler's pictogram. The page had two texts, switchable:
@@ -117,20 +137,20 @@ Each is the author's to answer, when the stage that needs it gets there.
 |---|----------|---------------|
 | 1 | Each hint's content | Chamber 3's box hint is settled (decision 25). For each of Chamber 1's steel and ditch hints and Chamber 3's button hint: tile or timer hint, its trigger tile or seconds, its cancelling event, its lit tile and its text. Recommended: timer hints, as hints are a backup for players who don't know how to progress, cancelled by the event that shows the element was understood (the box's by `boxPickedUp`, which also keeps the light off a box that has moved from its start tile; the button's by `buttonPressed`); a tile hint only where every player should read it first. A text or a lit tile must never point at the route (decision 6) |
 | 2 | Steel's title | The card's title is the element's name on the chamber sign, "Blocked wall", while the campaign calls it steel, so a player may not connect the two. Keep "Blocked wall", which needs nothing built; or show "Steel" through an optional title on a hint. Recommended: "Blocked wall", so the card and the sign agree |
-| 3 | The card on a small screen | At 1280 × 720 the 22rem card covers a large share of the stage. If it covers too much, its size goes back to the author (the page can show a smaller one) before real hints are added |
+| 3 | The card on a small screen | At 1280 × 720 the 22rem card covers a large share of the stage: Chamber 3's box hint, checked there, covers about the chamber's left half, the lit box clear. If it covers too much, its size goes back to the author (the page can show a smaller one) |
 
 ## Notes for building
 
-What was learned about the code while making the page. These are findings, not decisions.
+What was learned about the code while making the page and building the hints. These are findings, not decisions.
 
-- **Where it goes.** The chamber screen (`chamber_screen.vue`) owns the dialogs over the chamber, as one `ChamberDialog` state (`'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed'`), pausing the game with `level.paused` and resuming it on close. A hint is one more state there, whose Escape case in `handleKeydown` does nothing (decision 16). Pausing stops the clock (it counts only unpaused frames), and resuming forgets every press still waiting and every key held. A key still held once the hint closes acts again from its next auto-repeat, as after any dialog; pressing Enter usually ends another key's auto-repeat, but closing with a click doesn't.
-- **The game decides nothing about Vue.** `src/game/` never imports Vue, components or services. Whatever sets a hint off must reach the screen the way completion does (`level.onCompleted`): a callback from `Level`, or the screen reading the state after each step. The rules (`src/game/rules/`) must not change for hints: the recorded solutions and fixtures pin them.
+- **Where it goes.** The chamber screen (`chamber_screen.vue`) owns the dialogs over the chamber, as one `ChamberDialog` state, `'hint'` among them, pausing the game with `level.paused` and resuming it on close. Escape does nothing in the hint's state (decision 16). Pausing stops the clock (it counts only unpaused frames), and resuming forgets every press still waiting and every key held. A key still held once the hint closes acts again from its next auto-repeat, as after any dialog; pressing Enter usually ends another key's auto-repeat, but closing with a click doesn't.
+- **The game decides nothing about Vue.** `src/game/` never imports Vue, components or services, so steps reach the screen the way completion does (`level.onCompleted`): `Level` calls `onStep` after each step it takes for a press, never for a load, with the subject's tile after it, the step's events and whether it completed the chamber. The screen sets off tile hints there and timer hints as it refreshes the clock each frame. The rules (`src/game/rules/`) didn't change for hints and must not: the recorded solutions and fixtures pin them.
+- **Seen hints.** Each chamber's progress record holds `hintsSeen`, the ids of the hints closed, read like its other fields, with no change of the record's version, so progress stored before hints kept reading.
+- **Two hints in a row.** The spotlight keeps state of its own (pressed, closing, its measured size), so the screen keys it by a count of the hints shown: a hint shown as the one before it closes gets a fresh spotlight. Without that key, the second card stayed invisible and could not be closed.
 - **Finding the tile on the page.** The canvas is exactly the chamber (`tileSize × width` by `tileSize × height` device pixels, in `TilePainter.setSize`), centred in the stage, its page size its drawn size divided by the pixel ratio. So a tile's page size is the canvas's `getBoundingClientRect().width` divided by the chamber's width in tiles, and tile (x, y), y counting from the bottom as the game does, lies at `left + x × size`, `top + (height − 1 − y) × size`. The tile size itself is `Math.trunc(min(stage width / max(chamber width, 16), stage height / max(chamber height, 16)))` in device pixels, the stage less its 2rem padding each side; a resize or a pixel ratio change moves it, so the spotlight must follow (`fitToStage`).
 - **The darkening over the rail.** The dialogs' backdrop is `position: fixed; inset: 0`, over the rail too. The spotlight darkens the same area, cut out at one tile.
-- **Reuse.** `dialog_frame.vue` has the keyboard behaviour a hint needs (first action focused, Tab kept inside, a repeating Enter or Space ignored, the accept sound on pressing) but also the centred panel and backdrop, so the card needs that behaviour without that layout. The pictograms are in `element_pictogram.vue`, one per kind (`PictogramKind`). The Continue button is the pause dialog's (`pause_dialog.vue`, with its `.action-hint`).
 - **A pitfall the page hit.** The sign frames its pictograms with `padding: 7%`, which works in its grid cells. Put in a flex row, a percentage padding is taken from the row's width, not the frame's, and the pictogram shrinks to nothing: give the hint's frame a fixed padding (0.1875rem).
 - **Colours.** The page used black for the card's and the brackets' shadows; every shadow in the game is built from `--color-ink-rgb`, so the built hint uses ink. Every colour is an `rgba()` token from `styles.css` (no new colours), and `border-radius` is in rem.
-- **Docs to update when it reaches players.** `AGENTS.md` (the chamber screen, keyboard ownership, the layout), `docs/interface.md` (the chamber screen, the keys, the dialogs), `docs/game_summary.md` (the screens), `docs/level_design.md` if hints change how a chamber should introduce an element, and this file.
 
 ## The artifact
 

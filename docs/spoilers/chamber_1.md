@@ -88,7 +88,7 @@ None is a dead end: there is no box, link, arrow or anything one-way, and portal
 
 - `npm run solve -- --baseline --par`: 6 moves, 2 portals, both searches; 2 portal wall sides; key 11 bits.
 - The copy with every wall steel: unsolvable from `--baseline` and `--par`.
-- An independent check (a fresh agent with only the file and the plan's entry, no notes) found no shortcut or dead end: copies with both plain walls steel, or only one of them left, all unsolvable from `--baseline` and `--par`; the baseline search covers all 326 states. It flagged wrong try 6 as the one with no feedback at all, which comes from the rules, not the layout: a hint could cover it if hints are built.
+- An independent check (a fresh agent with only the file and the plan's entry, no notes) found no shortcut or dead end: copies with both plain walls steel, or only one of them left, all unsolvable from `--baseline` and `--par`; the baseline search covers all 326 states. It flagged wrong try 6 as the one with no feedback at all, which comes from the rules, not the layout: a hint could cover it (hints are built; Chamber 1's come with `stage-3-run-1-hints.md`).
 
 ## Playtests
 

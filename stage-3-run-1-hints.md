@@ -1,7 +1,7 @@
 # Run 1 hints
 
 Tick a box when the step is implemented and verified.
-Stage 3 of 3, after stage-2-hint-triggers.md.
+Stage 3 of 3, after stage 2 (the triggers, the hint list and Chamber 3's box hint, built; `docs/hints.md`).
 
 ## Goal and scope
 

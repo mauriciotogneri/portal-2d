@@ -6,7 +6,7 @@ Status: kept by the author on 2026-11-23, their cold run its recorded solution. 
 
 ## Entry
 
-Run 1, chamber 3, teach. Elements: a box, a button, a door, an antline; walls, steel and the exit are known from chambers 1.1 and 1.2. The player knows chambers 1 and 2. It should teach that a button opens the door its antline leads to while something stands on it, and that a box carried there holds it for the subject. Hint, if hints are built: Button, box.
+Run 1, chamber 3, teach. Elements: a box, a button, a door, an antline; walls, steel and the exit are known from chambers 1.1 and 1.2. The player knows chambers 1 and 2. It should teach that a button opens the door its antline leads to while something stands on it, and that a box carried there holds it for the subject. Hints: button (stage 3, `stage-3-run-1-hints.md`) and box (live: a timer hint at 10 seconds, cancelled once the box is picked up, `docs/hints.md` decision 25).
 
 ## Layout
 
@@ -51,7 +51,7 @@ Where the player should get stuck: in front of the shut door, working out that t
 
 The second likely stumble: carrying the box onto the button and pressing interact there. A player who picks the box up from the bottom row, walking along it into the box, will likely do this, since the way back to the button from there leads onto it. The box goes down on the tile in front, not underfoot, and stepping off shuts the door. The answer, coming at the button from a tile away, works from both sides along the middle row, and never needs the turn key (wrong tries 4 and 5).
 
-This is the first chamber where interact does anything: picking the box up and putting it down are met here, with only the controls legend's line ("pick up and drop boxes") to go on, which is why the entry's hint, if hints are built, names the box as well as the button.
+This is the first chamber where interact does anything: picking the box up and putting it down are met here, with only the controls legend's line ("pick up and drop boxes") to go on, which is why the entry's hints name the box as well as the button.
 
 ## Restrictions
 
