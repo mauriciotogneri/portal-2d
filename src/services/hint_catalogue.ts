@@ -34,8 +34,51 @@ export type Hint = {
 
 /** Each campaign chamber's hints, in the order they show when one step sets off several, by the chamber's permanent id */
 export const CHAMBER_HINTS: Readonly<Record<number, readonly Hint[]>> = {
-  // Chamber 3 (id 3), the first chamber where interact does anything
+  // Chamber 1 (id 1), where the ditch and steel are first met; neither lit tile lines up with a plain wall
+  1: [
+    {
+      id: 'ditch',
+      element: 'ditch',
+      tile: {
+        x: 4,
+        y: 1,
+      },
+      trigger: {
+        seconds: 10,
+      },
+      cancelledBy: 'crossed',
+      text: 'A ditch stops you, but not your shots.',
+    },
+    {
+      id: 'steel',
+      element: 'blockedWall',
+      tile: {
+        x: 2,
+        y: 4,
+      },
+      trigger: {
+        seconds: 20,
+      },
+      cancelledBy: 'crossed',
+      text: 'Portals can\'t open on blocked walls.',
+    },
+  ],
+  // Chamber 3 (id 3), the first chamber where interact does anything; the first press towards the exit presses the button, so no button event can cancel its hint
   3: [
+    {
+      id: 'button',
+      element: 'button',
+      tile: {
+        x: 3,
+        y: 2,
+      },
+      trigger: {
+        x: 5,
+        y: 2,
+      },
+      cancelledBy: 'boxPutDown',
+      text: 'A button opens its door while something stands on it.',
+    },
     {
       id: 'box',
       element: 'box',

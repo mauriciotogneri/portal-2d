@@ -1,14 +1,14 @@
 # Hints
 
-Short notes shown during the first chambers, so a new player understands what an element does: for example, that steel never takes a portal. The design was chosen on 2026-11-21 and settled on 2026-11-24, and it is built in three stages: the spotlight and its card (stage 1), then what sets a hint off, the seen hints stored, analytics, the hint list and its check, and Chamber 3's box hint (stage 2), both built, and the other run 1 hints (stage 3), still to come, planned in `stage-3-run-1-hints.md` at the repository's root. This file records the decisions, the chosen design, how to add a hint, how it was chosen, what is still open, and what was learned about the code on the way.
+Short notes shown during the first chambers, so a new player understands what an element does: for example, that steel never takes a portal. The design was chosen on 2026-11-21 and settled on 2026-11-24, and it is built in three stages: the spotlight and its card (stage 1), then what sets a hint off, the seen hints stored, analytics, the hint list and its check, and Chamber 3's box hint (stage 2), both built, and the other run 1 hints (stage 3), also built. This file records the decisions, the chosen design, how to add a hint, how it was chosen, what is still open, and what was learned about the code on the way.
 
-Hints reach players. The hint list (`src/services/hint_catalogue.ts`) says which hints each campaign chamber has, and the chamber screen sets them off by their triggers (decisions 8 to 13), shows each through `src/components/hint_spotlight.vue` as its `'hint'` dialog, pausing the game until Continue, sends `hint_shown` as it appears and stores it as seen in the chamber's progress record once it is closed. One hint is live: Chamber 3's box hint (decision 25). In development, `showHint(kind, x, y, text)` in the browser console still shows a hint over any tile of the open chamber (y counted from the bottom row), which is stored nowhere and sends nothing; production builds leave that function out.
+Hints reach players. The hint list (`src/services/hint_catalogue.ts`) says which hints each campaign chamber has, and the chamber screen sets them off by their triggers (decisions 8 to 13), shows each through `src/components/hint_spotlight.vue` as its `'hint'` dialog, pausing the game until Continue, sends `hint_shown` as it appears and stores it as seen in the chamber's progress record once it is closed. Every run 1 hint is live, four in all ([The hints](#the-hints)): Chamber 1's ditch and steel hints (decision 27) and Chamber 3's button and box hints (decisions 28 and 25). In development, `showHint(kind, x, y, text)` in the browser console still shows a hint over any tile of the open chamber (y counted from the bottom row), which is stored nowhere and sends nothing; production builds leave that function out.
 
 These are tutorial hints. They are not the solver's hints (a nudge, a highlight, the next move, on a key of their own), one of the player features dropped when the solver's prototype stopped (`docs/solver.md`); the solver itself is still in the code.
 
 ## The decision
 
-Rows 1 to 5 were decided on 2026-11-21 and 2026-11-22, rows 6 to 24 on 2026-11-24 with the stage plans, and rows 25 and 26 on 2026-11-25.
+Rows 1 to 5 were decided on 2026-11-21 and 2026-11-22, rows 6 to 24 on 2026-11-24 with the stage plans, and rows 25 to 28 on 2026-11-25.
 
 | # | Question | Decided |
 |---|----------|---------|
@@ -34,10 +34,12 @@ Rows 1 to 5 were decided on 2026-11-21 and 2026-11-22, rows 6 to 24 on 2026-11-2
 | 20 | Analytics? | One `hint_shown` event when a hint appears, with the chamber events' shared parameters (`chamber_id`, `chamber_number`, `attempt`) and `hint_id`, which shows where players stall; none when it closes. Event and parameter names, and hint ids, are permanent once production sends them |
 | 21 | Where are hints listed? | In a hint list of their own, keyed by each chamber's permanent id, outside the chamber files, so the chamber files and their recorded solutions stay untouched. Each hint has a permanent id, unique within its chamber and never reused, as it is stored and sent. `npm run chamber:check` checks the list and fails when a lit tile no longer holds its element or a trigger tile is outside its chamber, so a chamber edit that moves an element is caught |
 | 22 | When does no hint show? | In playground chambers, and once the step that completes the chamber has been taken, as a hint over the walk-out would be pointless |
-| 23 | Who decides each hint's content? | The author, per hint: its trigger, trigger tile or seconds, cancelling event, lit tile and text ([Open questions](#open-questions)) |
+| 23 | Who decides each hint's content? | The author, per hint: its trigger, trigger tile or seconds, cancelling event, lit tile and text (decisions 25, 27 and 28; [The hints](#the-hints)) |
 | 24 | How is it built? | In three stages, each checked on its own: the display first, then the triggers with one real hint, Chamber 3's box hint, then the other run 1 hints as data. Every hint after the display is a data entry, not new code |
 | 25 | Chamber 3's box hint? | A timer hint, id `box`: it shows once the chamber clock reaches 10 seconds, unless the box has been picked up (`boxPickedUp`) in the attempt, lights the box's start tile and says "Press interact to pick up a box, and again to put it down." (the author's choice of trigger, seconds and text) |
 | 26 | Does a hint name a key? | No: it says "interact", the game key's name, as the controls legend shows which key it is and players can rebind it (the author's choice, with the box hint's text) |
+| 27 | Chamber 1's hints? | Two timer hints, each kept from showing once the subject has come out of a portal (`crossed`) in the attempt: `ditch` at 10 seconds, lighting the ditch at (4, 1) and saying "A ditch stops you, but not your shots.", then `steel` (a `blockedWall`) at 20 seconds, lighting the steel at (2, 4) and saying "Portals can't open on blocked walls." The steel card keeps the sign's name, "Blocked wall", as its title, so the card and the sign agree and nothing was built for it. Neither lit tile lines up with a plain wall, so the light points at no way through (the author's choice of triggers, seconds, tiles, texts and title) |
+| 28 | Chamber 3's button hint? | A tile hint, id `button`, listed before the box hint: it shows the first time the subject stands in front of the door, at (5, 2), unless the box has been put down (`boxPutDown`) in the attempt, lights the button at (3, 2) and says "A button opens its door while something stands on it." No button event can cancel it, since the first move presses the button (the author's choice of trigger, tile and text) |
 
 The request that started it: hints during the first chambers, of two kinds to compare, intrusive (the game stops, the player reads, dismisses it, and the game continues) and non-intrusive (shown without interrupting the game), each tried in different places on the screen. Round 1 showed seven styles (A to G, [below](#what-was-considered)); round 2 kept only B, the spotlight, with its light cut down to the element's own tile. That round 2 design, called B2 on the page, is the one chosen.
 
@@ -82,11 +84,22 @@ The chamber screen sizes tiles from the stage, so the lit tile is as large as th
 
 At 1280 × 720 the lit tile is small but still clear with its brackets. The card is the same size at every window, so it covers a larger share of a smaller stage.
 
+## The hints
+
+Every hint in `src/services/hint_catalogue.ts`, in list order within each chamber.
+
+| # | Chamber | Id | Element | Trigger | Cancelled by | Lit tile | Text |
+|---|---------|----|---------|---------|--------------|----------|------|
+| 1 | 1 | `ditch` | Ditch | Clock at 10 s | `crossed` | (4, 1) | A ditch stops you, but not your shots. |
+| 2 | 1 | `steel` | Blocked wall | Clock at 20 s | `crossed` | (2, 4) | Portals can't open on blocked walls. |
+| 3 | 3 | `button` | Button | Subject on (5, 2) | `boxPutDown` | (3, 2) | A button opens its door while something stands on it. |
+| 4 | 3 | `box` | Box | Clock at 10 s | `boxPickedUp` | (5, 1) | Press interact to pick up a box, and again to put it down. |
+
 ## How to add a hint
 
 A hint is a data entry: no code changes.
 
-1. Settle its content with the author (decision 23), within decisions 5, 6 and 26: what the element is or does, never how to solve, as short as will do, naming no key.
+1. Settle its content with the author (decision 23), within decisions 5, 6 and 26: what the element is or does, never how to solve, as short as will do, naming no key. Pick a cancelling event players don't set off before they could need the hint (Chamber 3's first move presses its button, so `buttonPressed` would cancel a button hint for nearly everyone), and a lit tile that lines up with nothing the route needs (decision 27).
 2. Add it to `CHAMBER_HINTS` in `src/services/hint_catalogue.ts`, under the campaign chamber's permanent id (not its number; a playground chamber can't have one, decision 22). A chamber's hints show in list order when one step sets off several (decision 13).
 3. Run `npm run chamber:check`. Its `hint list` line fails when an id in the list belongs to no chamber of the play order, a hint id is used twice in a chamber, a lit tile doesn't hold its element, a trigger tile is outside the chamber, or a timer hint waits 0 seconds or less or names no cancelling event.
 4. Try it in `npm run dev`. A hint closed once never shows again in that browser, so use Reset progress (home menu, Settings) first, or a browser with no stored progress. Each showing logs `[analytics] hint_shown` to the console, with `chamber_id`, `chamber_number`, `attempt` and `hint_id`.
@@ -135,9 +148,7 @@ Each is the author's to answer, when the stage that needs it gets there.
 
 | # | Question | What is known |
 |---|----------|---------------|
-| 1 | Each hint's content | Chamber 3's box hint is settled (decision 25). For each of Chamber 1's steel and ditch hints and Chamber 3's button hint: tile or timer hint, its trigger tile or seconds, its cancelling event, its lit tile and its text. Recommended: timer hints, as hints are a backup for players who don't know how to progress, cancelled by the event that shows the element was understood (the box's by `boxPickedUp`, which also keeps the light off a box that has moved from its start tile; the button's by `buttonPressed`); a tile hint only where every player should read it first. A text or a lit tile must never point at the route (decision 6) |
-| 2 | Steel's title | The card's title is the element's name on the chamber sign, "Blocked wall", while the campaign calls it steel, so a player may not connect the two. Keep "Blocked wall", which needs nothing built; or show "Steel" through an optional title on a hint. Recommended: "Blocked wall", so the card and the sign agree |
-| 3 | The card on a small screen | At 1280 × 720 the 22rem card covers a large share of the stage: Chamber 3's box hint, checked there, covers about the chamber's left half, the lit box clear. If it covers too much, its size goes back to the author (the page can show a smaller one) |
+| 1 | The card on a small screen | At 1280 × 720 the 22rem card covers a large share of the stage: Chamber 3's box hint, checked there, covers about the chamber's left half, the lit box clear. If it covers too much, its size goes back to the author (the page can show a smaller one) |
 
 ## Notes for building
 

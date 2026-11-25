@@ -6,7 +6,7 @@ Status: kept by the author on 2026-11-23, their cold run its recorded solution. 
 
 ## Entry
 
-Run 1, chamber 3, teach. Elements: a box, a button, a door, an antline; walls, steel and the exit are known from chambers 1.1 and 1.2. The player knows chambers 1 and 2. It should teach that a button opens the door its antline leads to while something stands on it, and that a box carried there holds it for the subject. Hints: button (stage 3, `stage-3-run-1-hints.md`) and box (live: a timer hint at 10 seconds, cancelled once the box is picked up, `docs/hints.md` decision 25).
+Run 1, chamber 3, teach. Elements: a box, a button, a door, an antline; walls, steel and the exit are known from chambers 1.1 and 1.2. The player knows chambers 1 and 2. It should teach that a button opens the door its antline leads to while something stands on it, and that a box carried there holds it for the subject. Hints: button (live: a tile hint shown the first time the subject stands in front of the door, at (5, 2), cancelled once the box has been put down, `docs/hints.md` decision 28) and box (live: a timer hint at 10 seconds, cancelled once the box is picked up, `docs/hints.md` decision 25).
 
 ## Layout
 
