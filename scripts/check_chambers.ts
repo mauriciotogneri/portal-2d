@@ -1,5 +1,6 @@
 import {existsSync, readFileSync} from 'node:fs'
 import {isDeepStrictEqual} from 'node:util'
+import type {PositionData} from '@/game/chamber_data'
 import {GameEvent} from '@/game/game_event'
 import {CHAMBER_FIELDS} from '@/game/rules/chamber_parser'
 import {formatChamberProblem} from '@/game/rules/chamber_problem'
@@ -8,6 +9,7 @@ import type {ElementDefinition} from '@/game/rules/element_definition'
 import {CORE_STEP_EVENTS, ELEMENT_REGISTRY} from '@/game/rules/element_registry'
 import {loadChamber, readChamber} from '@/game/rules/load_chamber'
 import {CHAMBERS} from '@/services/chamber_catalogue'
+import {CHAMBER_HINTS, type HintElement} from '@/services/hint_catalogue'
 import {PLAYGROUND_LAYOUTS} from '@/services/playground_catalogue'
 import {CHAMBER_FILES, CHAMBERS_DIRECTORY, chamberFileName, listChamberFiles, listPlaygroundFiles, PLAYGROUND_DIRECTORY, PLAYGROUND_FILES, playgroundFileName} from '@scripts/chamber_files'
 import {listFixtureChambers} from '@scripts/fixtures/fixtures'
@@ -20,7 +22,11 @@ import {CHAMBER_CASES, type ChamberCase, FORMAT_V2_EXAMPLE} from '@scripts/fixtu
 // whole number of 1 or more, used once, whose file, chamber_<id>.json, holds
 // exactly the layout the game loads for it, and the playground list
 // (src/services/playground_catalogue.ts) must list every playground file, the
-// one at place N being playground_N.json.
+// one at place N being playground_N.json. The hint list
+// (src/services/hint_catalogue.ts) must name only chambers in the play order,
+// each hint's id used once in its chamber, its lit tile holding its element
+// (a box's start tile for a box), its trigger tile inside the chamber, and a
+// timer hint waiting more than 0 seconds and naming a cancelling event.
 // Each case in scripts/fixtures/format_examples.ts must report exactly
 // the problems pinned for it. The format 2 example, compiled, must reach
 // exactly the pinned links (its link group expanded) and refuse portals for
@@ -185,6 +191,107 @@ function checkCatalogue(): boolean {
   }
 
   console.error(`play order FAILED: ${countProblems(problems.length)}`)
+
+  for (const problem of problems) {
+    console.error(`  ${problem}`)
+  }
+
+  return false
+}
+
+/**
+ * Whether a tile of a chamber holds an element of a kind: a box's start tile
+ * for a box, a placed element on the tile for the others.
+ * @param chamber - The chamber, compiled
+ * @param element - The kind of element
+ * @param tile - The tile
+ * @returns True when the tile holds one
+ */
+function holdsElement(chamber: CompiledChamber, element: HintElement, tile: PositionData): boolean {
+  if (element === 'box') {
+    return chamber.boxStarts.some((start) => (start.x === tile.x) && (start.y === tile.y))
+  }
+
+  return chamber.elementAt(element, tile.x, tile.y) !== NO_ELEMENT
+}
+
+/**
+ * Checks the hint list against the chambers, since a chamber edit can move
+ * an element away from its hint's lit tile or shrink the chamber past a
+ * trigger tile: every chamber it names in the play order, each hint's id
+ * used once in its chamber, its lit tile holding its element, its trigger
+ * tile inside the chamber, and a timer hint waiting more than 0 seconds and
+ * naming a cancelling event. A chamber that doesn't load has already failed
+ * on its own line.
+ * @returns Whether the hint list passed
+ */
+function checkHints(): boolean {
+  const problems: string[] = []
+  let hintCount = 0
+  let chamberCount = 0
+
+  for (const [
+    id,
+    hints,
+  ] of Object.entries(CHAMBER_HINTS)) {
+    const chamber = CHAMBERS.find((entry) => String(entry.id) === id)
+
+    if (chamber === undefined) {
+      problems.push(`hints of chamber id ${id}: no chamber in the play order has this id`)
+      continue
+    }
+
+    const loaded = loadChamber(chamber.data)
+
+    if (loaded.chamber === null) {
+      continue
+    }
+
+    const compiled = new CompiledChamber(loaded.chamber)
+    const seenIds = new Set<string>()
+
+    chamberCount++
+
+    for (const hint of hints) {
+      const label = `chamber ${chamber.number} (id ${chamber.id}), hint ${hint.id}`
+      const trigger = hint.trigger
+
+      hintCount++
+
+      if (seenIds.has(hint.id)) {
+        problems.push(`${label}: its id is already used by an earlier hint of the chamber`)
+      }
+
+      seenIds.add(hint.id)
+
+      if (!holdsElement(compiled, hint.element, hint.tile)) {
+        problems.push(`${label}: its lit tile (${hint.tile.x}, ${hint.tile.y}) holds no ${hint.element}`)
+      }
+
+      if ('seconds' in trigger) {
+        if (!(trigger.seconds > 0)) {
+          problems.push(`${label}: its timer waits ${trigger.seconds} seconds, not more than 0`)
+        }
+
+        if (hint.cancelledBy === undefined) {
+          problems.push(`${label}: it is a timer hint with no cancelling event`)
+        }
+      } else if ((trigger.x < 0) || (trigger.y < 0) || (trigger.x >= compiled.width) || (trigger.y >= compiled.height)) {
+        problems.push(`${label}: its trigger tile (${trigger.x}, ${trigger.y}) is outside the ${compiled.width} × ${compiled.height} chamber`)
+      }
+    }
+  }
+
+  if (problems.length === 0) {
+    const hintWord = (hintCount === 1) ? 'hint' : 'hints'
+    const chamberWord = (chamberCount === 1) ? 'chamber' : 'chambers'
+
+    console.log(`hint list OK: ${hintCount} ${hintWord} in ${chamberCount} ${chamberWord}, each lighting its element and set off inside its chamber`)
+
+    return true
+  }
+
+  console.error(`hint list FAILED: ${countProblems(problems.length)}`)
 
   for (const problem of problems) {
     console.error(`  ${problem}`)
@@ -508,7 +615,7 @@ function checkRegistryFlags(): boolean {
 }
 
 /**
- * Checks every chamber file in src/chambers, the play order, every playground chamber and their list, every case, the
+ * Checks every chamber file in src/chambers, the play order, the hint list, every playground chamber and their list, every case, the
  * compiled format 2 example, the ring outside every chamber's edge and the
  * element registry.
  * @returns Whether all of them passed
@@ -521,6 +628,7 @@ function runAll(): boolean {
   }
 
   passed = checkCatalogue() && passed
+  passed = checkHints() && passed
 
   for (const file of listPlaygroundFiles()) {
     passed = checkPlaygroundFile(file) && passed

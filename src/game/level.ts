@@ -47,6 +47,16 @@ type SlideBeat = {
 }
 
 /**
+ * What one step of the rules did, as the chamber screen hears of it.
+ */
+export type StepReport = {
+  readonly x: number // The subject's column after the step, counted from the chamber's left edge
+  readonly y: number // The subject's row after the step, counted from the chamber's bottom row
+  readonly events: readonly GameEvent[] // What happened during the step, a slide's included, in order
+  readonly completed: boolean // Whether the step completed the chamber
+}
+
+/**
  * Plays a chamber on a canvas, driven by the chamber screen. Each frame takes
  * the oldest waiting key press, if any, as one action, fully resolved by the
  * rules' step, plays a sound for each thing that happened and redraws when
@@ -136,6 +146,7 @@ export class Level {
   }
 
   onCompleted: (() => void) | null = null // Called once per load when the subject reaches the exit, or, when it walks on out of the chamber, once it is out of sight
+  onStep: ((report: StepReport) => void) | null = null // Called after each step the rules take for a press, as soon as it is taken, with where it left the subject and what happened, even while it is still being drawn; never by a load
   frameStats: FrameStats | null = null // Development only: told of each frame, each drawing and each rules step, which are timed only while it is set
 
   private chamber: CompiledChamber | null = null // The chamber being played, null before the first load
@@ -550,7 +561,7 @@ export class Level {
    * each arrow, blocked wall, ditch, door, exit, fizzler, laser and light barrier it switched changing, what it took
    * breaking up when it fizzled, each box it sent home flying there or falling, a portal it opened opening, and a ripple
    * where a portal shot it refused stopped, a light barrier's band it walked the subject into reacting, and plays the sounds of what
-   * happened, a missed portal shot's own.
+   * happened, a missed portal shot's own, then tells the screen of it.
    * A step that slid and is drawn over time leaves all but the log and the
    * counts waiting until the subject gets to each tile, and the end of the
    * slide. A step drawn over time that walks the subject out of the chamber
@@ -600,6 +611,13 @@ export class Level {
         this.completionTime = this.animation.endTime ?? time
       }
     }
+
+    this.onStep?.({
+      x: next.subjectX,
+      y: next.subjectY,
+      events: result.events,
+      completed: next.completed,
+    })
 
     return next !== state
   }

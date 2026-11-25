@@ -1,6 +1,7 @@
 /**
  * The player's progress in each chamber: whether it is completed, its best
- * time and how many attempts it has had. Kept in localStorage under one
+ * time, how many attempts it has had and which of its hints the player has
+ * seen. Kept in localStorage under one
  * versioned key, by the chamber's permanent id, so records follow a chamber
  * when the list is reordered.
  */
@@ -15,6 +16,7 @@ type ChamberRecord = {
   completed: boolean // Whether the subject has reached the exit at least once
   bestTime: number | null // Fastest finished run, in whole hundredths of a second; null when there is none
   attempts: number // Runs started: each opening, Restart chamber and Play again
+  hintsSeen: readonly string[] // The ids of the chamber's hints the player has closed, each shown once ever
 }
 
 /** Everything stored, as written to localStorage. */
@@ -27,6 +29,7 @@ const EMPTY_CHAMBER: ChamberRecord = {
   completed: false,
   bestTime: null,
   attempts: 0,
+  hintsSeen: [],
 }
 
 /**
@@ -76,6 +79,15 @@ function isCount(value: unknown): value is number {
 }
 
 /**
+ * Whether a parsed JSON value is a list of strings.
+ * @param value - The parsed value
+ * @returns True for an array holding only strings
+ */
+function isStringList(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string')
+}
+
+/**
  * Reads one chamber's stored record, keeping only the values that are well formed.
  * @param value - The parsed value stored for the chamber
  * @returns The record, or null when the value is not an object
@@ -88,6 +100,7 @@ function parseChamberRecord(value: unknown): ChamberRecord | null {
     completed: value.completed === true,
     bestTime: isCount(value.bestTime) ? value.bestTime : null,
     attempts: isCount(value.attempts) ? value.attempts : 0,
+    hintsSeen: isStringList(value.hintsSeen) ? value.hintsSeen : [],
   }
 }
 
@@ -242,7 +255,36 @@ export function startAttempt(chamber: ChamberEntry): number {
 }
 
 /**
- * Forgets every chamber's completion, best time and attempts, storing an
+ * Whether the player has seen one of a chamber's hints: closed it, since
+ * progress was last reset.
+ * @param chamber - The chamber
+ * @param hintId - The hint's permanent id
+ * @returns True once the hint has been closed
+ */
+export function hasSeenHint(chamber: ChamberEntry, hintId: string): boolean {
+  return chamberRecord(chamber).hintsSeen.includes(hintId)
+}
+
+/**
+ * Records one of a chamber's hints as seen, so it never shows again, and
+ * persists it.
+ * @param chamber - The chamber
+ * @param hintId - The hint's permanent id
+ */
+export function markHintSeen(chamber: ChamberEntry, hintId: string): void {
+  if (hasSeenHint(chamber, hintId)) {
+    return
+  }
+  updateChamber(chamber, {
+    hintsSeen: [
+      ...chamberRecord(chamber).hintsSeen,
+      hintId,
+    ],
+  })
+}
+
+/**
+ * Forgets every chamber's completion, best time, attempts and seen hints, storing an
  * empty record.
  */
 export function resetProgress(): void {

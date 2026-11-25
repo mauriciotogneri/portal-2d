@@ -20,27 +20,31 @@ import type {PageRect} from '@/components/hint_spotlight.vue'
 import PauseDialog from '@/components/pause_dialog.vue'
 import type {PerformanceViewHandle} from '@/components/performance_view.vue'
 import {FrameStats} from '@/game/frame_stats'
+import type {GameEvent} from '@/game/game_event'
 import {Level} from '@/game/level'
+import type {StepReport} from '@/game/level'
 import type {ReplayData} from '@/game/replay_data'
 import {Sound} from '@/game/sound'
-import {trackChamberAbandon, trackChamberComplete, trackChamberQuit, trackChamberRestart, trackChamberStart} from '@/services/analytics'
+import {trackChamberAbandon, trackChamberComplete, trackChamberQuit, trackChamberRestart, trackChamberStart, trackHintShown} from '@/services/analytics'
 import type {RunProgress} from '@/services/analytics'
 import {findChamber} from '@/services/chamber_catalogue'
-import type {ChamberList} from '@/services/chamber_catalogue'
+import type {ChamberEntry, ChamberList} from '@/services/chamber_catalogue'
 import {ELEMENT_NAMES} from '@/services/element_names'
+import {findHints} from '@/services/hint_catalogue'
+import type {Hint} from '@/services/hint_catalogue'
 import {keyBindings} from '@/services/key_bindings'
 import {formatTime} from '@/services/format_time'
 import {rememberChamber} from '@/services/last_chamber'
 import {historyPosition, previousEntryIs} from '@/services/page_history'
 import {findPlaygroundChamber} from '@/services/playground'
-import {bestTime, isCompleted, markChamberCompleted, recordTime, startAttempt} from '@/services/progress'
+import {bestTime, hasSeenHint, isCompleted, markChamberCompleted, markHintSeen, recordTime, startAttempt} from '@/services/progress'
 import {startChamberMusic} from '@/services/settings'
 
 /** Which dialog is open over the chamber; a hint counts as one. */
 type ChamberDialog = 'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed' | 'hint'
 
-/** A tutorial hint: the element it explains, the tile it lights and what it says. */
-type Hint = {
+/** A tutorial hint as shown: the element it explains, the tile it lights and what it says. */
+type HintCard = {
   kind: PictogramKind // The element the hint is about
   x: number // The lit tile's column, counted from the chamber's left edge
   y: number // The lit tile's row, counted from the chamber's bottom row
@@ -81,6 +85,7 @@ const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
 const playground = computed(() => props.list === 'playground') // Whether this is a playground chamber
 const chamber = computed(() => props.list === 'campaign' ? findChamber(props.chamberNumber) : undefined) // The campaign chamber, whose progress is kept; undefined for a playground chamber
 const listed = computed(() => props.list === 'playground' ? findPlaygroundChamber(props.chamberNumber) : chamber.value) // The chamber in its list
+const hints = computed(() => chamber.value === undefined ? [] : findHints(chamber.value)) // The chamber's tutorial hints, in order; none for a playground chamber
 const layout = computed(() => listed.value?.data) // What the game plays
 const nextChamber = computed(() => props.list === 'playground' ? findPlaygroundChamber(props.chamberNumber + 1) : findChamber(props.chamberNumber + 1)) // The chamber after this one in its list; undefined after the last
 const chamberName = computed(() => listed.value?.name ?? '') // What the player sees it called, such as "Chamber 2" or "Playground 3"
@@ -89,8 +94,9 @@ const timeReadout = useTemplateRef<HTMLElement>('timeReadout')
 const timerStarted = ref(false) // Whether the clock has started; changes only on the first key and on reset
 const completedRun = ref<CompletedRun | null>(null) // The run the completion dialog reports
 const solutionFailed = ref(false) // Whether the last solution download was refused, because the run doesn't replay the same way
-const shownHint = ref<Hint | null>(null) // The hint over the chamber while the dialog is 'hint'
+const shownHint = ref<HintCard | null>(null) // The hint over the chamber while the dialog is 'hint'
 const hintPlace = ref<HintPlace | null>(null) // Where that hint is on the page, measured again whenever the chamber is refitted
+const hintsOpened = ref(0) // Hints shown so far, the spotlight's key, so a hint shown as the one before it closes gets a spotlight of its own
 const frameStats = import.meta.env.DEV ? new FrameStats() : null // Development only: measures the level's frame loop for the performance view at the foot of the rail
 // Development only: loaded on demand, so production builds leave it out
 const PerformanceView = import.meta.env.DEV ? defineAsyncComponent(() => import('@/components/performance_view.vue')) : null
@@ -107,6 +113,10 @@ let shownTime = '' // The text now in the timer, so the element is only written 
 let attempt = 0 // The current run's attempt number at this chamber, counted on this device across visits
 let abandonReported = false // Whether the page going away has already been reported for this attempt
 let pauses = 0 // Times the pause menu was opened during this attempt, for analytics
+const attemptEvents = new Set<GameEvent>() // What the rules reported during this attempt, for the hints' cancelling events
+let waitingHints: Hint[] = [] // Hints set off but not shown yet, in the order they show
+let listedHint: Hint | null = null // The list's hint shown last, stored as seen when closed; null for one shown from the console
+let stepCompleted = false // Whether a step has completed the chamber since the last load, after which no hint is set off
 
 /**
  * Measures the space the chamber may fill inside the stage.
@@ -220,6 +230,8 @@ function refreshTimer(): void {
       shownTime = text
     }
     timerStarted.value = level.started
+    setOffTimerHints(level.elapsedHundredths)
+    showWaitingHint()
   }
   readoutFrameId = requestAnimationFrame(refreshTimer)
 }
@@ -255,22 +267,130 @@ function resume(): void {
 /**
  * Pauses the game, the clock with it, and shows a hint over the chamber
  * until the player closes it.
- * @param hint - The hint
+ * @param card - What the hint shows
+ * @param hint - The list's hint it shows, stored as seen once closed; null for one shown from the console
  */
-function openHint(hint: Hint): void {
+function openHint(card: HintCard, hint: Hint | null): void {
   setPaused(true)
-  shownHint.value = hint
+  listedHint = hint
+  hintsOpened.value += 1
+  shownHint.value = card
   dialog.value = 'hint'
   placeHint()
 }
 
 /**
- * Closes the hint once the player has pressed Continue, and resumes the game.
+ * Closes the hint once the player has pressed Continue, storing the list's
+ * hint as seen so it never shows again, then shows the next waiting hint or
+ * resumes the game.
  */
 function closeHint(): void {
+  if (listedHint !== null && chamber.value !== undefined) {
+    markHintSeen(chamber.value, listedHint.id)
+  }
+  listedHint = null
   shownHint.value = null
   hintPlace.value = null
   resume()
+  showWaitingHint()
+}
+
+/**
+ * Whether a hint's cancelling event has been reported in this attempt.
+ * @param hint - The hint
+ * @returns True when it has, so the hint doesn't show
+ */
+function isCancelled(hint: Hint): boolean {
+  return hint.cancelledBy !== undefined && attemptEvents.has(hint.cancelledBy)
+}
+
+/**
+ * Whether a hint whose trigger is met may be set off: the player hasn't
+ * seen it, it isn't already waiting, and its cancelling event hasn't been
+ * reported in this attempt.
+ * @param chamberEntry - The campaign chamber
+ * @param hint - One of its hints
+ * @returns True when it may
+ */
+function canSetOff(chamberEntry: ChamberEntry, hint: Hint): boolean {
+  return !hasSeenHint(chamberEntry, hint.id) && !waitingHints.includes(hint) && !isCancelled(hint)
+}
+
+/**
+ * Sets off, in list order, each timer hint whose seconds the chamber clock
+ * has reached, while no dialog is open and no step has completed the chamber.
+ * @param hundredths - The chamber clock, in hundredths of a second
+ */
+function setOffTimerHints(hundredths: number): void {
+  const chamberEntry = chamber.value
+  if (dialog.value !== 'none' || stepCompleted || chamberEntry === undefined) {
+    return
+  }
+  for (const hint of hints.value) {
+    if ('seconds' in hint.trigger && hundredths >= hint.trigger.seconds * 100 && canSetOff(chamberEntry, hint)) {
+      waitingHints.push(hint)
+    }
+  }
+}
+
+/**
+ * Shows the first waiting hint when no dialog is open, dropping first each
+ * waiting hint whose cancelling event has been reported since it was set off.
+ */
+function showWaitingHint(): void {
+  const chamberEntry = chamber.value
+  if (dialog.value !== 'none' || chamberEntry === undefined) {
+    return
+  }
+  waitingHints = waitingHints.filter((hint) => !isCancelled(hint))
+  const hint = waitingHints.shift()
+  if (hint === undefined) {
+    return
+  }
+  trackHintShown(chamberEntry, attempt, hint.id)
+  openHint({
+    kind: hint.element,
+    x: hint.tile.x,
+    y: hint.tile.y,
+    text: hint.text,
+  }, hint)
+}
+
+/**
+ * Called by the game after each step it takes: notes what happened in this
+ * attempt, sets off, in list order, each tile hint whose trigger tile the
+ * subject now stands on, and shows the first waiting one. The step that
+ * completes the chamber sets off nothing, and no hint is set off after it.
+ * @param report - Where the step left the subject and what happened
+ */
+function handleStep(report: StepReport): void {
+  const chamberEntry = chamber.value
+  if (chamberEntry === undefined) {
+    return
+  }
+  if (report.completed) {
+    stepCompleted = true
+    return
+  }
+  for (const event of report.events) {
+    attemptEvents.add(event)
+  }
+  for (const hint of hints.value) {
+    if (!('seconds' in hint.trigger) && hint.trigger.x === report.x && hint.trigger.y === report.y && canSetOff(chamberEntry, hint)) {
+      waitingHints.push(hint)
+    }
+  }
+  showWaitingHint()
+}
+
+/**
+ * Forgets what this attempt set off: the events reported, the hints
+ * waiting and the completion. Hints already seen stay seen.
+ */
+function clearAttemptHints(): void {
+  attemptEvents.clear()
+  waitingHints = []
+  stepCompleted = false
 }
 
 /**
@@ -304,6 +424,7 @@ function beginAttempt(): void {
  */
 function restartChamber(): void {
   if (level !== null && layout.value !== undefined) {
+    clearAttemptHints()
     level.load(layout.value)
   }
   resume()
@@ -544,6 +665,7 @@ onMounted(() => {
   // Stored before the first load, which runs a frame straight away and can already complete the chamber
   level = new Level(canvasElement, keyBindings.value, size.width * pixelRatio, size.height * pixelRatio)
   level.onCompleted = handleCompleted
+  level.onStep = handleStep
   if (frameStats !== null) {
     frameStats.onSample = (sample) => {
       performanceView.value?.show(sample)
@@ -555,6 +677,7 @@ onMounted(() => {
   if (chamber.value !== undefined) {
     trackChamberStart(chamber.value, attempt)
   }
+  clearAttemptHints()
   level.load(data)
   setCanvasPageSize(canvasElement, pixelRatio)
   refreshTimer()
@@ -583,7 +706,7 @@ onMounted(() => {
         x: x,
         y: y,
         text: text,
-      })
+      }, null)
     }
   }
 })
@@ -685,6 +808,7 @@ onBeforeUnmount(() => {
     />
     <HintSpotlight
       v-else-if="dialog === 'hint' && shownHint !== null && hintPlace !== null"
+      :key="hintsOpened"
       :kind="shownHint.kind"
       :title="ELEMENT_NAMES[shownHint.kind]"
       :text="shownHint.text"

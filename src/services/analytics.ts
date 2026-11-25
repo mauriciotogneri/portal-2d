@@ -26,6 +26,7 @@ type EventName =
   | 'chamber_quit'
   | 'chamber_abandon'
   | 'chamber_complete'
+  | 'hint_shown'
   | 'setting_change'
   | 'controls_change'
   | 'progress_reset'
@@ -301,6 +302,20 @@ export function trackChamberComplete(chamber: ChamberEntry, attempt: number, pro
     // 1 or 0, so reports can sum them
     first_completion: firstCompletion ? 1 : 0,
     new_best: newBest ? 1 : 0,
+  })
+}
+
+/**
+ * A tutorial hint showed over the chamber, which it does once per player
+ * unless progress is reset or the player leaves before closing it.
+ * @param chamber - The chamber
+ * @param attempt - The run's attempt number at the chamber
+ * @param hintId - The hint's permanent id, unique within the chamber
+ */
+export function trackHintShown(chamber: ChamberEntry, attempt: number, hintId: string): void {
+  sendEvent('hint_shown', {
+    ...runParams(chamber, attempt),
+    hint_id: hintId,
   })
 }
 

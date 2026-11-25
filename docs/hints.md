@@ -8,7 +8,7 @@ These are tutorial hints. They are not the solver's hints (a nudge, a highlight,
 
 ## The decision
 
-Rows 1 to 5 were decided on 2026-11-21 and 2026-11-22, the rest on 2026-11-24 with the stage plans.
+Rows 1 to 5 were decided on 2026-11-21 and 2026-11-22, rows 6 to 24 on 2026-11-24 with the stage plans, and rows 25 and 26 on 2026-11-25.
 
 | # | Question | Decided |
 |---|----------|---------|
@@ -36,6 +36,8 @@ Rows 1 to 5 were decided on 2026-11-21 and 2026-11-22, the rest on 2026-11-24 wi
 | 22 | When does no hint show? | In playground chambers, and once the step that completes the chamber has been taken, as a hint over the walk-out would be pointless |
 | 23 | Who decides each hint's content? | The author, per hint: its trigger, trigger tile or seconds, cancelling event, lit tile and text ([Open questions](#open-questions)) |
 | 24 | How is it built? | In three stages, each checked on its own: the display first, then the triggers with one real hint, Chamber 3's box hint, then the other run 1 hints as data. Every hint after the display is a data entry, not new code |
+| 25 | Chamber 3's box hint? | A timer hint, id `box`: it shows once the chamber clock reaches 10 seconds, unless the box has been picked up (`boxPickedUp`) in the attempt, lights the box's start tile and says "Press interact to pick up a box, and again to put it down." (the author's choice of trigger, seconds and text) |
+| 26 | Does a hint name a key? | No: it says "interact", the game key's name, as the controls legend shows which key it is and players can rebind it (the author's choice, with the box hint's text) |
 
 The request that started it: hints during the first chambers, of two kinds to compare, intrusive (the game stops, the player reads, dismisses it, and the game continues) and non-intrusive (shown without interrupting the game), each tried in different places on the screen. Round 1 showed seven styles (A to G, [below](#what-was-considered)); round 2 kept only B, the spotlight, with its light cut down to the element's own tile. That round 2 design, called B2 on the page, is the one chosen.
 
@@ -113,10 +115,9 @@ Each is the author's to answer, when the stage that needs it gets there.
 
 | # | Question | What is known |
 |---|----------|---------------|
-| 1 | Each hint's content | For each of Chamber 1's steel and ditch hints and Chamber 3's button and box hints: tile or timer hint, its trigger tile or seconds, its cancelling event, its lit tile and its text. Recommended: timer hints, as hints are a backup for players who don't know how to progress, cancelled by the event that shows the element was understood (the box's by `boxPickedUp`, which also keeps the light off a box that has moved from its start tile; the button's by `buttonPressed`); a tile hint only where every player should read it first. A text or a lit tile must never point at the route (decision 6) |
-| 2 | Naming the interact key | A box hint may need to say which key picks a box up, and players can rebind it. Name no key, as the controls legend shows it, which needs nothing built; or fill the player's own key into the text from their bindings. Recommended: name no key |
-| 3 | Steel's title | The card's title is the element's name on the chamber sign, "Blocked wall", while the campaign calls it steel, so a player may not connect the two. Keep "Blocked wall", which needs nothing built; or show "Steel" through an optional title on a hint. Recommended: "Blocked wall", so the card and the sign agree |
-| 4 | The card on a small screen | At 1280 × 720 the 22rem card covers a large share of the stage. If it covers too much, its size goes back to the author (the page can show a smaller one) before real hints are added |
+| 1 | Each hint's content | Chamber 3's box hint is settled (decision 25). For each of Chamber 1's steel and ditch hints and Chamber 3's button hint: tile or timer hint, its trigger tile or seconds, its cancelling event, its lit tile and its text. Recommended: timer hints, as hints are a backup for players who don't know how to progress, cancelled by the event that shows the element was understood (the box's by `boxPickedUp`, which also keeps the light off a box that has moved from its start tile; the button's by `buttonPressed`); a tile hint only where every player should read it first. A text or a lit tile must never point at the route (decision 6) |
+| 2 | Steel's title | The card's title is the element's name on the chamber sign, "Blocked wall", while the campaign calls it steel, so a player may not connect the two. Keep "Blocked wall", which needs nothing built; or show "Steel" through an optional title on a hint. Recommended: "Blocked wall", so the card and the sign agree |
+| 3 | The card on a small screen | At 1280 × 720 the 22rem card covers a large share of the stage. If it covers too much, its size goes back to the author (the page can show a smaller one) before real hints are added |
 
 ## Notes for building
 

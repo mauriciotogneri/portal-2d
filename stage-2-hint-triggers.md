@@ -77,42 +77,42 @@ Checked on 2026-11-24.
 
 The list exists, empty, and `npm run chamber:check` checks it.
 
-- [ ] **The list.** New `src/services/hint_catalogue.ts`, plain TypeScript using nothing of Vite or Vue: a hint type (permanent `id`, the `element` kind it explains as an element-registry kind but wall and exit, the lit `tile`, a `trigger` that is either a trigger tile or a number of seconds, an optional `cancelledBy` game event required for a timer hint, the `text`), the hints keyed by permanent chamber id (empty for now), and a function returning a chamber's hints in order. Add the file to `tsconfig.scripts.json`'s `include`. Check: `npm run build`.
-- [ ] **The check.** In `scripts/check_chambers.ts`, a check run from `runAll()` after the catalogue check: every chamber id in the hint list belongs to a chamber in `src/services/chamber_catalogue.ts`; hint ids are unique within their chamber; each lit tile holds its element (a box's start tile for a box, `elementAt` for the others); each trigger tile is inside the chamber; each timer hint has seconds above 0 and a cancelling event. Update the file's header comment. Check: `npm run chamber:check` passes; a temporary wrong entry (lit tile off its element, trigger outside the chamber, duplicate id) fails with one clear problem each, then is removed.
-- [ ] **Verify.** `npm run lint:fix`, `npm run build`, `npm run chamber:check`.
+- [x] **The list.** New `src/services/hint_catalogue.ts`, plain TypeScript using nothing of Vite or Vue: a hint type (permanent `id`, the `element` kind it explains as an element-registry kind but wall and exit, the lit `tile`, a `trigger` that is either a trigger tile or a number of seconds, an optional `cancelledBy` game event required for a timer hint, the `text`), the hints keyed by permanent chamber id (empty for now), and a function returning a chamber's hints in order. Add the file to `tsconfig.scripts.json`'s `include`. Check: `npm run build`.
+- [x] **The check.** In `scripts/check_chambers.ts`, a check run from `runAll()` after the catalogue check: every chamber id in the hint list belongs to a chamber in `src/services/chamber_catalogue.ts`; hint ids are unique within their chamber; each lit tile holds its element (a box's start tile for a box, `elementAt` for the others); each trigger tile is inside the chamber; each timer hint has seconds above 0 and a cancelling event. Update the file's header comment. Check: `npm run chamber:check` passes; a temporary wrong entry (lit tile off its element, trigger outside the chamber, duplicate id) fails with one clear problem each, then is removed.
+- [x] **Verify.** `npm run lint:fix`, `npm run build`, `npm run chamber:check`.
 
 ## Phase 2 — Seen hints in the progress record
 
 The progress record remembers which hints a player has seen.
 
-- [ ] **Store them.** In `src/services/progress.ts`, each chamber's record gains `hintsSeen`, a list of hint ids, read like the other fields (a list of strings, otherwise empty), with no version change, so existing progress keeps reading. Add `hasSeenHint(chamber, hintId)` and `markHintSeen(chamber, hintId)`, with JSDoc. Reset progress already stores an empty record, which forgets them. Check: `npm run build`.
-- [ ] **Verify.** In the browser console of `npm run dev`, an existing `portal-2d.progress` value still reads (best times shown in the home menu unchanged) after the change.
+- [x] **Store them.** In `src/services/progress.ts`, each chamber's record gains `hintsSeen`, a list of hint ids, read like the other fields (a list of strings, otherwise empty), with no version change, so existing progress keeps reading. Add `hasSeenHint(chamber, hintId)` and `markHintSeen(chamber, hintId)`, with JSDoc. Reset progress already stores an empty record, which forgets them. Check: `npm run build`.
+- [x] **Verify.** In the browser console of `npm run dev`, an existing `portal-2d.progress` value still reads (best times shown in the home menu unchanged) after the change.
 
 ## Phase 3 — The game reports each step
 
 The chamber screen hears of every step with the subject's tile and the step's events. The rules don't change.
 
-- [ ] **Step callback.** In `src/game/level.ts`, an `onStep` callback (like `onCompleted`), called at the end of `applyStep` with the subject's tile after the step, the step's events and whether the chamber is now completed. Not called by a load. JSDoc on the field and the report's type. Check: `npm run build`; `npm run replay:check` passes unchanged.
-- [ ] **Verify.** `npm run lint:fix`, `npm run build`, `npm run replay:check`.
+- [x] **Step callback.** In `src/game/level.ts`, an `onStep` callback (like `onCompleted`), called at the end of `applyStep` with the subject's tile after the step, the step's events and whether the chamber is now completed. Not called by a load. JSDoc on the field and the report's type. Check: `npm run build`; `npm run replay:check` passes unchanged.
+- [x] **Verify.** `npm run lint:fix`, `npm run build`, `npm run replay:check`.
 
 ## Phase 4 — Triggers on the chamber screen
 
 Hints from the list show when their trigger is met, one at a time, and are stored when closed.
 
-- [ ] **Per attempt.** In `chamber_screen.vue`, keep the events seen in this attempt and the hints waiting to show, both cleared at every load (mount, Restart chamber, Play again). Only a campaign chamber has hints. Check: `npm run build`.
-- [ ] **Tile hints.** In the step callback: when the chamber is completed, do nothing; otherwise add the step's events to those seen, and queue, in list order, each tile hint whose trigger tile is the subject's tile, not seen (`hasSeenHint`), not waiting, and whose cancelling event hasn't been seen. Check: below.
-- [ ] **Timer hints.** In `refreshTimer`, while no dialog is open and the chamber isn't completed: queue each timer hint whose seconds the clock has reached, under the same conditions. Check: below.
-- [ ] **Show and store.** Show the first waiting hint (stage 1's hint state) when no dialog is open, sending `hint_shown`; on Continue, `markHintSeen`, then show the next waiting hint or resume. A waiting hint whose cancelling event has since been seen is dropped. Check: below.
-- [ ] **Analytics.** In `src/services/analytics.ts`, add `hint_shown` to `EventName` and `trackHintShown(chamber, attempt, hintId)`, sending the chamber events' shared parameters (`chamber_id`, `chamber_number`, `attempt`) and `hint_id`. Check: the development console logs `[analytics] hint_shown` with them.
-- [ ] **Verify.** `npm run lint:fix`, `npm run build`; then a temporary hint on Chamber 1 (one tile hint and one timer hint, removed afterwards), tried in the browser (`npm run dev`, new Chrome tab, sound muted as `AGENTS.md` says): each shows on its trigger; the timer doesn't count before the first move or while paused; the cancelling event stops the timer hint; closed hints never show again after Restart chamber or a reload; Reset progress brings them back; no hint on the step onto the exit; none in Playground 1; `hint_shown` logged once per showing.
+- [x] **Per attempt.** In `chamber_screen.vue`, keep the events seen in this attempt and the hints waiting to show, both cleared at every load (mount, Restart chamber, Play again). Only a campaign chamber has hints. Check: `npm run build`.
+- [x] **Tile hints.** In the step callback: when the chamber is completed, do nothing; otherwise add the step's events to those seen, and queue, in list order, each tile hint whose trigger tile is the subject's tile, not seen (`hasSeenHint`), not waiting, and whose cancelling event hasn't been seen. Check: below.
+- [x] **Timer hints.** In `refreshTimer`, while no dialog is open and the chamber isn't completed: queue each timer hint whose seconds the clock has reached, under the same conditions. Check: below.
+- [x] **Show and store.** Show the first waiting hint (stage 1's hint state) when no dialog is open, sending `hint_shown`; on Continue, `markHintSeen`, then show the next waiting hint or resume. A waiting hint whose cancelling event has since been seen is dropped. Check: below.
+- [x] **Analytics.** In `src/services/analytics.ts`, add `hint_shown` to `EventName` and `trackHintShown(chamber, attempt, hintId)`, sending the chamber events' shared parameters (`chamber_id`, `chamber_number`, `attempt`) and `hint_id`. Check: the development console logs `[analytics] hint_shown` with them.
+- [x] **Verify.** `npm run lint:fix`, `npm run build`; then a temporary hint on Chamber 1 (one tile hint and one timer hint, removed afterwards), tried in the browser (`npm run dev`, new Chrome tab, sound muted as `AGENTS.md` says): each shows on its trigger; the timer doesn't count before the first move or while paused; the cancelling event stops the timer hint; closed hints never show again after Restart chamber or a reload; Reset progress brings them back; no hint on the step onto the exit; none in Playground 1; `hint_shown` logged once per showing.
 
 ## Phase 5 — Chamber 3's box hint
 
 The first real hint is live.
 
-- [ ] **Choose it with the author.** Propose the box hint's trigger (tile or timer), its trigger tile or seconds, its cancelling event and a short text; the author picks (see Open decisions). If the text names a key, settle how before writing the entry. Check: the author's answer, recorded in `docs/hints.md`.
-- [ ] **Add it.** Its entry in `src/services/hint_catalogue.ts` under Chamber 3's permanent id (3), id `box`. Check: `npm run chamber:check`.
-- [ ] **Verify.** In the browser, as a new player (Reset progress first): play Chamber 3 until the hint shows, read it at 1920 × 1080 and 1280 × 720, close it, finish the chamber; play it again: no hint. Send the author the chamber's address to try it.
+- [x] **Choose it with the author.** Propose the box hint's trigger (tile or timer), its trigger tile or seconds, its cancelling event and a short text; the author picks (see Open decisions). If the text names a key, settle how before writing the entry. Check: the author's answer, recorded in `docs/hints.md`.
+- [x] **Add it.** Its entry in `src/services/hint_catalogue.ts` under Chamber 3's permanent id (3), id `box`. Check: `npm run chamber:check`.
+- [x] **Verify.** In the browser, as a new player (Reset progress first): play Chamber 3 until the hint shows, read it at 1920 × 1080 and 1280 × 720, close it, finish the chamber; play it again: no hint. Send the author the chamber's address to try it.
 
 ## Phase 6 — Docs
 
@@ -144,8 +144,8 @@ The project has no test suite by design.
 
 ## Open decisions
 
-- **Chamber 3's box hint content.** Deferred until the author sees proposals in phase 5. Options: a timer hint (for example 20 seconds, cancelled by `boxPickedUp`), which reaches only a stuck player; or a tile hint beside the box, which every new player sees. Recommendation: the timer hint, as hints are a backup for players who don't know how to progress.
-- **Naming the interact key in a text.** A box hint may need to say which key picks a box up, and players can rebind it. Options: name no key ("the interact key, shown in the controls legend"), which needs nothing built; or fill the player's own key into the text from their bindings, which adds a placeholder step in phase 5. Recommendation: name no key, as the legend already shows it.
+- **Chamber 3's box hint content.** Decided on 2026-11-25: a timer hint, 10 seconds, cancelled by `boxPickedUp`, saying "Press interact to pick up a box, and again to put it down." (`docs/hints.md`, decision 25). Was deferred until the author sees proposals in phase 5. Options: a timer hint (for example 20 seconds, cancelled by `boxPickedUp`), which reaches only a stuck player; or a tile hint beside the box, which every new player sees. Recommendation: the timer hint, as hints are a backup for players who don't know how to progress.
+- **Naming the interact key in a text.** Decided on 2026-11-25: name no key, only "interact" (`docs/hints.md`, decision 26). A box hint may need to say which key picks a box up, and players can rebind it. Options: name no key ("the interact key, shown in the controls legend"), which needs nothing built; or fill the player's own key into the text from their bindings, which adds a placeholder step in phase 5. Recommendation: name no key, as the legend already shows it.
 
 ## Done when
 

@@ -821,7 +821,7 @@ function closeResetDialog(): void {
 }
 
 /**
- * Forgets every chamber's completion, best time and attempts, then closes the confirmation.
+ * Forgets every chamber's completion, best time, attempts and seen hints, then closes the confirmation.
  */
 function confirmResetProgress(): void {
   resetProgress()
