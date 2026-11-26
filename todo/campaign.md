@@ -1,7 +1,7 @@
 # Campaign
 
-Status: In progress. Now: phase 14, step 14.1: build chamber 12.1
-Last revised: 2026-11-25
+Status: In progress. Now: run 12's handbook lessons, waiting for the author's approval; with run 12 finished, the outline's runs are built
+Last revised: 2026-11-26
 
 ## Goal
 
@@ -173,9 +173,9 @@ Detailed 2026-11-24 (`docs/campaign.md`, "Run 11 in detail"): a teach and a comb
 
 Detailed 2026-11-25 (`docs/campaign.md`, "Run 12 in detail"): a twist and a combine, the campaign's last chamber, both sketched in the idea pool. Both are built before the author plays either (approved with the plan, 2026-11-25, as for runs 2 to 11), taking ids 27 and 28. Each sketch names the risks to watch in the author's cold play; the handbook lessons its drafts turned up that give a chamber away wait until after that play. The macro search refuses chambers with receivers, so each is checked with `--baseline`, a walk of every reachable state and by hand (guideline 101).
 
-- [ ] **14.1 Chamber 12.1** (twist: the light that opens the exit must miss the tile in front of it; which way a mirror box turns a ray depends on the side it comes from). Build as id 27, twenty-seventh in the play order, from its sketch.
-- [ ] **14.2 Chamber 12.2** (combine, the campaign's last chamber: a receiver switching on an emitter; one mirror box turning two rays at once, each its own way). Build as id 28, twenty-eighth in the play order, from its sketch.
-- [ ] **14.3 Friends play run 12 cold.** With this, run 12, the outline's last run, is finished (assumption 6).
+- [x] **14.1 Chamber 12.1** (twist: the light that opens the exit must miss the tile in front of it; which way a mirror box turns a ray depends on the side it comes from). Built 2026-11-26 as id 27, twenty-seventh in the play order, from its sketch, as drawn (`docs/spoilers/chamber_27.md`); checked and independently reviewed; kept by the author after their cold play, 2026-11-26, who liked it, and recorded from it.
+- [x] **14.2 Chamber 12.2** (combine, the campaign's last chamber: a receiver switching on an emitter; one mirror box turning two rays at once, each its own way). Built 2026-11-26 as id 28, twenty-eighth in the play order, from its sketch, as drawn (`docs/spoilers/chamber_28.md`); checked and independently reviewed; the run's and the campaign's last chamber; kept by the author after their cold play, 2026-11-26, who liked it, and recorded from it.
+- [x] **14.3 Friends play run 12 cold.** Friends played chambers 12.1 and 12.2 (`/chamber/27` and `/chamber/28`) cold, 2026-11-26, and liked them, by the author's account; their routes weren't recorded (each chamber's notes, Playtests). With this, run 12, the outline's last run, is finished (assumption 6).
 
 ### Later runs
 
