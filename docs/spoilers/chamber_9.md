@@ -44,7 +44,7 @@ Built, the sketch holds, with these changes:
 
 ## Purpose
 
-Teaching: the box that starts absent (decision 12 of `todo/campaign.md`), its first contact forced, safe and unambiguous (guideline 24): no box exists until the switch is used, so every route uses it, and the box is then carried like any other. Its plant for chamber 4.3: a switch linked to a box puts it on its start tile. It may also leave the belief that a switch makes boxes, which walks players into 4.3's trap (guideline 27, used there).
+Teaching: the box that starts absent (decision 12 of `docs/campaign.md`), its first contact forced, safe and unambiguous (guideline 24): no box exists until the switch is used, so every route uses it, and the box is then carried like any other. Its plant for chamber 4.3: a switch linked to a box puts it on its start tile. It may also leave the belief that a switch makes boxes, which walks players into 4.3's trap (guideline 27, used there).
 
 Flow: no hard step.
 
