@@ -295,3 +295,31 @@ Chambers built, checked and played cold by the author, then cut, kept here so th
   ```
 
   The box holds the exit open and is needed on B2 to cross the laser; once across, the switch sends it home onto B1, the exit opens, and K shuts behind the subject, the portal on it gone (the idea pool's show, "The box flies home onto its button", in run 5's elements). 8 moves and 2 portals; 1,586 states, none dead; every route sends the box home from elsewhere and sees the portal on K close as K shuts, both as no loss. The author's verdict: "basically the same as chamber 11". Why: 5.1's fewest route is its first nine presses, and the switch, one tile from where the subject comes out and the only thing to do there, needs no foresight, so its two consequences arrive as things that happen, not as a step the player works out; its independent reviewer said as much (guideline 113). Its forced item, a box sent home from elsewhere, is carried to run 6, whose fizzler sends boxes home (guideline 28).
+- **Run 13's 13.1, its top area: the slide started from inside the light** (combine; slide floor, a light barrier over slide floor that a receiver holds off, two emitters, two receivers, a ditch a receiver bridges, the exit; cut 2026-11-27, while chamber 29 kept its id and its bottom area, the author's seed; the chamber as played is in commit `157e266`). Rows 5 to 11 of the 16-wide chamber, `■` steel, `H`, `U`, `K` and `W` plain walls, `~` slide floor, `_` an open ditch, `e` and `f` emitters, `r` and `q` receivers, `B` the light barrier, `D` the ditch q bridges, `J` the tile to stop on, `X` the exit:
+
+  ```
+  y11 ■ ■ ■ ■ ■ X f ■ ■ ■ ■ ■ ■ ■ ■ ■
+  y10 ■ _ _ _ _ D _ _ _ ■ ■ ■ ■ ■ ■ ■
+  y9  H ~ ~ ~ ~ J B ~ ~ ■ ■ ■ ■ ■ ■ ■
+  y8  ■ . W W W ■ q ■ ■ ■ ■ ■ ■ ■ ■ ■
+  y7  U . . . . . . . . ■ ■ ■ ■ ■ ■ ■
+  y6  e . . . . . . . . r ■ ■ ■ ■ ■ ■
+  y5  ■ ■ ■ ■ ~ ■ ■ K ■ ■ ■ ■ ■ ■ ■ ■
+  ```
+
+  B, which r holds off while e's light reaches it, is the only thing that stops a slide at J, but it also blocks f's light, which bridges D under the exit: it must be on while the subject slides and off once it stops. The subject walks down from (7, 6), in e's light, into a portal on K, comes out at the head (1, 9) and slides east with B still on, since a step is judged once it ends; as it stops on J the light comes back, B switches off and D bridges. 36 presses; 224,994 states, none dead. The author's verdict: "the trick to pass a portal that is considered a single step is not going to be discovered/understood by users (even i was confused)". Why: the rule it rests on, that everything a step changes is judged once the step ends, a crossing and the slide after it included, can't be seen; the drawing shows e's light whole again from the slide's first tile while B stays up until the stop, the break of guidelines 23 and 25 its notes took as a risk.
+- **Run 13's 13.2, its first area: the box on the turntable** (combine; a fizzler, an arrow a button turns, two fixed arrows, a box, a switch; cut 2026-11-27, while chamber 30 kept its id and its doors room, the author's seed; the chamber as played is in commit `157e266`). Columns 5 to 12, rows 0 to 7, `■` steel, `Z` the fizzler, always on, `T` the arrow its button `k` turns from up to right, `>` and `v` fixed arrows, `w` the switch that brings in the doors room's second box, `b` the box, `S` the start:
+
+  ```
+  y7  . ■ . > . ■ ■ ■
+  y6  . k T ■ v ■ ■ ■
+  y5  . ■ . . w . . .
+  y4  . Z . . . . . .
+  y3  . ■ . . S . . .
+  y2  . ■ . . . . . .
+  y1  ■ ■ . . . . . b
+  y0  ■ ■ ■ ■ ■ ■ ■ ■
+      5 6 7 8 9 10 11 12
+  ```
+
+  The box can't be carried through the field, and the arrows' road up from T loops back into the box room, so the box is left on T, the one tile both rooms touch; from the doors room the subject stands on k, T turns right with the box on it, and the box is lifted from that side. 71 presses; 8,383,120 states, none dead. The author's verdict: "the trick to pass the first cube to the left room is weird". Why: it rests on a rule the game never shows, that a box resting on an arrow can be lifted only from a tile that could step onto the arrow; the box hides the arrow's turn under it (guideline 89); and the move is chamber 16's with the roles swapped (guideline 113).
