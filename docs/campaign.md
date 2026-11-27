@@ -57,7 +57,7 @@ And the assumptions that follow from them:
 
 1. Design it from its entry in the outline and the handbook, trying several variants privately; write its notes (guideline 52).
 2. Check it: guidelines 100–104 (loading it and the solver, the key move check, the forbidden facts, the near misses), then a fresh reviewer (guideline 110); the chamber check itself refuses a chamber file the play order doesn't list, so it runs in step 3.
-3. Add it to the campaign list, at its place in the play order, run `npm run chamber:check`, and hand the author its address only. Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it.
+3. Add it to the campaign list, at its place in the play order, run `npm run chamber:check`, and hand the author its address only. Until its solution is recorded, `npm run replay:check` and `npm run solver:check`, and so `npm run verify` and `npm run deploy`, fail on it. The handover is the address and the next step, nothing else: risks and open questions about the chamber go in its notes, read after the cold play; that verify and deploy fail until its solution is recorded is said once, not after every deploy. Design and check the chamber in subagents, so no progress message in the author's session describes it.
 4. The author plays it cold in `npm run dev`, then reads its notes and decides: keep, tweak or redo.
 5. On keep: the author's play becomes its recorded solution (Download solution); the chamber goes live at the next deploy.
 6. Lessons that hold beyond the chamber go into the handbook, the rest into its notes (guideline 107).
