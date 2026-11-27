@@ -2,185 +2,197 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-27, checked and independently reviewed; waiting for the author's cold play, then its recorded solution. File: `src/chambers/chamber_30.json`, thirtieth in the play order; permanent id 30. Run 13's second chamber and the campaign's last (`docs/campaign.md`, "Run 13 in detail").
+Status: first built 2026-11-27; after the author's cold play the same day its box crossing was redone (Playtests), checked and independently reviewed; waiting for the author's cold play, then its recorded solution. File: `src/chambers/chamber_30.json`, thirtieth in the play order; permanent id 30, kept since the first version was never recorded. Run 13's second chamber and the campaign's last (`docs/campaign.md`, "Run 13 in detail").
 
 ## Entry
 
-Run 13, chamber 2, combine, the campaign's last chamber. Elements, with antlines: a fizzler, an arrow a button turns, fixed arrows, two boxes (one absent until a switch brings it in), three doors in a row, each with its own button, a pit of ditches, the exit. Every wall is steel but two plain walls. The player knows runs 1 to 12, and 13.1. It should teach that a box can rest on an arrow's tile, and that doors in a row open together only while every button is held, with one box fewer than buttons. Hint: none (convention 7).
+Run 13, chamber 2, combine, the campaign's last chamber. Elements, with antlines:
+
+- two fizzlers, one a button switches;
+- an arrow the same button turns, and a fixed arrow;
+- two boxes, one absent until a switch brings it in;
+- three doors in a row, each with its own button;
+- a pit of ditches;
+- the exit.
+
+Every wall is steel but two plain walls. The player knows runs 1 to 12, and 13.1. It should teach two things. A switch linked to a box sends it home on every use, from wherever it lies. Doors in a row open together only while every button is held, with one box fewer than buttons. Hint: none (convention 7).
 
 ## Layout
 
-15 × 12, in two areas: the box room on the right, then the doors room and the corridor on the left and along the top.
+15 × 10: the box room and the nook on the right, the doors room on the left, the corridor along the top.
 
 ```
-y11 ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ X ■
-y10 ■ 1 . . D . . E . . F _ _ . W
-y9  ■ ■ . ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■
-y8  ■ 3 . . 2 . ■ ■ ■ ■ ■ ■ ■ ■ ■
-y7  ■ . . . . . ■ . > . ■ ■ ■ ■ ■
-y6  N . . . . . k T ■ v ■ ■ ■ ■ ■
-y5  ■ . . x . . ■ . . w . . . ■ ■
-y4  ■ . . . . . Z . . . . . . ■ ■
-y3  ■ . . . . . ■ . . S . . . ■ ■
-y2  ■ . . . . . ■ . . . . . . ■ ■
-y1  ■ ■ ■ ■ ■ ■ ■ . . . . . b ■ ■
+y9  ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ X ■
+y8  ■ 1 . . D . . E . . F _ _ . W
+y7  ■ ■ . ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■
+y6  ■ 2 . . . ■ 3 ■ ■ ■ ■ ■ ■ ■ ■
+y5  ■ . . . . Y . T P k ■ ■ ■ ■ ■
+y4  N . . . . ■ ■ ■ v ■ ■ ■ ■ ■ ■
+y3  ■ . . . . ■ ■ . w ■ ■ ■ ■ ■ ■
+y2  ■ . . . . Z . . . S ■ ■ ■ ■ ■
+y1  ■ ■ ■ ■ ■ ■ . . . b ■ ■ ■ ■ ■
 y0  ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■
     0 1 2 3 4 5 6 7 8 9 10 ...  14
 ```
 
 `■` steel; `N` and `W` plain walls; `_` an open ditch.
 
-**Area A, the new catch** (the box room, x 7–12):
+**The box room** (x 6–9, y 1–3):
 
-- The box **b** (12, 1). The start **S** (9, 3), facing left.
-- The fizzler **Z** (6, 4), always on, between the box room and the doors room.
-- The turnable arrow **T** (7, 6):
-  - It points up, its own way, and right while its button **k** (6, 6), beside it in the doors room, is held.
-  - It is entered from the box room's tile (7, 5), below it.
-  - Up from it a road loops back into the box room: (7, 7), the fixed arrow `>` (8, 7), (9, 7), the fixed arrow `v` (9, 6).
-- The road ends on the switch **w** (9, 5). It links only the box **x**, which it brings in on (3, 5) in the doors room. It has no antline (guideline 96).
+- The box **b** (9, 1). The start **S** (9, 2), facing left.
+- The switch **w** (8, 3). It links only the box **x**, which it brings in on button 3. It has no antline (guideline 96).
+- The fizzler **Z** (5, 2), between the box room and the doors room, held off by k.
 
-**Area B, the author's seed** (the doors room, x 1–5, and the corridor along row 10):
+**The nook** (row 5, past Y):
 
-- The corridor:
-  - **Button 1** (1, 10), on the doors' line at its west end.
-  - The doors **D** (4, 10), **E** (7, 10) and **F** (10, 10), opened by buttons 1, **2** (4, 8) and **3** (1, 8).
-  - A pit, the ditches (11, 10) and (12, 10).
-  - The ledge (13, 10), under the exit X (13, 11), with the plain face **W** (14, 10) behind it.
-- The doors room reaches the corridor by the gap (2, 9). Its plain face **N** (0, 6) is the near portal face.
+- The fizzler **Y** (5, 5), always on, between the doors room and the nook.
+- **Button 3** (6, 6), x's start.
+- The arrow **T** (7, 5) points right, onto **P** (8, 5), plain floor. While k is held, T turns down, into the steel (7, 4).
+- The button **k** (9, 5), past P, links Z and T.
+- The fixed arrow **v** (8, 4) leads from P down onto the switch.
 
-Four antlines:
+**The doors room** (x 1–4, y 2–6) and **the corridor** (row 8), the author's seed:
+
+- **Button 2** (1, 6). The near portal face N (0, 4). The gap (2, 7) up to the corridor.
+- In the corridor:
+  - **button 1** (1, 8), on the doors' line at its west end;
+  - the doors **D** (4, 8), **E** (7, 8) and **F** (10, 8), opened by buttons 1, 2 and 3;
+  - the pit, the ditches (11, 8) and (12, 8);
+  - the ledge (13, 8), under the exit X (13, 9), with the plain face W (14, 8) behind it.
+
+Five antlines:
 
 | # | From | To | Path |
 |---|---|---|---|
-| 1 | Button 1 | D | (1, 10), (4, 10) |
-| 2 | Button 2 | E | (4, 8), (4, 9), (7, 9), (7, 10) |
-| 3 | Button 3 | F | (1, 8), (0, 8), (0, 11), (10, 11), (10, 10) |
-| 4 | k | T | (6, 6), (6, 7), (7, 7), (7, 6) |
+| 1 | Button 1 | D | (1, 8), (4, 8) |
+| 2 | Button 2 | E | (1, 6), (0, 6), (0, 9), (7, 9), (7, 8) |
+| 3 | Button 3 | F | (6, 6), (6, 7), (10, 7), (10, 8) |
+| 4 | k | T | (9, 5), (9, 6), (7, 6), (7, 5) |
+| 5 | k | Z | (9, 5), (10, 5), (10, 0), (5, 0), (5, 2), over steel |
 
 ## Idea
 
-**Area A, the new catch:**
+**The crossing, the new catch:**
 
-- The box can't be carried through the field, and the arrow it could ride loops back.
-- So leave the box on the arrow, the one tile both rooms touch, and walk through the field.
-- Then stand on the arrow's button. The arrow turns, box and all, toward the subject, so the box can be lifted from its side.
-- A box resting on an arrow can be lifted only from a tile that could step onto the arrow. No earlier route ever put a box on an arrow (checked on the recorded solutions and every state of chambers 15 to 17).
-- The catch was found by a fresh designer searching for one.
+- b can cross Z only while k is held, and the only box that can reach k is x, from the nook. Y breaks up b on the way in.
+- Once x is on k, T has turned away and nothing reaches P or k again, so x is out of reach, and button 3 needs it.
+- But the switch that brought x in sends it home onto button 3 each time it is used.
+- No earlier route needed a switch's second use. Chamber 9 offers one as a rescue no route needs (its notes, near misses), and the campaign carried it forward from run 4 until run 12 dropped it (`docs/campaign.md`).
 
-**Area B, the author's seed:**
+**The arrows' job:** T is the nook's gate. It lets the subject onto P from the nook only while k is up, and turns away into the steel as soon as k goes down, which seals x on k (chamber 17's arrow that closes a way). v is the one-way way out of P, so the box room can't reach k.
+
+**The seed, the author's idea:**
 
 - Three doors in a row, open together only while all three buttons are held, are the only line to W.
 - With two boxes, the subject holds the button on the line, button 1, and shoots W through all three doors and over the pit.
-- It steps off: the doors close and the portal stays. Then it shoots N and crosses to the ledge.
+- It steps off, so the doors close and the portal stays. Then it shoots N and crosses to the ledge.
 
 ## Purpose
 
 The finale: synthesis and spectacle, with catches no harder than chamber 29's (guideline 50).
 
-- The turntable is the new catch.
-- The closing show: the three doors opening one by one, their antlines lit, and the shot across the pit to the exit's ledge.
+- The crossing is the new catch: a box that holds a button out of reach comes back by the switch that brought it.
+- The closing show: the three doors opening, their antlines lit, and the shot across the pit to the exit's ledge.
 
 ## Gem or flow
 
-Two steps:
-
-- area A, a gem;
-- the seed, light: chamber 5's move with more doors.
+Two steps: the crossing, a gem; then the seed, light (chamber 5's move with more doors).
 
 ## Intended route
 
-1. Use the switch, at any time: x appears in the doors room.
-2. Carry b to (7, 5) and put it down on T, which points up.
-3. Walk through the field into the doors room, step onto k (T turns right, with the box on it), and lift the box.
-4. Put the boxes on buttons 2 and 3.
-5. Stand on button 1 and shoot W through D, E and F, over the pit.
-6. Step off, shoot N, walk into it, and go up into the exit.
+1. Use the switch: x appears on button 3, and F opens.
+2. Walk through Z, which carries nothing, into the doors room, then through Y into the nook. Lift x off button 3 (F shuts).
+3. Over T onto P, and put x on k. Z goes off, and T turns down beside the subject.
+4. Down v into the box room. Carry b through Z onto button 2: E opens.
+5. Back to the switch and use it again. x flies home onto button 3, and F opens; k comes up, Z comes on and T turns back.
+6. Stand on button 1 and shoot W through D, E and F, over the pit. Step off, shoot N, walk into it, and go up into the exit.
 
-71 presses, the fewest (a walk of every state).
+83 presses, the fewest (a walk of every state). b must cross Z before the second use, which lets k up so that Z comes back on; putting it down on button 2 can come before or after, and the fewest puts b down just past Z and fetches it after the switch.
 
 ## Lure and where the player should get stuck
 
-**Area A:** each wrong try fails plainly within a few moves.
-
-- Carry the box into the field: it breaks and flies home.
-- Ride the road with it: it loops back.
-- Put the box on k: T turns, but no box rests on T, so nothing is gained.
-
-**Area B:** two boxes and three buttons, so the player hunts for a third box until standing on button 1 shows the line.
+- **x on button 3, F open,** reads as done (guideline 19). The answer lifts it off again.
+- **Once x holds k and b is on button 2:** F is shut, and x is out of reach behind a turned arrow. The player hunts for a way back to x and finds the switch, whose first use brought it.
+- **b carried into Z:** it breaks up and flies home (chamber 6.1's lesson, so few will try it).
+- **Low-stake showings of the second use** (wrong tries, not forced):
+  - x carried out through Y breaks up and stays gone, since it is linked, and the switch brings it back;
+  - x carried from P down v lands in the box room, where the switch sends it home from there.
 
 ## Restrictions
 
 | # | Restriction | What it blocks |
 |---|---|---|
-| 1 | No plain face is in sight of the box room | A portal pair carrying the box round the field |
-| 2 | The fixed arrow `>` (8, 7) | A box left at (7, 7) from the east, which would freeze a subject carrying the other box on T (98 dead states without the arrows; blind reviewer) |
-| 3 | The fixed arrow `v` (9, 6) | Entering the road from the switch and leaving a box at (9, 7) (dead end) |
-| 4 | The road ends on the switch, which can never hold a box | A box blocking the road's exit while the subject rides it with the other box (294 dead states with plain floor there) |
-| 5 | The pit before the ledge | A box carried past the doors and left there, out of reach once the portals are lost (guideline 111) |
-| 6 | W is on the corridor's line only, and buttons 2 and 3 are off it | Shooting W without the subject on button 1 |
+| 1 | No plain wall in sight of the box room or the nook | A portal pair carrying b round Z, or reaching k |
+| 2 | Y, always on, fencing the nook | b carried to k and left there for good (without Y, 19,353 dead states) |
+| 3 | T turns away from P while k is held | x fetched back off k by hand, which skips the switch's second use (with T fixed, x can be fetched) |
+| 4 | The steel (7, 4), under T | T turned opening a way into the box room instead of closing one |
+| 5 | v one-way, with the switch at its foot | The box room reaching k; v always leads somewhere |
+| 6 | The pit before the ledge | A box carried through W's portal and left on the ledge, out of reach once the portals are lost (guideline 111; floor there, 19,364 dead states) |
+| 7 | W is on the corridor's line only, and buttons 2 and 3 are off it | Shooting W without the subject on button 1 |
 
 ## Facts that must never be possible
 
 - W hit while any door is shut.
-- A box past E. Boxes can rest between D and E, harmlessly.
-- b in the doors room without being lifted from T.
+- A box past E (0 states). Boxes can rest between D and E, harmlessly.
+- b on k (0 states).
+- The subject on T while it points down (0 states).
+- Completion without x resting on k.
 
 ## Guidelines broken on purpose
 
 - **11:** two hard steps (decision 7).
-- **18:** nine kinds of element (decision 4).
-- **80 and 9:** riding the road carrying a box ends on the switch, where interact is refused with the error sound (4,024 states). Kept, as plain floor there is a dead end (restriction 4).
+- **18:** eight kinds of element (decision 4).
+- **117 and 28:** x is the campaign's first linked box that can be destroyed (carried through Y), and it stays gone until the switch is used again. Convention 3 waives the antline to a box that starts absent. A line here would end on button 3's plate and read as switch, button 3, F (guideline 112). The switch is always in reach, so it is never a dead end.
+- **80 and 9:** a box carried onto the switch is refused interact, with the error sound. The earliest case is 6 presses in: lift b beside the start, step onto the switch. It is known since run 4, and recoverable.
+- **124 and 25, and run 13's amended decision 8:** the second use is new to the campaign's routes and is seen on screen as it happens: x flies home and F opens. But it is shown first at low stake only by wrong tries, not on every route. Kept because run 4 taught that a switch sends its box home, so once x is out of reach, using the switch again is the plain thing to try. The author's cold play decides.
 
 ## Risks named by the reviewers
 
-- **113: it may read as chamber 16 reversed.**
-  - The arrow's button lies right beside the arrow, which is entered only from there: chamber 16's frame.
-  - The move is 16's with the roles swapped: the box on the arrow, the subject on its button.
-  - Run 7's cut third chamber died as "16 reversed". The author's cold play decides.
-- **108, 89 and 20: the turn is heard but not seen.**
-  - The box covers the arrow's chevron, so the turn under it is heard, and its antline lights, but it can't be seen. To check in the game.
-  - Standing on k always turns T, so the lift always works.
-  - What every route is forced to do is leave the box on the arrow and lift it from the other room, which is all the entry claims.
-- **28 and 117: x may read as lost.**
-  - Carried into the field, or caught in a closing door, x is gone until the switch is used again (125,331 states). It is recoverable and never dead.
-  - A second use of the switch also sends a box resting on (3, 5) back to the box room.
-- **Decision 7, partly met:** a slip that destroys b sends it home to the box room, so the turntable must be done again; no restart is needed.
-  - A switch that turned the field off for good, to keep area A solved, was tried and dropped: it let two boxes into the box room, which made the dead ends of restrictions 2 to 4.
+- **37 and 50, the pace:** 83 presses. That is three crossings of Z, two trips to the nook, and a round trip to the switch after the idea has clicked. The blind reviewer found it "a little long". The switch must sit at v's foot, so the trip is structural.
+- **113:**
+  - A switch's box round trip may recall chamber 4.3 (guideline 116). Here x is stuck where only the switch can move it, and the same switch both brings it in and recalls it.
+  - It keeps the cut version's seed and two of its named risks: x looking lost, and the switch refusal.
+- **The author's bar, met in part:** the second use is new and shown on screen, but shown at low stake only by wrong tries, not on every route.
+- **Antline 3** runs along row 7 right under E: check in the game that it doesn't seem to end in E.
+- **x vanishing** through Y looks lost; using the switch brings it back.
 
 ## Near misses and wrong tries
 
 - **Two boxes on buttons 1 and 2,** or 1 and 3: D and one other door open, the third stays shut, plainly.
 - **A box carried through the portal to the ledge:** it can't be put down there (the pit, the exit and the walls refuse it), so it comes back or goes out with the subject.
-- **No dead state.** Every one-way step (the road, T, the field for a box) has a way back.
+- **x picked up again from P,** right after putting it on k: allowed; T turns back, and the way out is still v.
+- **No dead state.** Every one-way step (T, v, the field for a box, the portal to the ledge) has a way back.
 
 ## Variants tried
 
-1. **The prototype of area A alone:** 7 × 6, its exit standing in for the hand-over; 734 states. With T fixed: 501 states and no completion.
-2. **The switch in a nook off the corridor between D and E,** reached through D, held by the box. That made the "box on button 1 looks done" lure.
-   - Its second use sent x home from button 1 and shut the subject in between the doors.
-   - A one-way arrow back to the room fixed that.
-   - Then a box parked on the road's landing froze the subject on the road's last arrow, and that ended the nook.
-3. **The road ending on plain floor:** 294 dead states (restriction 4).
-4. **The corridor running on past F to the ledge:** a box left there was out of reach once the portals were lost (426,482 dead states). Hence the pit.
-5. **The field at (6, 2):** 75 presses. Moved to (6, 4) on the blind reviewer's advice: 71.
+1. **The first version (played by the author):** b was left on T, then a turnable arrow between the rooms. From the doors room the subject stood on T's button, so T turned under the box toward it, and the box was lifted from that side. Cut on the author's cold play (Playtests); its idea is in the idea pool ("Cut drafts").
+2. **The designer's three candidates:**
+   - the fenced nook, kept;
+   - a one-way road of fixed arrows from the doors room to k, ending on the switch, with no turnable arrow (1,223,619 states, 80 presses);
+   - the same road with x's home on button 3, where calling x home could knock b, left there, back to the box room.
+3. **The kept candidate first had k on (8, 5).** x went down onto it from T, which then turned under the subject. That was cut 7.3's key move, and chamber 16's reversed (handbook reviewer). So k moved to (9, 5), P became plain floor and (7, 4) steel, and T now turns beside the subject, in view (guideline 89).
+4. **k's antline to Z** first ran along the box room's floor, through the start, where boxes rest. It was rerouted over steel.
 
 ## Checks
 
 - **Walk of every reachable state** through the rules' step, with the game's presses:
-  - 8,383,120 states, 3,776 completed;
+  - 154,344 states, 48 completed;
   - 0 dead, 0 with the subject standing in something blocked, 0 with a box under it;
-  - 71 presses, the fewest.
-- **Key move forced:** with T fixed pointing up and k plain floor, 751,693 states and 0 completed.
+  - 83 presses, the fewest.
+- **The solver's pars** (`npm run solve -- --par`): 48 moves and 2 portals; each search's route has both.
+- **Key move forced:**
+  - No completion avoids x resting on k.
+  - With x on k, nothing but the switch reaches it: the subject stands on P with x on k only right after putting it there.
+  - The designer's walk, with the switch's second use banned, found no completion. That was on the draft before the arrow fix, which only made k harder to reach.
 - **The seed's shot is forced, by argument:**
-  - W is reached only along row 10, and only through D, E and F, which need buttons 1, 2 and 3 held.
-  - There are two boxes, and of the three buttons only button 1 is on row 10.
-  - The handbook reviewer confirmed it: no state has the subject past D with E and F open, until it comes out of the portal.
-- **Handbook reviewer:** the subject never stands on T while it points right (guideline 77).
-- **Blind reviewer:**
-  - Solved it by reasoning: the doors in about a minute, the crossing in a couple of minutes.
-  - Verdict "fair and good, only long".
+  - W is reached only along row 8, and only through D, E and F, which need buttons 1, 2 and 3 held.
+  - There are two boxes, and of the three buttons only button 1 is on row 8.
+- **Handbook reviewer:** confirmed the walk, no shortcut, no dead end, and both lessons forced. The arrow fix and the antline were made on its findings.
+- **Blind reviewer** (on the draft before the arrow fix):
+  - Solved it by reasoning in about 15 minutes, mostly drawing the map. It ruled out reaching k with b, and taking x off k by hand, before finding the second use.
+  - Verdict: "fair and clean, with a real catch", "the finish is a good show", "a little long".
 
 ## Playtests
 
-None yet.
+- **Author, cold, 2026-11-27, first version:** "the trick to pass the first cube to the left room is weird. find another way that doesn't use arrows. use the arrows in that chamber for another thing." The seed was kept.
+- **Author, second version:** none yet.

@@ -2,181 +2,159 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: built 2026-11-27, checked and independently reviewed; waiting for the author's cold play, then its recorded solution. File: `src/chambers/chamber_29.json`, twenty-ninth in the play order; permanent id 29. Run 13's first chamber, the harder of the graduation run's two (`docs/campaign.md`, "Run 13 in detail").
+Status: first built 2026-11-27; after the author's cold play the same day its top area was redone (Playtests), checked and independently reviewed; waiting for the author's cold play, then its recorded solution. File: `src/chambers/chamber_29.json`, twenty-ninth in the play order; permanent id 29, kept since the first version was never recorded. Run 13's first chamber (`docs/campaign.md`, "Run 13 in detail").
 
 ## Entry
 
-Run 13, chamber 1, combine. Elements: slide floor, ditches (one a receiver bridges), a laser and a light barrier over slide floor, each a receiver switches, three emitters, three receivers, a mirror box, the exit, with antlines; every wall steel but six plain walls. The player knows runs 1 to 12. It should teach that a barrier over slide floor stops a slide only while it is on, that a light barrier also stops light, and that everything a step changes is judged once it ends, a slide included. Hint: none (convention 7).
+Run 13, chamber 1, combine. Elements: slide floor, ditches, a laser over slide floor and the exit, which one receiver switches together, two emitters, a mirror box, with antlines; every wall steel but three plain walls. The player knows runs 1 to 12. It should teach that a receiver linking two elements switches both at once, so the light one of them needs the other can't have, and that a portal pair carries a light a mirror box turns to a receiver out of reach. Hint: none (convention 7).
 
 ## Layout
 
-16 × 12, in two areas, the seed below and the new catch above.
+16 × 12, in two areas: the seed below, the top room above.
 
 ```
-y11 ■ ■ ■ ■ ■ X f ■ ■ ■ ■ ■ ■ ■ ■ ■
-y10 ■ _ _ _ _ D _ _ _ ■ ■ ■ ■ ■ ■ ■
-y9  H ~ ~ ~ ~ J B ~ ~ ■ ■ ■ ■ ■ ■ ■
-y8  ■ . W W W ■ q ■ ■ ■ ■ ■ ■ ■ ■ ■
-y7  U . . . . . . . . ■ ■ ■ ■ ■ ■ ■
-y6  e . . . . . . . . r ■ ■ ■ ■ ■ ■
-y5  ■ ■ ■ ■ ~ ■ ■ K ■ ■ ■ ■ ■ ■ ■ ■
+y11 ■ ■ ■ X ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■
+y10 ■ ■ ■ . . . . . ■ ■ ■ ■ ■ ■ ■ ■
+y9  ■ ■ ■ . . . . . ■ ■ ■ ■ ■ ■ ■ ■
+y8  ■ ■ ■ . . . . . _ _ _ F ■ ■ ■ ■
+y7  ■ ■ ■ . . . . . ■ ■ ■ ■ ■ ■ ■ ■
+y6  ■ ■ ■ . . . . . ■ ■ ■ ■ ■ ■ ■ ■
+y5  ■ ■ ■ ■ ~ ■ ■ e ■ ■ ■ ■ ■ ■ ■ ■
 y4  ■ _ _ _ ~ _ _ _ _ _ ■ ■ ■ ■ ■ ■
-y3  ■ _ _ _ ~ _ _ _ _ _ _ . . . / R
+y3  P _ _ _ ~ _ _ _ _ _ _ . . . / R
 y2  ■ . . Z j ~ ~ ~ ~ ~ ~ . . . . ■
-y1  ■ _ _ _ _ _ _ _ _ _ _ . S . . ■
+y1  Q _ _ _ _ _ _ _ _ _ _ . S . . ■
 y0  ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ ■ a ■
-    0 1 2 3 4 5 6 7 8 9 ...      15
+    0 1 2 3 4 5 6 7 8 9 10 ...    15
 ```
 
-`■` steel; `W`, `H`, `U` and `K` plain walls; `~` slide floor; `_` an open ditch.
+`■` steel; `P`, `Q` and `F` the plain walls; `~` slide floor; `_` an open ditch.
 
-**Area A, the seed (bottom).**
+**Area A, the seed (bottom), the author's idea:**
 
-- **Bridge 1:** slide floor along row 2, from (4, 2) to (10, 2), with ditches above and below.
-  - Its head, (11, 2), is plain floor in the east room. Its far end, (1, 2) and (2, 2), is a plain landing.
-  - The laser **Z** (3, 2), drawn `V`, lies over slide floor, held off by the receiver **R** (15, 3).
-- **The light:** the emitter **a** (14, 0) fires up into the mirror box `/` (14, 3), in the east room's far corner, which turns it right into R. So the laser starts off.
-- **The junction j** (4, 2): from it, slide floor runs up column 4, through the gap (4, 5), into area B.
-- **The start** (12, 1) faces up.
+- **The bridge:** slide floor along row 2, from (4, 2) to (10, 2), with ditches above and below. Its head, (11, 2), is plain floor in the east room; its far end, (1, 2) and (2, 2), a plain landing.
+- **The laser Z** (3, 2), drawn `V`, lies over slide floor.
+- **The receiver R** (15, 3) links both Z and the exit **X** (3, 11). The emitter **a** (14, 0) fires up into the mirror box `/` (14, 3), in the east room's far corner, which turns it right into R. So the chamber starts with the laser off and the exit open.
+- **The junction j** (4, 2): from it, slide floor runs up column 4, through the gap (4, 5), into the top room.
+- **The start S** (12, 1) faces up.
+- **The plain walls P** (0, 3), at the far end of R's row, and **Q** (0, 1), two rows below. Both are shot from the east room, along their rows, over the ditches.
 
-**Area B, the new catch (top).**
+**Area B, the top room** (x 3–7, y 6–10), entered at (4, 6):
 
-- **The row of light:** the emitter **e** (0, 6) fires right along row 6 into the receiver **r** (9, 6), which holds the light barrier **B** (6, 9) off. B is drawn `V` and lies over slide floor.
-- **Bridge 2:** slide floor along row 9, from (1, 9) to (8, 9). Its head (1, 9) is reached from the room by the gap (1, 8). **J** (5, 9) is the tile to stop on.
-- **The second light:** the emitter **f** (6, 11) fires down through the ditch (6, 10) and B's tile into the receiver **q** (6, 8). q holds the ditch **D** (5, 10) bridged.
-- **The exit X** (5, 11) is above D and open; the ditch is what holds it.
-- **The plain walls:**
-  - **H** (0, 9), facing the head;
-  - **U** (0, 7), on the unlit row;
-  - **K** (7, 5), below the lit tile (7, 6);
-  - (2, 8), (3, 8) and (4, 8), both faces;
-  - (5, 8) stays steel: its top face fronts J and would skip the catch.
+- **The emitter e** (7, 5), in the room's floor wall, fires up column 7 into the steel (7, 11).
+- **The plain wall F** (11, 8), at the end of row 8, behind the ditches (8, 8) to (10, 8).
+- **The exit X** (3, 11), in the room's top wall.
 
-Three antlines, each over walls:
+Two antlines, leaving R in opposite directions:
 
 | # | From | To | Path | Note |
 |---|---|---|---|---|
-| 1 | R | Z | (15, 3), (15, 0), (0, 0), (0, 2), (3, 2) | Hidden under a; enters the laser over the landing's floor |
-| 2 | r | B | (9, 6), (9, 9), (6, 9) | |
-| 3 | q | D | (6, 8), (5, 8), (5, 10) | Over J's floor |
-
-No ray crosses anything its own receiver holds open, nor a tile from which the subject enters it (guideline 92):
-
-- a's light crosses nothing R holds;
-- row 6 crosses neither of B's neighbours on the lane;
-- f's column crosses B, which r holds, not q, and misses D and J.
+| 1 | R | Z | (15, 3), (15, 2), (3, 2) | Along the bridge's row, crossing a's light at right angles at (14, 2) |
+| 2 | R | X | (15, 3), (15, 11), (3, 11) | Over steel only |
 
 ## Idea
 
-**Area A, the author's seed:** the slide must stop mid-bridge at the junction, but the laser is held off, so it runs past. Lift the mirror box out of the light that holds the laser off, and the next slide stops in front of it.
+**Area A:** the slide must stop mid-bridge at the junction, but R holds the laser off, so it runs past. Lift the mirror box out of a's light and the next slide stops in front of the laser.
 
-**Area B, the new catch:**
+**Area B:** lifting the box also shut the exit, since R links both. So once upstairs the subject must give R light again from up there, where none of the bottom faces can be shot:
 
-- The barrier that stops the slide at J also blocks the light that bridges the ditch above J. So it must be on while the subject slides and off once it stops.
-- So cut its light with the subject's own body and start the slide from inside that light. Walk into the portal on K, whose only tile is in the light. The subject comes out at the head and slides with the barrier still on, since the step is judged only once it ends.
-- The subject stops at J. As the step ends the light comes back, the barrier switches off, f's light reaches q and the ditch bridges.
+- the box, put down at (7, 8), turns e's light right along row 8 into F;
+- a pair from F to P carries it out along R's row into R.
+- P must be shot before going up. Finished from below, the pair lights R with the subject downstairs, the laser goes off, and the slide no longer stops at j.
+
+The mirror box does its corner job twice: downstairs by leaving it, upstairs by doing it again for another light.
 
 ## Purpose
 
-Graduation; the campaign's second-to-last chamber.
-
-- The seed's answer, switching a barrier on to stop a slide, is the second area's lure.
-- The laser and the light barrier differ in a way that matters (guideline 17): with a laser at B, the lure would solve area B.
-- The rule the catch rests on is shown at no stake on every overshoot of bridge 2. D is bridged from the start, since r is lit, and stays bridged while each slide passes through f's light.
+Graduation; the campaign's second-to-last chamber. Area A is the author's seed, a known move made harder. Area B, after the first top area was cut (Playtests), is known moves tangled, at the author's call: a box turning a light into a pair (chamber 26) that ends at the far end of the receiver's line (chamber 23). What is new is how the areas fight: one receiver holds both the laser, which must be on to go up, and the exit, which must open once up.
 
 ## Gem or flow
 
-Two hard steps, guideline 11 bent on purpose (decision 7):
-
-- area A's light catch, then area B's gem;
-- the second is the chamber's moment.
+Two steps, guideline 11 bent on purpose (decision 7): area A's light catch, then area B's order.
 
 ## Intended route
 
-1. Lift the mirror box: R goes dark and the laser comes on.
-2. Slide west from the head, stopping at j; up the branch into the row of light.
-3. Put the box down out of the light.
-4. Shoot H from the head (1, 9), and K from (7, 6) or (7, 7).
-5. Stand at (7, 6), in the light, and walk down into K.
-   - The subject comes out at the head and slides east with B on, stopping at J.
-   - As the step ends, r lights, B switches off, f's light reaches q and D bridges.
-6. Up onto D and out.
+1. Shoot P from the east room, along row 3.
+2. Lift the mirror box: R goes dark, the laser comes on and the exit shuts.
+3. Slide west from the head and stop at j, then up column 4 into the top room.
+4. Put the box down at (7, 8) from (6, 8). e's light turns right into F, which holds no portal yet.
+5. Shoot F, from row 8, over the box. The light goes through the pair, out of P and along row 3 into R. The laser goes off and the exit opens.
+6. Walk to (3, 10) and out.
 
-36 presses, the fewest (a walk of every state).
+30 presses, the fewest (a walk of every state).
 
 ## Lure and where the player should get stuck
 
-- **Area A:** the first slide from the head runs past the junction to the far landing, plainly. The box sits in the far corner, away from the walk to the head. The blind reviewer, with the box beside the start, passed this catch by picking the box up first.
-- **Area B:** two wrong tries, each failing plainly within a few moves.
-  - Put the box in the light: the mirror box turns it away from r, and the slide stops at J, but B now blocks f's light, so D stays open.
-  - Cross from the unlit row (U, or the walls at (2–4, 8)) onto bridge 2: the slide runs past J.
+- **Area A:** the first slide from the head runs past the junction to the far landing, plainly. It comes back by sliding east.
+- **Area B:** the natural order of discovery goes up first, works out the box and F up there, then comes down to shoot P. That lights R with the subject below: the exit opens upstairs, the laser goes off, and the next slide overshoots j. It fails plainly, but only after the whole top is built.
+  - The way back is 19 presses (a restart costs 30): put F's colour on Q or P, go up, shoot F again over the box, which can stay where it is.
+- **Q** is a fair wrong far end (guideline 21): the light comes out along row 1, two rows off, into the right wall.
 
 ## Restrictions
 
 | # | Restriction | What it blocks |
 |---|---|---|
-| 1 | No face takes portals in area A; the only plain face it sees is (4, 8)'s bottom face, up the branch from j, which only a solved seed reaches and area B reaches anyway | A portal route into area B round the seed |
-| 2 | K is the only plain face whose tile is in the light | Any other way to start a slide from inside the light |
-| 3 | U and (2–4, 8), plain | Nothing: lures, and the dial of guideline 8, so the answer isn't a two-face test (handbook reviewer) |
-| 4 | (5, 8) steel | A portal out onto J. Made plain: 336 completions without the catch and 64 dead states (handbook reviewer) |
-| 5 | Ditches round bridge 2 and round J | A box as a stopper beside J, chamber 19's answer |
-| 6 | The far landing in area A is reached only while the laser is off, and nothing can switch it on while the subject is there | Being shut in there |
+| 1 | Only three plain walls; every other wall is steel | Any other pair carrying a light into R, or the subject anywhere |
+| 2 | The steel (7, 11), at the end of e's column | Piping e's light with no box upstairs (guideline 123; made plain, completions without the box on (7, 8)) |
+| 3 | The steel (14, 4), at the end of a's column | Piping a's light from downstairs, with the top room never needed (made plain, completions without a portal on F) |
+| 4 | Q plain | Being stranded after finishing the pair from below (with Q steel, 112 dead states) |
+| 5 | The steel (0, 2) | A dead end (with it plain, 32 dead states) |
+| 6 | The ditches (8, 8) to (10, 8) | Walking into F's portal with the other on P, which is refused because P faces a ditch (guideline 9; floor there gives 320 such states) |
+| 7 | The far landing in area A is reached only while the laser is off, and nothing can switch it on while the subject is there | Being shut in there |
 
 ## Facts that must never be possible
 
-- The subject standing on the laser's tile or the barrier's.
-- Reaching area B without stopping at j.
-- Completion without walking into K from (7, 6).
+- The subject standing on the laser's tile.
+- Reaching the top room without stopping at j with the laser on.
+- Completion without a portal on P, a portal on F, and the box on (7, 8).
+- The subject crossing a portal: every plain wall faces an open ditch.
 
 ## Guidelines broken on purpose
 
 - **11:** two hard steps (decision 7).
-- **99:** the size (decisions 4 and 5).
-- **23 and 25:** the barrier switching off as the slide stops may look like timing, and the rule it rests on was never forced before (run 12's list, item 8).
-  - The drawing shows e's light whole again from the slide's first tile while B stays up until the stop (handbook reviewer).
-  - Kept knowingly, as the run's new consequence, which the author approved as a risk; the author's cold play decides.
+- **99:** the size (decisions 4 and 5). The width, set by area A, already fixes the tile size, so the top room's steel costs nothing to read.
+- **Run 13 decision 8:** area B has no catch no earlier route needed, at the author's call (`docs/campaign.md`, "Run 13 in detail").
 
 ## Risks named by the reviewers
 
-- **113:** area A is chamber 21's move plus chamber 22's lift out of a ray, which is allowed for the seed. Area B uses chamber 21's frame, with 21's answer as its lure.
-- **95 and 19:** the laser runs between ditches, and B's run ends on a ditch and on q's face; no earlier chamber had either. To check in the game: the end plates read, and q's eye shows.
-- **The entry:** the laser lets light through where B doesn't, but no ray crosses the laser, so the entry doesn't claim it.
+- **Decision 6, the harder of the two:** both reviewers judged it medium at most. Few faces, one useful tile for the box, and the top light the bottom corner's twin, so elimination finds it fast. Chamber 30 is longer. If the author's cold play finds 29 the easier, swapping the two in the play order is the fix (their ids stay).
+- **113:** the top's move is chamber 26's. It is inherent to the idea once known moves are allowed. The first draft of the top was also in chamber 26's frame (a row turned into a column ending at the only face) and was turned (Variants tried). As built, it repeats the chamber's own bottom corner (and chamber 25's frame): an emitter firing up, the `/` box turning it right.
+- **The strand looks fatal:** the exit opens upstairs while the subject is below. The way back is 19 presses and uses Q, which otherwise reads as a lone face with no job (guideline 16). Both are named.
+- **95:** the laser runs between ditches; check its end plates in the game.
 
 ## Near misses and wrong tries
 
-- **The box in the light (area B):** fails at once, with D seen opening as B comes on. It can always be undone: lift the box out of the light.
-- **Arriving from the branch:** the subject stops at (4, 6), in the light, so B comes on and D opens as it arrives. That is the first sight of the conflict.
-- **No dead state:** every one-way step (the slide down the branch, the far landing) has a way back.
+- **Shooting P only after going up:** the walk back down and up again costs 14 presses; the strand only comes if the box is already on (7, 8).
+- **F shot before the box goes down:** fine, from anywhere on row 8. The pair carries nothing until the box turns the light, and the subject standing in e's column cuts it until it steps out.
+- **The box left downstairs off its corner:** the laser stays on and the subject can go up, but the top needs the box: a trip back down.
+- **No dead state.** Every one-way step (the slide down the branch, the far landing, the strand) has a way back.
 
 ## Variants tried
 
-- **Area B was sketched alone first:** 10 × 7, with the exit below, by the designer who found its catch; turned upside down to sit above the seed. With its lit face made steel, or its light moved down one row, the walk found no completion.
-- **Area A was first sketched with a box resting on a button,** chamber 21's form. It became the mirror box in a ray, so the box has a job and the seed reads one link deeper.
-- **The mirror box first sat beside the start.** The blind reviewer passed area A's catch by picking it up first, so it moved to the far corner.
-- **Faces:** the handbook reviewer added the plain walls (2–4, 8).
-- **The antline R to Z** first went down into the ditch below the laser, where it vanished. It was rerouted over the landing.
+1. **The first version (played by the author):** the top area was a second bridge with a light barrier over slide floor, held off by a row of light, which also blocked the light bridging a ditch under the exit. The catch was to walk into a portal from inside the light, so the barrier stayed on through the whole slide out of the far portal. Cut on the author's cold play (Playtests); its idea is in the idea pool ("Cut drafts").
+2. **A knock** (designer's first round): the exit on R, a plain box a switch recalls, and the mirror box parked on the plain box's start, so the recall sends it home to its corner and relights R. It was visible, but never shown before it was the answer, which the author's call ruled out. It also used no portal (the idea pool, run 13).
+3. **The pipe in chamber 26's frame:** e in the top row firing left, the box turning it down a column of ditches into F below. 27,058 states, 37 presses, clean. The handbook reviewer found it was chamber 26 flipped top to bottom, so it was turned: e moved into the floor and F to the right.
+4. **The top room** was 6 × 5 first; trimmed to 5 × 5 (73,858 states, 30 presses).
 
 ## Checks
 
 - **Walk of every reachable state** through the rules' step, with the game's presses:
-  - 224,994 states, 50 completed;
+  - 73,858 states, 2 completed (the portal colours swapped);
   - 0 dead, 0 with the subject standing in something blocked, 0 with a box under it;
-  - 36 presses, the fewest.
-- **Key moves forced:**
-
-  | # | Copy | States | Completed |
-  |---|---|---|---|
-  | 1 | K made steel | 164,984 | 0 |
-  | 2 | The laser made plain slide floor | 784 | 0 |
-
-- **Handbook reviewer (beyond the walk):**
-  - The subject never stops mid-bridge on row 2 (x 5–10), never on B's tile, and K's bottom face never takes a portal.
-  - Guideline 92 holds for every ray.
-- **Blind reviewer:**
-  - Solved both areas by reasoning: area A in about a minute, area B in several, after the box in the light and the mirror box on B's tile.
-  - Verdict "fair and good"; no step looked like a timing check.
+  - 30 presses, the fewest.
+- **Key moves forced:** no completion avoids any of these:
+  - the subject on j with the laser on;
+  - a portal on P;
+  - a portal on F;
+  - the box resting on (7, 8).
+- **Copies:** F steel gives 39,760 states and no completion. Each restriction above was checked by a copy.
+- **The subject never stops on (4, 3) to (4, 5)**, so P is shot only from the east room.
+- **Guideline 92:** the pair's light misses the exit's doorstep (3, 10), the laser, j and the landing (2, 2). Cutting it at (7, 6), (7, 7) or on row 3's east floor shuts the exit and the laser comes on, both undone by stepping out.
+- **Handbook reviewer:** on the first pipe draft and again on the build. It found no shortcut, no dead end and no refusal that looks like a bug, and both lessons forced. The antlines and the frame were fixed on its findings.
+- **Blind reviewer** (on the first pipe draft): solved it by reasoning. Area A took about two minutes, the remote light about three, and the order came at once. Verdict: "fair", "medium at best".
 - **The solver's macro search refuses chambers with receivers**, so the walk stands in for it (guideline 101).
 
 ## Playtests
 
-None yet.
+- **Author, cold, 2026-11-27, first version:** "the trick to pass a portal that is considered a single step is not going to be discovered/understood by users (even i was confused). redo the upper part to show another puzzle." Area A kept. The author then chose a new catch the game shows, shown first at no stake. When the designer found none left in the rules after chambers 1 to 28, the author chose known moves, tangled, with portals playing a real part.
+- **Author, second version:** none yet.
