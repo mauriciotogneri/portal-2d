@@ -13,6 +13,8 @@ Everything around the chamber itself: the screens, the menus and dialogs, the ke
 
 Touch-first devices (`pointer: coarse`) get the desktop-only notice instead of the app.
 
+The browser tab names the screen: "Portal 2D" at home, and the chamber's name before it at a chamber, "Chamber 3 · Portal 2D" or "Playground 4 · Portal 2D" (`src/router.ts`). It is set on each arrival, so the loading screen already shows the title of the address it opens on; a navigation that is stopped, such as a cancelled exit, keeps the title, and the desktop-only notice keeps "Portal 2D". A link to any address shows the same preview card in chat apps and on social sites (`index.html`'s Open Graph and Twitter card tags): the game's name and description, and `public/social_preview.jpg`, the logo on the test room's wall.
+
 ## Home menu
 
 The home screen has no game running, so the menu reads the keys itself (`event.key`, so the numpad's arrows follow it even with NumLock off). The first column holds the sections: Play, Settings and About, after Playground in development. Opening a section shows its rows in a second column, and the highlighted row's map, pages or changelog in a third.
@@ -40,7 +42,7 @@ The sections:
 
 - **Play:** a row per chamber, with its best time and a figure that turns green once it is completed, and the highlighted chamber's map in the third column.
 - **Settings:** the sound effects and music volumes, then Controls, then Reset progress.
-  - On a volume, Left and Right step it down or up by 10, from Off (0) to 100, held keys repeating, instead of stepping back or in (Escape and Backspace still step back), and Enter and Space do nothing.
+  - On a volume, Left and Right step it down or up by 10, from Off (0) to 100, held keys repeating, instead of stepping back or in (Escape and Backspace still step back); Home turns it off and End sets it to 100, once however long they are held; and Enter and Space do nothing.
   - The Controls row's third column starts level with it: Default and Custom. Right, Enter or a click steps in (on the layout in use), and Left, Escape or Backspace steps back. Enter, Space or a click on a layout puts it in use; on Custom it also opens the [custom controls dialog](#dialogs).
   - Reset progress opens a confirmation; confirmed, it stores an empty progress record.
 - **About:** More games (pages of the author's other games), Changelog, Valve's Portal and Feedback. The third column follows the highlighted row (the list of pages, or the changelog; Valve's Portal, which opens its page in a new tab, and Feedback show none). Right, Enter or a click steps into the pages or the changelog (where Up and Down scroll it), and Left, Escape or Backspace steps back to the About row. A page opens in a new tab and Feedback opens the mail app.
@@ -69,7 +71,8 @@ The chamber on a dark stage, beside a rail holding the chamber sign (its number,
 
 While any dialog is open the game is paused and its input is ignored, and the dialog's buttons get the keyboard (`dialog_frame.vue`):
 
-- The first action is focused. Up and Down (stacked actions) or Left and Right (actions in a row, the confirmation's) and Tab move between actions; the other two arrows do nothing.
+- The first action is focused, but for the pause menu coming back from its settings or a confirmation, which focuses the action that opened it (Settings, Restart chamber or Exit chamber); opened by Escape, or on backing out of the exit confirmation browser Back opened, it focuses Continue. Up and Down (stacked actions) or Left and Right (actions in a row, the confirmation's) and Tab move between actions; the other two arrows do nothing.
+- The screen behind (the chamber's rail and stage, or the home menu) is inert while any dialog is open, a hint's card included, so neither Tab nor a screen reader reaches it, and a click anywhere on a dialog but a control (its backdrop, title, text or margins) leaves the keyboard where it was.
 - A held (repeating) Enter or Space presses nothing and a held arrow moves nothing, so a move key held into a dialog, such as one kept down while walking out of the exit, can't act in it.
 - Resuming the game forgets every press still waiting and every key held.
 
@@ -79,7 +82,7 @@ A hint's card (`hint_spotlight.vue`, which doesn't use `dialog_frame.vue`) has o
 - Space (the default interact key) and Tab do nothing, a click off the card does nothing, and Escape does nothing while it shows; the player presses Enter, then Escape, to reach the pause menu.
 - Pressed, Continue shows pressed for a moment, everything fades out and the game carries on; with reduced motion it goes at once.
 
-The pause menu's Settings, under Continue, lists the same two volumes as the home menu's Settings: Left and Right step them, Up and Down move between them and Done, and Escape or Done goes back to the pause menu, on Continue.
+The pause menu's Settings, under Continue, lists the same two volumes as the home menu's Settings: Left and Right step them, Home and End turn them off or up to 100, Up and Down move between them and Done, and Escape or Done goes back to the pause menu, on Settings.
 
 The custom controls dialog (`custom_controls_dialog.vue`) opens from Custom under Settings: one row per game key, then Done, with the labels re-read from the layout as it opens.
 
@@ -126,7 +129,7 @@ The rules play no sounds: they report what happens as events, and after each ste
 - A ray starting to bounce off a mirror box, which the rules don't report (`findMirrorBounces` in `src/game/mirror_bounces.ts`), plays the mirror box's sound once, after the step's other sounds, however many boxes, and in place of the put-down sound when the box was put down in the ray. On a slide it waits for the slide's stop, and a load plays none.
 - A load settles the chamber's start and plays the sounds of its events. During a slide each tile's sounds wait until the subject gets there (`docs/sprites.md`, "Steps").
 - Three sounds belong to the interface, and the game never plays them; the screens do:
-  - **Move:** every move of the home menu's highlight (keys, Tab or pointer) and of a dialog's focus between its buttons (the keyboard's arrows or Tab); stepping into or back out of a home menu section or About's or Controls' third column with Right and Left; Escape or Backspace stepping back; Escape closing a dialog or stepping back from a confirmation or the settings to the pause menu (not Escape cancelling a custom controls row's wait); Escape opening or closing the pause menu; and each step of a volume (Left, Right or the pointer; after the change, so it is heard at the new sound effects volume, and not at all once sound effects are down to Off).
+  - **Move:** every move of the home menu's highlight (keys, Tab or pointer) and of a dialog's focus between its buttons (the keyboard's arrows or Tab); stepping into or back out of a home menu section or About's or Controls' third column with Right and Left; Escape or Backspace stepping back; Escape closing a dialog or stepping back from a confirmation or the settings to the pause menu (not Escape cancelling a custom controls row's wait); Escape opening or closing the pause menu; and each step of a volume (Left, Right, Home, End or the pointer; after the change, so it is heard at the new sound effects volume, and not at all once sound effects are down to Off).
   - **Accept:** pressing something with Enter, Space or a click: the loading screen's Start button, a dialog button (a custom controls row starting to wait for a key among them, never a volume row, which presses nothing), a home menu section or an About or Controls row (opening it or stepping into its third column, as Right does), a layout under Controls (with Custom, also opening its dialog), Reset progress (opening its confirmation), the chamber screen's Controls heading (folding or opening the legend) and a hint's Continue (Enter or a click); and a key or mouse button bound in the custom controls dialog. Opening Feedback or a page, which leave the game, plays neither.
   - **Start:** a chamber started from the home menu.
 - Every sound plays at the sound effects volume: the settings set one master volume that every effect's volume is multiplied by, 0 playing nothing. The effects' files are evened to one loudness (`npm run audio:normalize`) and play 10 dB above the music.
@@ -182,6 +185,8 @@ The others:
 - `asset_failed`: a file the loading screen downloads didn't download or was refused as a sprite, once per file: `file` (where it sits in `src/assets`, such as `images/chamber/box.webp`, since a build turns a small file into a data URL, so its address names nothing), `kind` (audio or image) and `reason` (download or refused); at most 10 per visit.
 - `desktop_only_shown`: a touch-first device got the desktop-only notice.
 - `exception`: Google Analytics' standard event for an error: one thrown and not caught, a promise rejected and not handled, or, in production builds, an error in a screen, which Vue would log to the console and which is still logged there. `description` (the error's name and message, or its text, cut to 100 characters) and `source` (page, promise or screen). An error event carrying no error, from a script on another site or the browser's ResizeObserver notice, is left out; each description is sent once per visit, at most 10 per visit.
+
+The SDK's own automatic page views, which the app neither sends nor turns off, record the tab's title as their page title (see [screens](#screens)), which names the chamber since tab titles did (before, every view recorded "Portal 2D"). Whether a view taken as the address changes records its own page's title or the one before it is unchecked, so page titles in the reports aren't to be relied on.
 
 ## Loading screen
 

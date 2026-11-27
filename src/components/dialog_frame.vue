@@ -1,11 +1,12 @@
 <script setup lang="ts">
 /**
  * Shared shell for the chamber dialogs: backdrop, panel, title and actions.
- * Keyboard-driven: the first action takes focus, the arrow keys along the
- * actions (Up and Down when stacked, Left and Right in a row) move between
- * them and Tab stays inside the dialog. Escape is left to the screen, which
- * knows what it means in each state. Every action clicks when pressed, and
- * when the keyboard moves focus onto it.
+ * Keyboard-driven: the first action takes focus, unless the dialog names
+ * another, the arrow keys along the actions (Up and Down when stacked, Left
+ * and Right in a row) move between them and Tab stays inside the dialog; a
+ * click anywhere on it but a control leaves the keyboard where it was. Escape
+ * is left to the screen, which knows what it means in each state. Every
+ * action clicks when pressed, and when the keyboard moves focus onto it.
  */
 import {onMounted, useId, useTemplateRef} from 'vue'
 import {Sound} from '@/game/sound'
@@ -15,12 +16,14 @@ export interface DialogFrameProps {
   layout?: 'stack' | 'row'
   tone?: 'neutral' | 'interaction' | 'caution' | 'success'
   wide?: boolean // Whether the panel is wider, for rows that end in a control
+  initialAction?: number // The action that takes focus when the dialog opens, by its place among the actions, counted from 0
 }
 
 const props = withDefaults(defineProps<DialogFrameProps>(), {
   layout: 'stack',
   tone: 'neutral',
   wide: false,
+  initialAction: 0,
 })
 
 const titleId = useId()
@@ -106,13 +109,27 @@ function handleActionClick(event: MouseEvent): void {
   }
 }
 
+/**
+ * Keeps the keyboard where it was when the press lands anywhere on the dialog
+ * but a control: the backdrop, the title, the text or the panel's margins,
+ * none of which can take focus, so the browser would drop it to the page.
+ * @param event - Mouse event
+ */
+function handleBackdropMousedown(event: MouseEvent): void {
+  if (!(event.target instanceof Element) || event.target.closest('button, a, [tabindex]') === null) {
+    event.preventDefault()
+  }
+}
+
 onMounted(() => {
-  actionButtons()[0]?.focus()
+  const buttons = actionButtons()
+  const firstFocused = buttons[props.initialAction] ?? buttons[0]
+  firstFocused?.focus()
 })
 </script>
 
 <template>
-  <div class="dialog-backdrop">
+  <div class="dialog-backdrop" @mousedown="handleBackdropMousedown">
     <section
       ref="panel"
       class="dialog-panel"

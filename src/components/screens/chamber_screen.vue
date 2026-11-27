@@ -18,6 +18,7 @@ import type {PictogramKind} from '@/components/element_pictogram.vue'
 import HintSpotlight from '@/components/hint_spotlight.vue'
 import type {PageRect} from '@/components/hint_spotlight.vue'
 import PauseDialog from '@/components/pause_dialog.vue'
+import type {PauseAction} from '@/components/pause_dialog.vue'
 import type {PerformanceViewHandle} from '@/components/performance_view.vue'
 import {FrameStats} from '@/game/frame_stats'
 import type {GameEvent} from '@/game/game_event'
@@ -42,6 +43,13 @@ import {startChamberMusic} from '@/services/settings'
 
 /** Which dialog is open over the chamber; a hint counts as one. */
 type ChamberDialog = 'none' | 'pause' | 'settings' | 'confirm-reset' | 'confirm-exit' | 'completed' | 'hint'
+
+// The dialog each of the pause menu's actions opens, but Continue, which closes it
+const PAUSE_ACTION_DIALOGS: Readonly<Record<Exclude<PauseAction, 'continue'>, ChamberDialog>> = {
+  settings: 'settings',
+  reset: 'confirm-reset',
+  exit: 'confirm-exit',
+}
 
 /** A tutorial hint as shown: the element it explains, the tile it lights and what it says. */
 type HintCard = {
@@ -90,6 +98,7 @@ const layout = computed(() => listed.value?.data) // What the game plays
 const nextChamber = computed(() => props.list === 'playground' ? findPlaygroundChamber(props.chamberNumber + 1) : findChamber(props.chamberNumber + 1)) // The chamber after this one in its list; undefined after the last
 const chamberName = computed(() => listed.value?.name ?? '') // What the player sees it called, such as "Chamber 2" or "Playground 3"
 const dialog = ref<ChamberDialog>('none')
+const pauseFocus = ref<PauseAction>('continue') // The pause menu's action that takes focus when it opens: the one the settings or a confirmation was opened from, on coming back, or Continue
 const timeReadout = useTemplateRef<HTMLElement>('timeReadout')
 const timerStarted = ref(false) // Whether the clock has started; changes only on the first key and on reset
 const completedRun = ref<CompletedRun | null>(null) // The run the completion dialog reports
@@ -251,9 +260,20 @@ function setPaused(paused: boolean): void {
  */
 function openPause(): void {
   setPaused(true)
+  pauseFocus.value = 'continue'
   dialog.value = 'pause'
   pauses += 1
   Sound.MENU_MOVE.play()
+}
+
+/**
+ * Opens the settings or a confirmation from the pause menu, which comes back
+ * with the action that opened it in focus.
+ * @param action - The pause menu's action pressed
+ */
+function openFromPause(action: Exclude<PauseAction, 'continue'>): void {
+  pauseFocus.value = action
+  dialog.value = PAUSE_ACTION_DIALOGS[action]
 }
 
 /**
@@ -639,6 +659,8 @@ function guardExit(to: RouteLocationNormalized): boolean {
   // Read while the browser is still on the entry it was heading to, before the router undoes the move
   pendingPosition = historyPosition(router.options.history.state)
   setPaused(true)
+  // Backing out of this confirmation opens the pause menu afresh, as no action of it opened this
+  pauseFocus.value = 'continue'
   dialog.value = 'confirm-exit'
   return false
 }
@@ -731,7 +753,8 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="chamber-screen">
-    <aside class="chamber-rail">
+    <!-- While a dialog is open, the rail and the stage behind it are out of reach of the keyboard -->
+    <aside class="chamber-rail" :inert="dialog !== 'none'">
       <ChamberSign :list="list" :chamber-number="chamberNumber" :layout="layout">
         <div
           class="sign-time"
@@ -764,16 +787,17 @@ onBeforeUnmount(() => {
       <PerformanceView v-if="PerformanceView !== null" ref="performanceView" />
     </aside>
 
-    <div ref="stage" class="chamber-stage">
+    <div ref="stage" class="chamber-stage" :inert="dialog !== 'none'">
       <canvas ref="canvas" class="chamber-canvas"></canvas>
     </div>
 
     <PauseDialog
       v-if="dialog === 'pause'"
+      :focused-action="pauseFocus"
       @continue="resume"
-      @settings="dialog = 'settings'"
-      @reset="dialog = 'confirm-reset'"
-      @exit="dialog = 'confirm-exit'"
+      @settings="openFromPause('settings')"
+      @reset="openFromPause('reset')"
+      @exit="openFromPause('exit')"
     />
     <AudioSettingsDialog v-else-if="dialog === 'settings'" @close="dialog = 'pause'" />
     <ConfirmDialog

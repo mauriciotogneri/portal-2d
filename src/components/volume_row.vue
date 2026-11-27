@@ -3,10 +3,11 @@
  * One volume in a menu: a row with its name and, at its right edge, a ramp of
  * bars rising like a volume wedge, one per step, lit up to the volume, then
  * the volume in sign numerals, or Off at 0, the only way to turn the sound
- * off. Left and Right step it down or up, clicking once the change has been
- * applied, so the click is heard at the new sound effects volume; a press or
- * drag on the bars sets it, and a press just left of them turns it off. Enter,
- * Space and a click on the name do nothing. Screen readers hear it as a slider.
+ * off. Left and Right step it down or up, and Home and End turn it off or up
+ * to the top, clicking once the change has been applied, so the click is
+ * heard at the new sound effects volume; a press or drag on the bars sets it,
+ * and a press just left of them turns it off. Enter, Space and a click on the
+ * name do nothing. Screen readers hear it as a slider.
  */
 import {computed, nextTick, useId, useTemplateRef} from 'vue'
 import {Sound} from '@/game/sound'
@@ -45,12 +46,21 @@ function changeVolume(next: number): void {
 }
 
 /**
- * Left and Right step the volume down or up, held keys repeating. They are
- * kept from the menu and the dialogs, where Left would step back.
+ * Left and Right step the volume down or up, held keys repeating, and Home
+ * and End turn it off or up to the top, once however long they are held. They
+ * are kept from the menu and the dialogs, where Left would step back.
  * @param event - Keyboard event
  */
 function handleKeydown(event: KeyboardEvent): void {
   if (event.altKey || event.ctrlKey || event.metaKey) {
+    return
+  }
+  if (event.key === 'Home' || event.key === 'End') {
+    event.preventDefault()
+    event.stopPropagation()
+    if (!event.repeat) {
+      changeVolume(event.key === 'Home' ? 0 : VOLUME_MAX)
+    }
     return
   }
   if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {

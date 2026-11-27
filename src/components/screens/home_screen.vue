@@ -50,7 +50,7 @@ import {chooseControlLayout, ControlLayout, controlLayout} from '@/services/key_
 import {lastChamber} from '@/services/last_chamber'
 import {PLAYGROUND_CHAMBERS} from '@/services/playground'
 import {bestTime, hasStartedAnyChamber, isCompleted, resetProgress} from '@/services/progress'
-import {AUDIO_VOLUMES, playMusic, setVolume, VOLUME_STEP} from '@/services/settings'
+import {AUDIO_VOLUMES, playMusic, setVolume, VOLUME_MAX, VOLUME_STEP} from '@/services/settings'
 
 /** A section listed in the first column, Playground only in development. */
 type MenuSection = 'play' | 'settings' | 'about' | 'playground'
@@ -797,11 +797,14 @@ function chooseLayout(index: number): void {
 }
 
 /**
- * Closes the Custom controls dialog and gives the keyboard back to the Custom row.
+ * Closes the Custom controls dialog and gives the keyboard back to the Custom
+ * row, once the menu is no longer out of reach behind it.
  */
 function closeControlsDialog(): void {
   controlsDialogOpen.value = false
-  focusRow('details', CUSTOM_LAYOUT_INDEX)
+  void nextTick(() => {
+    focusRow('details', CUSTOM_LAYOUT_INDEX)
+  })
 }
 
 /**
@@ -813,11 +816,14 @@ function openResetDialog(): void {
 }
 
 /**
- * Closes the reset confirmation and gives the keyboard back to the Reset progress row.
+ * Closes the reset confirmation and gives the keyboard back to the Reset
+ * progress row, once the menu is no longer out of reach behind it.
  */
 function closeResetDialog(): void {
   resetDialogOpen.value = false
-  focusRow('items', RESET_PROGRESS_INDEX)
+  void nextTick(() => {
+    focusRow('items', RESET_PROGRESS_INDEX)
+  })
 }
 
 /**
@@ -859,14 +865,15 @@ function handleEnter(event: KeyboardEvent): void {
 }
 
 /**
- * Left or Right with a volume row highlighted while the keyboard has left the
- * rows, as after a click on the wall (the row takes the keys itself while it
- * has the keyboard): steps the volume, with a click when it changes, and gives
- * the row the keyboard back, as Up and Down do.
- * @param offset - How far to step the volume
+ * Left, Right, Home or End with a volume row highlighted while the keyboard
+ * has left the rows, as after a click on the wall (the row takes the keys
+ * itself while it has the keyboard): steps the volume, or turns it off or up
+ * to the top, with a click when it changes, and gives the row the keyboard
+ * back, as Up and Down do.
+ * @param nextVolume - The volume asked for, from the current one
  * @returns Whether a volume row was highlighted, so the key was taken
  */
-function stepHighlightedVolume(offset: number): boolean {
+function changeHighlightedVolume(nextVolume: (volume: number) => number): boolean {
   if (activeColumn.value !== 'items' || openSection.value !== 'settings') {
     return false
   }
@@ -874,7 +881,7 @@ function stepHighlightedVolume(offset: number): boolean {
   if (setting === undefined) {
     return false
   }
-  if (setVolume(setting.volume, setting.volume.value + offset)) {
+  if (setVolume(setting.volume, nextVolume(setting.volume.value))) {
     void nextTick(() => {
       Sound.MENU_MOVE.play()
     })
@@ -884,8 +891,8 @@ function stepHighlightedVolume(offset: number): boolean {
 }
 
 /**
- * Arrow keys, Enter, Escape and Backspace drive the menu, unless a dialog is
- * open.
+ * Arrow keys, Enter, Escape and Backspace drive the menu, and Home and End a
+ * highlighted volume, unless a dialog is open.
  * @param event - Keyboard event
  */
 function handleKeydown(event: KeyboardEvent): void {
@@ -918,16 +925,25 @@ function handleKeydown(event: KeyboardEvent): void {
       break
     case 'ArrowRight':
       event.preventDefault()
-      if (!stepHighlightedVolume(VOLUME_STEP)) {
+      if (!changeHighlightedVolume((volume) => volume + VOLUME_STEP)) {
         stepIn()
       }
       break
     case 'ArrowLeft':
       event.preventDefault()
-      if (!stepHighlightedVolume(-VOLUME_STEP)) {
+      if (!changeHighlightedVolume((volume) => volume - VOLUME_STEP)) {
         stepBack()
       }
       break
+    case 'Home':
+    case 'End': {
+      // Taken only with a volume highlighted, elsewhere scrolling as usual; held, it acts once, as on the row itself
+      const target = event.key === 'Home' ? 0 : VOLUME_MAX
+      if (changeHighlightedVolume((volume) => event.repeat ? volume : target)) {
+        event.preventDefault()
+      }
+      break
+    }
     case 'Escape':
       // A held Escape that just closed a dialog must not close the section too
       if (!event.repeat) {
@@ -986,11 +1002,14 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="home-screen room">
+    <!-- While a dialog is open, the menu behind it is out of reach of the keyboard; the status line
+         below stays outside, so a change it reports as a dialog opens is still read out -->
     <div
       class="home-inner room-inner"
       :class="{
         'home-inner-fixed': chamberListOpen,
       }"
+      :inert="resetDialogOpen || controlsDialogOpen"
     >
       <h1 class="room-title">
         <PortalLogo size="medium" />
