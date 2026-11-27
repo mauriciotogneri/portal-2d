@@ -1,4 +1,3 @@
-- Fill readme
 - French keyboard bug
 - Add walls to the arrows
 - Replace light barriers with doors
