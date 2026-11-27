@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: first built 2026-11-27; after the author's cold play the same day its top area was redone (Playtests), checked and independently reviewed; waiting for the author's cold play, then its recorded solution. File: `src/chambers/chamber_29.json`, twenty-ninth in the play order; permanent id 29, kept since the first version was never recorded. Run 13's first chamber (`docs/campaign.md`, "Run 13 in detail").
+Status: first built 2026-11-27; after the author's cold play the same day its top area was redone (Playtests), checked and independently reviewed, then played cold by the author, who kept it, and by friends, who liked it; the author's cold run its recorded solution. File: `src/chambers/chamber_29.json`, twenty-ninth in the play order; permanent id 29, kept since the first version was never recorded. Run 13's first chamber (`docs/campaign.md`, "Run 13 in detail").
 
 ## Entry
 
@@ -117,7 +117,7 @@ Two steps, guideline 11 bent on purpose (decision 7): area A's light catch, then
 
 ## Risks named by the reviewers
 
-- **Decision 6, the harder of the two:** both reviewers judged it medium at most. Few faces, one useful tile for the box, and the top light the bottom corner's twin, so elimination finds it fast. Chamber 30 is longer. If the author's cold play finds 29 the easier, swapping the two in the play order is the fix (their ids stay).
+- **Decision 6, the harder of the two:** both reviewers judged it medium at most. Few faces, one useful tile for the box, and the top light the bottom corner's twin, so elimination finds it fast. Chamber 30 is longer. If the author's cold play finds 29 the easier, swapping the two in the play order is the fix (their ids stay). The author kept both in this order.
 - **113:** the top's move is chamber 26's. It is inherent to the idea once known moves are allowed. The first draft of the top was also in chamber 26's frame (a row turned into a column ending at the only face) and was turned (Variants tried). As built, it repeats the chamber's own bottom corner (and chamber 25's frame): an emitter firing up, the `/` box turning it right.
 - **The strand looks fatal:** the exit opens upstairs while the subject is below. The way back is 19 presses and uses Q, which otherwise reads as a lone face with no job (guideline 16). Both are named.
 - **95:** the laser runs between ditches; check its end plates in the game.
@@ -157,4 +157,5 @@ Two steps, guideline 11 bent on purpose (decision 7): area A's light catch, then
 ## Playtests
 
 - **Author, cold, 2026-11-27, first version:** "the trick to pass a portal that is considered a single step is not going to be discovered/understood by users (even i was confused). redo the upper part to show another puzzle." Area A kept. The author then chose a new catch the game shows, shown first at no stake. When the designer found none left in the rules after chambers 1 to 28, the author chose known moves, tangled, with portals playing a real part.
-- **Author, second version:** none yet.
+- **Author, cold, second version, 2026-11-27:** kept ("me and my friends like them"). Their recorded run is 37 presses, 18 moves and 2 portals: the intended route in its order, P shot from the east room before lifting the box, and F shot before the box went down on (7, 8).
+- **Friends, second version:** liked it (the author's report); their routes weren't recorded.

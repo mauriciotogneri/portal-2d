@@ -2,7 +2,7 @@
 
 Spoilers: the author reads this only after playing the chamber cold.
 
-Status: first built 2026-11-27; after the author's cold play the same day its box crossing was redone (Playtests), checked and independently reviewed; waiting for the author's cold play, then its recorded solution. File: `src/chambers/chamber_30.json`, thirtieth in the play order; permanent id 30, kept since the first version was never recorded. Run 13's second chamber and the campaign's last (`docs/campaign.md`, "Run 13 in detail").
+Status: first built 2026-11-27; after the author's cold play the same day its box crossing was redone (Playtests), checked and independently reviewed, then played cold by the author, who kept it, and by friends, who liked it; the author's cold run its recorded solution. File: `src/chambers/chamber_30.json`, thirtieth in the play order; permanent id 30, kept since the first version was never recorded. Run 13's second chamber and the campaign's last (`docs/campaign.md`, "Run 13 in detail").
 
 ## Entry
 
@@ -195,4 +195,5 @@ Two steps: the crossing, a gem; then the seed, light (chamber 5's move with more
 ## Playtests
 
 - **Author, cold, 2026-11-27, first version:** "the trick to pass the first cube to the left room is weird. find another way that doesn't use arrows. use the arrows in that chamber for another thing." The seed was kept.
-- **Author, second version:** none yet.
+- **Author, cold, second version, 2026-11-27:** kept ("me and my friends like them"). Their recorded run is 135 presses, 80 moves and 2 portals: the intended route with one wrong try. Once b was on button 2, they walked back through Y into the nook and stood on button 3 (F opened while held), then went back and used the switch again. They shot N before W.
+- **Friends, second version:** liked it (the author's report); their routes weren't recorded.
