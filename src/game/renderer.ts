@@ -27,8 +27,8 @@ import {NO_BOX} from '@/game/rules/state_layout'
 import type {SpriteName} from '@/game/sprite_set'
 import {spriteOf} from '@/game/sprite_sources'
 import {shownState, type StepTransition} from '@/game/step_animation'
-import {subjectPose, type SubjectPose} from '@/game/subject_pose'
-import type {SubjectTurn} from '@/game/subject_turn'
+import {SubjectBody} from '@/game/subject_body'
+import {type SubjectPlacement, subjectPose, type SubjectPose} from '@/game/subject_pose'
 import {drawFloorTone, drawWallTone} from '@/game/surface_tone'
 import {TilePainter} from '@/game/tile_painter'
 import {drawFloorWear, drawWallWear} from '@/game/wear_marks'
@@ -430,13 +430,13 @@ export class Renderer {
   }
 
   /**
-   * Draws the subject turned to the way it faces, or part way through a
-   * turn, holding a box it carries or else its portal gun, at its pose:
-   * where it stands, or part way through the step being drawn.
+   * Draws the subject turned to the way it faces, or at any angle, holding a
+   * box it carries or else its portal gun, at its pose: where it stands, or
+   * part way through the step being drawn.
    * @param painter - Paints on the canvas, or on a layer of its own
    * @param state - The state drawn, which says whether it carries a box
    * @param pose - Where it is drawn, from subjectPose()
-   * @param angle - How far it is turned part way through a turn, in radians clockwise on the canvas from facing up, or null to turn it squarely the way its pose faces
+   * @param angle - How far it is turned, in radians clockwise on the canvas from facing up, or null to turn it squarely the way its pose faces
    */
   private drawSubject(painter: TilePainter, state: RulesState, pose: SubjectPose, angle: number | null): void {
     const sprite = (state.carriedBox === NO_BOX) ? 'subject_holding_gun' : 'subject_holding_box'
@@ -464,7 +464,7 @@ export class Renderer {
    * or turns, so it reads apart from a plain box.
    * @param painter - Paints on the canvas, or on a layer of its own
    * @param pose - Where the subject is drawn, from subjectPose()
-   * @param angle - How far the subject is turned part way through a turn, in radians clockwise on the canvas from facing up, or null when it faces its pose's way squarely
+   * @param angle - How far the subject is turned, in radians clockwise on the canvas from facing up, or null when it faces its pose's way squarely
    * @param mirror - The carried box's mirror
    */
   private drawCarriedMirror(painter: TilePainter, pose: SubjectPose, angle: number | null, mirror: Mirror): void {
@@ -502,7 +502,7 @@ export class Renderer {
    * @param state - The state drawn
    * @param layer - The layer
    * @param pose - Where the subject is drawn, from subjectPose()
-   * @param angle - How far the subject is turned part way through a turn, from SubjectTurn, or null to turn it squarely the way its pose faces
+   * @param angle - How far the subject is turned, in radians clockwise on the canvas from facing up, or null to turn it squarely the way its pose faces
    * @param shares - How far blocked the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers that are changing are drawn, or null to draw every one as the state says
    * @param opening - How far the portal opening is drawn, or null to draw both open
    * @param returns - The boxes on their way home, or null when none can be
@@ -549,7 +549,7 @@ export class Renderer {
    * @param state - The state drawn
    * @param layer - The layer
    * @param pose - Where the subject is drawn, from subjectPose()
-   * @param angle - How far the subject is turned part way through a turn, from SubjectTurn, or null to turn it squarely the way its pose faces
+   * @param angle - How far the subject is turned, in radians clockwise on the canvas from facing up, or null to turn it squarely the way its pose faces
    * @param shares - How far blocked the blocked walls, the ditches, the doors, the exit, the fizzlers, the lasers and the light barriers that are changing are drawn, or null to draw every one as the state says
    * @param opening - How far the portal opening is drawn, or null to draw both open
    */
@@ -651,9 +651,10 @@ export class Renderer {
    * and splashing, under their connectors and over the subject, then the glows, the portals' particles, the pieces of what a fizzle took,
    * the pieces of the boxes flying home and a missed shot's ripple. Part way along a slide, everything but the
    * subject's pose is drawn as the state on the last tile it has reached
-   * (shownState), and the state after the step once the slide ends. The
-   * subject is drawn part way through its turn while it turns, and, while
-   * the state drawn is completed, on a layer of its own under the open
+   * (shownState), and the state after the step once the slide ends. In the
+   * live game the subject is drawn where its body is, at the angle it is
+   * turned to, and a ray it stops ends at its body's edge; while the state
+   * drawn is completed, it is drawn on a layer of its own under the open
    * exit's shadow. With a see-through exit the canvas is cleared first, as
    * the backdrop lets what lies behind the canvas show through the exit.
    * @param state - The state to draw
@@ -664,25 +665,31 @@ export class Renderer {
    * @param ripple - Where the latest missed shot stopped, rippling, or null (the default) when none can
    * @param fall - The boxes falling into ditches, or null (the default) when none can
    * @param openings - The portals opening, or null (the default) when none can
-   * @param turn - The subject's turn, followed every frame drawn with a time, or null (the default) to draw it squarely the way it faces
+   * @param subject - Where the live game has the subject's body and the angle it is drawn at, or null (the default) to draw it on its tile squarely the way it faces
    * @param returns - The boxes on their way home, or null (the default) when none can be
    * @param particles - The particles rising from the portals, or null (the default) when none can
    * @param flashes - Where the subject was caught in a fizzler's field lately, flashing, or null (the default) when none can
    * @param reactions - Where a light barrier's band was met lately, by a shot or the subject, reacting, or null (the default) when none can
    * @param splashes - Where a portal shot met a fizzler's field lately, splashing, or null (the default) when none can
    */
-  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, turn: SubjectTurn | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null, flashes: FizzlerFlashes | null = null, reactions: LightBarrierReactions | null = null, splashes: FizzlerSplashes | null = null): void {
+  render(state: RulesState, transition: StepTransition | null = null, time: number | null = null, fizzle: FizzleParticles | null = null, changes: ElementTransitions | null = null, ripple: MissRipple | null = null, fall: BoxFall | null = null, openings: PortalOpenings | null = null, subject: SubjectPlacement | null = null, returns: BoxReturns | null = null, particles: PortalParticles | null = null, flashes: FizzlerFlashes | null = null, reactions: LightBarrierReactions | null = null, splashes: FizzlerSplashes | null = null): void {
     // A canvas not yet sized for a chamber has nothing to draw
     if (this.painter.blockSize <= 0) {
       return
     }
 
     const shown = ((transition === null) || (transition.to !== state)) ? state : shownState(transition)
-    const pose = subjectPose(state, transition, this.painter.blockSize)
-    const angle = ((time !== null) && (turn !== null)) ? turn.angleFor(state, pose, time) : null
+    const pose = subjectPose(state, transition, this.painter.blockSize, subject)
+    // The canvas turns clockwise from up, the chamber counter-clockwise from right
+    const angle = (subject === null) ? null : (Math.PI / 2) - subject.angle
     const shares: BlockedShares | null = ((time !== null) && (changes !== null)) ? (kind, index) => changes.blockedAt(kind, index, time) : null
     const opening: OpeningProgress | null = ((time !== null) && (openings !== null)) ? (color) => openings.progressAt(shown, color, time) : null
-    const runs = (shown.chamber.countOf('emitter') > 0) ? rayRuns(shown, traceRays(shown)) : NO_RUNS
+    const stopper = {
+      x: pose.x + 0.5,
+      y: pose.y + 0.5,
+      radius: SubjectBody.RADIUS,
+    }
+    const runs = (shown.chamber.countOf('emitter') > 0) ? rayRuns(shown, traceRays(shown), stopper) : NO_RUNS
 
     // The backdrop is see-through across the exit, so the last frame's pixels there must go first
     if (this.seeThroughExit) {

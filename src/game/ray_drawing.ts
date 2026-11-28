@@ -6,6 +6,16 @@ import type {RayLine, RayPoint, RayTrace} from '@/game/rules/rays'
 import type {RulesState} from '@/game/rules/rules_state'
 import type {TilePainter} from '@/game/tile_painter'
 
+/**
+ * Where the subject's body is drawn, which a ray it stops ends at: its
+ * middle, in tiles from the chamber's bottom-left corner, and its radius.
+ */
+export type RayStopper = {
+  readonly x: number // Its middle's column coordinate
+  readonly y: number // Its middle's row coordinate
+  readonly radius: number // Its radius, in tiles
+}
+
 // How an emitter's ray is drawn (docs/sprites.md): in code, from the rays
 // traced on the state shown, as the game draws a laser's beam (laser_on and
 // laser_glow), recoloured pale gold with a dark rim and narrower: a haze
@@ -187,15 +197,68 @@ const GLOW: RayBand = {
 }
 
 /**
+ * Where a line of a ray the subject stops is drawn ending: where it meets
+ * the edge of the subject's body, coming along its line, or, when the body
+ * stands off its line, where the rules end it, the middle of the subject's
+ * tile.
+ * @param line - The line
+ * @param last - The point the rules end it at
+ * @param stopper - Where the subject's body is drawn
+ * @returns The point it is drawn ending at
+ */
+function subjectEnd(line: RayLine, last: RayPoint, stopper: RayStopper): RayPoint {
+  const across = ((line.way === Direction.UP) || (line.way === Direction.DOWN)) ? stopper.x - last.x : stopper.y - last.y
+  const reach = (stopper.radius * stopper.radius) - (across * across)
+
+  if (reach <= 0) {
+    return last
+  }
+
+  const half = Math.sqrt(reach)
+
+  switch (line.way) {
+    case Direction.UP:
+      return {
+        x: last.x,
+        y: stopper.y - half,
+      }
+
+    case Direction.DOWN:
+      return {
+        x: last.x,
+        y: stopper.y + half,
+      }
+
+    case Direction.RIGHT:
+      return {
+        x: stopper.x - half,
+        y: last.y,
+      }
+
+    case Direction.LEFT:
+      return {
+        x: stopper.x + half,
+        y: last.y,
+      }
+  }
+}
+
+/**
  * Where a line of a ray is drawn ending: where the rules end it, but at a
  * light barrier whose band runs across it, at the band's near rim, inside
- * the tile, rather than at the tile's edge.
+ * the tile, rather than at the tile's edge, and at the subject, at its
+ * body's edge (subjectEnd).
  * @param state - The state drawn
  * @param line - The line
  * @param last - The point the rules end it at
+ * @param stopper - Where the subject's body is drawn, or null to end a ray it stops where the rules do
  * @returns The point it is drawn ending at
  */
-function drawnEnd(state: RulesState, line: RayLine, last: RayPoint): RayPoint {
+function drawnEnd(state: RulesState, line: RayLine, last: RayPoint, stopper: RayStopper | null): RayPoint {
+  if ((line.end === 'subject') && (stopper !== null)) {
+    return subjectEnd(line, last, stopper)
+  }
+
   if (line.end !== 'element') {
     return last
   }
@@ -223,9 +286,10 @@ function drawnEnd(state: RulesState, line: RayLine, last: RayPoint): RayPoint {
  * drawn.
  * @param state - The state drawn
  * @param trace - The rays traced on it
+ * @param stopper - Where the subject's body is drawn, or null (the default) to end a ray it stops where the rules do
  * @returns The runs
  */
-export function rayRuns(state: RulesState, trace: RayTrace): readonly RayRun[] {
+export function rayRuns(state: RulesState, trace: RayTrace, stopper: RayStopper | null = null): readonly RayRun[] {
   const runs: RayRun[] = []
 
   for (const line of trace.lines) {
@@ -239,7 +303,7 @@ export function rayRuns(state: RulesState, trace: RayTrace): readonly RayRun[] {
 
       runs.push({
         from: from,
-        to: (i === line.points.length - 1) ? drawnEnd(state, line, corner) : corner,
+        to: (i === line.points.length - 1) ? drawnEnd(state, line, corner, stopper) : corner,
       })
     }
   }

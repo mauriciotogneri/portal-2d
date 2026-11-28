@@ -1,5 +1,5 @@
 import type {ChamberData} from '@/game/chamber_data'
-import {type Action, ACTIONS} from '@/game/rules/action'
+import type {RulesAction} from '@/game/rules/aimed_shot'
 import {formatHash, hashText} from '@/game/text_hash'
 
 /**
@@ -15,28 +15,13 @@ export type ReplayExpectation = {
 /**
  * A run recorded press by press, replayable without a browser, as a recorded
  * solution saved next to its chamber's file. Each press is written as its
- * action ("up", "turnLeft", "blue", "interact").
+ * action ("up", "turnLeft", "blue", "interact"), or an aimed shot as an
+ * object ({"shot": "blue", "x": 3.42, "y": 1.5, "angle": 0.7854}).
  */
 export type ReplayData = {
   readonly chamberHash: string // Hash of the chamber the run was recorded on, as read; editing the chamber changes it, but for its antlines
-  readonly actions: readonly Action[] // The presses, in order
+  readonly actions: readonly RulesAction[] // The presses, in order
   readonly expected: ReplayExpectation // What replaying the presses gives
-}
-
-/**
- * Reads a press of a recorded run.
- * @param text - The press as text, such as "up" or "turnLeft"
- * @returns The action
- * @throws Error when the text names no action
- */
-export function parseReplayAction(text: string): Action {
-  const action = ACTIONS.find((candidate) => candidate === text)
-
-  if (action === undefined) {
-    throw new Error(`Unknown replay action: "${text}"`)
-  }
-
-  return action
 }
 
 /**

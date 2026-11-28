@@ -4,7 +4,7 @@ Reference for the elements a chamber file (`src/chambers/*.json`) can contain, c
 
 | # | Element | Description | Can a link change it? | Do shots pass it? | Can the subject walk onto it? | Quantity |
 |---|---------|-------------|-----------------------|-------------------|-------------------------------|----------|
-| 1 | Subject | Where the subject starts | No | Its own shots leave from its tile | — | 1 |
+| 1 | Subject | Where the subject starts | No | Its own shots leave from its tile, at any angle | — | 1 |
 | 2 | Wall | A solid wall, which takes portals | No | No: a portal opens on it | No (only by crossing a portal on it) | 0..∞ |
 | 3 | Blocked wall | A wall that refuses portals while blocked | Yes, a one-tile one | No: a portal opens on it only while unblocked | No (only by crossing a portal on it) | 0..∞ |
 | 4 | Light barrier | A field of light, on a floor tile only | Yes | Only when off | Only when off | 0..∞ |
@@ -70,7 +70,7 @@ Blocked walls, light barriers, ditches, doors, the exit, fizzlers and lasers eac
 
 ### A step
 
-The player gives one action per step: move or turn (up, down, left or right), shoot blue, shoot orange, or interact. A step carries out every consequence of its action before it ends; nothing waits for a later step.
+The player gives one action per step: move or turn (up, down, left or right), shoot blue or orange (the way the subject faces, or aimed at any angle), or interact. A step carries out every consequence of its action before it ends; nothing waits for a later step.
 
 1. The action runs (see [Actions](#actions)); a move onto slide floor goes on as [a slide](#a-slide), within this step.
 2. A carried box moves onto the subject's tile.
@@ -120,11 +120,14 @@ Loose boxes never slide; a box is put down on slide floor and picked up from it 
 
 #### Shoot blue or orange
 
-While the subject stands in a fizzler that is on, the portal keys do nothing, without a sound. While it carries a box, they are refused: `refused`, with the error sound and no ripple, since no shot leaves (it can't stand in a fizzler that is on while carrying one, so the two never meet). Otherwise the shot leaves the subject's tile the way it faces and goes on tile by tile; the subject's own tile never stops it.
+A shot takes one of two forms. The **straight shot** leaves the middle of the subject's tile the way it faces; the recorded solutions, the behaviour fixtures and the solver play it. The **aimed shot**, which the game plays, leaves from a point of the subject's tile (kept a millionth of a tile inside its edges) at any angle, whatever way the subject faces, but on an arrow tile, where it is the straight shot the way the subject faces, which is the arrow's way (see [links](#links)). A straight shot is an aimed shot from the tile's middle along its row or column: the replay check plays both on every state of every recorded solution and behaviour fixture, and they must give the same step.
+
+While the subject stands in a fizzler that is on, the portal keys do nothing, without a sound. While it carries a box, they are refused: `refused`, with the error sound and no ripple, since no shot leaves (it can't stand in a fizzler that is on while carrying one, so the two never meet). Otherwise the shot goes on in a straight line through the tiles it passes, in order; the subject's own tile never stops it.
 
 - A fizzler or a light barrier that is on, a closed door or the closed exit stops it: a miss. Ditches, lasers, boxes, buttons, switches, arrows, slide floors and rays, in any state, and anything not blocked let it through.
 - Reaching the edge of the chamber is a miss, and so is a shot that passes an open door or the open exit in the chamber's edge, which leaves the chamber.
-- A wall takes the portal on its side facing the subject, unless that side faces a door or the exit, open or closed, or a laser or a light barrier running towards the wall (the wall at the end of its run, behind its end plate; a wall alongside the run still takes one), on or off, or a fizzler whose field spans its gap towards the wall (behind its connector), on or off, or it already holds a portal, of either colour, on that side or on either neighbouring side; a portal on the far side doesn't stop it. A blocked wall takes it the same way only while it isn't blocked; while it is, the shot is a miss. An emitter or a receiver takes none, on any face: the shot is a miss.
+- A shot passing exactly through a corner where four tiles meet (within a billionth of a tile) is a miss when the two tiles on either side of its line there both stop it, since it is squeezed between them, or when the tile across the corner does, since it enters that tile through its corner. Grazing the corner of one tile, it goes on. A straight shot never meets a corner.
+- A wall takes the portal on the side the shot enters (a straight shot's: its side facing the subject), unless that side faces a door or the exit, open or closed, or a laser or a light barrier running towards the wall (the wall at the end of its run, behind its end plate; a wall alongside the run still takes one), on or off, or a fizzler whose field spans its gap towards the wall (behind its connector), on or off, or it already holds a portal, of either colour, on that side or on either neighbouring side; a portal on the far side doesn't stop it. A blocked wall takes it the same way only while it isn't blocked; while it is, the shot is a miss. An emitter or a receiver takes none, on any face: the shot is a miss.
 - A fizzler's field spans its gap from the wall on its left to the one on its right, unless more of what lines a gap (a wall of any kind, a door, the exit, a fizzler, a light barrier or a ditch, in any state; outside the chamber lines none) lies above and below it than left and right, when it spans from top to bottom; it has a connector at each end of its span where no fizzler continues it, so a run of fizzlers side by side across a gap has one at each of its two ends. The wall at the end of its way through, where it has no connector, still takes a portal.
 
 A hit opens the portal of that colour there, closing it wherever it was before: `bluePortalOpened` or `orangePortalOpened`. A miss: `refused` (the game plays the shot sound instead of the error sound, and draws a ripple where the shot stopped, see `docs/sprites.md`).
@@ -208,7 +211,7 @@ An element a link reaches is unblocked exactly while every button, switch and re
 
 A door or the exit reports its event only when it actually opens or closes, an arrow `arrowTurned` only when it actually turns, a blocked wall `blockedWallSwitched` and a ditch `ditchSwitched` only when it actually switches, a light barrier `lightBarrierSwitchedOff` or `lightBarrierSwitchedOn`, a laser `laserSwitchedOff` or `laserSwitchedOn`, a fizzler `fizzlerSwitchedOff` or `fizzlerSwitchedOn` and an emitter `emitterSwitchedOff` or `emitterSwitchedOn` only when it actually switches off or on, a fizzler reports `portalFizzled` only when it closes a portal, and a box `boxSentBack` only when it was away from its start, or `boxAppeared` when it was absent; the others are silent.
 
-An arrow turning under the subject turns the subject with it, to face the arrow's new way, so on an arrow the subject always faces the way it points, and its shots fly that way; a carried box stays carried. It can then leave only that way. An arrow turns only as links act: as a button goes down or comes up, or a receiver lights or goes dark, while the step settles (a chamber's start included), or on a switch's use. A slide judges no button or receiver until it ends, so no arrow turns mid-slide, but a slide's end can turn one, under the subject too.
+An arrow turning under the subject turns the subject with it, to face the arrow's new way, so on an arrow the subject always faces the way it points, and its shots fly that way, aimed ones included; a carried box stays carried. It can then leave only that way. An arrow turns only as links act: as a button goes down or comes up, or a receiver lights or goes dark, while the step settles (a chamber's start included), or on a switch's use. A slide judges no button or receiver until it ends, so no arrow turns mid-slide, but a slide's end can turn one, under the subject too.
 
 A blocked wall is a wall in every state: it stops walking and shots, and joins the walls around it. Blocking it closes a portal already on it, silently. A fizzler switching on closes a portal on a wall side facing its tile, one opened while it was off (a fizzler that is on stops shots and keeps the subject from shooting), which only the wall at the end of its way through can hold, since the walls behind its connectors take none: `portalFizzled`, which the game shows by breaking the portal up, with no sound. A light barrier stands only on a floor tile, which never holds a portal, so switching it on closes none.
 
@@ -267,6 +270,7 @@ Every way these rules differ from the original game's, which this game played un
 20. **`no_portal_behind_fizzler_connector`** — The walls a fizzler's field spans its gap between, behind its connectors, never take a portal, on or off: a shot there misses. The wall at the end of its way through still takes one. The original rules let one open there whenever a shot reached it, and the fizzler had no connectors. Fixture: `no_portal_behind_fizzler_connector`.
 21. **`links_need_every_activator`** — An element a link reaches is unblocked exactly while every button, switch and receiver linking it is active: a button held down, a receiver lit, a switch used, which a switch stays from its first use until the chamber is loaded again (the state keeps a used flag for each switch, after the receivers' lit flags). Every element a link reaches starts blocked, whatever its file says, and the validator rejects a `blocked` on one. The original rules let the latest change win, whatever else held the element, so two buttons on one door undid each other. Fixtures: `door_opens_once_both_buttons_held`, `door_closes_when_either_button_released`, `switch_linked_door_stays_closed_on_button`, `button_release_closes_switch_linked_door`, `button_reopens_door_without_switch`, `receiver_alone_leaves_door_closed`, `box_in_ray_closes_button_held_door`, `box_out_of_ray_reopens_door`, `button_pressed_while_ray_cut_leaves_door_closed`, `switch_used_in_ray_leaves_door_closed`, `leaving_ray_opens_switch_held_door`, `stepping_into_ray_closes_switch_held_door`, `box_stays_with_one_of_two_links_active`, `box_goes_home_once_both_links_active`, `linked_door_starts_closed_whatever_its_file_says`.
 22. **`linked_box_stays_destroyed`** — A destroyed box that a button, switch or receiver links is absent until a link brings it in on its start tile, `boxAppeared`, and sends no box on from there; a box no link reaches goes back to its start. The original rules sent every destroyed box back to its start. Fixtures: `linked_box_breaks_up_in_closing_door`, `linked_box_falls_into_opening_ditch`, `linked_box_carried_into_fizzler_stays_absent`, `linked_box_reached_from_fizzler_destroyed`, `fizzled_linked_box_brought_back`.
+23. **`shots_at_any_angle`** — A shot can be aimed at any angle from a point of the subject's tile, and opens its portal on the side of the wall it enters, with the same checks as a straight shot; one squeezed between two tiles that stop it at a corner, or entering one through its corner, is a miss; from an arrow tile it goes the arrow's way. The original rules shot only the way the subject faced. Fixtures: `aimed_shot_takes_entered_face`, `aimed_portal_refused_beside_portal`, `aimed_shot_grazes_corner`, `aimed_shot_into_wall_corner_misses`, `aimed_shot_squeezed_at_corner_misses`, `aimed_shot_from_arrow_goes_its_way`, `aimed_shot_refused_while_carrying`, `no_aimed_shot_from_inside_fizzler`, `aimed_shots_out_of_open_edge`, `aimed_shots_stopped_until_switched_off`.
 
 ## Interactions
 
@@ -306,18 +310,18 @@ Moving ([move or turn](#move-or-turn)):
 
 Portals ([shoot blue or orange](#shoot-blue-or-orange), [crossing a portal](#crossing-a-portal)):
 
-- **P1:** where a shot opens its portal ([shoot blue or orange](#shoot-blue-or-orange); fixtures: `portal_refused_on_or_beside_a_portal`, `no_portal_beside_door_or_exit`).
+- **P1:** where a shot opens its portal, at any angle, and corners ([shoot blue or orange](#shoot-blue-or-orange); fixtures: `portal_refused_on_or_beside_a_portal`, `no_portal_beside_door_or_exit`, `aimed_shot_takes_entered_face`, `aimed_portal_refused_beside_portal`, `aimed_shot_grazes_corner`, `aimed_shot_into_wall_corner_misses`, `aimed_shot_squeezed_at_corner_misses`).
 - **P2:** a blocked wall takes portals only while unblocked ([shoot blue or orange](#shoot-blue-or-orange), [links](#links); fixture: `blocked_wall_switches_off_and_on`).
-- **P3:** what stops a shot, and shots out of the chamber ([shoot blue or orange](#shoot-blue-or-orange); fixtures: `shots_stopped_until_switched_off`, `shots_over_switch_and_button_out_of_open_edge`, `light_barrier_switches_off_and_on`).
+- **P3:** what stops a shot, and shots out of the chamber ([shoot blue or orange](#shoot-blue-or-orange); fixtures: `shots_stopped_until_switched_off`, `shots_over_switch_and_button_out_of_open_edge`, `light_barrier_switches_off_and_on`, `aimed_shots_stopped_until_switched_off`, `aimed_shots_out_of_open_edge`).
 - **P4:** what shots pass over ([shoot blue or orange](#shoot-blue-or-orange); fixtures: `shots_over_switch_and_button_out_of_open_edge`, `portal_onto_open_ditch_refused`, `portal_onto_active_laser_refused`, `portal_onto_box_refused`, `blocked_wall_switches_off_and_on`, `portal_onto_turned_arrow`, `slide_through_portal_slides_on`).
 - **P5:** crossing a portal, and what refuses it ([crossing a portal](#crossing-a-portal); fixtures: `portal_onto_open_ditch_refused`, `portal_onto_active_laser_refused`, `portal_onto_box_refused`, `portal_onto_turned_back_arrow_refused`, `portal_onto_turned_arrow`, `portal_onto_fizzler_fizzles_at_once`, `portal_onto_slide_floor_slides`, `mirror_box_through_portal`).
 - **P6:** no portal beside a door or the exit ([shoot blue or orange](#shoot-blue-or-orange); fixture: `no_portal_beside_door_or_exit`).
 - **P7:** no portal behind an end plate or a connector ([shoot blue or orange](#shoot-blue-or-orange); fixtures: `no_portal_behind_end_plate`, `no_portal_behind_fizzler_connector`).
-- **P8:** no shot while carrying a box ([shoot blue or orange](#shoot-blue-or-orange); fixture: `no_shot_while_carrying`).
+- **P8:** no shot while carrying a box ([shoot blue or orange](#shoot-blue-or-orange); fixtures: `no_shot_while_carrying`, `aimed_shot_refused_while_carrying`).
 
 Fizzlers ([the fizzler rule](#the-fizzler-rule), [links](#links)):
 
-- **F1:** standing in a field that is on ([the fizzler rule](#the-fizzler-rule), [shoot blue or orange](#shoot-blue-or-orange); fixtures: `fizzler_rule_every_step`, `portal_onto_fizzler_fizzles_at_once`, `box_reached_from_fizzler_destroyed`, `no_shot_from_inside_fizzler`, `linked_box_carried_into_fizzler_stays_absent`, `linked_box_reached_from_fizzler_destroyed`).
+- **F1:** standing in a field that is on ([the fizzler rule](#the-fizzler-rule), [shoot blue or orange](#shoot-blue-or-orange); fixtures: `fizzler_rule_every_step`, `portal_onto_fizzler_fizzles_at_once`, `box_reached_from_fizzler_destroyed`, `no_shot_from_inside_fizzler`, `no_aimed_shot_from_inside_fizzler`, `linked_box_carried_into_fizzler_stays_absent`, `linked_box_reached_from_fizzler_destroyed`).
 - **F2:** a fizzler switching on closes a portal facing it ([links](#links); fixtures: `fizzler_on_closes_portal_facing_it`, `portal_onto_fizzler_fizzles_at_once`).
 - **F3:** nothing remembers a field ([the fizzler rule](#the-fizzler-rule); fixture: `fizzler_rule_every_step`).
 
@@ -357,7 +361,7 @@ Slides ([a slide](#a-slide)):
 Turning arrows ([links](#links)):
 
 - **A1:** a link turns an arrow ([links](#links); fixtures: `arrow_turned_back_when_released`, `arrow_turned_by_switch_for_good`, `receiver_turns_arrow`, `slide_stops_on_turned_arrow`, `slide_stops_before_turned_back_arrow`).
-- **A2:** an arrow turns the subject on it ([links](#links); fixtures: `arrow_turned_back_under_subject`, `arrow_turns_subject_with_it`, `receiver_turns_arrow`).
+- **A2:** an arrow turns the subject on it, and its shots go the arrow's way ([links](#links), [shoot blue or orange](#shoot-blue-or-orange); fixtures: `arrow_turned_back_under_subject`, `arrow_turns_subject_with_it`, `receiver_turns_arrow`, `aimed_shot_from_arrow_goes_its_way`).
 
 Rays, emitters, receivers and mirror boxes ([rays](#rays), [receivers](#receivers)):
 

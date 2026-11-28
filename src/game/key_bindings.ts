@@ -17,14 +17,14 @@ export type MouseButton = 'left' | 'right'
  */
 export type KeyBindings = Readonly<Record<GameKey, BoundKey>>
 
-/** The Default layout, stored as Arrow keys: arrows, A, D and Space */
-export const ARROW_KEY_BINDINGS: KeyBindings = {
-  [GameKey.UP]: 'ArrowUp',
-  [GameKey.DOWN]: 'ArrowDown',
-  [GameKey.LEFT]: 'ArrowLeft',
-  [GameKey.RIGHT]: 'ArrowRight',
-  [GameKey.BLUE]: 'KeyA',
-  [GameKey.ORANGE]: 'KeyD',
+/** The Default layout: W, A, S and D to move, the left and right mouse buttons for the portals, and Space */
+export const DEFAULT_BINDINGS: KeyBindings = {
+  [GameKey.UP]: 'KeyW',
+  [GameKey.DOWN]: 'KeyS',
+  [GameKey.LEFT]: 'KeyA',
+  [GameKey.RIGHT]: 'KeyD',
+  [GameKey.BLUE]: 'MouseLeft',
+  [GameKey.ORANGE]: 'MouseRight',
   [GameKey.INTERACT]: 'Space',
 }
 

@@ -5,6 +5,7 @@ import type {GameEvent} from '@/game/game_event'
 import {pieceNumber} from '@/game/piece_number'
 import {findReturnedBoxes, type ReturnedBox} from '@/game/returned_boxes'
 import type {RulesState} from '@/game/rules/rules_state'
+import type {SubjectPlacement} from '@/game/subject_pose'
 import type {PiecePlacement, TilePainter} from '@/game/tile_painter'
 
 /**
@@ -257,9 +258,10 @@ export class BoxReturns {
    * @param after - The state after the step, or after this part of it
    * @param events - What happened in the step, or in this part of it
    * @param time - Now, in milliseconds on the frame clock
+   * @param carrier - Where the live game has the subject's body and the angle it is drawn at, from which a carried box breaks up, or null (the default) to read them from its tile and facing
    */
-  start(before: RulesState, after: RulesState, events: readonly GameEvent[], time: number): void {
-    const started = findReturnedBoxes(before, after, events).map((box) => ({
+  start(before: RulesState, after: RulesState, events: readonly GameEvent[], time: number, carrier: SubjectPlacement | null = null): void {
+    const started = findReturnedBoxes(before, after, events, carrier).map((box) => ({
       ...box,
       look: lookOf(after.chamber, 'box', box.index),
       seed: this.returnCount++,

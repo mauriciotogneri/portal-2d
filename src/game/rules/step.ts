@@ -1,8 +1,9 @@
 import type {PositionData} from '@/game/chamber_data'
 import type {Direction} from '@/game/direction'
-import {DELTAS} from '@/game/direction'
+import {AIM_ANGLES, DELTAS} from '@/game/direction'
 import {GameEvent} from '@/game/game_event'
 import {Action, MOVEMENTS, type Movement} from '@/game/rules/action'
+import {type AimedShot, isAimedShot, type RulesAction} from '@/game/rules/aimed_shot'
 import {type CompiledChamber, NO_ELEMENT, type PlacedKind} from '@/game/rules/compiled_chamber'
 import type {ElementDefinition, ElementHooks} from '@/game/rules/element_definition'
 import {type BlockableKind, ELEMENT_REGISTRY, isBlockableElement, isOneWayElement, type OneWayKind, type RegisteredElement} from '@/game/rules/element_registry'
@@ -10,6 +11,7 @@ import {destroyBoxesOnBlockedTiles} from '@/game/rules/elements/box'
 import {PORTAL_COLORS, PortalColor} from '@/game/rules/portal_color'
 import {type Arrival, OPPOSITES, portalExit} from '@/game/rules/portals'
 import type {RulesState} from '@/game/rules/rules_state'
+import {type ShotTrace, ShotTraceKind, traceShot} from '@/game/rules/shot_trace'
 import {StateDraft} from '@/game/rules/state_draft'
 import {DIRECTION_INDEX, DIRECTIONS, NO_BOX} from '@/game/rules/state_layout'
 import type {StateReader} from '@/game/rules/state_reader'
@@ -62,6 +64,9 @@ type PlacedElement = Extract<RegisteredElement, {readonly kind: PlacedKind}>
 
 /** The most passes of the repeat loop a step may need; one more is a mistake in the rules, reported as an error */
 export const PASS_CAP = 32
+
+/** How far inside the subject's tile an aimed shot's origin is kept, in tiles, so it never leaves from another tile, an edge or a corner */
+const AIMED_ORIGIN_INSET = 1e-6
 
 /** The event a hit reports for each portal */
 const PORTAL_OPENED: Readonly<Record<PortalColor, GameEvent>> = {
@@ -177,6 +182,18 @@ export function allowsWay(draft: StateReader, x: number, y: number, direction: D
   }
 
   return true
+}
+
+/**
+ * Whether a tile holds a one-way element (an arrow), from which only the way
+ * it points now acts, shots included.
+ * @param draft - The state, a step's draft or a settled state
+ * @param x - Column
+ * @param y - Row
+ * @returns True when it does
+ */
+function isOneWayTile(draft: StateReader, x: number, y: number): boolean {
+  return ONE_WAY.some((kind) => draft.chamber.elementAt(kind, x, y) !== NO_ELEMENT)
 }
 
 /**
@@ -557,19 +574,16 @@ export function shotStop(draft: StateReader, x: number, y: number, direction: Di
 }
 
 /**
- * Shoots a portal the way the subject faces, unless it stands somewhere
- * that keeps it from shooting (a fizzler that is on), which does nothing,
- * silently, or carries a box, which is refused. The shot goes on until
- * something stops it, a miss, or it reaches a wall (shotStop): a wall whose
- * side facing the shot takes portals and has room opens the portal there;
- * any other wall, outside the chamber included, is a miss.
+ * Whether a shot leaves the subject: not while it stands somewhere that keeps
+ * it from shooting (a fizzler that is on), which does nothing, silently, nor
+ * while it carries a box, which is refused.
  * @param draft - The step's state
- * @param color - The portal shot
+ * @returns True when the shot leaves
  */
-function shoot(draft: StateDraft, color: PortalColor): void {
+function shotLeaves(draft: StateDraft): boolean {
   for (const kind of SHOOTING_STOPPED_WHEN_BLOCKED) {
     if (draft.isBlockedAt(kind, draft.subjectX, draft.subjectY)) {
-      return
+      return false
     }
   }
 
@@ -577,22 +591,113 @@ function shoot(draft: StateDraft, color: PortalColor): void {
   if (draft.isCarrying) {
     draft.emit(GameEvent.REFUSED)
 
-    return
+    return false
   }
 
-  const direction = draft.facing
-  const stop = shotStop(draft, draft.subjectX, draft.subjectY, direction)
+  return true
+}
 
+/**
+ * Opens a portal on the side of the tile where a shot stopped, when that
+ * tile is a wall whose side takes portals now and has room for one; any
+ * other stop, outside the chamber included, is a miss.
+ * @param draft - The step's state
+ * @param color - The portal shot
+ * @param x - Column of the tile where the shot stopped
+ * @param y - Row of that tile
+ * @param direction - The way the shot crossed into that tile, which is the wall's far side
+ */
+function openPortalWhereStopped(draft: StateDraft, color: PortalColor, x: number, y: number, direction: Direction): void {
   const side = OPPOSITES[direction]
 
-  if ((!stopsShot(draft, stop.x, stop.y)) && takesPortalsNow(draft, stop.x, stop.y, side) && hasRoomForPortal(draft, stop.x, stop.y, direction)) {
-    draft.openPortal(color, stop.x, stop.y, side)
+  if ((!stopsShot(draft, x, y)) && takesPortalsNow(draft, x, y, side) && hasRoomForPortal(draft, x, y, direction)) {
+    draft.openPortal(color, x, y, side)
     draft.emit(PORTAL_OPENED[color])
 
     return
   }
 
   draft.emit(GameEvent.REFUSED)
+}
+
+/**
+ * Shoots a portal the way the subject faces, when the shot leaves
+ * (shotLeaves). The shot goes on until something stops it, a miss, or it
+ * reaches a wall (shotStop): a wall whose side facing the shot takes portals
+ * and has room opens the portal there; any other wall, outside the chamber
+ * included, is a miss.
+ * @param draft - The step's state
+ * @param color - The portal shot
+ */
+function shoot(draft: StateDraft, color: PortalColor): void {
+  if (!shotLeaves(draft)) {
+    return
+  }
+
+  const stop = shotStop(draft, draft.subjectX, draft.subjectY, draft.facing)
+
+  openPortalWhereStopped(draft, color, stop.x, stop.y, draft.facing)
+}
+
+/**
+ * Where an aimed shot stops (traceShot): it leaves from its point, kept
+ * inside the subject's tile, at its angle, and goes on until a wall or a
+ * tile something on it stops it (stopsShot). From a one-way tile (an arrow)
+ * it is the shot along the way the subject faces, from the tile's middle,
+ * whatever its point and angle. Exported for the live game, which draws the
+ * aim line and where a shot stopped from it, so the drawing always matches
+ * the rules.
+ * @param draft - The state, a step's draft or a settled state
+ * @param x - Where it leaves from, in tiles from the chamber's left edge
+ * @param y - Where it leaves from, in tiles from the chamber's bottom edge
+ * @param angle - The way it goes, in radians counter-clockwise from right
+ * @returns Where it stopped
+ * @throws Error when the point or the angle is not a finite number
+ */
+export function traceAimedShot(draft: StateReader, x: number, y: number, angle: number): ShotTrace {
+  const subjectX = draft.subjectX
+  const subjectY = draft.subjectY
+  const stops = (tileX: number, tileY: number): boolean => stopsShot(draft, tileX, tileY)
+
+  if (isOneWayTile(draft, subjectX, subjectY)) {
+    return traceShot(draft.chamber, stops, subjectX + 0.5, subjectY + 0.5, AIM_ANGLES[draft.facing])
+  }
+
+  const originX = Math.min(Math.max(x, subjectX + AIMED_ORIGIN_INSET), subjectX + 1 - AIMED_ORIGIN_INSET)
+  const originY = Math.min(Math.max(y, subjectY + AIMED_ORIGIN_INSET), subjectY + 1 - AIMED_ORIGIN_INSET)
+
+  return traceShot(draft.chamber, stops, originX, originY, angle)
+}
+
+/**
+ * Shoots a portal at any angle, when the shot leaves (shotLeaves): from a
+ * one-way tile (an arrow), the shot the way the subject faces (shoot), which
+ * an arrow keeps its way. Otherwise the shot goes where traceAimedShot says:
+ * stopped at a corner, it misses; on a wall's face, it opens the portal
+ * there as a shot the way it crossed into that tile would.
+ * @param draft - The step's state
+ * @param aimed - The shot
+ */
+function shootAimed(draft: StateDraft, aimed: AimedShot): void {
+  if (isOneWayTile(draft, draft.subjectX, draft.subjectY)) {
+    shoot(draft, aimed.shot)
+
+    return
+  }
+
+  if (!shotLeaves(draft)) {
+    return
+  }
+
+  const trace = traceAimedShot(draft, aimed.x, aimed.y, aimed.angle)
+
+  if (trace.kind === ShotTraceKind.CORNER) {
+    draft.emit(GameEvent.REFUSED)
+
+    return
+  }
+
+  openPortalWhereStopped(draft, aimed.shot, trace.x, trace.y, trace.travel)
 }
 
 /**
@@ -762,7 +867,13 @@ function interact(draft: StateDraft): void {
  * @param action - The action
  * @returns Each tile a slide entered, NO_PATH when the action didn't slide, or null when a move's slide would loop, which refuses the whole move
  */
-function runAction(draft: StateDraft, action: Action): readonly SlideLeg[] | null {
+function runAction(draft: StateDraft, action: RulesAction): readonly SlideLeg[] | null {
+  if (isAimedShot(action)) {
+    shootAimed(draft, action)
+
+    return NO_PATH
+  }
+
   const movement = MOVEMENTS[action]
 
   if (movement !== null) {
@@ -900,7 +1011,7 @@ function refuseLoop(chamber: CompiledChamber, state: RulesState, direction: Dire
  * @returns The state after the step, what happened, in order, and the tiles a slide entered
  * @throws Error when the state belongs to another chamber, or the step doesn't settle within PASS_CAP passes
  */
-export function step(chamber: CompiledChamber, state: RulesState, action: Action): StepResult {
+export function step(chamber: CompiledChamber, state: RulesState, action: RulesAction): StepResult {
   if (state.completed) {
     if (state.chamber !== chamber) {
       throw new Error('The state belongs to another chamber')
@@ -918,7 +1029,7 @@ export function step(chamber: CompiledChamber, state: RulesState, action: Action
 
   if (path === null) {
     // Only a move slides, so the action is one and its way is never missing
-    return refuseLoop(chamber, state, MOVEMENTS[action]?.direction ?? state.facing)
+    return refuseLoop(chamber, state, (isAimedShot(action) ? null : MOVEMENTS[action]?.direction) ?? state.facing)
   }
 
   draft.carryBoxAlong()

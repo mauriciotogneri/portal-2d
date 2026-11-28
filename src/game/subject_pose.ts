@@ -23,8 +23,19 @@ export type SubjectPose = {
 }
 
 /**
- * Where the subject is drawn in a frame. Part way through a step that moved
- * it one tile, it glides from the tile it left to the tile it reached.
+ * Where the live game has the subject's body, and the angle it is drawn at.
+ */
+export type SubjectPlacement = {
+  readonly x: number // Its middle, in tiles from the chamber's left edge
+  readonly y: number // Its middle, in tiles from the chamber's bottom edge
+  readonly angle: number // The angle it is drawn at, in radians counter-clockwise from right, in the chamber
+}
+
+/**
+ * Where the subject is drawn in a frame. In the live game it stands where
+ * its body is, but along a slide, through a portal and walking out of the
+ * chamber. Without a body, part way through a step that moved it one tile,
+ * it glides from the tile it left to the tile it reached.
  * Through a portal, it slides into the entry portal, shown only inside the
  * tile it left, then out of the exit portal, shown only inside the tile it
  * reached, each half one tile's travel at the pace of a glide. Along a
@@ -36,12 +47,13 @@ export type SubjectPose = {
  * @param state - The state drawn
  * @param transition - The step being drawn, ending on the state drawn, or null
  * @param tileSize - Side of a tile, in canvas pixels
+ * @param placement - Where the live game has its body, or null (the default) to stand it on its tile
  * @returns The pose
  */
-export function subjectPose(state: RulesState, transition: StepTransition | null, tileSize: number): SubjectPose {
+export function subjectPose(state: RulesState, transition: StepTransition | null, tileSize: number, placement: SubjectPlacement | null = null): SubjectPose {
   const rest: SubjectPose = {
-    x: state.subjectX,
-    y: state.subjectY,
+    x: (placement === null) ? state.subjectX : placement.x - 0.5,
+    y: (placement === null) ? state.subjectY : placement.y - 0.5,
     facing: state.facing,
     clip: null,
     portalsAhead: 0,
@@ -63,6 +75,11 @@ export function subjectPose(state: RulesState, transition: StepTransition | null
 
   if (transition.events.includes(GameEvent.CROSSED)) {
     return crossingPose(from, state, transition.progress, tileSize) ?? rest
+  }
+
+  // The body walks on its own
+  if (placement !== null) {
+    return rest
   }
 
   return glidePose(from, state, 1 - transition.progress, tileSize) ?? rest

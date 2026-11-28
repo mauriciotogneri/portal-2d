@@ -69,9 +69,9 @@ const MAX_PARAMETER_LENGTH = 100
 const MAX_EXCEPTIONS = 10
 const MAX_FAILED_ASSETS = 10
 
-/** Each layout of controls as reports name it: Arrow keys is the one shown as Default. */
+/** Each layout of controls as reports name it */
 const LAYOUT_NAMES: Readonly<Record<ControlLayout, string>> = {
-  'arrow-keys': 'default',
+  'default': 'default',
   'custom': 'custom',
 }
 

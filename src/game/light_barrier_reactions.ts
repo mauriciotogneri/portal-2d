@@ -36,8 +36,9 @@ const REACTION_MILLISECONDS = 700
  * two and runs off both ways along it (LightBarrierBand draws it). The rules
  * report a refused shot but nothing for a walk into a band, so a walk-in is
  * read from the step: a move that left the subject on its tile, facing a
- * light barrier that is on. A band still reacting takes no new reaction, so
- * a key held into it pulses rather than staying lit. Purely visual: nothing
+ * light barrier that is on; in the live game, from the subject's body
+ * pressing into one. A band still reacting takes no new reaction, so a key
+ * held into it pulses rather than staying lit. Purely visual: nothing
  * waits for it.
  */
 export class LightBarrierReactions {
@@ -75,6 +76,18 @@ export class LightBarrierReactions {
     }
 
     this.startAt(after, x + DELTAS[direction].dx, y + DELTAS[direction].dy, time)
+  }
+
+  /**
+   * Starts a reaction where the subject's body pressed into a light barrier
+   * that is on, on a tile beside its own.
+   * @param state - The state now
+   * @param x - Column of the tile pressed into
+   * @param y - Row of the tile pressed into
+   * @param time - When, in milliseconds on the frame clock
+   */
+  startPressedInto(state: RulesState, x: number, y: number, time: number): void {
+    this.startAt(state, x, y, time)
   }
 
   /**

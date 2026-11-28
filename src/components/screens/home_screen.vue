@@ -180,7 +180,7 @@ const RESET_PROGRESS_INDEX = settings.length + 1 // Reset progress comes last
 // The rows of the Controls column
 const LAYOUTS: LayoutEntry[] = [
   {
-    layout: ControlLayout.ARROW_KEYS,
+    layout: ControlLayout.DEFAULT,
     label: 'Default',
   },
   {

@@ -1,6 +1,7 @@
 import type {ChamberData} from '@/game/chamber_data'
 import type {ReplayExpectation} from '@/game/replay_data'
-import type {Action} from '@/game/rules/action'
+import type {AimedShot, RulesAction} from '@/game/rules/aimed_shot'
+import type {PortalColor} from '@/game/rules/portal_color'
 import absentBoxButton from '@scripts/fixtures/absent_box_button.json'
 import absentBoxInRay from '@scripts/fixtures/absent_box_in_ray.json'
 import absentBoxInTheWay from '@scripts/fixtures/absent_box_in_the_way.json'
@@ -8,6 +9,9 @@ import absentBoxLinkedButton from '@scripts/fixtures/absent_box_linked_button.js
 import absentBoxOntoBox from '@scripts/fixtures/absent_box_onto_box.json'
 import absentBoxReceiver from '@scripts/fixtures/absent_box_receiver.json'
 import absentBoxUnderSubject from '@scripts/fixtures/absent_box_under_subject.json'
+import aimedShotArrow from '@scripts/fixtures/aimed_shot_arrow.json'
+import aimedShotPillar from '@scripts/fixtures/aimed_shot_pillar.json'
+import aimedShotSqueeze from '@scripts/fixtures/aimed_shot_squeeze.json'
 import arrowBox from '@scripts/fixtures/arrow_box.json'
 import arrowButton from '@scripts/fixtures/arrow_button.json'
 import arrowPortal from '@scripts/fixtures/arrow_portal.json'
@@ -81,14 +85,15 @@ import wallTiles from '@scripts/fixtures/wall_tiles.json'
 
 // Short replays on tiny chambers (the JSON files next to this one): each pins
 // how the rules play a change from the original rules (docs/elements.md,
-// "Changes from the original rules") or an element the original game didn't
-// have (the light barrier, the blocked wall that a link switches, the slide
-// floor, the arrow that a link turns, the emitter, its ray, the receiver
-// and the mirror box, and the box that starts absent until a link brings it
-// in), or a rule of the interaction table (docs/elements.md,
-// "Interactions") that no other fixture plays, so that every rule there names
-// the fixtures that play it. The replay check runs them. The chambers are read
-// without the layout checks, so the one open at the edge still plays
+// "Changes from the original rules", shots at any angle among them) or an
+// element the original game didn't have (the light barrier, the blocked wall
+// that a link switches, the slide floor, the arrow that a link turns, the
+// emitter, its ray, the receiver and the mirror box, and the box that starts
+// absent until a link brings it in), or a rule of the interaction table
+// (docs/elements.md, "Interactions") that no other fixture plays, so that
+// every rule there names the fixtures that play it. The replay check runs
+// them. The chambers are read without the layout checks, so the one open at
+// the edge still plays
 
 /**
  * A replay pinning one behaviour of the rules.
@@ -97,8 +102,27 @@ export type Fixture = {
   readonly name: string // Short id, used in the replay check's report
   readonly behaviour: string // The behaviour it pins, in plain words
   readonly chamber: ChamberData // The tiny chamber it is played on
-  readonly actions: readonly Action[] // The presses, in order
+  readonly actions: readonly RulesAction[] // The presses, in order
   readonly expected: ReplayExpectation // What replaying the presses gives
+}
+
+/**
+ * A shot aimed from a point towards another, as the fixtures write aimed
+ * shots, so each one's target reads at a glance.
+ * @param shot - The portal shot
+ * @param x - Where it leaves from, in tiles from the chamber's left edge
+ * @param y - Where it leaves from, in tiles from the chamber's bottom edge
+ * @param towardsX - A point it passes through, in tiles from the left edge
+ * @param towardsY - That point, in tiles from the bottom edge
+ * @returns The aimed shot
+ */
+function aimedAt(shot: PortalColor, x: number, y: number, towardsX: number, towardsY: number): AimedShot {
+  return {
+    shot: shot,
+    x: x,
+    y: y,
+    angle: Math.atan2(towardsY - y, towardsX - x),
+  }
 }
 
 /** Every behaviour fixture, run by the replay check */
@@ -1935,6 +1959,161 @@ export const FIXTURES: readonly Fixture[] = [
       moves: 2,
       portals: 1,
       finalHash: '847073fb',
+    },
+  },
+  {
+    name: 'aimed_shot_takes_entered_face',
+    behaviour: 'A shot at an angle opens its portal on the face of the wall tile it enters, even when it travels mostly along the other axis.',
+    chamber: aimedShotPillar,
+    actions: [
+      aimedAt('blue', 1.5, 1.5, 4.5, 4),
+      aimedAt('orange', 1.5, 1.5, 3, 1.2),
+    ],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 2,
+      finalHash: '4c15d365',
+    },
+  },
+  {
+    name: 'aimed_portal_refused_beside_portal',
+    behaviour: 'A shot at an angle onto the side of a wall tile beside the side holding the other portal is refused, as a straight shot is.',
+    chamber: aimedShotPillar,
+    actions: [
+      aimedAt('blue', 1.5, 1.5, 3, 1.2),
+      'up',
+      'right',
+      aimedAt('orange', 2.5, 2.5, 3.5, 2),
+    ],
+    expected: {
+      completed: false,
+      moves: 2,
+      portals: 1,
+      finalHash: '38f05366',
+    },
+  },
+  {
+    name: 'aimed_shot_grazes_corner',
+    behaviour: 'A shot passing exactly through the corner of one wall tile, with no wall across the corner, goes on to the wall beyond.',
+    chamber: aimedShotPillar,
+    actions: [aimedAt('blue', 1.5, 1.5, 3, 2)],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 1,
+      finalHash: '68eec2ab',
+    },
+  },
+  {
+    name: 'aimed_shot_into_wall_corner_misses',
+    behaviour: 'A shot entering a wall tile exactly through its corner is a miss.',
+    chamber: aimedShotPillar,
+    actions: [aimedAt('blue', 1.5, 1.5, 2.5, 2.5)],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 0,
+      finalHash: '30504ab8',
+    },
+  },
+  {
+    name: 'aimed_shot_squeezed_at_corner_misses',
+    behaviour: 'A shot passing exactly between two wall tiles that touch at a corner is a miss, though the tile across the corner is open floor.',
+    chamber: aimedShotSqueeze,
+    actions: [aimedAt('blue', 1.5, 1.75, 2, 2)],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 0,
+      finalHash: '398e540f',
+    },
+  },
+  {
+    name: 'aimed_shot_from_arrow_goes_its_way',
+    behaviour: 'On an arrow, a shot aimed any way goes the arrow\'s way; off it, the same aim shoots where it points.',
+    chamber: aimedShotArrow,
+    actions: [
+      'right',
+      aimedAt('blue', 2.5, 1.5, 2.5, 2.5),
+      'right',
+      aimedAt('orange', 3.5, 1.5, 3.5, 2.5),
+    ],
+    expected: {
+      completed: false,
+      moves: 2,
+      portals: 2,
+      finalHash: 'eac21515',
+    },
+  },
+  {
+    name: 'aimed_shot_refused_while_carrying',
+    behaviour: 'A shot at an angle while carrying a box is refused and opens no portal; with the box put down, the same shot opens it.',
+    chamber: buttonBehindCarriedBox,
+    actions: [
+      'interact',
+      aimedAt('blue', 2.5, 1.5, 3.2, 2),
+      'interact',
+      aimedAt('blue', 2.5, 1.5, 3.2, 2),
+    ],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 1,
+      finalHash: 'c229502d',
+    },
+  },
+  {
+    name: 'no_aimed_shot_from_inside_fizzler',
+    behaviour: 'Inside a fizzler that is on, a shot at an angle does nothing; a step out of it, the next one opens its portal.',
+    chamber: fizzlerShot,
+    actions: [
+      'right',
+      aimedAt('blue', 2.5, 1.5, 3.5, 2),
+      'right',
+      aimedAt('orange', 3.5, 1.5, 3.2, 2),
+    ],
+    expected: {
+      completed: false,
+      moves: 2,
+      portals: 1,
+      finalHash: '2c9368c4',
+    },
+  },
+  {
+    name: 'aimed_shots_out_of_open_edge',
+    behaviour: 'Shots at an angle out through an open door or the open exit on the chamber\'s edge leave it and open nothing; one at a wall opens its portal.',
+    chamber: shotEdges,
+    actions: [
+      aimedAt('blue', 1.5, 1.5, 1.3, 0),
+      aimedAt('blue', 1.5, 1.5, 1.7, 3),
+      aimedAt('orange', 1.5, 1.5, 2.5, 2),
+    ],
+    expected: {
+      completed: false,
+      moves: 0,
+      portals: 1,
+      finalHash: '58b2f7c7',
+    },
+  },
+  {
+    name: 'aimed_shots_stopped_until_switched_off',
+    behaviour: 'A closed door and a fizzler that is on stop shots at an angle; once a switch opens the door and switches the fizzler off, the same shots pass them to the walls beyond.',
+    chamber: shotStoppers,
+    actions: [
+      aimedAt('blue', 3.5, 3.5, 3.8, 4.5),
+      aimedAt('orange', 3.5, 3.5, 2, 3.7),
+      'down',
+      'interact',
+      'up',
+      aimedAt('blue', 3.5, 3.5, 3.8, 4.5),
+      aimedAt('orange', 3.5, 3.5, 2, 3.7),
+    ],
+    expected: {
+      completed: false,
+      moves: 2,
+      portals: 2,
+      finalHash: 'fb67f2e1',
     },
   },
   {

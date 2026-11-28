@@ -1,9 +1,12 @@
 import {existsSync, readFileSync} from 'node:fs'
 import type {ChamberData} from '@/game/chamber_data'
+import {AIM_ANGLES} from '@/game/direction'
 import {getChamberHash, type ReplayExpectation} from '@/game/replay_data'
 import {ACTIONS} from '@/game/rules/action'
+import {type AimedShot, describeAction, type RulesAction} from '@/game/rules/aimed_shot'
 import {CompiledChamber} from '@/game/rules/compiled_chamber'
 import {loadChamber, readChamber} from '@/game/rules/load_chamber'
+import {PORTAL_COLORS} from '@/game/rules/portal_color'
 import {runRulesReplay, type RulesReplayResult} from '@/game/rules/replay_runner'
 import type {RulesState} from '@/game/rules/rules_state'
 import {step} from '@/game/rules/step'
@@ -14,12 +17,45 @@ import {SOLVER_FIXTURES, type SolverFixture, type SolverRoute} from '@scripts/so
 
 // Replays every chamber's recorded solution (src/chambers/chamber_N.solution.json)
 // with the rules under Node, compares it with what it must give, and checks
-// that no action changes the completed chamber; then every behaviour fixture
-// (scripts/fixtures/fixtures.ts), compared with how it must end; then both
+// that no action, aimed shots included, changes the completed chamber; then
+// every behaviour fixture (scripts/fixtures/fixtures.ts), compared with how
+// it must end; on every state a solution or a fixture passes through, a shot
+// aimed from the middle of the subject's tile along the way it faces must
+// play exactly like the shot that way; then both
 // hand-written routes of every solver fixture (scripts/solver_fixtures/),
 // each on its chamber loaded with the layout checks, compared with how it
 // must end. Prints one line per chamber and per fixture, and exits non-zero
 // on any failure
+
+/** The angles an aimed shot is tried at on a completed chamber: the eight ways round, and two between them */
+const COMPLETED_SHOT_ANGLES: readonly number[] = [
+  0,
+  Math.PI / 4,
+  Math.PI / 2,
+  3 * Math.PI / 4,
+  Math.PI,
+  -3 * Math.PI / 4,
+  -Math.PI / 2,
+  -Math.PI / 4,
+  0.3,
+  2,
+]
+
+/**
+ * A shot of one colour aimed from the middle of the subject's tile.
+ * @param state - The state
+ * @param color - The portal shot
+ * @param angle - The way it goes, in radians counter-clockwise from right
+ * @returns The aimed shot
+ */
+function aimedFromMiddle(state: RulesState, color: AimedShot['shot'], angle: number): AimedShot {
+  return {
+    shot: color,
+    x: state.subjectX + 0.5,
+    y: state.subjectY + 0.5,
+    angle: angle,
+  }
+}
 
 /**
  * Compares a replay's result with what it must give.
@@ -64,19 +100,49 @@ function toExpectation(result: RulesReplayResult): ReplayExpectation {
 }
 
 /**
- * Checks that no action changes a completed chamber or reports anything.
+ * Checks that no action, nor a shot aimed from the subject's tile at any of
+ * a few angles, changes a completed chamber or reports anything.
  * @param chamber - The chamber
  * @param state - A completed state of it
  * @throws Error naming the first action that did
  */
 function checkCompletedIsFinal(chamber: CompiledChamber, state: RulesState): void {
-  for (const action of ACTIONS) {
+  const actions: RulesAction[] = [...ACTIONS]
+
+  for (const color of PORTAL_COLORS) {
+    for (const angle of COMPLETED_SHOT_ANGLES) {
+      actions.push(aimedFromMiddle(state, color, angle))
+    }
+  }
+
+  for (const action of actions) {
     const result = step(chamber, state, action)
 
     if ((result.state !== state) || (result.events.length > 0)) {
-      throw new Error(`${action} after completion changed the state or reported [${result.events.join(', ')}]`)
+      throw new Error(`${describeAction(action)} after completion changed the state or reported [${result.events.join(', ')}]`)
     }
   }
+}
+
+/**
+ * Checks that on every state of a replay, a shot of each colour aimed from
+ * the middle of the subject's tile along the way it faces gives the same
+ * state and events as the shot that way.
+ * @param chamber - The chamber
+ * @param states - The replay's states, its settled start first
+ * @throws Error naming the first state and colour where they differ
+ */
+function checkAimedShotsMatch(chamber: CompiledChamber, states: readonly RulesState[]): void {
+  states.forEach((state, index) => {
+    for (const color of PORTAL_COLORS) {
+      const straight = step(chamber, state, color)
+      const aimed = step(chamber, state, aimedFromMiddle(state, color, AIM_ANGLES[state.facing]))
+
+      if ((aimed.state.hash !== straight.state.hash) || (aimed.events.join() !== straight.events.join())) {
+        throw new Error(`after press ${index}, the ${color} shot aimed along the subject's facing gave [${aimed.events.join(', ')}], hash ${aimed.state.hash}, not [${straight.events.join(', ')}], hash ${straight.state.hash}`)
+      }
+    }
+  })
 }
 
 /**
@@ -121,6 +187,7 @@ function checkSolution(file: string, data: ChamberData): string {
   }
 
   checkCompletedIsFinal(chamber, result.finalState)
+  checkAimedShotsMatch(chamber, result.states)
 
   return `${result.moves} moves, ${result.portals} portals`
 }
@@ -137,12 +204,15 @@ function checkFixture(fixture: Fixture): void {
     throw new Error(`the rules can't read the chamber: ${read.problems.map((problem) => problem.message).join('; ')}`)
   }
 
-  const result = runRulesReplay(new CompiledChamber(read.chamber), fixture.actions)
+  const chamber = new CompiledChamber(read.chamber)
+  const result = runRulesReplay(chamber, fixture.actions)
   const differences = describeDifferences(toExpectation(result), fixture.expected)
 
   if (differences !== null) {
     throw new Error(differences)
   }
+
+  checkAimedShotsMatch(chamber, result.states)
 }
 
 /**

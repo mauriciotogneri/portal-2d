@@ -1,22 +1,22 @@
 /**
- * The player's controls: the fixed Default layout (stored as Arrow keys), or
+ * The player's controls: the fixed Default layout, or
  * their own Custom keys, kept apart so picking Default never loses them.
  * Stored in localStorage and handed to the game when a chamber opens. One key
  * per game key, never shared; whatever can't be read falls back to Default.
  */
 import {computed, shallowRef} from 'vue'
 import {GameKey} from '@/game/game_key'
-import {ARROW_KEY_BINDINGS, type BoundKey, canBindKey, type KeyBindings} from '@/game/key_bindings'
+import {type BoundKey, canBindKey, DEFAULT_BINDINGS, type KeyBindings} from '@/game/key_bindings'
 import {trackControlsChange} from '@/services/analytics'
 
-/** A set of controls the player can pick: Arrow keys is the one shown as Default. */
-export type ControlLayout = 'arrow-keys' | 'custom'
+/** A set of controls the player can pick. */
+export type ControlLayout = 'default' | 'custom'
 
 /**
  * Named values of ControlLayout.
  */
 export const ControlLayout = {
-  ARROW_KEYS: 'arrow-keys',
+  DEFAULT: 'default',
   CUSTOM: 'custom',
 } as const
 
@@ -33,7 +33,7 @@ const GAME_KEYS: readonly GameKey[] = Object.values(GameKey)
 
 /** The keys of each fixed layout */
 const FIXED_LAYOUTS: Readonly<Record<Exclude<ControlLayout, typeof ControlLayout.CUSTOM>, KeyBindings>> = {
-  [ControlLayout.ARROW_KEYS]: ARROW_KEY_BINDINGS,
+  [ControlLayout.DEFAULT]: DEFAULT_BINDINGS,
 }
 
 /** Every layout, for reading a stored one */
@@ -41,7 +41,7 @@ const LAYOUTS: ReadonlySet<string> = new Set(Object.values(ControlLayout))
 
 /** What applies when nothing usable is stored */
 const DEFAULT_CONTROLS: StoredControls = {
-  layout: ControlLayout.ARROW_KEYS,
+  layout: ControlLayout.DEFAULT,
   custom: null,
 }
 
@@ -74,10 +74,10 @@ function isControlLayout(value: unknown): value is ControlLayout {
  */
 function readBindings(value: unknown): KeyBindings {
   if (!isPlainObject(value)) {
-    return ARROW_KEY_BINDINGS
+    return DEFAULT_BINDINGS
   }
   const bindings: Record<GameKey, BoundKey> = {
-    ...ARROW_KEY_BINDINGS,
+    ...DEFAULT_BINDINGS,
   }
   const kept = new Set<GameKey>()
   const usedKeys = new Set<BoundKey>()
@@ -93,9 +93,9 @@ function readBindings(value: unknown): KeyBindings {
     if (kept.has(gameKey)) {
       continue
     }
-    const fallback = ARROW_KEY_BINDINGS[gameKey]
+    const fallback = DEFAULT_BINDINGS[gameKey]
     if (usedKeys.has(fallback)) {
-      return ARROW_KEY_BINDINGS
+      return DEFAULT_BINDINGS
     }
     usedKeys.add(fallback)
   }
@@ -103,8 +103,9 @@ function readBindings(value: unknown): KeyBindings {
 }
 
 /**
- * Reads the stored controls. A layout that isn't one, or Custom with no keys
- * stored, falls back to Default.
+ * Reads the stored controls. A layout that isn't one (the retired
+ * `arrow-keys` and `wasd-mouse` among them), or Custom with no keys stored,
+ * falls back to Default.
  * @param value - The parsed stored value
  * @returns The controls
  */
@@ -113,9 +114,9 @@ function readControls(value: unknown): StoredControls {
     return DEFAULT_CONTROLS
   }
   const custom = (value.custom === undefined || value.custom === null) ? null : readBindings(value.custom)
-  const layout = isControlLayout(value.layout) ? value.layout : ControlLayout.ARROW_KEYS
+  const layout = isControlLayout(value.layout) ? value.layout : ControlLayout.DEFAULT
   return {
-    layout: (layout === ControlLayout.CUSTOM && custom === null) ? ControlLayout.ARROW_KEYS : layout,
+    layout: (layout === ControlLayout.CUSTOM && custom === null) ? ControlLayout.DEFAULT : layout,
     custom: custom,
   }
 }
@@ -157,7 +158,7 @@ function saveControls(controls: StoredControls): void {
  */
 function bindingsOf(controls: StoredControls): KeyBindings {
   if (controls.layout === ControlLayout.CUSTOM) {
-    return controls.custom ?? ARROW_KEY_BINDINGS
+    return controls.custom ?? DEFAULT_BINDINGS
   }
   return FIXED_LAYOUTS[controls.layout]
 }

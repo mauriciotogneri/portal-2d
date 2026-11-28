@@ -1,4 +1,4 @@
-import type {Action} from '@/game/rules/action'
+import type {RulesAction} from '@/game/rules/aimed_shot'
 import type {CompiledChamber} from '@/game/rules/compiled_chamber'
 import type {RulesState} from '@/game/rules/rules_state'
 import {startChamber, step} from '@/game/rules/step'
@@ -25,7 +25,7 @@ export type RulesReplayResult = {
  * @returns What the replay gave
  * @throws Error when the rules throw
  */
-export function runRulesReplay(chamber: CompiledChamber, steps: readonly Action[]): RulesReplayResult {
+export function runRulesReplay(chamber: CompiledChamber, steps: readonly RulesAction[]): RulesReplayResult {
   const start = startChamber(chamber)
   const states: RulesState[] = [start.state]
   const stepHashes: string[] = []

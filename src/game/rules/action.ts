@@ -1,6 +1,4 @@
 import {Direction} from '@/game/direction'
-import type {FrameInput} from '@/game/frame_input'
-import {GameKey} from '@/game/game_key'
 
 /**
  * One thing the player does in a step of the rules: a move or a turn
@@ -96,43 +94,4 @@ export const MOVEMENTS: Readonly<Record<Action, Movement | null>> = {
   [Action.BLUE]: null,
   [Action.ORANGE]: null,
   [Action.INTERACT]: null,
-}
-
-/**
- * The action a key press stands for: a move key turns the subject that way,
- * and moves it when it already faces that way. Only recorded runs, the
- * behaviour fixtures and the solver play the plain moves, which turn and step
- * at once.
- * @param input - A press, as the game's input queues it
- * @returns The action, or null when the press doesn't hold exactly one key
- */
-export function actionOfPress(input: FrameInput): Action | null {
-  const key = input.keys[0]
-
-  if ((input.keys.length !== 1) || (key === undefined)) {
-    return null
-  }
-
-  switch (key) {
-    case GameKey.UP:
-      return Action.TURN_UP
-
-    case GameKey.DOWN:
-      return Action.TURN_DOWN
-
-    case GameKey.LEFT:
-      return Action.TURN_LEFT
-
-    case GameKey.RIGHT:
-      return Action.TURN_RIGHT
-
-    case GameKey.BLUE:
-      return Action.BLUE
-
-    case GameKey.ORANGE:
-      return Action.ORANGE
-
-    case GameKey.INTERACT:
-      return Action.INTERACT
-  }
 }

@@ -6,6 +6,7 @@ import {CARRIED_BOX_AHEAD, CARRIED_BOX_SIZE} from '@/game/renderer'
 import type {RulesState} from '@/game/rules/rules_state'
 import {NO_BOX} from '@/game/rules/state_layout'
 import type {SpriteName} from '@/game/sprite_set'
+import type {SubjectPlacement} from '@/game/subject_pose'
 
 /**
  * A box a step sent back to its start tile, or destroyed and left absent:
@@ -55,13 +56,17 @@ export function sendsBoxesHome(events: readonly GameEvent[]): boolean {
  * subject faced as the step began. A box a link reaches goes nowhere when
  * destroyed: it breaks up where it was and is gone, the one picked up from
  * inside an active fizzler from where it lay, and one that fell into a
- * ditch is left to its fall.
+ * ditch is left to its fall. The carried box goes from where it was drawn
+ * in the subject's hands: ahead of the subject's body at the angle it is
+ * drawn at, in the live game, or else ahead of its tile's middle the way it
+ * faces.
  * @param before - The state before the step, or before this part of it
  * @param after - The state after the step, or after this part of it
  * @param events - What happened in the step, or in this part of it
+ * @param carrier - Where the live game has the subject's body and the angle it is drawn at, or null (the default) to read them from its tile and facing
  * @returns Each box that went home, empty when none did
  */
-export function findReturnedBoxes(before: RulesState, after: RulesState, events: readonly GameEvent[]): ReturnedBox[] {
+export function findReturnedBoxes(before: RulesState, after: RulesState, events: readonly GameEvent[], carrier: SubjectPlacement | null = null): ReturnedBox[] {
   if (!sendsBoxesHome(events)) {
     return []
   }
@@ -99,14 +104,17 @@ export function findReturnedBoxes(before: RulesState, after: RulesState, events:
       })
     } else if ((index === carried) && (after.carriedBox === NO_BOX) && events.includes(GameEvent.CARRIED_BOX_DESTROYED)) {
       // Where it was carried at the step's end
-      const ahead = DELTAS[after.facing]
+      const middleX = (carrier === null) ? after.subjectX + 0.5 : carrier.x
+      const middleY = (carrier === null) ? after.subjectY + 0.5 : carrier.y
+      const aheadX = (carrier === null) ? DELTAS[after.facing].dx : Math.cos(carrier.angle)
+      const aheadY = (carrier === null) ? DELTAS[after.facing].dy : Math.sin(carrier.angle)
 
       returned.push({
         ...box,
         gathers: false,
         vanishes: after.isBoxAbsent(index),
-        fromX: after.subjectX + 0.5 + (ahead.dx * CARRIED_BOX_AHEAD),
-        fromY: after.subjectY + 0.5 + (ahead.dy * CARRIED_BOX_AHEAD),
+        fromX: middleX + (aheadX * CARRIED_BOX_AHEAD),
+        fromY: middleY + (aheadY * CARRIED_BOX_AHEAD),
         fromSize: CARRIED_BOX_SIZE,
         fromWay: boxSprite(chamber, index, after.facing).way,
       })

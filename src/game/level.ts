@@ -1,7 +1,7 @@
 import {BoxFall} from '@/game/box_fall'
 import {BoxReturns} from '@/game/box_returns'
 import type {ChamberData} from '@/game/chamber_data'
-import type {Direction} from '@/game/direction'
+import {AIM_ANGLES, DELTAS, Direction} from '@/game/direction'
 import {ElementTransitions} from '@/game/element_transitions'
 import {exitOuterSide} from '@/game/exit_shadow'
 import {FizzleParticles} from '@/game/fizzle_particles'
@@ -9,28 +9,33 @@ import {FizzlerFlashes} from '@/game/fizzler_flashes'
 import {FizzlerSplashes} from '@/game/fizzler_splashes'
 import {GameEvent} from '@/game/game_event'
 import {GameKey} from '@/game/game_key'
-import type {FrameInput} from '@/game/frame_input'
 import type {FrameStats} from '@/game/frame_stats'
 import {Input} from '@/game/input'
 import type {KeyBindings} from '@/game/key_bindings'
 import {LightBarrierReactions} from '@/game/light_barrier_reactions'
 import {findMirrorBounces, type MirrorBounces, NO_MIRROR_BOUNCES} from '@/game/mirror_bounces'
 import {MissRipple} from '@/game/miss_ripple'
+import {PointerAim} from '@/game/pointer_aim'
 import {PortalOpenings} from '@/game/portal_openings'
 import {PortalParticles} from '@/game/portal_particles'
 import {sendsBoxesHome} from '@/game/returned_boxes'
 import {getChamberHash, type ReplayData} from '@/game/replay_data'
 import {hasAmbientLife, Renderer} from '@/game/renderer'
-import {Action, actionOfPress, MOVEMENTS} from '@/game/rules/action'
+import {Action, MOVEMENTS} from '@/game/rules/action'
+import {describeAction, isAimedShot, type RulesAction} from '@/game/rules/aimed_shot'
 import {CompiledChamber} from '@/game/rules/compiled_chamber'
 import {loadChamber} from '@/game/rules/load_chamber'
 import type {PortalColor} from '@/game/rules/portal_color'
 import {runRulesReplay} from '@/game/rules/replay_runner'
 import type {RulesState} from '@/game/rules/rules_state'
-import {startChamber, step, type StepResult} from '@/game/rules/step'
+import {DIRECTIONS} from '@/game/rules/state_layout'
+import {allowsWay, startChamber, step, type StepResult} from '@/game/rules/step'
 import {Sound} from '@/game/sound'
 import {legReach, StepAnimation} from '@/game/step_animation'
-import {SubjectTurn} from '@/game/subject_turn'
+import {SubjectAim} from '@/game/subject_aim'
+import {SubjectBody} from '@/game/subject_body'
+import type {SubjectPlacement} from '@/game/subject_pose'
+import {PLAIN_MOVES, TileGate} from '@/game/tile_gate'
 
 /**
  * Something a slide being drawn still has waiting: what happened on one of
@@ -57,12 +62,17 @@ export type StepReport = {
 }
 
 /**
- * Plays a chamber on a canvas, driven by the chamber screen. Each frame takes
- * the oldest waiting key press, if any, as one action, fully resolved by the
- * rules' step, plays a sound for each thing that happened and redraws when
- * the state changed. A step that changes the state is then drawn over a few
- * frames, redrawn every frame until it ends, paused or not; the next press
- * ends it at once. When a step fizzles, the portals it took break up over a
+ * Plays a chamber on a canvas, driven by the chamber screen. The subject's
+ * body walks freely while the move keys are held, aimed where the pointer
+ * is; each frame it moves, and each tile edge its middle crosses is played
+ * as the rules' plain move that way, then a turn when the facing the rules
+ * keep no longer matches the aim, snapped to four ways. Then the frame takes
+ * the oldest waiting press, a shot or interact, if any, as one action, fully
+ * resolved by the rules' step. Each step plays a sound for each thing that
+ * happened, and a frame redraws when the state changed, the body moved or
+ * the aim turned. A step that slides is then drawn over a few frames,
+ * redrawn every frame until it ends, paused or not; the next press ends it
+ * at once. When a step fizzles, the portals it took break up over a
  * few frames; a box a step sends back to its start, destroyed or sent home by
  * a link, comes apart where it was and flies there, while one on a ditch
  * that opens falls out of sight and gathers at its start;
@@ -99,6 +109,24 @@ export class Level {
     GameKey.ORANGE,
     GameKey.INTERACT,
   ]
+
+  /** The longest time one frame moves the body for, in seconds, so a frame coming late never moves it far */
+  private static readonly LONGEST_MOVE_SECONDS = 0.05
+
+  /** The turn action to each way */
+  private static readonly TURNS: Readonly<Record<Direction, Action>> = {
+    [Direction.UP]: Action.TURN_UP,
+    [Direction.DOWN]: Action.TURN_DOWN,
+    [Direction.LEFT]: Action.TURN_LEFT,
+    [Direction.RIGHT]: Action.TURN_RIGHT,
+  }
+
+  /** The action each press stands for: the portals and interact, since the move keys are held rather than pressed */
+  private static readonly PRESS_ACTIONS: Readonly<Partial<Record<GameKey, Action>>> = {
+    [GameKey.BLUE]: Action.BLUE,
+    [GameKey.ORANGE]: Action.ORANGE,
+    [GameKey.INTERACT]: Action.INTERACT,
+  }
 
   /** Fewest tiles the chamber is sized for each way, so a small chamber's tiles are no larger than a chamber this size would get */
   private static readonly MINIMUM_TILES = 16
@@ -152,7 +180,7 @@ export class Level {
   private chamber: CompiledChamber | null = null // The chamber being played, null before the first load
   private chamberHash = '' // Hash of the chamber being played, as replays name it
   private state: RulesState | null = null // The state now, null before the first load
-  private replaySteps: Action[] = [] // Every press acted on since the last load, in order
+  private replaySteps: RulesAction[] = [] // Every action stepped since the last load, in order
   private stepHashes: string[] = [] // Hash of the state right after each logged press
   private clockStarted = false // Whether a game key has been pressed since the last load
   private elapsedSeconds = 0 // Play time since the clock started; only grows while unpaused
@@ -172,7 +200,12 @@ export class Level {
   private readonly flashes = new FizzlerFlashes() // Where the subject was caught in a fizzler's field lately, flashing over a few frames, if anywhere
   private readonly splashes = new FizzlerSplashes() // Where a portal shot met a fizzler's field lately, splashing over a few frames, if anywhere
   private readonly reactions = new LightBarrierReactions() // Where a shot or the subject met a light barrier's band lately, reacting over a few frames, if anywhere
-  private readonly turn = new SubjectTurn() // The subject's facing as drawn, turning over a few frames whenever it comes to face another way
+  private readonly body = new SubjectBody() // The subject's body, walking freely
+  private gate: TileGate | null = null // Which tiles around the subject's the body may reach into, read on the latest state it was asked for
+  private readonly aim: PointerAim // Where the player aims, from the pointer
+  private readonly subjectAim = new SubjectAim() // The angle the subject is drawn at
+  private turnRefusedOn: RulesState | null = null // The state on which turning to the aim changed nothing (on an arrow), so it isn't tried again until the state changes
+  private subjectMoved = false // Whether the latest update moved the body or turned the aim, so the frame is drawn
   private slideBeats: SlideBeat[] = [] // What the slide being drawn still has waiting, in order; empty when none is
   private completionTime: number | null = null // When the completion is told after a step that didn't slide and walks the subject out of the chamber, once it is out of sight, in milliseconds on the frame clock; null when none waits
   private frameTime = 0 // The latest frame's time, in milliseconds on the frame clock; redraws outside a frame use it, so a step being drawn never goes back
@@ -197,6 +230,7 @@ export class Level {
     this.renderer = new Renderer(canvas, screenWidth, screenHeight, Level.MINIMUM_TILES, true)
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
     this.input = new Input(bindings)
+    this.aim = new PointerAim(canvas)
     document.addEventListener('visibilitychange', this.onVisibilityChange)
   }
 
@@ -243,7 +277,12 @@ export class Level {
     this.flashes.clear()
     this.splashes.clear()
     this.reactions.clear()
-    this.turn.clear()
+    this.body.place(start.state.subjectX, start.state.subjectY)
+    this.gate = null
+    this.turnRefusedOn = null
+    this.aim.reset(start.state.facing)
+    this.aim.remeasure()
+    this.subjectAim.reset(AIM_ANGLES[start.state.facing], Level.heldWayOf(start.state))
 
     this.countPortals(start.events)
     this.playSounds(start.events)
@@ -356,7 +395,9 @@ export class Level {
     const differingStep = this.stepHashes.findIndex((hash, index) => hash !== result.stepHashes[index])
 
     if (differingStep !== -1) {
-      throw new Error(`The replay differs from the live run after press ${differingStep + 1} of ${actions.length} (${actions[differingStep]})`)
+      const differing = actions[differingStep]
+
+      throw new Error(`The replay differs from the live run after action ${differingStep + 1} of ${actions.length} (${(differing === undefined) ? 'none' : describeAction(differing)})`)
     }
 
     if ((result.moves !== this.stepCount) || (result.portals !== this.portalCount)) {
@@ -383,6 +424,7 @@ export class Level {
    */
   resize(screenWidth: number, screenHeight: number): void {
     this.renderer.resize(screenWidth, screenHeight)
+    this.aim.remeasure()
 
     if (this.chamber !== null) {
       this.renderer.setSize(this.chamber.width, this.chamber.height)
@@ -408,7 +450,7 @@ export class Level {
   /**
    * Draws the current state, part way through the step being drawn, if any,
    * with what moves with time alone at this time, the fizzlers' fields, the light barriers' bands, the portals' particles, what breaks up,
-   * flashes, splashes, reacts, falls or flies home, a portal opening, a missed shot's ripple, the subject turning and the arrows, the blocked walls, the ditches, the doors,
+   * flashes, splashes, reacts, falls or flies home, a portal opening, a missed shot's ripple, the subject where its body is, at the angle it is drawn at, and the arrows, the blocked walls, the ditches, the doors,
    * the exit, the fizzlers, the lasers and the light barriers changing included, or held still when the player asks for
    * reduced motion.
    * @param time - Now, in milliseconds on the frame clock
@@ -418,7 +460,13 @@ export class Level {
       const frameStats = this.frameStats
       const drawStart = (frameStats === null) ? 0 : performance.now()
 
-      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, this.turn, this.returns, this.particles, this.flashes, this.reactions, this.splashes)
+      const subject: SubjectPlacement = {
+        x: this.body.x,
+        y: this.body.y,
+        angle: this.subjectAim.angleAt(this.aim.angle, Level.heldWayOf(this.state), time, this.reducedMotion.matches),
+      }
+
+      this.renderer.render(this.state, this.animation.transitionAt(time), this.reducedMotion.matches ? null : time, this.fizzle, this.changes, this.ripple, this.fall, this.openings, subject, this.returns, this.particles, this.flashes, this.reactions, this.splashes)
       frameStats?.recordDraw(performance.now() - drawStart)
     }
   }
@@ -430,7 +478,7 @@ export class Level {
    * @param action - The action stepped
    * @returns What the rules' step gave for it
    */
-  private runStep(chamber: CompiledChamber, state: RulesState, action: Action): StepResult {
+  private runStep(chamber: CompiledChamber, state: RulesState, action: RulesAction): StepResult {
     const frameStats = this.frameStats
     const stepStart = (frameStats === null) ? 0 : performance.now()
     const result = step(chamber, state, action)
@@ -490,17 +538,19 @@ export class Level {
   }
 
   /**
-   * Runs one frame: takes the oldest waiting press, if any, ends the step
-   * being drawn and runs the rules' step for it; once the chamber is
-   * completed, forgets every waiting press instead. Then forgets which keys
-   * went down during the frame, for the clock.
+   * Runs one frame: aims, walks the body and plays each tile edge it crossed
+   * as a move, turns the rules' facing to the aim, then takes the oldest
+   * waiting press, if any, ends the step being drawn and runs the rules'
+   * step for it; once the chamber is completed, forgets every waiting press
+   * instead. Then forgets which keys went down during the frame, for the
+   * clock.
    * @param delta - Seconds since the previous frame
-   * @param input - The keyboard and the mouse buttons
+   * @param input - The keyboard, the mouse buttons and the pointer
    * @param time - The frame's time, in milliseconds on the frame clock
    * @returns Whether the state changed
    */
   private update(delta: number, input: Input, time: number): boolean {
-    let updated = false
+    const before = this.state
 
     // The clock counts from the frame after the first key, so the wait before it is not included,
     // and stops at the press that completes the chamber, though a slide onto the exit is drawn before the completion is told
@@ -512,47 +562,211 @@ export class Level {
       this.clockStarted = true
     }
 
-    if ((this.chamber !== null) && (this.state !== null)) {
-      if (this.state.completed) {
+    if (this.chamber !== null) {
+      if (this.state?.completed ?? true) {
         // Nothing more runs, so no press is taken, and none is left waiting:
         // a held key's repeats can't cut short a walk-out or a slide onto the exit
         input.forgetPresses()
       } else {
+        this.subjectMoved = this.updateBody(this.chamber, input, delta, time)
+
         const press = input.takePress()
+        const action = (press === null) ? undefined : Level.PRESS_ACTIONS[press]
 
         // A press never waits for the step being drawn: it ends it at once,
         // even when the press itself changes nothing, after playing all that a
-        // slide still has waiting
-        if (press !== null) {
+        // slide still has waiting; none is taken once a step this frame paused the game (a hint shown)
+        if ((action !== undefined) && !this.isPaused && (this.state !== null) && !this.state.completed) {
           this.playSlideBeats(time, true)
           this.animation.finish()
-          updated = this.updateRules(this.chamber, this.state, press, time)
+          this.applyStep(this.state, action, this.runStep(this.chamber, this.state, action), time)
         }
       }
     }
 
     input.clear()
 
-    return updated
+    return this.state !== before
   }
 
   /**
-   * Runs one step of the rules for a press. Nothing runs once the chamber is
-   * completed.
+   * Aims from the body at the pointer, walks the body the way the move keys
+   * held say, unless a slide being drawn carries it, plays each tile edge
+   * its middle crossed as a move, and turns the rules' facing to the aim.
    * @param chamber - The chamber being played
-   * @param state - The state before the step
-   * @param press - The press, one key
+   * @param input - The keyboard, the mouse buttons and the pointer
+   * @param delta - Seconds since the previous frame
    * @param time - The frame's time, in milliseconds on the frame clock
-   * @returns Whether the state changed
+   * @returns Whether the body moved or the aim turned
    */
-  private updateRules(chamber: CompiledChamber, state: RulesState, press: FrameInput, time: number): boolean {
-    const action = actionOfPress(press)
+  private updateBody(chamber: CompiledChamber, input: Input, delta: number, time: number): boolean {
+    const aimed = this.aim.update(input.pointer, this.body.x, this.body.y, chamber.width, chamber.height)
+    let moved = false
 
-    if ((action === null) || state.completed) {
-      return false
+    // While a slide is drawn the body waits on the tile it stops on, and the drawing carries the subject there
+    if ((this.state !== null) && !this.animation.running) {
+      const state = this.state
+
+      // The body always stands on the subject's tile; should it not, it goes to its middle
+      if ((this.body.tileX !== state.subjectX) || (this.body.tileY !== state.subjectY)) {
+        this.body.place(state.subjectX, state.subjectY)
+      }
+
+      const right = Number(input.isHeld(GameKey.RIGHT)) - Number(input.isHeld(GameKey.LEFT))
+      const up = Number(input.isHeld(GameKey.UP)) - Number(input.isHeld(GameKey.DOWN))
+      const length = Math.hypot(right, up)
+      // A clock set back gives a frame no time rather than a move backwards
+      const seconds = Math.max(Math.min(delta, Level.LONGEST_MOVE_SECONDS), 0)
+      const distance = (length === 0) ? 0 : SubjectBody.SPEED * seconds / length
+      const gate = this.gateOf(chamber, state)
+      const move = this.body.move(right * distance, up * distance, seconds, gate)
+
+      moved = move.moved
+
+      // A light barrier's band the body pressed into reacts
+      if (!this.reducedMotion.matches) {
+        for (const way of move.pressedInto) {
+          this.reactions.startPressedInto(state, gate.x + DELTAS[way].dx, gate.y + DELTAS[way].dy, time)
+        }
+      }
+
+      this.followBody(chamber, time)
     }
 
-    return this.applyStep(state, action, this.runStep(chamber, state, action), time)
+    // A step this frame may have paused the game (a hint shown), which stops the frame's play
+    if (!this.isPaused) {
+      this.turnToAim(chamber, time)
+    }
+
+    return moved || aimed
+  }
+
+  /**
+   * Plays each tile edge the body's middle crossed as the rules' plain move
+   * that way, across columns first, then rows, each judged on the state the
+   * one before it left. A move the rules refuse, or one after which the game
+   * is paused (a hint shown), brings the middle back inside the subject's
+   * tile; one that slides leaves the body on the tile the slide stops on,
+   * drawn getting there.
+   * @param chamber - The chamber being played
+   * @param time - The frame's time, in milliseconds on the frame clock
+   */
+  private followBody(chamber: CompiledChamber, time: number): void {
+    const startState = this.state
+
+    if (startState === null) {
+      return
+    }
+
+    const columns = this.body.tileX - startState.subjectX
+    const rows = this.body.tileY - startState.subjectY
+    const ways: Direction[] = []
+
+    if (columns !== 0) {
+      ways.push((columns > 0) ? Direction.RIGHT : Direction.LEFT)
+    }
+
+    if (rows !== 0) {
+      ways.push((rows > 0) ? Direction.UP : Direction.DOWN)
+    }
+
+    for (const way of ways) {
+      const before = this.state
+
+      if ((before === null) || before.completed) {
+        return
+      }
+
+      const targetX = before.subjectX + DELTAS[way].dx
+      const targetY = before.subjectY + DELTAS[way].dy
+
+      if (this.gateOf(chamber, before).isSolid(targetX, targetY)) {
+        this.body.keepInTile(before.subjectX, before.subjectY)
+
+        return
+      }
+
+      const action = PLAIN_MOVES[way]
+      const result = this.runStep(chamber, before, action)
+      const after = result.state
+
+      this.applyStep(before, action, result, time)
+
+      if ((after.subjectX === before.subjectX) && (after.subjectY === before.subjectY)) {
+        this.body.keepInTile(before.subjectX, before.subjectY)
+
+        return
+      }
+
+      if ((after.subjectX !== targetX) || (after.subjectY !== targetY)) {
+        this.body.place(after.subjectX, after.subjectY)
+
+        return
+      }
+
+      // A move that paused the game (a hint shown) is the frame's last, so the body stays on its tile
+      if (this.isPaused) {
+        this.body.keepInTile(after.subjectX, after.subjectY)
+
+        return
+      }
+    }
+  }
+
+  /**
+   * Turns the rules' facing to the aim's snapped way, when it faces another
+   * way, unless a slide being drawn carries the subject. A turn that changes
+   * nothing (on an arrow, which holds the subject its way) is neither logged
+   * nor tried again until the state changes.
+   * @param chamber - The chamber being played
+   * @param time - The frame's time, in milliseconds on the frame clock
+   */
+  private turnToAim(chamber: CompiledChamber, time: number): void {
+    const state = this.state
+    const way = this.aim.way
+
+    if ((state === null) || state.completed || this.animation.running || (state.facing === way) || (this.turnRefusedOn === state)) {
+      return
+    }
+
+    const action = Level.TURNS[way]
+    const result = this.runStep(chamber, state, action)
+
+    if ((result.state === state) && (result.events.length === 0)) {
+      this.turnRefusedOn = state
+
+      return
+    }
+
+    this.applyStep(state, action, result, time)
+  }
+
+  /**
+   * Which tiles around the subject's the body may reach into, read again
+   * whenever the state changes.
+   * @param chamber - The chamber being played
+   * @param state - The state now
+   * @returns The tiles
+   */
+  private gateOf(chamber: CompiledChamber, state: RulesState): TileGate {
+    if ((this.gate === null) || (this.gate.state !== state)) {
+      this.gate = new TileGate(chamber, state)
+    }
+
+    return this.gate
+  }
+
+  /**
+   * The way the subject is held facing, standing on a tile that lets it act
+   * only one way (an arrow), which it always faces there.
+   * @param state - The state
+   * @returns Its facing, or null when it stands anywhere else
+   */
+  private static heldWayOf(state: RulesState): Direction | null {
+    const x = state.subjectX
+    const y = state.subjectY
+
+    return DIRECTIONS.some((direction) => !allowsWay(state, x, y, direction)) ? state.facing : null
   }
 
   /**
@@ -572,11 +786,12 @@ export class Level {
    * @param time - The frame's time, in milliseconds on the frame clock
    * @returns Whether the state changed
    */
-  private applyStep(state: RulesState, action: Action, result: StepResult, time: number): boolean {
+  private applyStep(state: RulesState, action: RulesAction, result: StepResult, time: number): boolean {
     const next = result.state
     // A shot tried while carrying a box never leaves, so its refusal is the
     // error sound, with no ripple
     const shot = ((action === Action.BLUE) || (action === Action.ORANGE)) && !state.isCarrying
+    // The body walks on its own: only a slide, or the walk out of the chamber, is drawn over time
     const drawn = (next !== state) && !this.reducedMotion.matches
     const walkOut = drawn ? Level.walkOutWay(result) : null
     const bounces = findMirrorBounces(state, next, result.events)
@@ -591,12 +806,12 @@ export class Level {
     this.countPortals(result.events)
     this.state = next
 
-    if (drawn) {
+    if (drawn && ((result.path.length > 0) || (walkOut !== null))) {
       this.animation.start(state, next, result.events, result.path, walkOut, time)
     }
 
     // A light barrier's band the subject walked into reacts; the rules report nothing for it
-    const movement = MOVEMENTS[action]
+    const movement = isAimedShot(action) ? null : MOVEMENTS[action]
 
     if ((movement !== null) && !this.reducedMotion.matches) {
       this.reactions.startWalkIn(state, next, movement, time)
@@ -758,8 +973,16 @@ export class Level {
       // again is done with going home; one a link reaches that is destroyed breaks up where it was, unless it fell
       this.returns.forgetMoved(after)
 
+      // A carried box breaks up in the subject's hands: where the body is, or, part way along a slide, which the body
+      // already waits at the end of, on the tile the subject is drawn on
       if (sendsBoxesHome(events)) {
-        this.returns.start(before, after, events, time)
+        const onBody = (this.body.tileX === after.subjectX) && (this.body.tileY === after.subjectY)
+
+        this.returns.start(before, after, events, time, {
+          x: onBody ? this.body.x : after.subjectX + 0.5,
+          y: onBody ? this.body.y : after.subjectY + 0.5,
+          angle: this.subjectAim.angle,
+        })
       }
 
       // A portal a shot opened grows open on its wall
@@ -799,11 +1022,11 @@ export class Level {
   }
 
   /**
-   * Logs a press acted on and the state it led to.
+   * Logs an action stepped and the state it led to.
    * @param action - The action
    * @param state - The state after it
    */
-  private logStep(action: Action, state: RulesState): void {
+  private logStep(action: RulesAction, state: RulesState): void {
     this.replaySteps.push(action)
     this.stepHashes.push(state.hash)
   }
@@ -851,6 +1074,8 @@ export class Level {
     const wasAnimating = this.animation.running
     let stateUpdated = false
 
+    this.subjectMoved = false
+
     // What a slide being drawn has waiting plays as the subject gets there, paused or not, and the completion a walk-out
     // left waiting is told as the subject goes out of sight
     this.playSlideBeats(time)
@@ -862,9 +1087,9 @@ export class Level {
 
     // So does a field or a band that is on, and anything that glows, gives off particles, breaks up, flashes, splashes, reacts, falls, changes,
     // opens, ripples or turns, paused or not, and the first frame after it stops, which draws it still
-    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.flashes.isRunningAt(time) || this.splashes.isRunningAt(time) || this.reactions.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.particles.isRunningAt(time) || this.ripple.isRunningAt(time) || this.turn.isRunningAt(time))
+    const ambient = (this.state !== null) && !this.reducedMotion.matches && (hasAmbientLife(this.state) || this.fizzle.isRunningAt(time) || this.flashes.isRunningAt(time) || this.splashes.isRunningAt(time) || this.reactions.isRunningAt(time) || this.fall.isRunningAt(time) || this.returns.isRunningAt(time) || this.changes.isRunningAt(time) || this.openings.isRunningAt(time) || this.particles.isRunningAt(time) || this.ripple.isRunningAt(time) || this.subjectAim.isRunningAt(time))
 
-    if (stateUpdated || wasAnimating || ambient || this.ambientDrawn) {
+    if (stateUpdated || this.subjectMoved || wasAnimating || ambient || this.ambientDrawn) {
       this.render(time)
     }
 
