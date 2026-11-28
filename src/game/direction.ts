@@ -53,6 +53,17 @@ export const WAY_ANGLES: Readonly<Record<Direction, number>> = {
 }
 
 /**
+ * The angle of each way in the chamber, where y grows upwards, in radians
+ * counter-clockwise from right: the angle an aimed shot takes along it.
+ */
+export const AIM_ANGLES: Readonly<Record<Direction, number>> = {
+  [Direction.RIGHT]: 0,
+  [Direction.UP]: Math.PI / 2,
+  [Direction.LEFT]: Math.PI,
+  [Direction.DOWN]: -Math.PI / 2,
+}
+
+/**
  * Narrows a direction read from chamber JSON.
  * @param value - The direction string from the data
  * @returns The same value, typed as a Direction
